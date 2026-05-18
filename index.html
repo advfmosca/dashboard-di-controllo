@@ -434,6 +434,13 @@
   if (initialHash && document.getElementById("tab-" + initialHash)) activateTab(initialHash);
 
   // ============================ PLATFORM FILTER CHIPS ============================
+  // Stato filtri: per default tutte le piattaforme attive
+  // (dichiarato qui prima dei listener perché syncFilterUI lo legge subito al boot)
+  const FILTER_STATE = {
+    sp: new Set(["Meta", "Google", "TikTok"]),
+    bf: new Set(["Meta", "Google"]),
+  };
+
   function syncFilterUI(scope) {
     const bar = document.querySelector(`.filter-bar[data-filter-scope="${scope}"]`);
     if (!bar) return;
@@ -532,12 +539,6 @@
     document.getElementById("ov-projects").innerHTML = p_html;
     document.getElementById("ov-projects-pill").textContent = (ov.projects || []).length + " progetti";
   }
-
-  // Stato filtri: per default tutte le piattaforme attive
-  const FILTER_STATE = {
-    sp: new Set(["Meta", "Google", "TikTok"]),
-    bf: new Set(["Meta", "Google"]),
-  };
 
   function renderSpending(d) {
     if (!d) return;
