@@ -144,7 +144,10 @@
   .aghc-card .trend .arrow.up { color: var(--green); }
   .aghc-card .trend .arrow.down { color: var(--red); }
   .aghc-card .trend .arrow.flat { color: var(--text-muted); }
-  .aghc-card .rational { font-size: 12.5px; color: #2c2c2c; line-height: 1.5; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; }
+  .aghc-card .rational { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+  .aghc-card .rational p { margin: 0 0 8px; }
+  .aghc-card .rational p:last-child { margin-bottom: 0; }
+  .aghc-card .rational p:first-child { color: #1c1c1e; font-weight: 500; }
   .aghc-card .footer { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .aghc-card .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
   .aghc-card .status-pill.red    { background: #fee2e2; color: #991b1b; }
@@ -158,6 +161,15 @@
   .loading { color: var(--text-muted); font-size: 13px; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
   .spinner { width: 12px; height: 12px; border: 2px solid #e0e0e3; border-top-color: #6a6a70; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Platform filter bar */
+  .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-bar .lbl { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .filter-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 8px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 500; transition: background .15s, border-color .15s; }
+  .filter-chip:hover { background: var(--bg-soft); }
+  .filter-chip.active { background: #1c1c1e; color: #fff; border-color: #1c1c1e; }
+  .filter-chip.active .plogo.google { background: #fff; }
+  .filter-chip .plogo { width: 18px; height: 18px; font-size: 11px; }
 
   /* Reports list */
   .report-list { display: flex; flex-direction: column; gap: 4px; }
@@ -278,6 +290,13 @@
   </section>
 
   <section class="tab-panel" id="tab-spending">
+    <div class="filter-bar" data-filter-scope="sp">
+      <span class="lbl">Piattaforme:</span>
+      <button type="button" class="filter-chip active" data-platform="all">Tutte</button>
+      <button type="button" class="filter-chip active" data-platform="Meta"><span class="plogo meta">M</span> Meta</button>
+      <button type="button" class="filter-chip active" data-platform="Google"><span class="plogo google">G</span> Google</button>
+      <button type="button" class="filter-chip active" data-platform="TikTok"><span class="plogo tiktok"><svg viewBox="0 0 24 24" fill="none"><path fill="#fff" d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6c0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64c0 3.33 2.76 5.7 5.69 5.7c3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg></span> TikTok</button>
+    </div>
     <div class="kpis">
       <div class="kpi"><div class="label">Account analizzati</div><div class="value" id="sp-k-total">–</div><div class="sub" id="sp-k-total-sub">Meta · Google · TikTok</div></div>
       <div class="kpi danger"><div class="label">Zero anomalo</div><div class="value" id="sp-k-zero">–</div></div>
@@ -294,6 +313,12 @@
   </section>
 
   <section class="tab-panel" id="tab-beefamily">
+    <div class="filter-bar" data-filter-scope="bf">
+      <span class="lbl">Piattaforme:</span>
+      <button type="button" class="filter-chip active" data-platform="all">Tutte</button>
+      <button type="button" class="filter-chip active" data-platform="Meta"><span class="plogo meta">M</span> Meta</button>
+      <button type="button" class="filter-chip active" data-platform="Google"><span class="plogo google">G</span> Google</button>
+    </div>
     <div class="kpis">
       <div class="kpi"><div class="label">Account attivi ieri</div><div class="value" id="bf-k-acc">–</div><div class="sub" id="bf-k-acc-sub">/ totali</div></div>
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="bf-k-spend">–</div></div>
@@ -392,6 +417,9 @@
     return `<a class="btn btn-mini btn-icon" href="${escapeHtml(url)}" target="_blank" rel="noopener" title="${lbl}"><svg><use href="#i-ext"/></svg></a>`;
   }
 
+  // Module-scope cache of last loaded data (per filtri client-side)
+  let LAST_DATA = null;
+
   // ============================ TAB SWITCHING ============================
   const tabBtns = document.querySelectorAll(".tab-btn");
   const tabPanels = document.querySelectorAll(".tab-panel");
@@ -404,6 +432,56 @@
   // honor initial hash
   const initialHash = (location.hash || "").replace("#", "");
   if (initialHash && document.getElementById("tab-" + initialHash)) activateTab(initialHash);
+
+  // ============================ PLATFORM FILTER CHIPS ============================
+  function syncFilterUI(scope) {
+    const bar = document.querySelector(`.filter-bar[data-filter-scope="${scope}"]`);
+    if (!bar) return;
+    const active = FILTER_STATE[scope];
+    const allPlatforms = Array.from(bar.querySelectorAll(".filter-chip"))
+      .map(b => b.getAttribute("data-platform"))
+      .filter(p => p !== "all");
+    const allActive = allPlatforms.every(p => active.has(p));
+    bar.querySelectorAll(".filter-chip").forEach(b => {
+      const plat = b.getAttribute("data-platform");
+      if (plat === "all") b.classList.toggle("active", allActive);
+      else b.classList.toggle("active", active.has(plat));
+    });
+  }
+
+  function rerenderForScope(scope) {
+    if (!LAST_DATA) return;
+    if (scope === "sp") renderSpending(LAST_DATA);
+    else if (scope === "bf") renderBeefamily(LAST_DATA);
+  }
+
+  document.querySelectorAll(".filter-bar").forEach(bar => {
+    const scope = bar.getAttribute("data-filter-scope");
+    const allPlatforms = Array.from(bar.querySelectorAll(".filter-chip"))
+      .map(b => b.getAttribute("data-platform"))
+      .filter(p => p !== "all");
+    bar.querySelectorAll(".filter-chip").forEach(b => {
+      b.addEventListener("click", () => {
+        const plat = b.getAttribute("data-platform");
+        const state = FILTER_STATE[scope];
+        if (plat === "all") {
+          // toggle "tutte": se tutte attive → spegne nulla (no-op); altrimenti rimette tutte
+          allPlatforms.forEach(p => state.add(p));
+        } else {
+          if (state.has(plat)) {
+            state.delete(plat);
+            // Se rimane vuoto, fallback a "tutte"
+            if (state.size === 0) allPlatforms.forEach(p => state.add(p));
+          } else {
+            state.add(plat);
+          }
+        }
+        syncFilterUI(scope);
+        rerenderForScope(scope);
+      });
+    });
+    syncFilterUI(scope);
+  });
 
   // ============================ COPY HELPER ============================
   document.addEventListener("click", function(e) {
@@ -455,19 +533,39 @@
     document.getElementById("ov-projects-pill").textContent = (ov.projects || []).length + " progetti";
   }
 
+  // Stato filtri: per default tutte le piattaforme attive
+  const FILTER_STATE = {
+    sp: new Set(["Meta", "Google", "TikTok"]),
+    bf: new Set(["Meta", "Google"]),
+  };
+
   function renderSpending(d) {
+    if (!d) return;
+    LAST_DATA = d;
     const sp = d.spending || {};
     const totals = sp.totals || {};
-    document.getElementById("sp-k-total").textContent = totals.total != null ? totals.total : "–";
-    document.getElementById("sp-k-total-sub").textContent = `Meta ${totals.meta||0} · Google ${totals.google||0} · TikTok ${totals.tiktok||0}`;
-    document.getElementById("sp-k-zero").textContent = (sp.zero || []).length;
-    document.getElementById("sp-k-high").textContent = (sp.high || []).length;
+    const active = FILTER_STATE.sp;
+    const filterRow = r => active.has(r.platform);
+
+    const zeroAll = sp.zero || [];
+    const highAll = sp.high || [];
+    const zeroF = zeroAll.filter(filterRow);
+    const highF = highAll.filter(filterRow);
+
+    // KPI totale = numero account in tabella filtrati (zero + high non riempie tutta la base; usiamo totals)
+    const totalByPlatform = { Meta: totals.meta || 0, Google: totals.google || 0, TikTok: totals.tiktok || 0 };
+    const totalShown = [...active].reduce((s, p) => s + (totalByPlatform[p] || 0), 0);
+    document.getElementById("sp-k-total").textContent = totalShown;
+    document.getElementById("sp-k-total-sub").textContent =
+      [...active].map(p => `${p} ${totalByPlatform[p]||0}`).join(" · ");
+    document.getElementById("sp-k-zero").textContent = zeroF.length;
+    document.getElementById("sp-k-high").textContent = highF.length;
 
     let zHtml = "";
-    if (!sp.zero || sp.zero.length === 0) zHtml = `<div class="empty">Nessun account con spending zero anomalo ✓</div>`;
+    if (zeroF.length === 0) zHtml = `<div class="empty">Nessun account con spending zero anomalo ${zeroAll.length>0?'(con i filtri attivi)':''} ✓</div>`;
     else {
       zHtml = `<table><thead><tr><th>Piattaforma</th><th>Account</th><th class="num">Spend</th><th class="num">Media 7gg</th><th></th></tr></thead><tbody>`;
-      for (const r of sp.zero) {
+      for (const r of zeroF) {
         zHtml += `<tr>
           <td>${platformLogo(r.platform)}</td>
           <td>${escapeHtml(r.account_name)} <span class="small muted">· ${escapeHtml(r.account_id)}</span></td>
@@ -481,10 +579,10 @@
     document.getElementById("sp-zero").innerHTML = zHtml;
 
     let hHtml = "";
-    if (!sp.high || sp.high.length === 0) hHtml = `<div class="empty">Nessun account sopra soglia ✓</div>`;
+    if (highF.length === 0) hHtml = `<div class="empty">Nessun account sopra soglia ${highAll.length>0?'(con i filtri attivi)':''} ✓</div>`;
     else {
       hHtml = `<table><thead><tr><th>Piattaforma</th><th>Account</th><th class="num">Spend</th><th class="num">Media 7gg</th><th class="num">Δ%</th><th>Trigger</th><th></th></tr></thead><tbody>`;
-      for (const r of sp.high) {
+      for (const r of highF) {
         const dCls = r.delta == null ? "" : (r.delta >= 0 ? "delta-pos" : "delta-neg");
         const t = r.triggers || [];
         const trigPill = (t.includes(">50€") && t.includes(">30%")) ? `<span class="pill both">&gt;50€ + &gt;30%</span>` : (t.includes(">50€") ? `<span class="pill warn">&gt;50€</span>` : `<span class="pill warn">&gt;30%</span>`);
@@ -504,16 +602,23 @@
   }
 
   function renderBeefamily(d) {
+    if (!d) return;
+    LAST_DATA = d;
     const proj = d.beefamily;
     if (!proj) return;
-    const kpi = proj.kpi || {};
-    document.getElementById("bf-k-acc").textContent = kpi.actives != null ? kpi.actives : "–";
-    document.getElementById("bf-k-acc-sub").textContent = "/ " + (kpi.total || 0) + " (con spesa > 0)";
-    document.getElementById("bf-k-spend").textContent = fmtEUR(kpi.total_spend);
-    document.getElementById("bf-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
-    document.getElementById("bf-k-cpc").textContent = kpi.cpc_y == null ? "—" : fmtEUR(kpi.cpc_y);
+    const active = FILTER_STATE.bf;
+    const entries = (proj.entries || []).filter(e => active.has(e.source));
 
-    const entries = proj.entries || [];
+    // KPI ricalcolati sul subset filtrato
+    const actives = entries.filter(e => e.spend_y > 0).length;
+    const total_spend = entries.reduce((s,e)=> s + (e.spend_y || 0), 0);
+    const total_contatti = entries.reduce((s,e)=> s + (e.contatti_y || 0), 0);
+    const cpc_y = total_contatti > 0 ? total_spend / total_contatti : null;
+    document.getElementById("bf-k-acc").textContent = actives;
+    document.getElementById("bf-k-acc-sub").textContent = "/ " + entries.length + " (con spesa > 0)";
+    document.getElementById("bf-k-spend").textContent = fmtEUR(total_spend);
+    document.getElementById("bf-k-contatti").textContent = total_contatti;
+    document.getElementById("bf-k-cpc").textContent = cpc_y == null ? "—" : fmtEUR(cpc_y);
     const alerts = entries.filter(e => e.status && (e.status.color === "red" || e.status.color === "yellow"));
     const alertsPill = document.getElementById("bf-alerts-pill");
     if (alertsPill) alertsPill.textContent = alerts.length + " da analizzare";
@@ -595,7 +700,7 @@
           <span>${escapeHtml(c.trend_label)}</span>
           ${c.trend_pct != null ? `<span class="small muted">(${fmtPct(c.trend_pct)})</span>` : ""}
         </div>
-        <div class="rational">${escapeHtml(c.rational)}</div>
+        <div class="rational">${c.rational || ""}</div>
         <div class="footer">
           <span class="status-pill ${color}">${escapeHtml(c.status.label)}</span>
           ${openAccountBtn(c.ad_url_meta, "Meta")}

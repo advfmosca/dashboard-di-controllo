@@ -358,6 +358,111 @@ def classify_spending(results):
 
 # ============================ AGHC CARDS ============================
 
+def _build_aghc_rational(client_name, window_days, total_spend_window,
+                          meta_spend_total, tt_spend_total, has_tiktok,
+                          zero_days, active_days, trend_pct,
+                          contatti_y, spend_y):
+    """
+    Rational a 3 paragrafi nello stile aghc-report-mensile-kpi:
+    P1 = cosa è successo nel periodo (frame narrativo del trend principale)
+    P2 = perché conta (composizione media spesa, presidio multi-canale, segnali contatti)
+    P3 = cosa fare (next step / monitoraggio per la prossima finestra)
+    Restituisce HTML con <p>...</p><p>...</p><p>...</p>.
+    """
+    def fmt_eur_no_decimal(n):
+        if n is None: return "—"
+        return f"{int(round(n)):,}".replace(",", ".") + " €"
+
+    avg_daily = total_spend_window / window_days if window_days else 0
+    pct_zero = (zero_days / window_days * 100) if window_days else 0
+
+    # ===== Caso 1: spending zero — pausa strategica =====
+    if total_spend_window == 0:
+        p1 = (f"Le ultime {window_days} giornate rappresentano una pausa per {client_name}: nessuna attività "
+              f"pubblicitaria erogata, coerente con la pianificazione strategica del periodo.")
+        p2 = (f"Il budget residuo resta integro e pronto a concentrarsi sulle finestre di richiamo "
+              f"più strategiche del piano annuo.")
+        p3 = (f"Alla riattivazione sarà importante ripartire con creatività rinnovata e una distribuzione "
+              f"costante per riacquisire frequenza sul pubblico target.")
+        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+
+    # ===== Caso 2: erogazione irregolare (>30% giorni a zero) =====
+    if pct_zero > 30 and zero_days >= 3:
+        p1 = (f"Le ultime due settimane mostrano un'erogazione frammentata per {client_name}: in {zero_days} "
+              f"giorni su {window_days} l'account non ha speso, distribuendo {fmt_eur(total_spend_window)} "
+              f"in modo non continuativo.")
+        p2 = (f"Lo spending medio sui giorni effettivamente attivi si attesta a {fmt_eur(total_spend_window/max(active_days,1))}, "
+              f"ma la mancanza di continuità penalizza la curva di apprendimento delle campagne e l'esposizione "
+              f"al pubblico.")
+        if contatti_y > 0:
+            p3 = (f"Il primo obiettivo per la prossima settimana è ripristinare la continuità quotidiana: "
+                  f"l'ultimo giorno ha generato {contatti_y} contatti, segnale che la domanda c'è.")
+        else:
+            p3 = (f"Il primo obiettivo per la prossima settimana è ripristinare la continuità quotidiana di erogazione "
+                  f"e verificare che le creatività non siano in saturazione.")
+        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+
+    # ===== Caso 3: trend in forte crescita =====
+    if trend_pct is not None and trend_pct > 25:
+        p1 = (f"Le ultime due settimane segnano un'accelerazione per {client_name}: lo spending sale "
+              f"di {trend_pct:.0f}% confrontando prima e seconda metà del periodo, "
+              f"portando il totale a {fmt_eur(total_spend_window)} in {window_days} giorni.")
+    elif trend_pct is not None and trend_pct < -25:
+        p1 = (f"Le ultime due settimane vedono un raffreddamento dell'attività di {client_name}: lo spending "
+              f"cala di {abs(trend_pct):.0f}% nella seconda metà del periodo, chiudendo a "
+              f"{fmt_eur(total_spend_window)} totali sui {window_days} giorni.")
+    elif trend_pct is not None and trend_pct > 0:
+        p1 = (f"Le ultime due settimane consolidano la rotta di {client_name}: lo spending cresce in modo "
+              f"misurato (+{trend_pct:.0f}% tra prima e seconda metà), totalizzando "
+              f"{fmt_eur(total_spend_window)} sui {window_days} giorni.")
+    else:
+        p1 = (f"Le ultime due settimane confermano la rotta di {client_name}: l'investimento si mantiene stabile "
+              f"con {fmt_eur(total_spend_window)} totali, distribuiti su {active_days} giorni effettivi "
+              f"di erogazione su {window_days}.")
+
+    # ===== Paragrafo 2: perché conta — frasi concatenate fluenti =====
+    p2_main = f"La media giornaliera si attesta a {fmt_eur(avg_daily)}"
+
+    # Aggiungi composizione canali se TikTok presente con spesa rilevante
+    tk_clause = ""
+    if has_tiktok and tt_spend_total > 0:
+        share_tt = (tt_spend_total / total_spend_window * 100) if total_spend_window else 0
+        if share_tt >= 8:
+            tk_clause = (f", con il canale TikTok che presidia il pubblico più giovane portando "
+                         f"{fmt_eur(tt_spend_total)} ({share_tt:.0f}% del mix)")
+        else:
+            tk_clause = (f", con Meta come canale principale e TikTok in attivazione marginale "
+                         f"({fmt_eur(tt_spend_total)} di affiancamento)")
+    elif has_tiktok and tt_spend_total == 0:
+        tk_clause = f", sul solo canale Meta — TikTok resta fermo nella finestra e sarà da riattivare appena utile al funnel"
+
+    # Segnale contatti come frase autonoma successiva
+    contact_clause = ""
+    if contatti_y > 50:
+        contact_clause = f" L'ultimo giorno ha portato {contatti_y} contatti, segnale che la domanda risponde bene al messaggio attuale."
+    elif contatti_y > 0:
+        contact_clause = f" L'ultimo giorno ha generato {contatti_y} contatti, in linea con il funnel pianificato."
+
+    p2 = p2_main + tk_clause + "." + contact_clause
+    p2 = p2.strip()
+
+    # ===== Paragrafo 3: cosa fare =====
+    if trend_pct is not None and trend_pct > 25:
+        p3 = (f"La fase di crescita va presidiata: nei prossimi giorni monitorare il CPC e la frequenza per "
+              f"evitare che la pressione superi la soglia di efficienza, e tenere pronta nuova creatività se la frequenza sale.")
+    elif trend_pct is not None and trend_pct < -25:
+        p3 = (f"Per la prossima finestra l'obiettivo è recuperare cadenza: verificare se la riduzione "
+              f"è strategica o se serve un intervento su budget e bidding per riallineare l'erogazione al piano.")
+    elif zero_days > 0 and zero_days <= 2:
+        p3 = (f"L'erogazione è solida ma con {zero_days} {'giorno' if zero_days == 1 else 'giorni'} a zero da chiarire: "
+              f"verificare che la sospensione sia stata voluta e non frutto di un blocco budget/billing.")
+    else:
+        p3 = (f"La cadenza è regolare: la prossima settimana si lavora sul fine-tuning delle creatività più stanche e "
+              f"sull'ottimizzazione del CPC mantenendo invariata la struttura di campagne.")
+
+    return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+
+
 def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
     """
     Una card per cliente AGHC. Se più voci roster condividono lo stesso meta_id,
@@ -405,17 +510,21 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
             tt_spend_y += tt_e["daily"].get(y_iso, 0)
 
         total_spend_window = meta_spend_total + tt_spend_total
-        # Zero days nel window (giorni con 0 spending Meta nel window)
-        zero_days_meta = sum(1 for _, s in meta_series if s == 0)
-        active_days_meta = len(meta_series) - zero_days_meta
+        # Considera solo i giorni effettivamente coperti dal dataset.
+        # zero_days = solo giorni con valore esplicito 0 (non missing).
+        days_with_data = sum(1 for d, _ in meta_series if d in meta_e["daily"])
+        zero_days_meta = sum(1 for d, s in meta_series if d in meta_e["daily"] and s == 0)
+        active_days_meta = sum(1 for d, s in meta_series if d in meta_e["daily"] and s > 0)
+        effective_window = days_with_data if days_with_data > 0 else window_days
 
         # Status
         st = status_account(meta_spend_y + tt_spend_y, contatti_y, prev7_spend, prev7_contatti, project_type="hotel")
 
-        # Trend: confronta media prima metà vs seconda metà del window
-        mid_idx = len(meta_series) // 2
-        first_half = [s for _, s in meta_series[:mid_idx]]
-        second_half = [s for _, s in meta_series[mid_idx:]]
+        # Trend: confronta media prima metà vs seconda metà — solo sui giorni con dati
+        actual_series = [(d, s) for d, s in meta_series if d in meta_e["daily"]]
+        mid_idx = len(actual_series) // 2
+        first_half = [s for _, s in actual_series[:mid_idx]]
+        second_half = [s for _, s in actual_series[mid_idx:]]
         first_mean = sum(first_half) / len(first_half) if first_half else 0
         second_mean = sum(second_half) / len(second_half) if second_half else 0
         if first_mean > 0:
@@ -431,23 +540,20 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
         else:
             trend_arrow, trend_label = "→", "stabile"
 
-        # Rational: 2-3 righe
-        rat_lines = []
-        rat_lines.append(
-            f"Negli ultimi {window_days} giorni l'account ha investito {fmt_eur(total_spend_window)} "
-            f"({fmt_eur(total_spend_window / window_days)} al giorno in media)."
+        # ===== Rational stile AGHC monthly KPI (3 paragrafi narrativi) =====
+        rational = _build_aghc_rational(
+            client_name=merged_name,
+            window_days=effective_window,
+            total_spend_window=total_spend_window,
+            meta_spend_total=meta_spend_total,
+            tt_spend_total=tt_spend_total,
+            has_tiktok=bool(info["tiktok_ids"]),
+            zero_days=zero_days_meta,
+            active_days=active_days_meta,
+            trend_pct=trend_pct,
+            contatti_y=contatti_y,
+            spend_y=meta_spend_y + tt_spend_y,
         )
-        if trend_pct is not None:
-            rat_lines.append(
-                f"Trend di spesa {trend_label} ({fmt_pct(trend_pct)} confrontando prima e seconda metà del periodo)."
-            )
-        if zero_days_meta > 0:
-            rat_lines.append(
-                f"In {zero_days_meta} giorni su {window_days} l'account non ha speso; verificare cause."
-            )
-        else:
-            rat_lines.append("Erogazione costante senza giorni a zero spending.")
-        rational = " ".join(rat_lines)
 
         card = {
             "id": mid,
