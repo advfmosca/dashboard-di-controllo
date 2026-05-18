@@ -1,86 +1,86 @@
 {
-  "_README": "Budget annuali AGHC importati dal report mensile (https://github.com/advfmosca/report-aghc-monthly _scripts/anagrafica.py). Per i clienti che condividono lo stesso meta_account_id (sub-brand) il budget è la SOMMA dei due. Modifica budget_annuale e ytd_seed quando serve.",
-  "_source": "report-aghc-monthly/_scripts/anagrafica.py (importato il 18/05/2026)",
+  "_README": "Budget annuali AGHC importati dal report mensile (https://github.com/advfmosca/report-aghc-monthly _scripts/anagrafica.py). ytd_seed = spending cumulativo gen-apr 2026 importato da _data/data-2026-04.json. Quando arriva un nuovo report mensile aggiorna ytd_seed sommando gen → mese chiuso.",
+  "_source": "report-aghc-monthly anagrafica.py + data-2026-04.json (importati il 18/05/2026)",
   "year": 2026,
   "clients": {
     "1312718426033158": {
       "name": "ACCENTODI + ADESSO",
       "budget_annuale": 4800,
-      "ytd_seed": null,
-      "_note": "2400 ACCENTODI + 2400 ADESSO"
+      "ytd_seed": 1694.77,
+      "_note": "2400 ACCENTODI + 2400 ADESSO. Seed = somma spending gen-apr 2026"
     },
     "1201395876543423": {
       "name": "ALTAFIUMARA",
       "budget_annuale": 23000,
-      "ytd_seed": null
+      "ytd_seed": 1799.55
     },
     "1489903155429629": {
       "name": "CASTELLO",
       "budget_annuale": 14400,
-      "ytd_seed": null
+      "ytd_seed": 1617.90
     },
     "911357333863123": {
       "name": "DELLA PIANA",
       "budget_annuale": 14000,
-      "ytd_seed": null
+      "ytd_seed": 1349.34
     },
     "1528485957725509": {
       "name": "HANNAH + HANNAH TERRACES",
       "budget_annuale": 16200,
-      "ytd_seed": null,
-      "_note": "9000 HANNAH + 7200 HANNAH TERRACES"
+      "ytd_seed": 2991.67,
+      "_note": "9000 HANNAH + 7200 HANNAH TERRACES. Seed = somma spending gen-apr"
     },
     "217115315497718": {
       "name": "HEMANAIRE",
       "budget_annuale": 15000,
-      "ytd_seed": null
+      "ytd_seed": 2584.57
     },
     "4666471140299701": {
       "name": "LIVATA",
       "budget_annuale": 15000,
-      "ytd_seed": null
+      "ytd_seed": 0.00
     },
     "687349689221880": {
       "name": "LUNETTA",
       "budget_annuale": 18000,
-      "ytd_seed": null
+      "ytd_seed": 3023.48
     },
     "1372615496521110": {
       "name": "MAGARI ESTATES",
       "budget_annuale": 24600,
-      "ytd_seed": null
+      "ytd_seed": 1857.15
     },
     "821188209852436": {
       "name": "MARCELLA ROYAL + TERRAZZA FLAVIA",
       "budget_annuale": 21900,
-      "ytd_seed": null,
-      "_note": "14400 MARCELLA ROYAL + 7500 TERRAZZA FLAVIA"
+      "ytd_seed": 2488.06,
+      "_note": "14400 MARCELLA ROYAL + 7500 TERRAZZA FLAVIA. Seed = somma spending gen-apr"
     },
     "1432341844596179": {
       "name": "MARE",
       "budget_annuale": 15000,
-      "ytd_seed": null
+      "ytd_seed": 4992.43
     },
     "752450855779035": {
       "name": "MONTEMAGNO",
       "budget_annuale": null,
-      "ytd_seed": null,
-      "_note": "TBD — budget annuo da definire (placeholder 0 nel monthly KPI)"
+      "ytd_seed": 632.97,
+      "_note": "Budget annuale TBD. Seed = somma spending gen-apr"
     },
     "30233607946222961": {
       "name": "VILLA ERMELLINA",
       "budget_annuale": 16400,
-      "ytd_seed": null
+      "ytd_seed": 3746.00
     },
     "1849759899186169": {
       "name": "VILLA GIADA",
       "budget_annuale": 21600,
-      "ytd_seed": null
+      "ytd_seed": 1844.62
     },
     "1353024533007038": {
       "name": "VILLA MILIANI",
       "budget_annuale": 6600,
-      "ytd_seed": null
+      "ytd_seed": 3335.83
     }
   }
 }
