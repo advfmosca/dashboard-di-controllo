@@ -154,6 +154,23 @@
 
   .error { background: #fdf2f0; color: #b32f1f; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
 
+  /* Loading */
+  .loading { color: var(--text-muted); font-size: 13px; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
+  .spinner { width: 12px; height: 12px; border: 2px solid #e0e0e3; border-top-color: #6a6a70; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Reports list */
+  .report-list { display: flex; flex-direction: column; gap: 4px; }
+  .report-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
+  .report-item:hover { background: var(--bg-soft); border-color: #d2d2d7; }
+  .report-item .ri-date { font-weight: 600; font-size: 13px; flex-shrink: 0; }
+  .report-item .ri-counts { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .report-item .ri-counts .c-r { color: var(--red); font-weight: 600; }
+  .report-item .ri-counts .c-y { color: #b88a00; font-weight: 600; }
+  .report-item .ri-counts .c-v { color: var(--green); font-weight: 600; }
+  .report-item .ri-counts .c-n { color: #444; font-weight: 600; }
+  .report-item .ri-arrow { margin-left: auto; color: var(--text-dim); }
+
   .recap-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; color: var(--text); }
   .recap-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
   .btn { font: inherit; padding: 7px 14px; border-radius: 8px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; font-weight: 500; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
@@ -322,10 +339,12 @@
     </div>
     <section class="card"><h2>Alert da analizzare <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
     <section class="card"><h2>Status performance campagne <span class="pill" id="mt-status-pill">–</span></h2><div id="mt-status"></div></section>
-    <section class="card"><h2>Recap copia-incolla per il team</h2>
+    <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
       <div class="body">
-        <div class="recap-box" id="mt-recap">–</div>
-        <div class="recap-actions"><button class="btn primary" data-copy="mt-recap">Copia recap</button><span class="copy-feedback" id="mt-copy-fb">Copiato ✓</span></div>
+        <div id="mt-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
+        <div style="margin-top: 10px;">
+          <a class="btn" href="https://advfmosca.github.io/med-tech-daily-check/" target="_blank" rel="noopener">Apri archivio completo →</a>
+        </div>
       </div>
     </section>
   </section>
@@ -643,7 +662,47 @@
       statusRoot.innerHTML = html;
     }
 
-    document.getElementById("mt-recap").textContent = proj.recap || "—";
+    // (Recap textual removed — replaced by live list of historical reports below)
+  }
+
+  // ============================ MED TECH REPORTS (fetch live) ============================
+  function loadMedtechReports() {
+    const root = document.getElementById("mt-reports");
+    const pill = document.getElementById("mt-reports-pill");
+    if (!root) return;
+    fetch("https://advfmosca.github.io/med-tech-daily-check/?t=" + Date.now(), { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        // Each report is an <li><a href="med-tech-daily-YYYY-MM-DD.html">Domenica 17 Maggio 2026 7R · 4G · 3V · 0N →</a></li>
+        const anchors = Array.from(doc.querySelectorAll("li a[href*='med-tech-daily-']"));
+        if (anchors.length === 0) throw new Error("Nessun report trovato nella pagina archivio");
+        let listHtml = `<div class="report-list">`;
+        for (const a of anchors) {
+          const url = new URL(a.getAttribute("href"), "https://advfmosca.github.io/med-tech-daily-check/").href;
+          const text = (a.textContent || "").replace(/→\s*$/, "").trim();
+          // Parse counts: "Domenica 17 Maggio 2026 7R · 4G · 3V · 0N"
+          const m = text.match(/^(.*?)\s+(\d+)R\s*[·•]\s*(\d+)G\s*[·•]\s*(\d+)V\s*[·•]\s*(\d+)N/);
+          let dateLabel = text, counts = "";
+          if (m) {
+            dateLabel = m[1].trim();
+            counts = `<span class="c-r">${m[2]} R</span> · <span class="c-y">${m[3]} G</span> · <span class="c-v">${m[4]} V</span> · <span class="c-n">${m[5]} N</span>`;
+          }
+          listHtml += `<a class="report-item" href="${escapeHtml(url)}" target="_blank" rel="noopener">
+            <span class="ri-date">${escapeHtml(dateLabel)}</span>
+            <span class="ri-counts">${counts}</span>
+            <span class="ri-arrow">→</span>
+          </a>`;
+        }
+        listHtml += `</div>`;
+        root.innerHTML = listHtml;
+        if (pill) pill.textContent = anchors.length + " report";
+      })
+      .catch(err => {
+        console.warn("Med Tech reports fetch failed:", err);
+        root.innerHTML = `<div class="empty">Impossibile caricare la lista report (${escapeHtml(err.message)}). Apri l'archivio completo dal pulsante sotto.</div>`;
+        if (pill) pill.textContent = "—";
+      });
   }
 
   function applyData(d) {
@@ -683,7 +742,8 @@
       });
   }
 
-  // Boot: load snapshots index then activate latest
+  // Boot: load snapshots index then activate latest + load Med Tech reports list in parallel
+  loadMedtechReports();
   fetchJson("snapshots/index.json").then(idx => {
     const dates = (idx.dates || []).slice(0, 90);
     if (dates.length === 0) throw new Error("nessuno snapshot");

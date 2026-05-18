@@ -22,7 +22,7 @@ import sys
 
 # ============================ CONFIG ============================
 
-PAGES_URL = "https://moscadv.github.io/dashboard-di-controllo/"  # aggiornare dopo primo push
+PAGES_URL = "https://advfmosca.github.io/dashboard-di-controllo/"
 
 BEEFAMILY = [
     {"name": "ALBATROS",      "meta_id": "630436088886762",   "google_id": "517-405-1660"},
@@ -144,9 +144,10 @@ def build_daily_map(rows, is_meta_with_leads=False):
         spend = float(r.get("spend") or 0)
         e["daily"][d] = e["daily"].get(d, 0) + spend
         if is_meta_with_leads:
-            onsite = int(r.get("actions_onsite_conversion_lead_grouped") or 0)
-            lead_ad = int(r.get("actions_lead") or 0)
-            contatti = onsite + lead_ad
+            # actions_lead è già il TOTALE di tutti gli eventi "Lead" (pixel website + onsite leadgen + offline).
+            # Per gli hotel BF questo cattura i "Contatti acquisiti sul sito web" tracciati via Pixel/CAPI.
+            # Per Med & Tech (Instant Forms) actions_lead coincide con actions_onsite_conversion_lead_grouped.
+            contatti = int(r.get("actions_lead") or 0)
             if contatti:
                 e["contatti_daily"][d] = e["contatti_daily"].get(d, 0) + contatti
     return m
@@ -700,7 +701,9 @@ def _build_medtech(rows, y_iso, yesterday):
         e = camp_map[camp]
         d = r.get("date")
         e["daily"][d] = e["daily"].get(d, 0) + float(r.get("spend") or 0)
-        ld = int(r.get("actions_onsite_conversion_lead_grouped") or 0)
+        # Per Med & Tech le campagne sono pure Instant Forms quindi onsite_conversion_lead_grouped
+        # è di solito uguale a actions_lead; in mancanza del primo usiamo il secondo.
+        ld = int(r.get("actions_onsite_conversion_lead_grouped") or r.get("actions_lead") or 0)
         if ld:
             e["contatti_daily"][d] = e["contatti_daily"].get(d, 0) + ld
         if r.get("campaign_effective_status"):
