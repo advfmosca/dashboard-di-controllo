@@ -385,7 +385,8 @@ _WEEKDAYS_IT = ["lunedì","martedì","mercoledì","giovedì","venerdì","sabato"
 def _build_aghc_rational(client_name, window_days, total_spend_window,
                           meta_spend_total, tt_spend_total, has_tiktok,
                           zero_days, active_days, trend_pct,
-                          contatti_y, spend_y, daily_series_data=None):
+                          contatti_y, spend_y, daily_series_data=None,
+                          vanity_window=None):
     """
     Rational a 3 paragrafi (Cosa è successo / Perché conta / Cosa faremo ora).
     Variants pool deterministiche per client + dati specifici (peak day, weekday).
@@ -412,12 +413,33 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
     tt_share = (tt_spend_total / total_spend_window * 100) if total_spend_window else 0
     cn = client_name  # alias
 
+    def fmt_int(n):
+        if n is None or n == 0: return "0"
+        return f"{int(n):,}".replace(",", ".")
+
     def wrap(p1, p2, p3):
-        return (
-            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
-            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
-            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
-        )
+        # Stile descrittivo argomentato: niente label uppercase, solo prosa
+        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+
+    # Vanity inline string (riga "gasazione" da incastonare nei paragrafi)
+    v = vanity_window or {}
+    v_impr = v.get("impressions", 0)
+    v_clicks = v.get("clicks", 0)
+    v_lpv = v.get("lpv", 0)
+    v_eng = v.get("page_eng", 0)
+    has_vanity = (v_impr + v_clicks + v_eng) > 0
+    vanity_phrase = ""
+    if has_vanity:
+        parts = []
+        if v_impr > 0:
+            parts.append(f"{fmt_int(v_impr)} visualizzazioni")
+        if v_clicks > 0:
+            parts.append(f"{fmt_int(v_clicks)} click")
+        if v_eng > 0:
+            parts.append(f"{fmt_int(v_eng)} interazioni con la pagina")
+        if v_lpv > 50:
+            parts.append(f"{fmt_int(v_lpv)} visite landing")
+        vanity_phrase = ", ".join(parts)
 
     # ============================================================
     # RAMO A — Pausa pulita (nessuno spending nel periodo)
@@ -508,60 +530,78 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
         # ============================================================
         peak_clause = f", con il picco {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
         p1 = _pick(cn + "·E·p1", [
-            f"{cn} ha tenuto una traiettoria in lieve salita: +{trend_pct:.0f}% tra prima e seconda metà del periodo, "
-            f"{fmt_eur(total_spend_window)} totali distribuiti con regolarità{peak_clause}.",
-            f"Per {cn} la finestra è stata di crescita controllata (+{trend_pct:.0f}%), con {fmt_eur(total_spend_window)} "
-            f"spesi e una distribuzione che ha respirato bene sui giorni attivi{peak_clause}.",
-            f"Curva in lieve risalita per {cn}: +{trend_pct:.0f}% sul periodo, {fmt_eur(total_spend_window)} totali e "
-            f"nessun giorno fuori scala{peak_clause}.",
+            f"Negli ultimi {window_days} giorni {cn} ha tenuto una traiettoria in lieve salita, con un +{trend_pct:.0f}% "
+            f"tra la prima e la seconda metà del periodo: in totale sono stati investiti {fmt_eur(total_spend_window)}, "
+            f"distribuiti con regolarità su tutta la finestra{peak_clause}.",
+            f"Per {cn} la finestra appena chiusa è stata una crescita controllata (+{trend_pct:.0f}%): "
+            f"{fmt_eur(total_spend_window)} di investimento spalmati su {window_days} giorni che hanno respirato bene"
+            f"{peak_clause}.",
+            f"Curva in lieve risalita per {cn} nelle ultime due settimane, con un +{trend_pct:.0f}% di spesa nella "
+            f"seconda parte del periodo e {fmt_eur(total_spend_window)} totali messi a terra senza giorni fuori scala"
+            f"{peak_clause}.",
         ])
     else:
         # ============================================================
         # RAMO F — Stabilità / leggero calo
         # ============================================================
-        delta_str = f" ({trend_pct:+.0f}% tra le due metà)" if trend_pct is not None else ""
-        peak_clause = f", con la giornata più alta {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
+        delta_str = f" ({trend_pct:+.0f}% tra prima e seconda metà del periodo)" if trend_pct is not None else ""
+        peak_clause = f", con la giornata più importante {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
         p1 = _pick(cn + "·F·p1", [
-            f"{cn} ha mantenuto la rotta: {fmt_eur(total_spend_window)} distribuiti su {active_days} giorni effettivi, "
-            f"senza scossoni{delta_str}{peak_clause}.",
-            f"Per {cn} il periodo è stato di crociera: {fmt_eur(total_spend_window)} spesi con una cadenza prevedibile{delta_str}{peak_clause}.",
-            f"Andamento regolare per {cn}: {fmt_eur(total_spend_window)} sui {active_days} giorni attivi, niente "
-            f"oscillazioni rilevanti{delta_str}{peak_clause}.",
+            f"Nelle ultime due settimane {cn} ha mantenuto la rotta che ci siamo dati: {fmt_eur(total_spend_window)} "
+            f"investiti su {active_days} giorni effettivi di erogazione, senza scossoni rilevanti{delta_str}{peak_clause}.",
+            f"Per {cn} il periodo è stato di crociera: {fmt_eur(total_spend_window)} spesi con una cadenza prevedibile "
+            f"giorno per giorno{delta_str}{peak_clause}. È esattamente il ritmo che il piano media richiede in questa parte della stagione.",
+            f"Andamento regolare per {cn} negli ultimi {window_days} giorni, con {fmt_eur(total_spend_window)} totali "
+            f"distribuiti sui {active_days} giorni attivi e nessuna oscillazione meritevole di intervento{delta_str}{peak_clause}.",
         ])
 
     # ============================================================
-    # P2 — Perché conta (composizione canali + segnale contatti)
+    # P2 — Perché conta: VANITY metrics nel testo + composizione canali
     # ============================================================
-    pieces = []
-    pieces.append(_pick(cn + "·p2·avg", [
-        f"In media spendiamo {fmt_eur(avg_daily)} al giorno",
-        f"La media giornaliera nel periodo è {fmt_eur(avg_daily)}",
-        f"Il ritmo è di {fmt_eur(avg_daily)} al giorno",
-    ]))
-    if has_tiktok and tt_spend_total > 0 and tt_share >= 8:
-        pieces.append(_pick(cn + "·p2·tk", [
-            f"con TikTok che pesa per il {tt_share:.0f}% del mix ({fmt_eur(tt_spend_total)}) sul pubblico più giovane",
-            f"con TikTok in affiancamento al {tt_share:.0f}% ({fmt_eur(tt_spend_total)}) come secondo canale di presidio",
-            f"con il canale TikTok che porta il {tt_share:.0f}% del totale ({fmt_eur(tt_spend_total)})",
-        ]))
-    elif has_tiktok and tt_spend_total > 0:
-        pieces.append(f"con TikTok in attivazione marginale ({fmt_eur(tt_spend_total)} sul totale)")
-    elif has_tiktok and tt_spend_total == 0:
-        pieces.append(_pick(cn + "·p2·tk0", [
-            "su solo canale Meta — TikTok è rimasto fermo nella finestra",
-            "lasciando TikTok in stand-by per tutto il periodo",
-        ]))
+    if has_vanity:
+        # Frase principale: vanity in evidenza, poi media giornaliera come contesto.
+        p2_opener = _pick(cn + "·p2·van", [
+            f"Sul fronte della visibilità i numeri parlano da soli: le campagne hanno totalizzato {vanity_phrase}, "
+            f"con una spesa media giornaliera di {fmt_eur(avg_daily)}",
+            f"In termini di copertura il bilancio è solido — abbiamo portato a casa {vanity_phrase}, "
+            f"a fronte di {fmt_eur(avg_daily)} di investimento medio al giorno",
+            f"La fotografia di gasazione del periodo restituisce {vanity_phrase}, "
+            f"con un ritmo giornaliero di {fmt_eur(avg_daily)} di spesa",
+        ])
+    else:
+        p2_opener = _pick(cn + "·p2·noVan", [
+            f"La media giornaliera nel periodo è {fmt_eur(avg_daily)}",
+            f"Il ritmo è di {fmt_eur(avg_daily)} al giorno",
+        ])
 
-    p2 = ", ".join(pieces) + "."
+    # TikTok clause
+    tk_clause = ""
+    if has_tiktok and tt_spend_total > 0 and tt_share >= 8:
+        tk_clause = _pick(cn + "·p2·tk", [
+            f", con il canale TikTok che pesa per il {tt_share:.0f}% del mix ({fmt_eur(tt_spend_total)}) sul pubblico più giovane",
+            f", con TikTok in affiancamento al {tt_share:.0f}% ({fmt_eur(tt_spend_total)}) come secondo canale di presidio",
+            f" e con TikTok che porta il {tt_share:.0f}% del totale ({fmt_eur(tt_spend_total)}) a presidiare il target sotto i 35 anni",
+        ])
+    elif has_tiktok and tt_spend_total > 0:
+        tk_clause = f", con TikTok in attivazione marginale ({fmt_eur(tt_spend_total)} di affiancamento)"
+    elif has_tiktok and tt_spend_total == 0:
+        tk_clause = _pick(cn + "·p2·tk0", [
+            " — concentrati per ora sul solo canale Meta, mentre TikTok resta in stand-by",
+            "; per la finestra appena chiusa TikTok è rimasto fermo, scelta che andrà rivalutata alla prossima apertura",
+        ])
+
+    p2 = p2_opener + tk_clause + "."
+
+    # Contatti aggiunti come frase narrativa successiva
     if contatti_y > 50:
         p2 += _pick(cn + "·p2·c+", [
-            f" L'ultimo giorno ha generato {contatti_y} contatti: il messaggio attuale tiene.",
-            f" Ieri sono entrati {contatti_y} contatti, segnale forte di domanda sul brand.",
+            f" Ieri sono entrati anche {contatti_y} contatti diretti, segnale che il messaggio attuale sta intercettando bene la domanda.",
+            f" Sul fronte conversioni l'ultimo giorno ha portato {contatti_y} contatti, conferma che la creatività gira sul pubblico giusto.",
         ])
     elif contatti_y > 0:
         p2 += _pick(cn + "·p2·c-", [
-            f" Ieri {contatti_y} contatti, in linea con la media del funnel.",
-            f" L'ultimo giorno ha portato {contatti_y} contatti, dentro l'aspettativa.",
+            f" L'ultimo giorno ha portato anche {contatti_y} contatti diretti, dentro le aspettative del funnel.",
+            f" Tra le conversioni dirette di ieri abbiamo {contatti_y} contatti, in linea con la media del periodo.",
         ])
 
     # ============================================================
@@ -622,7 +662,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
     meta_map = build_daily_map(meta_rows, is_meta_with_leads=True)
     tiktok_map = build_daily_map(tiktok_rows, is_meta_with_leads=False)
 
-    # Indice vanity (account_id, date) → {impressions, clicks, lpv}
+    # Indice vanity (account_id, date) → {impressions, clicks, lpv, page_eng}
     vanity_idx = {}
     if vanity_rows:
         for r in vanity_rows:
@@ -631,6 +671,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                 "impressions": int(r.get("impressions") or 0),
                 "clicks": int(r.get("clicks") or 0),
                 "lpv": int(r.get("actions_landing_page_view") or 0),
+                "page_eng": int(r.get("actions_page_engagement") or 0),
             }
 
     # group AGHC voci per meta_id
@@ -702,11 +743,35 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
         else:
             trend_arrow, trend_label = "→", "stabile"
 
-        # ===== Rational stile AGHC monthly KPI (3 paragrafi narrativi) =====
+        # Vanity metrics aggregati sul window (impressions, clicks, landing page views, page engagement)
+        # CALCOLATI PRIMA del rational così possono essere passati come argomento
+        van_impr_w = 0
+        van_clicks_w = 0
+        van_lpv_w = 0
+        van_eng_w = 0
+        van_impr_y = 0
+        van_clicks_y = 0
+        van_lpv_y = 0
+        van_eng_y = 0
+        for d, _ in meta_series:
+            v = vanity_idx.get((mid, d))
+            if v:
+                van_impr_w += v["impressions"]
+                van_clicks_w += v["clicks"]
+                van_lpv_w += v["lpv"]
+                van_eng_w += v.get("page_eng", 0)
+                if d == y_iso:
+                    van_impr_y = v["impressions"]
+                    van_clicks_y = v["clicks"]
+                    van_lpv_y = v["lpv"]
+                    van_eng_y = v.get("page_eng", 0)
+
+        # ===== Rational descrittivo argomentato con vanity inline =====
         rational = _build_aghc_rational(
             client_name=merged_name,
             window_days=effective_window,
             daily_series_data=actual_series,
+            vanity_window={"impressions": van_impr_w, "clicks": van_clicks_w, "lpv": van_lpv_w, "page_eng": van_eng_w},
             total_spend_window=total_spend_window,
             meta_spend_total=meta_spend_total,
             tt_spend_total=tt_spend_total,
@@ -717,24 +782,6 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             contatti_y=contatti_y,
             spend_y=meta_spend_y + tt_spend_y,
         )
-
-        # Vanity metrics aggregati sul window (impressions, clicks, landing page views)
-        van_impr_w = 0
-        van_clicks_w = 0
-        van_lpv_w = 0
-        van_impr_y = 0
-        van_clicks_y = 0
-        van_lpv_y = 0
-        for d, _ in meta_series:
-            v = vanity_idx.get((mid, d))
-            if v:
-                van_impr_w += v["impressions"]
-                van_clicks_w += v["clicks"]
-                van_lpv_w += v["lpv"]
-                if d == y_iso:
-                    van_impr_y = v["impressions"]
-                    van_clicks_y = v["clicks"]
-                    van_lpv_y = v["lpv"]
 
         card = {
             "id": mid,
@@ -760,9 +807,11 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                 "impressions_window": van_impr_w,
                 "clicks_window": van_clicks_w,
                 "lpv_window": van_lpv_w,
+                "page_eng_window": van_eng_w,
                 "impressions_y": van_impr_y,
                 "clicks_y": van_clicks_y,
                 "lpv_y": van_lpv_y,
+                "page_eng_y": van_eng_y,
             },
         }
         cards.append(card)

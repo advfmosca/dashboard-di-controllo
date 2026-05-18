@@ -126,8 +126,8 @@
   .status-row .rat { color: #4a4a50; font-size: 12.5px; margin-top: 3px; line-height: 1.45; }
   .status-row .row-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
 
-  /* AGHC cards grid */
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 18px; }
+  /* AGHC cards — single column, full-width */
+  .cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
   .aghc-card {
     background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--gray);
     border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px;
@@ -223,7 +223,6 @@
     .kpi { padding: 11px 12px; }
     .kpi .value { font-size: 20px; }
     section.card > h2 { font-size: 12.5px; padding: 10px 14px; }
-    .cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .aghc-card { padding: 12px 14px; }
     .aghc-card .kpi-row .item .val { font-size: 14px; }
     .recap-box { font-size: 11.5px; padding: 12px 14px; }
@@ -237,7 +236,6 @@
     .tabs { gap: 0; }
     .tab-btn { padding: 8px 10px; font-size: 12.5px; }
     .kpis { grid-template-columns: 1fr 1fr; }
-    .cards-grid { grid-template-columns: 1fr; }
     .kpi .value { font-size: 18px; }
     .aghc-card .name { font-size: 13px; }
     .btn { width: 100%; }
@@ -352,12 +350,7 @@
         <div class="cards-grid" id="ag-cards"></div>
       </div>
     </section>
-    <section class="card"><h2>Recap copia-incolla per il team</h2>
-      <div class="body">
-        <div class="recap-box" id="ag-recap">–</div>
-        <div class="recap-actions"><button class="btn primary" data-copy="ag-recap">Copia recap</button><span class="copy-feedback" id="ag-copy-fb">Copiato ✓</span></div>
-      </div>
-    </section>
+    <!-- Recap globale rimosso: ogni card ha il proprio tasto copia per il rational del cliente -->
   </section>
 
   <section class="tab-panel" id="tab-medtech">
@@ -504,7 +497,9 @@
     if (!el) return;
     const text = el.innerText || el.textContent || "";
     const finalize = () => {
-      const fb = document.getElementById(targetId.replace(/-recap$/, "-copy-fb"));
+      // Priorità: feedback id esplicito via data-copy-fb, altrimenti convenzione "{id}-copy-fb" su id ending -recap
+      const fbId = btn.getAttribute("data-copy-fb") || targetId.replace(/-recap$/, "-copy-fb");
+      const fb = document.getElementById(fbId);
       if (fb) { fb.classList.add("show"); setTimeout(()=> fb.classList.remove("show"), 1800); }
     };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(finalize, () => fallbackCopy(text, finalize));
@@ -694,39 +689,29 @@
       const color = c.status.color;
       const arrowCls = c.trend_arrow === "↑" ? "up" : (c.trend_arrow === "↓" ? "down" : "flat");
       const ttBtn = c.ad_url_tiktok ? openAccountBtn(c.ad_url_tiktok, "TikTok") : "";
-      const v = c.vanity || {};
-      const fmtInt = n => n != null ? Number(n).toLocaleString("it-IT") : "—";
-      const vanityRow = (v.impressions_window || v.clicks_window || v.lpv_window)
-        ? `<div class="vanity">
-            <div class="v-item"><div class="v-lbl">Visualizz.</div><div class="v-val">${fmtInt(v.impressions_window)}</div></div>
-            <div class="v-item"><div class="v-lbl">Click</div><div class="v-val">${fmtInt(v.clicks_window)}</div></div>
-            <div class="v-item"><div class="v-lbl">Landing</div><div class="v-val">${fmtInt(v.lpv_window)}</div></div>
-          </div>`
-        : "";
+      const cardCopyId = "ag-card-rat-" + c.id;
       html += `<div class="aghc-card ${color}">
         <div class="name">${escapeHtml(c.name)}</div>
         <div class="kpi-row">
           <div class="item"><div class="lbl">Spesa ${c.window_days}gg</div><div class="val">${fmtEURcompact(c.spend_window)}</div></div>
           <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(c.spend_y)}</div></div>
-          <div class="item"><div class="lbl">gg attivi</div><div class="val">${c.active_days}/${c.window_days}</div></div>
         </div>
-        ${vanityRow}
         <div class="trend">
           <span class="arrow ${arrowCls}">${c.trend_arrow}</span>
           <span>${escapeHtml(c.trend_label)}</span>
           ${c.trend_pct != null ? `<span class="small muted">(${fmtPct(c.trend_pct)})</span>` : ""}
         </div>
-        <div class="rational">${c.rational || ""}</div>
+        <div class="rational" id="${cardCopyId}">${c.rational || ""}</div>
         <div class="footer">
           <span class="status-pill ${color}">${escapeHtml(c.status.label)}</span>
           ${openAccountBtn(c.ad_url_meta, "Meta")}
           ${ttBtn}
+          <button class="btn btn-mini" data-copy="${cardCopyId}" data-copy-fb="${cardCopyId}-fb" style="margin-left:auto;">Copia rational</button>
+          <span class="copy-feedback" id="${cardCopyId}-fb">Copiato ✓</span>
         </div>
       </div>`;
     }
     root.innerHTML = html;
-
-    document.getElementById("ag-recap").textContent = proj.recap || "—";
   }
 
   function renderMedtech(d) {
