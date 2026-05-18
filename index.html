@@ -121,6 +121,13 @@
   .status-dot.yellow { background: var(--yellow); }
   .status-dot.red { background: var(--red); }
   .status-dot.gray { background: var(--gray); }
+  .status-dot.black { background: #1a1a1a; }
+  /* Pill semafori Med Tech (ROSSO/GIALLO/VERDE/NERO) */
+  .mt-status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .mt-status-pill.red    { background: #fee2e2; color: #991b1b; }
+  .mt-status-pill.yellow { background: #ffedd5; color: #9a3412; }
+  .mt-status-pill.green  { background: #d1fadf; color: #14532d; }
+  .mt-status-pill.black  { background: #1a1a1a; color: #fff; }
   .status-row .body-row { flex: 1; min-width: 0; }
   .status-row .name { font-weight: 600; font-size: 13px; }
   .status-row .rat { color: #4a4a50; font-size: 12.5px; margin-top: 3px; line-height: 1.45; }
@@ -369,10 +376,17 @@
     <div class="kpis">
       <div class="kpi"><div class="label">Campagne attive ieri</div><div class="value" id="mt-k-camp">–</div><div class="sub">Total Lift / Total Sculpt</div></div>
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="mt-k-spend">–</div></div>
-      <div class="kpi"><div class="label">Contatti generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Lead Ad form</div></div>
-      <div class="kpi"><div class="label">CPC medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
+      <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Instant Form</div></div>
+      <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
     </div>
-    <section class="card"><h2>Alert da analizzare <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
+    <!-- Conteggi semafori (allineati alla scheduled task med-tech-daily-total-lift-sculpt) -->
+    <div class="kpis" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi" style="background:#fee2e2;border-color:#fca5a5;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi" style="background:#ffedd5;border-color:#fed7aa;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi" style="background:#d1fadf;border-color:#86efac;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi" style="background:#1a1a1a;border-color:#1a1a1a;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
+    </div>
+    <section class="card"><h2>Daily check campagne <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
       <div class="body">
         <div id="mt-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
@@ -754,36 +768,45 @@
     document.getElementById("mt-k-camp").textContent = kpi.actives != null ? kpi.actives : "–";
     document.getElementById("mt-k-spend").textContent = fmtEUR(kpi.total_spend);
     document.getElementById("mt-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
-    document.getElementById("mt-k-cpc").textContent = kpi.cpc_y == null ? "—" : fmtEUR(kpi.cpc_y);
+    document.getElementById("mt-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    // Conteggi semaforici
+    document.getElementById("mt-k-rosso").textContent = kpi.rosso != null ? kpi.rosso : "–";
+    document.getElementById("mt-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
+    document.getElementById("mt-k-verde").textContent = kpi.verde != null ? kpi.verde : "–";
+    document.getElementById("mt-k-nero").textContent = kpi.nero != null ? kpi.nero : "–";
 
     const entries = proj.entries || [];
-    const alerts = entries.filter(e => e.status && (e.status.color === "red" || e.status.color === "yellow"));
     const alertsPill = document.getElementById("mt-alerts-pill");
-    if (alertsPill) alertsPill.textContent = alerts.length + " da analizzare";
+    if (alertsPill) alertsPill.textContent = entries.length + " campagne";
 
     const alertsRoot = document.getElementById("mt-alerts");
-    if (alerts.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessun alert. Tutte le campagne in linea ✓</div>`;
+    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessuna campagna Total Lift / Total Sculpt attiva nel periodo</div>`;
     else {
       let html = "";
-      for (const a of alerts) {
-        const ico = a.status.color === "red" ? "🔴" : "🟡";
-        html += `<div class="alert-row">
-          <div class="ico">${ico}</div>
+      for (const e of entries) {
+        const color = (e.status && e.status.color) || "black";
+        const lbl = (e.status && e.status.label) || "—";
+        const reason = (e.status && e.status.reason) || "—";
+        // Mini trend 3gg
+        const trend = e.trend_3d || [];
+        const trendHtml = trend.length
+          ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
+          : "";
+        html += `<div class="status-row">
+          <div class="status-dot ${color}"></div>
           <div class="body-row">
-            <div class="title">${escapeHtml(a.name)}</div>
-            <div class="desc">${escapeHtml(a.status.label)} — ${escapeHtml(a.status.reason)}</div>
+            <div class="name">
+              <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
+              ${escapeHtml(e.name)}
+            </div>
+            <div class="rat">${escapeHtml(reason)}</div>
+            ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
           </div>
-          <div class="row-actions">${openAccountBtn(a.ad_url, "Meta")}</div>
+          <div class="row-actions">${openAccountBtn(e.ad_url, "Meta")}</div>
         </div>`;
       }
       alertsRoot.innerHTML = html;
     }
-
-    // Sezione "Status performance campagne" rimossa per scelta utente:
-    // l'unico contenuto sotto agli alert sono i Report disponibili (popolati da loadMedtechReports).
-
-
-    // (Recap textual removed — replaced by live list of historical reports below)
   }
 
   // ============================ MED TECH REPORTS (fetch live) ============================

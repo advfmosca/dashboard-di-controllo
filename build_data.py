@@ -267,14 +267,17 @@ def recap_beefamily_slack(kpi, entries, yesterday):
     return "\n".join(lines)
 
 def recap_medtech_slack(kpi, entries, yesterday):
+    """Replica del messaggio della scheduled task med-tech-daily-total-lift-sculpt.
+    Niente emoji (inoltrato su WhatsApp), niente landing/copy esterno, solo moduli Lead Ad."""
     reds   = sum(1 for e in entries if e.get("status", {}).get("color") == "red")
     yellows= sum(1 for e in entries if e.get("status", {}).get("color") == "yellow")
     greens = sum(1 for e in entries if e.get("status", {}).get("color") == "green")
-    grays  = sum(1 for e in entries if e.get("status", {}).get("color") == "gray")
+    # "NERO" della scheduled task = campagna ferma → mappato sul color "black" (fallback su "gray" per retro-compat)
+    blacks = sum(1 for e in entries if e.get("status", {}).get("color") in ("black", "gray"))
     lines = [
         "Med & Tech —",
         f"Daily Check del {date_slash(yesterday)}",
-        f"{kpi['actives']} campagne attive · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {grays} NERO",
+        f"{kpi['actives']} campagne attive · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {blacks} NERO",
         f"Apri Report Storico: https://advfmosca.github.io/med-tech-daily-check/",
         f"Apri dashboard: {PAGES_URL}#medtech",
     ]
@@ -1070,55 +1073,142 @@ def _clean_sp(r):
         "ad_url": r.get("ad_url"),
     }
 
+def _medtech_status(spend_y, lead_y, cpl_mean_7d):
+    """
+    Stessa logica della scheduled task med-tech-daily-total-lift-sculpt:
+    - NERO: spend ieri == 0 (campagna ferma)
+    - ROSSO: 0 lead pur con spending OPPURE CPL ieri > 1.5x media 7gg
+    - GIALLO: CPL ieri tra 1.0x e 1.5x media 7gg
+    - VERDE: CPL ieri ≤ media 7gg
+    """
+    if spend_y == 0:
+        return {"color": "black", "label": "NERO",
+                "reason": "Nessuna spesa ieri sulla campagna"}
+    if lead_y == 0:
+        return {"color": "red", "label": "ROSSO",
+                "reason": f"Spesi {fmt_eur(spend_y)} ieri senza generare lead via modulo Lead Ad"}
+    cpl_y = spend_y / lead_y
+    if cpl_mean_7d is None or cpl_mean_7d == 0:
+        return {"color": "green", "label": "VERDE",
+                "reason": f"Spesi {fmt_eur(spend_y)} con {lead_y} lead (CPL {fmt_eur(cpl_y)})"}
+    ratio = cpl_y / cpl_mean_7d
+    delta_pct = (ratio - 1) * 100
+    if ratio > 1.5:
+        return {"color": "red", "label": "ROSSO",
+                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, oltre la soglia +50%)"}
+    if ratio > 1.0:
+        return {"color": "yellow", "label": "GIALLO",
+                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, lieve crescita)"}
+    return {"color": "green", "label": "VERDE",
+            "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, in linea o sotto)"}
+
+
 def _build_medtech(rows, y_iso, yesterday):
+    """
+    Tab Med & Tech allineata alla scheduled task med-tech-daily-total-lift-sculpt:
+    - Solo moduli Lead Ad (Instant Forms) — niente landing page
+    - Stati semaforici NERO/ROSSO/GIALLO/VERDE
+    - Trend 3gg di CPL
+    """
     camp_map = {}
     for r in rows:
         camp = r.get("campaign")
         if not camp or not MEDTECH_FILTER.search(camp):
             continue
         if camp not in camp_map:
-            camp_map[camp] = {"daily": {}, "contatti_daily": {}, "status": r.get("campaign_effective_status")}
+            camp_map[camp] = {"daily": {}, "lead_daily": {}, "status": r.get("campaign_effective_status")}
         e = camp_map[camp]
         d = r.get("date")
         e["daily"][d] = e["daily"].get(d, 0) + float(r.get("spend") or 0)
-        # Per Med & Tech le campagne sono pure Instant Forms quindi onsite_conversion_lead_grouped
-        # è di solito uguale a actions_lead; in mancanza del primo usiamo il secondo.
+        # Med & Tech usa SOLO Instant Forms → actions_onsite_conversion_lead_grouped è il dato canonico
         ld = int(r.get("actions_onsite_conversion_lead_grouped") or r.get("actions_lead") or 0)
         if ld:
-            e["contatti_daily"][d] = e["contatti_daily"].get(d, 0) + ld
+            e["lead_daily"][d] = e["lead_daily"].get(d, 0) + ld
         if r.get("campaign_effective_status"):
             e["status"] = r["campaign_effective_status"]
 
+    # Helper: media CPL ultimi 7gg per una campagna (esclude eventuali giorni a 0 lead)
+    def cpl_mean_7d(daily, lead_daily, ref_iso):
+        ref = parse_iso(ref_iso)
+        cpls = []
+        for i in range(1, 8):
+            d = iso(ref - timedelta(days=i))
+            s = daily.get(d, 0)
+            l = lead_daily.get(d, 0)
+            if l > 0 and s > 0:
+                cpls.append(s / l)
+        return sum(cpls) / len(cpls) if cpls else None
+
+    # Helper: trend 3gg ultimi (CPL giornaliero degli ultimi 3 giorni esclusi vuoti)
+    def cpl_trend_3d(daily, lead_daily, ref_iso):
+        ref = parse_iso(ref_iso)
+        series = []
+        for i in range(2, -1, -1):
+            d = iso(ref - timedelta(days=i))
+            s = daily.get(d, 0)
+            l = lead_daily.get(d, 0)
+            cpl = (s / l) if l > 0 else None
+            series.append({"date": d, "cpl": (round(cpl, 2) if cpl is not None else None)})
+        return series
+
     entries = []
     for k, e in camp_map.items():
-        prev_spend, _ = sum_prev_window(e["daily"], y_iso, 7)
-        prev_contatti, _ = sum_prev_window(e["contatti_daily"], y_iso, 7)
+        spend_y = round(e["daily"].get(y_iso, 0), 2)
+        lead_y = int(e["lead_daily"].get(y_iso, 0))
+        cpl_y = (spend_y / lead_y) if lead_y > 0 else None
+        cpl_mean = cpl_mean_7d(e["daily"], e["lead_daily"], y_iso)
+        status = _medtech_status(spend_y, lead_y, cpl_mean)
+        trend = cpl_trend_3d(e["daily"], e["lead_daily"], y_iso)
+        prev7_spend, _ = sum_prev_window(e["daily"], y_iso, 7)
+        prev7_lead, _ = sum_prev_window(e["lead_daily"], y_iso, 7)
         entries.append({
-            "name": k, "source": e.get("status") or "",
-            "spend_y": round(e["daily"].get(y_iso, 0), 2),
-            "contatti_y": int(e["contatti_daily"].get(y_iso, 0)),
-            "prev7_spend": prev_spend,
-            "prev7_contatti": prev_contatti,
+            "name": k,
+            "source": e.get("status") or "",
+            "spend_y": spend_y,
+            "lead_y": lead_y,
+            "contatti_y": lead_y,  # alias backward-compat con UI esistente
+            "cpl_y": round(cpl_y, 2) if cpl_y is not None else None,
+            "cpl_mean_7d": round(cpl_mean, 2) if cpl_mean is not None else None,
+            "trend_3d": trend,
+            "prev7_spend": round(prev7_spend, 2),
+            "prev7_lead": int(prev7_lead),
+            "prev7_contatti": int(prev7_lead),
+            "status": status,
             "ad_url": url_meta(MEDTECH_META_ACCOUNT),
         })
-    kpi = compute_project(entries, project_type="leadgen")
-    # sort: rossi -> gialli -> verdi/grigi; entro stesso colore, spend desc
-    pri = lambda e: 0 if e["status"]["color"] == "red" else (1 if e["status"]["color"] == "yellow" else (2 if e["status"]["color"] == "gray" else 3))
+
+    # Sort: ROSSO -> GIALLO -> VERDE -> NERO, entro stesso colore spend desc
+    pri = lambda e: {"red": 0, "yellow": 1, "green": 2, "black": 3}.get(e["status"]["color"], 4)
     entries.sort(key=lambda e: (pri(e), -e["spend_y"]))
-    for e in entries:
-        e["prev7_spend"] = round(e["prev7_spend"], 2)
-        e["prev7_contatti"] = int(e["prev7_contatti"])
+
+    # KPI aggregati: campagne attive (status != NERO) + totali del giorno
+    actives = sum(1 for e in entries if e["status"]["color"] != "black")
+    n_rosso = sum(1 for e in entries if e["status"]["color"] == "red")
+    n_giallo = sum(1 for e in entries if e["status"]["color"] == "yellow")
+    n_verde = sum(1 for e in entries if e["status"]["color"] == "green")
+    n_nero = sum(1 for e in entries if e["status"]["color"] == "black")
+    tot_spend = round(sum(e["spend_y"] for e in entries), 2)
+    tot_lead = sum(e["lead_y"] for e in entries)
+    cpl_agg = round(tot_spend / tot_lead, 2) if tot_lead > 0 else None
+
     return {
         "kpi": {
-            "actives": kpi["actives"],
-            "total": kpi["total"],
-            "total_spend": round(kpi["total_spend"], 2),
-            "total_contatti": kpi["total_contatti"],
-            "cpc_y": round(kpi["cpc_y"], 2) if kpi["cpc_y"] is not None else None,
-            "cpc_mean": round(kpi["cpc_mean"], 2) if kpi["cpc_mean"] is not None else None,
+            "actives": actives,
+            "total": len(entries),
+            "total_spend": tot_spend,
+            "total_contatti": tot_lead,
+            "total_lead": tot_lead,
+            "cpc_y": cpl_agg,
+            "cpl_y": cpl_agg,
+            "rosso": n_rosso,
+            "giallo": n_giallo,
+            "verde": n_verde,
+            "nero": n_nero,
         },
         "entries": entries,
-        "recap": recap_medtech_slack(kpi, entries, yesterday),
+        "recap": recap_medtech_slack({"actives": actives, "total": len(entries),
+                                       "total_spend": tot_spend, "total_contatti": tot_lead,
+                                       "cpc_y": cpl_agg, "cpc_mean": None}, entries, yesterday),
     }
 
 # ============================ MAIN ============================
