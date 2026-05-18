@@ -23,7 +23,7 @@ if [ ! -d .git ]; then
   git init -b main
 fi
 
-git add .gitignore README.md index.html beefamily.html data.json actions.json push-to-github.sh build_data.py snapshots/ 2>/dev/null || git add .gitignore README.md index.html beefamily.html data.json push-to-github.sh build_data.py
+git add .gitignore README.md index.html beefamily.html data.json actions.json aghc_budgets.json push-to-github.sh build_data.py snapshots/ 2>/dev/null || git add .gitignore README.md index.html beefamily.html data.json push-to-github.sh build_data.py
 git commit -m "$COMMIT_MSG" || echo "  (niente da committare)"
 
 echo "→ Creazione repo PUBBLICO su GitHub e push…"

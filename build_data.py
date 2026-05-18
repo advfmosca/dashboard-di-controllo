@@ -652,7 +652,7 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
     return wrap(p1, p2, p3)
 
 
-def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=None):
+def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=None, budgets_config=None):
     """
     Una card per cliente AGHC. Se più voci roster condividono lo stesso meta_id,
     le aggrego in UNA card con nomi merged (es. "ACCENTODI + ADESSO").
@@ -661,6 +661,24 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
     """
     meta_map = build_daily_map(meta_rows, is_meta_with_leads=True)
     tiktok_map = build_daily_map(tiktok_rows, is_meta_with_leads=False)
+
+    # Budgets per meta_id
+    budgets_year = None
+    budgets_clients = {}
+    if budgets_config:
+        budgets_year = budgets_config.get("year")
+        budgets_clients = budgets_config.get("clients", {})
+
+    # YTD spending per meta_id e per tiktok_id sull'anno corrente del config (o anno yesterday se non specificato)
+    target_year = budgets_year or yesterday.year
+    target_year_prefix = str(target_year) + "-"
+    ytd_by_account = {}  # account_id → sum spend in target year
+    for r in meta_rows + tiktok_rows:
+        d = r.get("date") or ""
+        if not d.startswith(target_year_prefix):
+            continue
+        aid = str(r.get("account_id"))
+        ytd_by_account[aid] = ytd_by_account.get(aid, 0) + float(r.get("spend") or 0)
 
     # Indice vanity (account_id, date) → {impressions, clicks, lpv, page_eng}
     vanity_idx = {}
@@ -766,6 +784,17 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                     van_lpv_y = v["lpv"]
                     van_eng_y = v.get("page_eng", 0)
 
+        # ===== Budget approvato + Speso YTD =====
+        budget_info = budgets_clients.get(mid, {}) if isinstance(budgets_clients, dict) else {}
+        budget_annuale = budget_info.get("budget_annuale")
+        ytd_seed = budget_info.get("ytd_seed") or 0
+        ytd_spent_from_data = ytd_by_account.get(mid, 0)
+        # Aggiungi anche eventuali TikTok ids dello stesso cliente
+        for tt_id in info["tiktok_ids"]:
+            ytd_spent_from_data += ytd_by_account.get(tt_id, 0)
+        ytd_spent = round(ytd_seed + ytd_spent_from_data, 2)
+        budget_pct = (ytd_spent / budget_annuale * 100) if budget_annuale and budget_annuale > 0 else None
+
         # ===== Rational descrittivo argomentato con vanity inline =====
         rational = _build_aghc_rational(
             client_name=merged_name,
@@ -813,6 +842,13 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                 "lpv_y": van_lpv_y,
                 "page_eng_y": van_eng_y,
             },
+            "budget": {
+                "year": target_year,
+                "budget_annuale": budget_annuale,
+                "ytd_seed": ytd_seed if ytd_seed else None,
+                "ytd_spent": ytd_spent,
+                "budget_pct": round(budget_pct, 1) if budget_pct is not None else None,
+            },
         }
         cards.append(card)
 
@@ -823,7 +859,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
 
 # ============================ BUILD ============================
 
-def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_date=None, vanity_rows=None):
+def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_date=None, vanity_rows=None, budgets_config=None):
     now = now_dt or datetime.now()
     today = now.date()
     yesterday = ref_date if ref_date is not None else today - timedelta(days=1)
@@ -1002,7 +1038,7 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     }
 
     # ============= AGHC =============
-    aghc_cards = build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=vanity_rows)
+    aghc_cards = build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=vanity_rows, budgets_config=budgets_config)
     aghc_tot_spend_y = sum(c["spend_y"] for c in aghc_cards)
     aghc_actives = sum(1 for c in aghc_cards if c["spend_y"] > 0)
     out["aghc"] = {
@@ -1095,6 +1131,7 @@ def main():
     ap.add_argument("--medtech", required=True)
     ap.add_argument("--workspace", required=True, help="Path workspace (Dashboard di Controllo)")
     ap.add_argument("--aghc-vanity", default=None, help="Path opzionale a JSON con vanity metrics (impressions/clicks/landing_page_view) per AGHC")
+    ap.add_argument("--aghc-budgets", default=None, help="Path opzionale a aghc_budgets.json con budget_annuale + ytd_seed per ogni meta_id")
     ap.add_argument("--retention-days", type=int, default=90, help="Quanti snapshot/<date>.json tenere; più vecchi vengono cancellati")
     ap.add_argument("--ref-date", default=None, help="Override reference date (YYYY-MM-DD); default = ieri")
     args = ap.parse_args()
@@ -1111,7 +1148,11 @@ def main():
 
     ref_date = parse_iso(args.ref_date) if args.ref_date else None
     vanity_rows = load(args.aghc_vanity) if args.aghc_vanity and os.path.exists(args.aghc_vanity) else None
-    data = build(meta, google, tiktok, medtech, ref_date=ref_date, vanity_rows=vanity_rows)
+    budgets_config = None
+    if args.aghc_budgets and os.path.exists(args.aghc_budgets):
+        with open(args.aghc_budgets, "r", encoding="utf-8") as f:
+            budgets_config = json.load(f)
+    data = build(meta, google, tiktok, medtech, ref_date=ref_date, vanity_rows=vanity_rows, budgets_config=budgets_config)
 
     workspace = args.workspace
     snap_dir = os.path.join(workspace, "snapshots")
