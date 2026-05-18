@@ -384,7 +384,11 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
               f"più strategiche del piano annuo.")
         p3 = (f"Alla riattivazione sarà importante ripartire con creatività rinnovata e una distribuzione "
               f"costante per riacquisire frequenza sul pubblico target.")
-        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+        return (
+            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
+            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
+            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
+        )
 
     # ===== Caso 2: erogazione irregolare (>30% giorni a zero) =====
     if pct_zero > 30 and zero_days >= 3:
@@ -400,7 +404,11 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
         else:
             p3 = (f"Il primo obiettivo per la prossima settimana è ripristinare la continuità quotidiana di erogazione "
                   f"e verificare che le creatività non siano in saturazione.")
-        return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+        return (
+            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
+            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
+            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
+        )
 
     # ===== Caso 3: trend in forte crescita =====
     if trend_pct is not None and trend_pct > 25:
@@ -460,7 +468,11 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
         p3 = (f"La cadenza è regolare: la prossima settimana si lavora sul fine-tuning delle creatività più stanche e "
               f"sull'ottimizzazione del CPC mantenendo invariata la struttura di campagne.")
 
-    return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
+    return (
+        f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
+        f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
+        f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
+    )
 
 
 def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
