@@ -154,6 +154,11 @@
   .aghc-card .status-pill.yellow { background: #ffedd5; color: #9a3412; }
   .aghc-card .status-pill.green  { background: #d1fadf; color: #14532d; }
   .aghc-card .status-pill.gray   { background: #eceff1; color: #455a64; }
+  /* Vanity row (gasazione) — sempre verde-friendly per i clienti hotel */
+  .aghc-card .vanity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px 10px; background: #f1faf3; border: 1px solid #d5ebd9; border-radius: 8px; }
+  .aghc-card .vanity .v-item { text-align: center; }
+  .aghc-card .vanity .v-item .v-lbl { font-size: 10px; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+  .aghc-card .vanity .v-item .v-val { font-size: 13.5px; font-weight: 700; color: #14532d; font-variant-numeric: tabular-nums; line-height: 1.15; }
 
   .error { background: #fdf2f0; color: #b32f1f; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
 
@@ -689,6 +694,15 @@
       const color = c.status.color;
       const arrowCls = c.trend_arrow === "↑" ? "up" : (c.trend_arrow === "↓" ? "down" : "flat");
       const ttBtn = c.ad_url_tiktok ? openAccountBtn(c.ad_url_tiktok, "TikTok") : "";
+      const v = c.vanity || {};
+      const fmtInt = n => n != null ? Number(n).toLocaleString("it-IT") : "—";
+      const vanityRow = (v.impressions_window || v.clicks_window || v.lpv_window)
+        ? `<div class="vanity">
+            <div class="v-item"><div class="v-lbl">Visualizz.</div><div class="v-val">${fmtInt(v.impressions_window)}</div></div>
+            <div class="v-item"><div class="v-lbl">Click</div><div class="v-val">${fmtInt(v.clicks_window)}</div></div>
+            <div class="v-item"><div class="v-lbl">Landing</div><div class="v-val">${fmtInt(v.lpv_window)}</div></div>
+          </div>`
+        : "";
       html += `<div class="aghc-card ${color}">
         <div class="name">${escapeHtml(c.name)}</div>
         <div class="kpi-row">
@@ -696,6 +710,7 @@
           <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(c.spend_y)}</div></div>
           <div class="item"><div class="lbl">gg attivi</div><div class="val">${c.active_days}/${c.window_days}</div></div>
         </div>
+        ${vanityRow}
         <div class="trend">
           <span class="arrow ${arrowCls}">${c.trend_arrow}</span>
           <span>${escapeHtml(c.trend_label)}</span>

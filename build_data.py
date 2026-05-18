@@ -281,16 +281,34 @@ def recap_medtech_slack(kpi, entries, yesterday):
     return "\n".join(lines)
 
 def recap_aghc_slack(cards, yesterday):
+    """Recap copia-incolla stile 'Ciao team' con KPI di gasazione (vanity)."""
     actives = sum(1 for c in cards if c["spend_y"] > 0)
-    tot_spend = sum(c["spend_y"] for c in cards)
+    tot_spend_y = sum(c["spend_y"] for c in cards)
+    tot_spend_w = sum(c["spend_window"] for c in cards)
+    tot_impr_w = sum(c.get("vanity", {}).get("impressions_window", 0) for c in cards)
+    tot_clicks_w = sum(c.get("vanity", {}).get("clicks_window", 0) for c in cards)
+    tot_lpv_w = sum(c.get("vanity", {}).get("lpv_window", 0) for c in cards)
     reds = sum(1 for c in cards if c["status"]["color"] == "red")
     yellows = sum(1 for c in cards if c["status"]["color"] == "yellow")
+
+    def fmt_int(n):
+        return f"{int(n):,}".replace(",", ".")
+
     lines = [
-        f"AGHC — Daily Check del {date_slash(yesterday)}",
-        f"{actives} clienti attivi su {len(cards)} · Spending {fmt_eur(tot_spend)}",
-        f"{reds} alert critici · {yellows} da monitorare",
-        f"Dashboard live: {PAGES_URL}#aghc",
+        "Ciao a tutti,",
+        f"ecco l'andamento delle campagne AGHC negli ultimi 15 giorni:",
+        "",
+        f"📊 Spending totale: {fmt_eur(tot_spend_w)} · {actives}/{len(cards)} clienti attivi ieri",
+        f"👁  Visualizzazioni: {fmt_int(tot_impr_w)} · 🖱  Click: {fmt_int(tot_clicks_w)} · 🌐  Visite landing: {fmt_int(tot_lpv_w)}",
     ]
+    if reds or yellows:
+        lines.append(f"⚠️  Alert da analizzare: {reds} critici · {yellows} da monitorare (dettagli in dashboard)")
+    lines.extend([
+        "",
+        f"Dashboard live: {PAGES_URL}#aghc",
+        "",
+        "Per qualsiasi info sono a disposizione! :)",
+    ])
     return "\n".join(lines)
 
 # ============================ SPENDING ALERT ============================
@@ -358,130 +376,262 @@ def classify_spending(results):
 
 # ============================ AGHC CARDS ============================
 
+def _pick(seed, pool):
+    """Pick deterministico (stesso client → stessa variante)."""
+    return pool[abs(hash(seed)) % len(pool)]
+
+_WEEKDAYS_IT = ["lunedì","martedì","mercoledì","giovedì","venerdì","sabato","domenica"]
+
 def _build_aghc_rational(client_name, window_days, total_spend_window,
                           meta_spend_total, tt_spend_total, has_tiktok,
                           zero_days, active_days, trend_pct,
-                          contatti_y, spend_y):
+                          contatti_y, spend_y, daily_series_data=None):
     """
-    Rational a 3 paragrafi nello stile aghc-report-mensile-kpi:
-    P1 = cosa è successo nel periodo (frame narrativo del trend principale)
-    P2 = perché conta (composizione media spesa, presidio multi-canale, segnali contatti)
-    P3 = cosa fare (next step / monitoraggio per la prossima finestra)
-    Restituisce HTML con <p>...</p><p>...</p><p>...</p>.
+    Rational a 3 paragrafi (Cosa è successo / Perché conta / Cosa faremo ora).
+    Variants pool deterministiche per client + dati specifici (peak day, weekday).
     """
-    def fmt_eur_no_decimal(n):
-        if n is None: return "—"
-        return f"{int(round(n)):,}".replace(",", ".") + " €"
+    avg_daily = total_spend_window / max(window_days, 1)
+    pct_zero = (zero_days / max(window_days, 1)) * 100
 
-    avg_daily = total_spend_window / window_days if window_days else 0
-    pct_zero = (zero_days / window_days * 100) if window_days else 0
+    # === Peak/low day estratti dalla serie giornaliera ===
+    peak_iso, peak_spend = None, 0
+    low_iso, low_spend = None, None
+    if daily_series_data:
+        for d, s in daily_series_data:
+            if s and s > peak_spend:
+                peak_iso, peak_spend = d, s
+            if s and s > 0 and (low_spend is None or s < low_spend):
+                low_iso, low_spend = d, s
+    peak_wd = ""
+    if peak_iso:
+        try:
+            peak_wd = _WEEKDAYS_IT[parse_iso(peak_iso).weekday()]
+        except Exception:
+            peak_wd = ""
 
-    # ===== Caso 1: spending zero — pausa strategica =====
+    tt_share = (tt_spend_total / total_spend_window * 100) if total_spend_window else 0
+    cn = client_name  # alias
+
+    def wrap(p1, p2, p3):
+        return (
+            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
+            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
+            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
+        )
+
+    # ============================================================
+    # RAMO A — Pausa pulita (nessuno spending nel periodo)
+    # ============================================================
     if total_spend_window == 0:
-        p1 = (f"Le ultime {window_days} giornate rappresentano una pausa per {client_name}: nessuna attività "
-              f"pubblicitaria erogata, coerente con la pianificazione strategica del periodo.")
-        p2 = (f"Il budget residuo resta integro e pronto a concentrarsi sulle finestre di richiamo "
-              f"più strategiche del piano annuo.")
-        p3 = (f"Alla riattivazione sarà importante ripartire con creatività rinnovata e una distribuzione "
-              f"costante per riacquisire frequenza sul pubblico target.")
-        return (
-            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
-            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
-            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
-        )
+        p1 = _pick(cn + "·A·p1", [
+            f"In queste due settimane {cn} è rimasto fermo: nessuna spesa, l'account ha tenuto la riserva di budget al sicuro.",
+            f"Le ultime giornate per {cn} sono passate in silenzio pubblicitario, in linea con la stagionalità del piano.",
+            f"Per {cn} il periodo è stato di stand-by programmato: zero erogazione e zero rumore.",
+        ])
+        p2 = _pick(cn + "·A·p2", [
+            "Quello che non è speso adesso resta a disposizione per le finestre commerciali più calde, dove ogni euro pesa di più.",
+            "La riserva di budget intatta diventa la nostra leva nella prossima apertura di stagione: meno disperso, più mirato.",
+            "Nessun consumo a vuoto significa che possiamo concentrare il fuoco esattamente dove sappiamo che la domanda risponderà.",
+        ])
+        p3 = _pick(cn + "·A·p3", [
+            "Quando rialzeremo lo switch ripartiamo con un set creativo nuovo e una distribuzione piena su tutta la settimana, così non perdiamo i primi giorni in start-up.",
+            "Per la riapertura prepariamo un test creativo fresco e una cadenza distribuita: l'algoritmo deve poter scaldare l'apprendimento da subito.",
+            "Alla ripresa lavoreremo su creatività rinnovate e copertura quotidiana: l'obiettivo è entrare nella seconda settimana già a regime.",
+        ])
+        return wrap(p1, p2, p3)
 
-    # ===== Caso 2: erogazione irregolare (>30% giorni a zero) =====
+    # ============================================================
+    # RAMO B — Erogazione frammentata (>30% giorni a zero)
+    # ============================================================
     if pct_zero > 30 and zero_days >= 3:
-        p1 = (f"Le ultime due settimane mostrano un'erogazione frammentata per {client_name}: in {zero_days} "
-              f"giorni su {window_days} l'account non ha speso, distribuendo {fmt_eur(total_spend_window)} "
-              f"in modo non continuativo.")
-        p2 = (f"Lo spending medio sui giorni effettivamente attivi si attesta a {fmt_eur(total_spend_window/max(active_days,1))}, "
-              f"ma la mancanza di continuità penalizza la curva di apprendimento delle campagne e l'esposizione "
-              f"al pubblico.")
+        p1 = _pick(cn + "·B·p1", [
+            f"L'erogazione di {cn} è andata a strappi: in {zero_days} giornate su {window_days} l'account è rimasto fermo, "
+            f"e i {fmt_eur(total_spend_window)} totali si sono concentrati in pochi giorni di attività piena.",
+            f"Quindici giornate spezzate per {cn}: {zero_days} a zero, le altre {active_days} che si sono divise tutto il "
+            f"carico — {fmt_eur(total_spend_window)} bruciati senza una distribuzione regolare.",
+            f"Per {cn} è stata una finestra a singhiozzo: solo {active_days} giorni effettivi di spinta, dove sono confluiti i "
+            f"{fmt_eur(total_spend_window)} di periodo.",
+        ])
+        avg_active = total_spend_window / max(active_days, 1)
+        p2 = _pick(cn + "·B·p2", [
+            f"Sui giorni effettivamente attivi la media sale a {fmt_eur(avg_active)}, ma la discontinuità penalizza la "
+            f"curva di apprendimento e la stabilità delle aste.",
+            f"Quando l'account spinge, spinge forte ({fmt_eur(avg_active)} al giorno), ma le pause obbligano l'algoritmo a "
+            f"ricominciare da capo ogni volta che torniamo live.",
+            f"Il problema non è il quanto — sui giorni attivi si arriva a {fmt_eur(avg_active)} medi — ma il quando: senza "
+            f"continuità il pubblico non si scalda e la frequenza non si stabilizza.",
+        ])
         if contatti_y > 0:
-            p3 = (f"Il primo obiettivo per la prossima settimana è ripristinare la continuità quotidiana: "
-                  f"l'ultimo giorno ha generato {contatti_y} contatti, segnale che la domanda c'è.")
+            p3 = _pick(cn + "·B·p3a", [
+                f"Per la prossima settimana l'obiettivo è uno solo: riportare l'erogazione a sette giorni su sette. Ieri "
+                f"abbiamo già visto {contatti_y} contatti, segnale che il messaggio risponde — non manca la domanda, manca la presenza.",
+                f"Riallineiamo la cadenza: l'ultimo giorno ha portato {contatti_y} contatti pur con erogazione interrotta, "
+                f"quindi sappiamo che il pubblico c'è. La priorità è eliminare i buchi di copertura.",
+            ])
         else:
-            p3 = (f"Il primo obiettivo per la prossima settimana è ripristinare la continuità quotidiana di erogazione "
-                  f"e verificare che le creatività non siano in saturazione.")
-        return (
-            f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
-            f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
-            f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
-        )
+            p3 = _pick(cn + "·B·p3b", [
+                f"La prima mossa è ripristinare la continuità quotidiana — poi controlleremo bidding e creatività per "
+                f"capire perché non stiamo intercettando contatti nemmeno nei giorni attivi.",
+                f"Riattiviamo l'erogazione stabile e poi facciamo un audit veloce: senza contatti su {active_days} giorni di "
+                f"spinta serve verificare offerta, audience e creative.",
+            ])
+        return wrap(p1, p2, p3)
 
-    # ===== Caso 3: trend in forte crescita =====
+    # ============================================================
+    # RAMO C — Accelerazione forte (+25%)
+    # ============================================================
     if trend_pct is not None and trend_pct > 25:
-        p1 = (f"Le ultime due settimane segnano un'accelerazione per {client_name}: lo spending sale "
-              f"di {trend_pct:.0f}% confrontando prima e seconda metà del periodo, "
-              f"portando il totale a {fmt_eur(total_spend_window)} in {window_days} giorni.")
+        peak_clause = f" con un picco {peak_wd or 'centrale'} a {fmt_eur(peak_spend)}" if peak_iso else ""
+        p1 = _pick(cn + "·C·p1", [
+            f"{cn} ha cambiato passo nelle ultime due settimane: la spesa nella seconda metà è {trend_pct:.0f}% sopra la prima, "
+            f"portando il totale a {fmt_eur(total_spend_window)}{peak_clause}.",
+            f"Per {cn} è stato un periodo in accelerazione netta: +{trend_pct:.0f}% di spesa tra prima e seconda settimana, "
+            f"{fmt_eur(total_spend_window)} bruciati con una curva chiaramente in salita{peak_clause}.",
+            f"Le ultime giornate di {cn} hanno alzato l'asticella: +{trend_pct:.0f}% nella seconda parte della finestra, "
+            f"con il monte spese che chiude a {fmt_eur(total_spend_window)}{peak_clause}.",
+        ])
     elif trend_pct is not None and trend_pct < -25:
-        p1 = (f"Le ultime due settimane vedono un raffreddamento dell'attività di {client_name}: lo spending "
-              f"cala di {abs(trend_pct):.0f}% nella seconda metà del periodo, chiudendo a "
-              f"{fmt_eur(total_spend_window)} totali sui {window_days} giorni.")
-    elif trend_pct is not None and trend_pct > 0:
-        p1 = (f"Le ultime due settimane consolidano la rotta di {client_name}: lo spending cresce in modo "
-              f"misurato (+{trend_pct:.0f}% tra prima e seconda metà), totalizzando "
-              f"{fmt_eur(total_spend_window)} sui {window_days} giorni.")
+        # ============================================================
+        # RAMO D — Raffreddamento (-25%)
+        # ============================================================
+        p1 = _pick(cn + "·D·p1", [
+            f"{cn} ha rallentato visibilmente: la spesa della seconda metà è {abs(trend_pct):.0f}% sotto la prima, "
+            f"chiudendo il periodo a {fmt_eur(total_spend_window)} totali.",
+            f"Per {cn} la curva si è raffreddata: −{abs(trend_pct):.0f}% nella seconda settimana, segno che qualcosa "
+            f"nell'erogazione o nel bidding ha frenato.",
+            f"Nelle ultime giornate {cn} ha ridotto la presenza: cala del {abs(trend_pct):.0f}% tra prima e seconda metà, "
+            f"a fronte di un totale di {fmt_eur(total_spend_window)} sul periodo.",
+        ])
+    elif trend_pct is not None and trend_pct > 5:
+        # ============================================================
+        # RAMO E — Crescita misurata (+5 a +25%)
+        # ============================================================
+        peak_clause = f", con il picco {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
+        p1 = _pick(cn + "·E·p1", [
+            f"{cn} ha tenuto una traiettoria in lieve salita: +{trend_pct:.0f}% tra prima e seconda metà del periodo, "
+            f"{fmt_eur(total_spend_window)} totali distribuiti con regolarità{peak_clause}.",
+            f"Per {cn} la finestra è stata di crescita controllata (+{trend_pct:.0f}%), con {fmt_eur(total_spend_window)} "
+            f"spesi e una distribuzione che ha respirato bene sui giorni attivi{peak_clause}.",
+            f"Curva in lieve risalita per {cn}: +{trend_pct:.0f}% sul periodo, {fmt_eur(total_spend_window)} totali e "
+            f"nessun giorno fuori scala{peak_clause}.",
+        ])
     else:
-        p1 = (f"Le ultime due settimane confermano la rotta di {client_name}: l'investimento si mantiene stabile "
-              f"con {fmt_eur(total_spend_window)} totali, distribuiti su {active_days} giorni effettivi "
-              f"di erogazione su {window_days}.")
+        # ============================================================
+        # RAMO F — Stabilità / leggero calo
+        # ============================================================
+        delta_str = f" ({trend_pct:+.0f}% tra le due metà)" if trend_pct is not None else ""
+        peak_clause = f", con la giornata più alta {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
+        p1 = _pick(cn + "·F·p1", [
+            f"{cn} ha mantenuto la rotta: {fmt_eur(total_spend_window)} distribuiti su {active_days} giorni effettivi, "
+            f"senza scossoni{delta_str}{peak_clause}.",
+            f"Per {cn} il periodo è stato di crociera: {fmt_eur(total_spend_window)} spesi con una cadenza prevedibile{delta_str}{peak_clause}.",
+            f"Andamento regolare per {cn}: {fmt_eur(total_spend_window)} sui {active_days} giorni attivi, niente "
+            f"oscillazioni rilevanti{delta_str}{peak_clause}.",
+        ])
 
-    # ===== Paragrafo 2: perché conta — frasi concatenate fluenti =====
-    p2_main = f"La media giornaliera si attesta a {fmt_eur(avg_daily)}"
-
-    # Aggiungi composizione canali se TikTok presente con spesa rilevante
-    tk_clause = ""
-    if has_tiktok and tt_spend_total > 0:
-        share_tt = (tt_spend_total / total_spend_window * 100) if total_spend_window else 0
-        if share_tt >= 8:
-            tk_clause = (f", con il canale TikTok che presidia il pubblico più giovane portando "
-                         f"{fmt_eur(tt_spend_total)} ({share_tt:.0f}% del mix)")
-        else:
-            tk_clause = (f", con Meta come canale principale e TikTok in attivazione marginale "
-                         f"({fmt_eur(tt_spend_total)} di affiancamento)")
+    # ============================================================
+    # P2 — Perché conta (composizione canali + segnale contatti)
+    # ============================================================
+    pieces = []
+    pieces.append(_pick(cn + "·p2·avg", [
+        f"In media spendiamo {fmt_eur(avg_daily)} al giorno",
+        f"La media giornaliera nel periodo è {fmt_eur(avg_daily)}",
+        f"Il ritmo è di {fmt_eur(avg_daily)} al giorno",
+    ]))
+    if has_tiktok and tt_spend_total > 0 and tt_share >= 8:
+        pieces.append(_pick(cn + "·p2·tk", [
+            f"con TikTok che pesa per il {tt_share:.0f}% del mix ({fmt_eur(tt_spend_total)}) sul pubblico più giovane",
+            f"con TikTok in affiancamento al {tt_share:.0f}% ({fmt_eur(tt_spend_total)}) come secondo canale di presidio",
+            f"con il canale TikTok che porta il {tt_share:.0f}% del totale ({fmt_eur(tt_spend_total)})",
+        ]))
+    elif has_tiktok and tt_spend_total > 0:
+        pieces.append(f"con TikTok in attivazione marginale ({fmt_eur(tt_spend_total)} sul totale)")
     elif has_tiktok and tt_spend_total == 0:
-        tk_clause = f", sul solo canale Meta — TikTok resta fermo nella finestra e sarà da riattivare appena utile al funnel"
+        pieces.append(_pick(cn + "·p2·tk0", [
+            "su solo canale Meta — TikTok è rimasto fermo nella finestra",
+            "lasciando TikTok in stand-by per tutto il periodo",
+        ]))
 
-    # Segnale contatti come frase autonoma successiva
-    contact_clause = ""
+    p2 = ", ".join(pieces) + "."
     if contatti_y > 50:
-        contact_clause = f" L'ultimo giorno ha portato {contatti_y} contatti, segnale che la domanda risponde bene al messaggio attuale."
+        p2 += _pick(cn + "·p2·c+", [
+            f" L'ultimo giorno ha generato {contatti_y} contatti: il messaggio attuale tiene.",
+            f" Ieri sono entrati {contatti_y} contatti, segnale forte di domanda sul brand.",
+        ])
     elif contatti_y > 0:
-        contact_clause = f" L'ultimo giorno ha generato {contatti_y} contatti, in linea con il funnel pianificato."
+        p2 += _pick(cn + "·p2·c-", [
+            f" Ieri {contatti_y} contatti, in linea con la media del funnel.",
+            f" L'ultimo giorno ha portato {contatti_y} contatti, dentro l'aspettativa.",
+        ])
 
-    p2 = p2_main + tk_clause + "." + contact_clause
-    p2 = p2.strip()
-
-    # ===== Paragrafo 3: cosa fare =====
+    # ============================================================
+    # P3 — Cosa faremo ora (concreto, niente cliché)
+    # ============================================================
     if trend_pct is not None and trend_pct > 25:
-        p3 = (f"La fase di crescita va presidiata: nei prossimi giorni monitorare il CPC e la frequenza per "
-              f"evitare che la pressione superi la soglia di efficienza, e tenere pronta nuova creatività se la frequenza sale.")
+        p3 = _pick(cn + "·p3·up", [
+            f"Lasciamo correre la spinta ma teniamo l'occhio su CPC e frequenza: se la frequenza supera 2,5 entriamo "
+            f"subito con un test creativo nuovo per non bruciare il pubblico.",
+            f"La crescita la cavalchiamo, però la prossima settimana misuriamo CPC giornaliero e frequenza — se l'asta "
+            f"si surriscalda alziamo il prezzo per evitare di pagare di più ogni nuovo utente.",
+            f"Cavalchiamo il momentum senza forzare: alziamo i tetti budget solo se il CPC resta stabile, e ruotiamo "
+            f"creatività appena la frequenza tocca 2,5.",
+        ])
     elif trend_pct is not None and trend_pct < -25:
-        p3 = (f"Per la prossima finestra l'obiettivo è recuperare cadenza: verificare se la riduzione "
-              f"è strategica o se serve un intervento su budget e bidding per riallineare l'erogazione al piano.")
+        p3 = _pick(cn + "·p3·down", [
+            f"La prossima cosa da fare è capire se il calo è strategico o tecnico: controlliamo bidding, copertura del "
+            f"pubblico e vivacità delle creatività, e poi decidiamo se rialzare la spinta.",
+            f"Riapro le campagne lunedì per un audit veloce: CTR, copertura giornaliera e budget non spesi. Se il calo "
+            f"non è voluto, riallineo bidding e creatività in giornata.",
+            f"Programmo subito una revisione: vedo se è un raffreddamento naturale del pubblico (servono creatività nuove) "
+            f"o un limite di bidding/copertura, e ti dico cosa muovere.",
+        ])
     elif zero_days > 0 and zero_days <= 2:
-        p3 = (f"L'erogazione è solida ma con {zero_days} {'giorno' if zero_days == 1 else 'giorni'} a zero da chiarire: "
-              f"verificare che la sospensione sia stata voluta e non frutto di un blocco budget/billing.")
+        p3 = _pick(cn + "·p3·zd", [
+            f"Da chiarire {zero_days} {'giorno' if zero_days == 1 else 'giorni'} a zero nel periodo: oggi verifico che "
+            f"non sia un blocco budget o billing e ti aggiorno entro l'orario operativo.",
+            f"Quei {zero_days} giorni a spending nullo me li guardo subito: controllo limiti carta, billing e "
+            f"campaign status, così sappiamo se è stata una pausa voluta.",
+        ])
+    elif has_tiktok and tt_spend_total == 0:
+        p3 = _pick(cn + "·p3·tk0", [
+            f"Nella prossima finestra rimettiamo in moto TikTok: serve quel canale per non lasciare scoperto il pubblico "
+            f"sotto i 30 anni, dove ormai la prima ricerca passa da lì.",
+            f"La prima cosa da decidere è quando riattivare TikTok — il pubblico più giovane sta scivolando fuori dal "
+            f"funnel solo Meta e dobbiamo ricaricarlo.",
+        ])
     else:
-        p3 = (f"La cadenza è regolare: la prossima settimana si lavora sul fine-tuning delle creatività più stanche e "
-              f"sull'ottimizzazione del CPC mantenendo invariata la struttura di campagne.")
+        p3 = _pick(cn + "·p3·ok", [
+            f"Nessuna mossa urgente: la prossima settimana facciamo solo refresh creativo sugli annunci più stanchi e "
+            f"teniamo monitorato il CPC giorno per giorno.",
+            f"Per ora si va così: rotazione creativa di routine, monitoraggio CPC giornaliero, niente intervento "
+            f"strutturale fino al prossimo segnale.",
+            f"Si naviga: nessuna correzione di rotta, solo refresh creativo se compaiono segnali di saturazione e "
+            f"controllo del CPC sulla media settimanale.",
+        ])
 
-    return (
-        f'<p><span class="rat-label">Cosa è successo</span>{p1}</p>'
-        f'<p><span class="rat-label">Perché conta</span>{p2}</p>'
-        f'<p><span class="rat-label">Cosa faremo ora</span>{p3}</p>'
-    )
+    return wrap(p1, p2, p3)
 
 
-def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
+def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=None):
     """
     Una card per cliente AGHC. Se più voci roster condividono lo stesso meta_id,
     le aggrego in UNA card con nomi merged (es. "ACCENTODI + ADESSO").
+    vanity_rows: lista opzionale [{account_id, date, impressions, clicks, actions_landing_page_view}]
+    da cui estraiamo le metriche vanity per le card.
     """
     meta_map = build_daily_map(meta_rows, is_meta_with_leads=True)
     tiktok_map = build_daily_map(tiktok_rows, is_meta_with_leads=False)
+
+    # Indice vanity (account_id, date) → {impressions, clicks, lpv}
+    vanity_idx = {}
+    if vanity_rows:
+        for r in vanity_rows:
+            key = (str(r.get("account_id")), r.get("date"))
+            vanity_idx[key] = {
+                "impressions": int(r.get("impressions") or 0),
+                "clicks": int(r.get("clicks") or 0),
+                "lpv": int(r.get("actions_landing_page_view") or 0),
+            }
 
     # group AGHC voci per meta_id
     by_meta = {}
@@ -556,6 +706,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
         rational = _build_aghc_rational(
             client_name=merged_name,
             window_days=effective_window,
+            daily_series_data=actual_series,
             total_spend_window=total_spend_window,
             meta_spend_total=meta_spend_total,
             tt_spend_total=tt_spend_total,
@@ -566,6 +717,24 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
             contatti_y=contatti_y,
             spend_y=meta_spend_y + tt_spend_y,
         )
+
+        # Vanity metrics aggregati sul window (impressions, clicks, landing page views)
+        van_impr_w = 0
+        van_clicks_w = 0
+        van_lpv_w = 0
+        van_impr_y = 0
+        van_clicks_y = 0
+        van_lpv_y = 0
+        for d, _ in meta_series:
+            v = vanity_idx.get((mid, d))
+            if v:
+                van_impr_w += v["impressions"]
+                van_clicks_w += v["clicks"]
+                van_lpv_w += v["lpv"]
+                if d == y_iso:
+                    van_impr_y = v["impressions"]
+                    van_clicks_y = v["clicks"]
+                    van_lpv_y = v["lpv"]
 
         card = {
             "id": mid,
@@ -587,6 +756,14 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
             "rational": rational,
             "series": [{"date": d, "spend": round(s, 2)} for d, s in meta_series],
             "window_days": window_days,
+            "vanity": {
+                "impressions_window": van_impr_w,
+                "clicks_window": van_clicks_w,
+                "lpv_window": van_lpv_w,
+                "impressions_y": van_impr_y,
+                "clicks_y": van_clicks_y,
+                "lpv_y": van_lpv_y,
+            },
         }
         cards.append(card)
 
@@ -597,7 +774,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15):
 
 # ============================ BUILD ============================
 
-def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_date=None):
+def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_date=None, vanity_rows=None):
     now = now_dt or datetime.now()
     today = now.date()
     yesterday = ref_date if ref_date is not None else today - timedelta(days=1)
@@ -776,7 +953,7 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     }
 
     # ============= AGHC =============
-    aghc_cards = build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15)
+    aghc_cards = build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=vanity_rows)
     aghc_tot_spend_y = sum(c["spend_y"] for c in aghc_cards)
     aghc_actives = sum(1 for c in aghc_cards if c["spend_y"] > 0)
     out["aghc"] = {
@@ -868,6 +1045,7 @@ def main():
     ap.add_argument("--tiktok", required=True)
     ap.add_argument("--medtech", required=True)
     ap.add_argument("--workspace", required=True, help="Path workspace (Dashboard di Controllo)")
+    ap.add_argument("--aghc-vanity", default=None, help="Path opzionale a JSON con vanity metrics (impressions/clicks/landing_page_view) per AGHC")
     ap.add_argument("--retention-days", type=int, default=90, help="Quanti snapshot/<date>.json tenere; più vecchi vengono cancellati")
     ap.add_argument("--ref-date", default=None, help="Override reference date (YYYY-MM-DD); default = ieri")
     args = ap.parse_args()
@@ -883,7 +1061,8 @@ def main():
     medtech = load(args.medtech)
 
     ref_date = parse_iso(args.ref_date) if args.ref_date else None
-    data = build(meta, google, tiktok, medtech, ref_date=ref_date)
+    vanity_rows = load(args.aghc_vanity) if args.aghc_vanity and os.path.exists(args.aghc_vanity) else None
+    data = build(meta, google, tiktok, medtech, ref_date=ref_date, vanity_rows=vanity_rows)
 
     workspace = args.workspace
     snap_dir = os.path.join(workspace, "snapshots")
@@ -919,6 +1098,78 @@ def main():
     index_path = os.path.join(snap_dir, "index.json")
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump({"dates": available_dates}, f, ensure_ascii=False, indent=2)
+
+    # ============= ACTIONS.JSON per Calendar =============
+    # Trigger:
+    # - HIGH spending: account con BOTH triggers (>50€ + >30% vs media 7gg) — più critico
+    # - NEW fermo: account in spending.zero oggi che NON era in spending.zero ieri (diff snapshot)
+    actions = []
+    ref_date_iso = data["reference_date"]
+    ref_date_label = data["reference_date_label"]
+
+    # Cerca lo snapshot del giorno PRECEDENTE (ieri rispetto a reference_date)
+    prev_date = (parse_iso(ref_date_iso) - timedelta(days=1)).strftime("%Y-%m-%d")
+    prev_snap_path = os.path.join(snap_dir, prev_date + ".json")
+    prev_zero_ids = set()
+    prev_snapshot_exists = os.path.exists(prev_snap_path)
+    if prev_snapshot_exists:
+        try:
+            with open(prev_snap_path, "r", encoding="utf-8") as f:
+                prev_data = json.load(f)
+            prev_zero_ids = {f"{r['platform']}:{r['account_id']}" for r in prev_data.get("spending", {}).get("zero", [])}
+        except Exception:
+            prev_snapshot_exists = False
+
+    # 1) HIGH spending critici (entrambi trigger)
+    for r in data["spending"]["high"]:
+        triggers = r.get("triggers", [])
+        if ">50€" in triggers and ">30%" in triggers:
+            actions.append({
+                "type": "high_spending",
+                "priority": "high",
+                "title": f"🔴 {r['account_name']} · spesa anomala alta",
+                "platform": r["platform"],
+                "account_id": r["account_id"],
+                "ad_url": r["ad_url"],
+                "details": f"Spesa {fmt_eur(r['target'])} ieri vs media 7gg {fmt_eur(r['mean7'])} ({fmt_pct(r['delta'])})",
+                "reference_date": ref_date_iso,
+                "reference_date_label": ref_date_label,
+            })
+
+    # 2) NEW fermi (in zero oggi, non c'erano ieri)
+    # Solo se abbiamo lo snapshot di ieri per fare il diff. Al primo run salta del tutto
+    # (altrimenti tutti i fermi sarebbero "nuovi" e riempirebbe il calendar).
+    if prev_snapshot_exists:
+        new_fermi = []
+        for r in data["spending"]["zero"]:
+            key = f"{r['platform']}:{r['account_id']}"
+            if key not in prev_zero_ids:
+                new_fermi.append({
+                    "type": "new_fermo",
+                    "priority": "high",
+                    "title": f"⚫ {r['account_name']} · nuovo account fermo",
+                    "platform": r["platform"],
+                    "account_id": r["account_id"],
+                    "ad_url": r["ad_url"],
+                    "details": f"Spending 0 ieri, media 7gg precedente {fmt_eur(r['mean7'])}. Da verificare.",
+                    "reference_date": ref_date_iso,
+                    "reference_date_label": ref_date_label,
+                })
+        # Sort by media7 desc — prima i più "importanti" (spendevano di più prima del fermo)
+        new_fermi.sort(key=lambda a: -float(a['details'].split('precedente ')[1].split(' €')[0].replace('.','').replace(',','.')) if 'precedente' in a['details'] else 0)
+        actions.extend(new_fermi[:10])  # max 10 new_fermi al giorno
+
+    # Cap globale per non saturare il Calendar: max 15 azioni totali
+    actions = actions[:15]
+
+    actions_path = os.path.join(workspace, "actions.json")
+    with open(actions_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "generated_at": data["generated_at"],
+            "reference_date": ref_date_iso,
+            "actions": actions,
+        }, f, ensure_ascii=False, indent=2)
+    print(f"✓ actions.json: {len(actions)} azioni (high={sum(1 for a in actions if a['type']=='high_spending')}, new_fermo={sum(1 for a in actions if a['type']=='new_fermo')})")
 
     print(f"✓ data.json:   {latest_path} ({os.path.getsize(latest_path)} bytes)")
     print(f"✓ snapshot:    {snap_path}")
