@@ -1,21 +1,21 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-05-18T01:41:21.846606",
-  "generated_at_label": "18/05/2026 01:41",
+  "generated_at": "2026-05-18T01:49:21.488966",
+  "generated_at_label": "18/05/2026 01:49",
   "reference_date": "2026-05-17",
   "reference_date_label": "17 mag 2026",
   "pages_url": "https://advfmosca.github.io/dashboard-di-controllo/",
   "errors": [],
   "overview": {
-    "total_spend": 2885.97,
-    "active_accounts": 29,
-    "total_accounts": 52,
+    "total_spend": 2976.02,
+    "active_accounts": 30,
+    "total_accounts": 53,
     "date_label": "17/05/2026",
     "platforms": [
       {
         "name": "Meta",
-        "accounts": 31,
-        "spend": 2885.97,
+        "accounts": 32,
+        "spend": 2976.02,
         "pct": 100.0
       },
       {
@@ -34,15 +34,15 @@
     "projects": [
       {
         "name": "BeeFamily",
-        "spend": 1810.6,
-        "accounts": 16,
-        "pct": 84.09
+        "spend": 1900.65,
+        "accounts": 17,
+        "pct": 84.73
       },
       {
         "name": "AGHC",
         "spend": 342.58,
         "accounts": 12,
-        "pct": 15.91
+        "pct": 15.27
       },
       {
         "name": "Med & Tech",
@@ -55,10 +55,10 @@
   "spending": {
     "target_day": "2026-05-17",
     "totals": {
-      "meta": 29,
+      "meta": 30,
       "google": 16,
       "tiktok": 5,
-      "total": 50
+      "total": 51
     },
     "zero": [
       {
@@ -332,6 +332,19 @@
       },
       {
         "platform": "Meta",
+        "account_id": "978507964180533",
+        "account_name": "Adv_El cid campeador",
+        "target": 90.05,
+        "mean7": 66.45,
+        "delta": 35.51,
+        "triggers": [
+          ">50€",
+          ">30%"
+        ],
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=978507964180533"
+      },
+      {
+        "platform": "Meta",
         "account_id": "1849759899186169",
         "account_name": "Villa Giada Luxury Boutique Hotel",
         "target": 65.55,
@@ -396,12 +409,12 @@
   },
   "beefamily": {
     "kpi": {
-      "actives": 16,
+      "actives": 17,
       "total": 38,
-      "total_spend": 1810.6,
-      "total_contatti": 1247,
-      "cpc_y": 1.45,
-      "cpc_mean": 2.18
+      "total_spend": 1900.65,
+      "total_contatti": 1279,
+      "cpc_y": 1.49,
+      "cpc_mean": 2.2
     },
     "entries": [
       {
@@ -416,6 +429,20 @@
           "color": "yellow",
           "label": "Spesa in salita",
           "reason": "Spesi 121,83 € vs media 7gg 89,25 € (+36,5%) · 147 contatti (CPC 0,83 €)"
+        }
+      },
+      {
+        "name": "EL CID",
+        "source": "Meta",
+        "spend_y": 90.05,
+        "contatti_y": 32,
+        "prev7_spend": 465.16,
+        "prev7_contatti": 160,
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=978507964180533",
+        "status": {
+          "color": "yellow",
+          "label": "Spesa in salita",
+          "reason": "Spesi 90,05 € vs media 7gg 66,45 € (+35,5%) · 32 contatti (CPC 2,81 €)"
         }
       },
       {
@@ -500,20 +527,6 @@
           "color": "gray",
           "label": "Fermo ieri",
           "reason": "Spending ieri 0 ma media 7gg 32,32 €"
-        }
-      },
-      {
-        "name": "EL CID",
-        "source": "Meta",
-        "spend_y": 0,
-        "contatti_y": 0,
-        "prev7_spend": 0.0,
-        "prev7_contatti": 0,
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=978507964180533",
-        "status": {
-          "color": "gray",
-          "label": "Inattivo",
-          "reason": "Nessuna spesa rilevante negli ultimi 8 giorni"
         }
       },
       {
@@ -937,7 +950,7 @@
         }
       }
     ],
-    "recap": "Bee Family — Daily Check del 17/05/2026\n16 account attivi su 38 · 0 ROSSO · 2 GIALLO · 14 VERDE · 22 NERO\nSpending: 1.810,60 € · Contatti: 1247 · CPC medio: 1,45 €\nApri dashboard live: https://advfmosca.github.io/dashboard-di-controllo/"
+    "recap": "Bee Family — Daily Check del 17/05/2026\n17 account attivi su 38 · 0 ROSSO · 3 GIALLO · 14 VERDE · 21 NERO\nSpending: 1.900,65 € · Contatti: 1279 · CPC medio: 1,49 €\nApri dashboard live: https://advfmosca.github.io/dashboard-di-controllo/"
   },
   "aghc": {
     "kpi": {
