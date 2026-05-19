@@ -467,9 +467,6 @@
     <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
       <div class="body">
         <div id="cea-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
-        <div style="margin-top: 10px;">
-          <a class="btn" href="https://advfmosca.github.io/cea-daily-check/" target="_blank" rel="noopener">Apri archivio completo →</a>
-        </div>
       </div>
     </section>
   </section>
@@ -945,15 +942,15 @@
   // ============================ CEA RENDER (stessa struttura Med & Tech) ============================
   function renderCEA(d) {
     const proj = d.cea;
-    if (!proj) {
-      // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto
+    if (!proj || !Array.isArray(proj.entries) || proj.entries.length === 0) {
+      // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto + hint
       ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
         const el = document.getElementById(id); if (el) el.textContent = "–";
       });
       const ap = document.getElementById("cea-alerts-pill");
       if (ap) ap.textContent = "0 campagne";
       const ar = document.getElementById("cea-alerts");
-      if (ar) ar.innerHTML = `<div class="empty">Nessun dato CEA disponibile in questo snapshot. La scheduled task aggiornerà i dati appena la sezione cea sarà popolata in data.json.</div>`;
+      if (ar) ar.innerHTML = `<div class="empty">Nessun dato CEA in questo giorno. Vedi <b>Report disponibili</b> qui sotto per le giornate già caricate, oppure aggiungi il CSV del giorno per popolarlo.</div>`;
       return;
     }
     const kpi = proj.kpi || {};
@@ -1173,42 +1170,70 @@
     return m ? `${m[3]}/${m[2]}` : iso;
   }
 
-  // ============================ CEA REPORTS (fetch live, stessa logica Med Tech) ============================
+  // ============================ CEA REPORTS (da snapshots locali) ============================
+  // I dati CEA vivono direttamente negli snapshot della dashboard (non in un repo esterno).
+  // Listo i giorni che hanno cea.entries non vuoto: un click salta al giorno + attiva la TAB CEA.
   function loadCEAReports() {
     const root = document.getElementById("cea-reports");
     const pill = document.getElementById("cea-reports-pill");
     if (!root) return;
-    fetch("https://advfmosca.github.io/cea-daily-check/?t=" + Date.now(), { cache: "no-store" })
-      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
-      .then(html => {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        const anchors = Array.from(doc.querySelectorAll("li a[href*='cea-daily-'], li a[href*='daily-']"));
-        if (anchors.length === 0) throw new Error("Nessun report trovato nella pagina archivio");
-        let listHtml = `<div class="report-list">`;
-        for (const a of anchors) {
-          const url = new URL(a.getAttribute("href"), "https://advfmosca.github.io/cea-daily-check/").href;
-          const text = (a.textContent || "").replace(/→\s*$/, "").trim();
-          const m = text.match(/^(.*?)\s+(\d+)R\s*[·•]\s*(\d+)G\s*[·•]\s*(\d+)V\s*[·•]\s*(\d+)N/);
-          let dateLabel = text, counts = "";
-          if (m) {
-            dateLabel = m[1].trim();
-            counts = `<span class="c-r">${m[2]} R</span> · <span class="c-y">${m[3]} G</span> · <span class="c-v">${m[4]} V</span> · <span class="c-n">${m[5]} N</span>`;
-          }
-          listHtml += `<a class="report-item" href="${escapeHtml(url)}" target="_blank" rel="noopener">
-            <span class="ri-date">${escapeHtml(dateLabel)}</span>
-            <span class="ri-counts">${counts}</span>
-            <span class="ri-arrow">→</span>
-          </a>`;
-        }
-        listHtml += `</div>`;
-        root.innerHTML = listHtml;
-        if (pill) pill.textContent = anchors.length + " report";
-      })
-      .catch(err => {
-        console.warn("CEA reports fetch failed:", err);
-        root.innerHTML = `<div class="empty">Archivio CEA non ancora disponibile (${escapeHtml(err.message)}). Verrà popolato non appena la scheduled task CEA sarà attiva.</div>`;
+    const monthsIT = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+    const weekdaysIT = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+    function formatDateIT(iso) {
+      const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (!m) return iso;
+      const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+      return `${weekdaysIT[d.getDay()]} ${Number(m[3])} ${monthsIT[d.getMonth()]} ${m[1]}`;
+    }
+    fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, 30);
+      // Fetch parallelo limitato — ogni giorno verifica se ha data.cea con entries
+      return Promise.all(dates.map(d =>
+        fetchJson("snapshots/" + d + ".json")
+          .then(j => ({ date: d, cea: (j && j.cea && Array.isArray(j.cea.entries) && j.cea.entries.length) ? j.cea : null }))
+          .catch(() => ({ date: d, cea: null }))
+      ));
+    }).then(rows => {
+      const withCEA = rows.filter(r => r.cea);
+      if (withCEA.length === 0) {
+        root.innerHTML = `<div class="empty">Nessun report CEA disponibile negli snapshot. Carica i CSV CEA e rigenera lo snapshot del giorno per vederli qui.</div>`;
         if (pill) pill.textContent = "—";
+        return;
+      }
+      let html = `<div class="report-list">`;
+      for (const r of withCEA) {
+        const k = r.cea.kpi || {};
+        const counts = `<span class="c-r">${k.rosso||0} R</span> · <span class="c-y">${k.giallo||0} G</span> · <span class="c-v">${k.verde||0} V</span> · <span class="c-n">${k.nero||0} N</span>`;
+        html += `<a class="report-item" href="#cea" data-cea-date="${escapeHtml(r.date)}">
+          <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
+          <span class="ri-counts">${counts}</span>
+          <span class="ri-arrow">→</span>
+        </a>`;
+      }
+      html += `</div>`;
+      root.innerHTML = html;
+      if (pill) pill.textContent = withCEA.length + " report";
+
+      // Click handler: salta al giorno + attiva TAB CEA
+      root.querySelectorAll("[data-cea-date]").forEach(a => {
+        a.addEventListener("click", function(e) {
+          e.preventDefault();
+          const targetDate = this.getAttribute("data-cea-date");
+          const sel = document.getElementById("date-select");
+          if (sel && targetDate) {
+            sel.value = targetDate;
+            // Forziamo l'evento change per innescare loadDate()
+            sel.dispatchEvent(new Event("change"));
+          }
+          activateTab("cea");
+          // Scroll up dopo il switch
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       });
+    }).catch(err => {
+      console.warn("CEA reports list failed:", err);
+      root.innerHTML = `<div class="empty">Impossibile caricare la lista report (${escapeHtml(err.message)})</div>`;
+      if (pill) pill.textContent = "—";
+    });
   }
 
   function applyData(d) {
