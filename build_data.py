@@ -152,6 +152,56 @@ def build_daily_map(rows, is_meta_with_leads=False):
                 e["contatti_daily"][d] = e["contatti_daily"].get(d, 0) + contatti
     return m
 
+def build_campaign_breakdown(rows, is_meta_with_leads=False, only_active=True):
+    """
+    Per ogni account_id ritorna lista campagne aggregate sulla finestra dei `rows`.
+    Compatibile sia con dataset che hanno il campo `campaign` (nuovo, dal 2026-05-20)
+    sia con quelli senza (vecchio: ritorna dict vuoto).
+
+    Output: {account_id: [{name, spend, lead, cpl, active, status}, ...]}
+    - active = True se campaign_effective_status (se presente) è ACTIVE oppure
+               se non c'è status MA spend > 0
+    - Se only_active=True filtra solo le attive
+    """
+    out = {}
+    has_campaign = any(r.get("campaign") for r in rows[:50])
+    if not has_campaign:
+        return out  # raw "vecchi" senza campagna: niente breakdown
+    by_account = {}
+    for r in rows:
+        camp = (r.get("campaign") or "").strip()
+        if not camp:
+            continue
+        aid = str(r.get("account_id"))
+        st  = r.get("campaign_effective_status")  # solo Meta
+        key = (aid, camp)
+        b = by_account.setdefault(key, {"name": camp, "spend": 0.0, "lead": 0, "status": st})
+        b["spend"] += float(r.get("spend") or 0)
+        if is_meta_with_leads:
+            b["lead"] += int(r.get("actions_lead") or 0)
+        # Se in righe successive cambia status (improbabile), prendi l'ultimo non null
+        if r.get("campaign_effective_status"):
+            b["status"] = r["campaign_effective_status"]
+    # Aggrega per account
+    for (aid, camp), b in by_account.items():
+        cpl = (b["spend"] / b["lead"]) if b["lead"] > 0 else None
+        status_active = (b["status"] == "ACTIVE") if b["status"] else (b["spend"] > 0)
+        if only_active and not status_active:
+            continue
+        out.setdefault(aid, []).append({
+            "name": b["name"],
+            "spend": round(b["spend"], 2),
+            "lead": b["lead"] if is_meta_with_leads else None,  # Google: lead non tracciati
+            "cpl": round(cpl, 2) if cpl is not None else None,
+            "active": status_active,
+            "status": b["status"],
+        })
+    # Sort per ogni account: spend desc
+    for aid in out:
+        out[aid].sort(key=lambda c: -c["spend"])
+    return out
+
+
 def sum_prev_window(daily, ref_iso, days):
     """Return total over the `days` days preceding ref_iso."""
     ref = parse_iso(ref_iso)
@@ -390,7 +440,8 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
                                zero_days, active_days, trend_pct,
                                contatti_window, contatti_y, spend_y,
                                daily_series_data=None,
-                               meta_contatti_window=None, google_contatti_window=None):
+                               meta_contatti_window=None, google_contatti_window=None,
+                               meta_campaigns=None, google_campaigns=None):
     """
     Rational BeeFamily per uso INTERNO (team) — tono colloquiale, asciutto.
     Struttura: titolo periodo + breakdown per canale + prossima mossa.
@@ -433,7 +484,7 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
         sign = "+" if p >= 0 else ""
         return f"{sign}{p:.0f}%"
 
-    def channel_line(label, spend, leads, cpl):
+    def channel_line(label, spend, leads, cpl, campaigns=None):
         bits = [f"<strong>{label}:</strong>"]
         bits.append(f"Investimento {fmt_eur(spend)}")
         if leads is not None and leads > 0:
@@ -442,7 +493,25 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
                 bits.append(f"CPL {fmt_eur(cpl)}")
         elif spend > 0:
             bits.append("Lead non tracciati lato canale")
-        return " · ".join(bits)
+        line = " · ".join(bits)
+        # Sub-lista campagne attive (popolata solo se i raw hanno il campo `campaign`)
+        if campaigns:
+            camp_items = []
+            for c in campaigns:
+                parts = [f"<em>{escape_html_simple(c['name'])}</em>", f"Spesa {fmt_eur(c['spend'])}"]
+                if c.get("lead") is not None and c["lead"] > 0:
+                    parts.append(f"{fmt_int(c['lead'])} lead")
+                    if c.get("cpl") is not None:
+                        parts.append(f"CPL {fmt_eur(c['cpl'])}")
+                elif c.get("lead") == 0 and c["spend"] > 0:
+                    parts.append("0 lead")
+                camp_items.append("<li>" + " · ".join(parts) + "</li>")
+            line += f'<ul class="r-campaigns">{"".join(camp_items)}</ul>'
+        return line
+
+
+    def escape_html_simple(s):
+        return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
     def wrap(headline, channels_html, action):
         # Tre blocchi: sintesi periodo, breakdown per canale, prossima mossa.
@@ -484,9 +553,9 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
     # ----- Breakdown per canale (sempre, se il canale è presente) -----
     channels = []
     if has_meta:
-        channels.append(channel_line("META", meta_spend_total, meta_contatti, meta_cpl))
+        channels.append(channel_line("META", meta_spend_total, meta_contatti, meta_cpl, meta_campaigns))
     if has_g:
-        channels.append(channel_line("GOOGLE", google_spend_total, google_contatti, google_cpl))
+        channels.append(channel_line("GOOGLE", google_spend_total, google_contatti, google_cpl, google_campaigns))
     # Aggregato totale (sempre — utile come riassunto)
     total_leads = (meta_contatti or 0) + (google_contatti or 0)
     if total_leads > 0:
@@ -1175,6 +1244,9 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
 
     # ---------- BeeFamily CARDS per cliente (raggruppa Meta + Google) ----------
     bf_window_days = 15
+    # Breakdown campagne attive (popolato solo se raw Meta/Google hanno il campo `campaign`)
+    bf_meta_camps_by_aid   = build_campaign_breakdown(meta_rows,   is_meta_with_leads=True,  only_active=True)
+    bf_google_camps_by_aid = build_campaign_breakdown(google_rows, is_meta_with_leads=False, only_active=True)
     bf_cards = []
     for c in BEEFAMILY:
         meta_id = c.get("meta_id")
@@ -1256,7 +1328,13 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
             daily_series_data=merged_series,
             meta_contatti_window=meta_contatti_window,
             google_contatti_window=google_contatti_window,
+            meta_campaigns=bf_meta_camps_by_aid.get(meta_id, [])      if meta_id   else [],
+            google_campaigns=bf_google_camps_by_aid.get(google_id, []) if google_id else [],
         )
+
+        # Campagne attive per questo cliente (vuoto se raw senza campo `campaign`)
+        meta_campaigns   = bf_meta_camps_by_aid.get(meta_id, [])     if meta_id   else []
+        google_campaigns = bf_google_camps_by_aid.get(google_id, []) if google_id else []
 
         bf_cards.append({
             "id": c["name"].lower().replace(" ", "-").replace("&", "and"),
@@ -1271,6 +1349,8 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
             "rational": rational_html,
             "ad_url_meta":   url_meta(meta_id)     if meta_id   else None,
             "ad_url_google": url_google(google_id) if google_id else None,
+            "meta_campaigns":   meta_campaigns,    # lista campagne Meta attive sulla window 15gg
+            "google_campaigns": google_campaigns,  # lista campagne Google attive sulla window 15gg
         })
 
     # Sort card: rossi/gialli prima, poi spend_window desc

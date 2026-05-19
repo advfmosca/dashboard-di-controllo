@@ -167,6 +167,11 @@
   .aghc-card .rational .r-channels { list-style: none; padding: 0; margin: 6px 0 4px; display: flex; flex-direction: column; gap: 4px; }
   .aghc-card .rational .r-channels li { padding: 6px 10px; background: #fff; border: 1px solid var(--border-soft); border-radius: 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
   .aghc-card .rational .r-channels li strong { color: #1c1c1e; }
+  /* Lista campagne attive dentro il breakdown canale META/GOOGLE */
+  .aghc-card .rational .r-campaigns { list-style: none; padding: 4px 0 0 18px; margin: 4px 0 0; border-top: 1px dashed var(--border-soft); }
+  .aghc-card .rational .r-campaigns li { padding: 3px 0; background: transparent; border: 0; border-radius: 0; font-size: 11.5px; color: #4a4a4a; }
+  .aghc-card .rational .r-campaigns li::before { content: "↳ "; color: var(--text-dim); margin-right: 4px; }
+  .aghc-card .rational .r-campaigns li em { font-style: normal; font-weight: 600; color: #2c2c2c; }
   .aghc-card .footer { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
   .aghc-card .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
   .aghc-card .status-pill.red    { background: #fee2e2; color: #991b1b; }
@@ -826,15 +831,12 @@
     }
 
     // Card per cliente (raggruppa Meta+Google per nome cliente)
-    // FILTRO: solo card con campagne attive ieri (spend_y > 0).
-    // I clienti fermi sono comunque visibili nel blocco "Status performance account" sopra.
-    const allCards = proj.cards || [];
-    const cards = allCards.filter(c => (c.spend_y || 0) > 0);
+    const cards = proj.cards || [];
     const cardsPill = document.getElementById("bf-cards-pill");
-    if (cardsPill) cardsPill.textContent = `${cards.length} attive · ${allCards.length} totale`;
+    if (cardsPill) cardsPill.textContent = cards.length + " card";
     const cardsRoot = document.getElementById("bf-cards");
     if (cardsRoot) {
-      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card attiva oggi (spend ieri 0). Vedi <b>Status performance account</b> sopra per il dettaglio dei ${allCards.length} clienti.</div>`;
+      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card disponibile</div>`;
       else {
         let chtml = "";
         for (const c of cards) {
