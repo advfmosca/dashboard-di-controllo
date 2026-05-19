@@ -195,6 +195,26 @@
   .filter-chip.active .plogo.google { background: #fff; }
   .filter-chip .plogo { width: 18px; height: 18px; font-size: 11px; }
 
+  /* Overview chart */
+  .chart-legend { display: flex; gap: 18px; padding: 4px 0 10px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+  .chart-legend .lg-item { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend .lg-swatch { display: inline-block; width: 12px; height: 3px; border-radius: 2px; }
+  .chart-wrap { width: 100%; }
+  .chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-wrap .ax-line { stroke: var(--border); stroke-width: 1; }
+  .chart-wrap .grid-line { stroke: var(--border-soft); stroke-width: 1; stroke-dasharray: 3 3; }
+  .chart-wrap .ax-tick { fill: var(--text-dim); font-size: 10px; font-family: inherit; font-variant-numeric: tabular-nums; }
+  .chart-wrap .ax-tick.right { fill: #0866FF; }
+  .chart-wrap .ax-tick.left { fill: #1c1c1e; }
+  .chart-wrap .line-spend { fill: none; stroke: #1c1c1e; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .chart-wrap .line-leads { fill: none; stroke: #0866FF; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .chart-wrap .dot-spend { fill: #1c1c1e; stroke: #fff; stroke-width: 1.5; }
+  .chart-wrap .dot-leads { fill: #0866FF; stroke: #fff; stroke-width: 1.5; }
+  .chart-wrap .pt-target { fill: transparent; cursor: pointer; }
+  .chart-wrap .tooltip-bg { fill: #1c1c1e; opacity: 0; }
+  .chart-wrap .tooltip-txt { fill: #fff; font-size: 11px; font-family: inherit; opacity: 0; pointer-events: none; }
+  .chart-wrap .x-label { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
+
   /* Reports list */
   .report-list { display: flex; flex-direction: column; gap: 4px; }
   .report-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
@@ -290,6 +310,7 @@
     <button class="tab-btn" data-tab="beefamily" role="tab">BeeFamily</button>
     <button class="tab-btn" data-tab="aghc" role="tab">AGHC</button>
     <button class="tab-btn" data-tab="medtech" role="tab">Med &amp; Tech</button>
+    <button class="tab-btn" data-tab="cea" role="tab">CEA</button>
   </nav>
 
   <div id="error-box"></div>
@@ -301,6 +322,18 @@
       <div class="kpi"><div class="label">Account collegati</div><div class="value" id="ov-acc-tot">–</div><div class="sub">Meta · Google · TikTok</div></div>
       <div class="kpi"><div class="label">Data</div><div class="value" id="ov-date" style="font-size:18px">–</div><div class="sub">Giorno di riferimento</div></div>
     </div>
+    <section class="card">
+      <h2>Andamento Spesa &amp; Lead Generati <span class="pill" id="ov-chart-pill">ultimi 15 giorni</span></h2>
+      <div class="body" id="ov-chart-body">
+        <div class="chart-legend">
+          <span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa (€)</span>
+          <span class="lg-item"><span class="lg-swatch" style="background:#0866FF"></span> Lead Generati</span>
+        </div>
+        <div class="chart-wrap" id="ov-chart">
+          <div class="loading"><div class="spinner"></div> Carico la serie storica…</div>
+        </div>
+      </div>
+    </section>
     <section class="card">
       <h2>Breakdown per piattaforma <span class="pill" id="ov-platforms-pill">–</span></h2>
       <div class="table-scroll" id="ov-platforms"></div>
@@ -340,6 +373,9 @@
       <button type="button" class="filter-chip active" data-platform="all">Tutte</button>
       <button type="button" class="filter-chip active" data-platform="Meta"><span class="plogo meta">M</span> Meta</button>
       <button type="button" class="filter-chip active" data-platform="Google"><span class="plogo google">G</span> Google</button>
+      <div style="flex:1"></div>
+      <button type="button" class="btn btn-mini" id="bf-copy-link" title="Copia link dashboard cliente (bloccato sul giorno selezionato)">📋 Copia link cliente</button>
+      <span class="copy-feedback" id="bf-link-fb">Copiato ✓</span>
     </div>
     <div class="kpis">
       <div class="kpi"><div class="label">Account attivi ieri</div><div class="value" id="bf-k-acc">–</div><div class="sub" id="bf-k-acc-sub">/ totali</div></div>
@@ -392,6 +428,31 @@
         <div id="mt-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
         <div style="margin-top: 10px;">
           <a class="btn" href="https://advfmosca.github.io/med-tech-daily-check/" target="_blank" rel="noopener">Apri archivio completo →</a>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="tab-panel" id="tab-cea">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Campagne attive ieri</div><div class="value" id="cea-k-camp">–</div><div class="sub">CEA</div></div>
+      <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="cea-k-spend">–</div></div>
+      <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="cea-k-contatti">–</div><div class="sub">Instant Form</div></div>
+      <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="cea-k-cpc">–</div></div>
+    </div>
+    <!-- Conteggi semafori CEA (stessa struttura Med & Tech) -->
+    <div class="kpis" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi" style="background:#fee2e2;border-color:#fca5a5;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi" style="background:#ffedd5;border-color:#fed7aa;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi" style="background:#d1fadf;border-color:#86efac;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi" style="background:#1a1a1a;border-color:#1a1a1a;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
+    </div>
+    <section class="card"><h2>Daily check campagne <span class="pill" id="cea-alerts-pill">–</span></h2><div id="cea-alerts"></div></section>
+    <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
+      <div class="body">
+        <div id="cea-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
+        <div style="margin-top: 10px;">
+          <a class="btn" href="https://advfmosca.github.io/cea-daily-check/" target="_blank" rel="noopener">Apri archivio completo →</a>
         </div>
       </div>
     </section>
@@ -536,6 +597,25 @@
     try { document.execCommand("copy"); } catch (e) {}
     document.body.removeChild(ta); cb && cb();
   }
+
+  // ============================ COPY LINK CLIENTE BEEFAMILY ============================
+  // Genera URL beefamily.html?date=YYYY-MM-DD bloccato sul giorno scelto nel date picker.
+  // Usa location.origin + pathname per essere compatibile sia su GitHub Pages sia in locale.
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest("#bf-copy-link");
+    if (!btn) return;
+    const sel = document.getElementById("date-select");
+    const day = sel && sel.value && /^\d{4}-\d{2}-\d{2}$/.test(sel.value) ? sel.value : "";
+    // base URL: stessa cartella della dashboard di controllo
+    const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
+    const url = baseHref + "beefamily.html" + (day ? "?date=" + day : "");
+    const finalize = () => {
+      const fb = document.getElementById("bf-link-fb");
+      if (fb) { fb.classList.add("show"); setTimeout(() => fb.classList.remove("show"), 1800); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(finalize, () => fallbackCopy(url, finalize));
+    else fallbackCopy(url, finalize);
+  });
 
   function showError(msg) { document.getElementById("error-box").innerHTML = `<div class="error">${escapeHtml(msg)}</div>`; }
   function clearError() { document.getElementById("error-box").innerHTML = ""; }
@@ -809,6 +889,63 @@
     }
   }
 
+  // ============================ CEA RENDER (stessa struttura Med & Tech) ============================
+  function renderCEA(d) {
+    const proj = d.cea;
+    if (!proj) {
+      // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto
+      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
+        const el = document.getElementById(id); if (el) el.textContent = "–";
+      });
+      const ap = document.getElementById("cea-alerts-pill");
+      if (ap) ap.textContent = "0 campagne";
+      const ar = document.getElementById("cea-alerts");
+      if (ar) ar.innerHTML = `<div class="empty">Nessun dato CEA disponibile in questo snapshot. La scheduled task aggiornerà i dati appena la sezione cea sarà popolata in data.json.</div>`;
+      return;
+    }
+    const kpi = proj.kpi || {};
+    document.getElementById("cea-k-camp").textContent = kpi.actives != null ? kpi.actives : "–";
+    document.getElementById("cea-k-spend").textContent = fmtEUR(kpi.total_spend);
+    document.getElementById("cea-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
+    document.getElementById("cea-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    document.getElementById("cea-k-rosso").textContent  = kpi.rosso  != null ? kpi.rosso  : "–";
+    document.getElementById("cea-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
+    document.getElementById("cea-k-verde").textContent  = kpi.verde  != null ? kpi.verde  : "–";
+    document.getElementById("cea-k-nero").textContent   = kpi.nero   != null ? kpi.nero   : "–";
+
+    const entries = proj.entries || [];
+    const alertsPill = document.getElementById("cea-alerts-pill");
+    if (alertsPill) alertsPill.textContent = entries.length + " campagne";
+
+    const alertsRoot = document.getElementById("cea-alerts");
+    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessuna campagna CEA attiva nel periodo</div>`;
+    else {
+      let html = "";
+      for (const e of entries) {
+        const color = (e.status && e.status.color) || "black";
+        const lbl = (e.status && e.status.label) || "—";
+        const reason = (e.status && e.status.reason) || "—";
+        const trend = e.trend_3d || [];
+        const trendHtml = trend.length
+          ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
+          : "";
+        html += `<div class="status-row">
+          <div class="status-dot ${color}"></div>
+          <div class="body-row">
+            <div class="name">
+              <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
+              ${escapeHtml(e.name)}
+            </div>
+            <div class="rat">${escapeHtml(reason)}</div>
+            ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
+          </div>
+          <div class="row-actions">${openAccountBtn(e.ad_url, "Meta")}</div>
+        </div>`;
+      }
+      alertsRoot.innerHTML = html;
+    }
+  }
+
   // ============================ MED TECH REPORTS (fetch live) ============================
   function loadMedtechReports() {
     const root = document.getElementById("mt-reports");
@@ -849,6 +986,178 @@
       });
   }
 
+  // ============================ OVERVIEW CHART (Spesa + Lead, ultimi 15gg) ============================
+  function loadOverviewChart() {
+    const root = document.getElementById("ov-chart");
+    const pill = document.getElementById("ov-chart-pill");
+    if (!root) return;
+    fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, 15).reverse(); // ordine cronologico asc
+      if (dates.length === 0) throw new Error("Nessuno snapshot disponibile");
+      return Promise.all(dates.map(d =>
+        fetchJson("snapshots/" + d + ".json")
+          .then(j => ({ date: d, snap: j }))
+          .catch(() => ({ date: d, snap: null }))
+      ));
+    }).then(rows => {
+      const series = rows.map(r => {
+        if (!r.snap) return { date: r.date, spend: null, leads: null };
+        const ov = r.snap.overview || {};
+        const bf = (r.snap.beefamily && r.snap.beefamily.kpi) || {};
+        const mt = (r.snap.medtech   && r.snap.medtech.kpi)   || {};
+        const cea = (r.snap.cea      && r.snap.cea.kpi)        || {};
+        const leads = (bf.total_contatti || 0) + (mt.total_contatti || 0) + (cea.total_contatti || 0);
+        return { date: r.date, spend: ov.total_spend != null ? ov.total_spend : null, leads: leads };
+      }).filter(p => p.spend != null);
+
+      if (series.length === 0) { root.innerHTML = `<div class="empty">Dati insufficienti per il grafico</div>`; return; }
+      drawOverviewChart(root, series);
+      if (pill) pill.textContent = "ultimi " + series.length + " giorni";
+    }).catch(err => {
+      console.warn("Overview chart failed:", err);
+      root.innerHTML = `<div class="empty">Impossibile caricare il grafico (${escapeHtml(err.message)})</div>`;
+    });
+  }
+
+  function drawOverviewChart(root, series) {
+    const W = 720, H = 240;
+    const padL = 56, padR = 56, padT = 18, padB = 34;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = series.length;
+    const spends = series.map(p => p.spend);
+    const leads  = series.map(p => p.leads);
+    const spendMax = Math.max(...spends) * 1.1 || 1;
+    const leadMax  = Math.max(...leads, 1) * 1.1;
+    const xAt = i => padL + (n <= 1 ? innerW/2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax)  * innerH;
+
+    // Grid orizzontale (4 linee)
+    let grid = "";
+    let yticksLeft = "", yticksRight = "";
+    const steps = 4;
+    for (let i = 0; i <= steps; i++) {
+      const y = padT + (innerH * i) / steps;
+      grid += `<line class="grid-line" x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}"/>`;
+      const sv = spendMax * (1 - i / steps);
+      const lv = leadMax  * (1 - i / steps);
+      yticksLeft  += `<text class="ax-tick left"  x="${padL - 6}" y="${y + 3}" text-anchor="end">${formatAxisEUR(sv)}</text>`;
+      yticksRight += `<text class="ax-tick right" x="${W - padR + 6}" y="${y + 3}" text-anchor="start">${formatAxisNum(lv)}</text>`;
+    }
+
+    // Asse X — etichette: prima, ultima, e una nel mezzo
+    const xLabels = [];
+    const labelIdx = n === 1 ? [0] : (n <= 5 ? series.map((_,i)=>i) : [0, Math.floor((n-1)/2), n - 1]);
+    for (const i of labelIdx) {
+      const lbl = shortDate(series[i].date);
+      xLabels.push(`<text class="x-label" x="${xAt(i)}" y="${H - padB + 16}" text-anchor="middle">${escapeHtml(lbl)}</text>`);
+    }
+
+    // Polilinee
+    const pathSpend = spends.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = leads.map((v,i)  => (i===0 ? "M" : "L") + xAt(i) + "," + yLeads(v)).join(" ");
+
+    // Punti + tooltip group per ciascun indice
+    let dots = "", interact = "";
+    for (let i = 0; i < n; i++) {
+      const xs = xAt(i);
+      dots += `<circle class="dot-spend" cx="${xs}" cy="${ySpend(spends[i])}" r="3"/>`;
+      dots += `<circle class="dot-leads" cx="${xs}" cy="${yLeads(leads[i])}" r="3"/>`;
+      const tipBody = `${shortDate(series[i].date)} · ${fmtEUR(spends[i])} · ${leads[i]} lead`;
+      // hover hitbox
+      interact += `<rect class="pt-target" x="${xs - innerW/(n*2)}" y="${padT}" width="${innerW/n}" height="${innerH}"
+          data-tip="${escapeHtml(tipBody)}" data-x="${xs}"/>`;
+    }
+
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Spesa e Lead generati ultimi giorni">
+      ${grid}
+      <line class="ax-line" x1="${padL}" x2="${padL}" y1="${padT}" y2="${padT + innerH}"/>
+      <line class="ax-line" x1="${W - padR}" x2="${W - padR}" y1="${padT}" y2="${padT + innerH}"/>
+      <line class="ax-line" x1="${padL}" x2="${W - padR}" y1="${padT + innerH}" y2="${padT + innerH}"/>
+      <path class="line-spend" d="${pathSpend}"/>
+      <path class="line-leads" d="${pathLeads}"/>
+      ${dots}
+      ${yticksLeft}
+      ${yticksRight}
+      ${xLabels.join("")}
+      <g id="ov-tip" style="pointer-events:none">
+        <rect class="tooltip-bg" id="ov-tip-bg" x="0" y="0" rx="6" ry="6" width="0" height="0"/>
+        <text class="tooltip-txt" id="ov-tip-txt" x="0" y="0"></text>
+      </g>
+      ${interact}
+    </svg>`;
+    root.innerHTML = svg;
+
+    // Tooltip handlers
+    const tipBg = root.querySelector("#ov-tip-bg");
+    const tipTxt = root.querySelector("#ov-tip-txt");
+    root.querySelectorAll(".pt-target").forEach(t => {
+      t.addEventListener("mouseenter", () => {
+        const text = t.getAttribute("data-tip");
+        const x = Number(t.getAttribute("data-x"));
+        tipTxt.textContent = text;
+        tipTxt.setAttribute("x", String(x));
+        tipTxt.setAttribute("y", String(padT - 4));
+        tipTxt.setAttribute("text-anchor", "middle");
+        tipTxt.style.opacity = "1";
+        // Background sizing via getBBox
+        const bb = tipTxt.getBBox();
+        tipBg.setAttribute("x", String(bb.x - 6));
+        tipBg.setAttribute("y", String(bb.y - 3));
+        tipBg.setAttribute("width", String(bb.width + 12));
+        tipBg.setAttribute("height", String(bb.height + 6));
+        tipBg.style.opacity = "0.92";
+      });
+      t.addEventListener("mouseleave", () => { tipBg.style.opacity = "0"; tipTxt.style.opacity = "0"; });
+    });
+  }
+
+  function formatAxisEUR(v) { if (v >= 1000) return (v/1000).toFixed(1).replace(".",",")+"k €"; return Math.round(v) + " €"; }
+  function formatAxisNum(v) { return Math.round(v).toLocaleString("it-IT"); }
+  function shortDate(iso) {
+    // "2026-05-18" → "18/05"
+    const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}` : iso;
+  }
+
+  // ============================ CEA REPORTS (fetch live, stessa logica Med Tech) ============================
+  function loadCEAReports() {
+    const root = document.getElementById("cea-reports");
+    const pill = document.getElementById("cea-reports-pill");
+    if (!root) return;
+    fetch("https://advfmosca.github.io/cea-daily-check/?t=" + Date.now(), { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const anchors = Array.from(doc.querySelectorAll("li a[href*='cea-daily-'], li a[href*='daily-']"));
+        if (anchors.length === 0) throw new Error("Nessun report trovato nella pagina archivio");
+        let listHtml = `<div class="report-list">`;
+        for (const a of anchors) {
+          const url = new URL(a.getAttribute("href"), "https://advfmosca.github.io/cea-daily-check/").href;
+          const text = (a.textContent || "").replace(/→\s*$/, "").trim();
+          const m = text.match(/^(.*?)\s+(\d+)R\s*[·•]\s*(\d+)G\s*[·•]\s*(\d+)V\s*[·•]\s*(\d+)N/);
+          let dateLabel = text, counts = "";
+          if (m) {
+            dateLabel = m[1].trim();
+            counts = `<span class="c-r">${m[2]} R</span> · <span class="c-y">${m[3]} G</span> · <span class="c-v">${m[4]} V</span> · <span class="c-n">${m[5]} N</span>`;
+          }
+          listHtml += `<a class="report-item" href="${escapeHtml(url)}" target="_blank" rel="noopener">
+            <span class="ri-date">${escapeHtml(dateLabel)}</span>
+            <span class="ri-counts">${counts}</span>
+            <span class="ri-arrow">→</span>
+          </a>`;
+        }
+        listHtml += `</div>`;
+        root.innerHTML = listHtml;
+        if (pill) pill.textContent = anchors.length + " report";
+      })
+      .catch(err => {
+        console.warn("CEA reports fetch failed:", err);
+        root.innerHTML = `<div class="empty">Archivio CEA non ancora disponibile (${escapeHtml(err.message)}). Verrà popolato non appena la scheduled task CEA sarà attiva.</div>`;
+        if (pill) pill.textContent = "—";
+      });
+  }
+
   function applyData(d) {
     clearError();
     document.getElementById("hdr-sub").textContent = "Giorno di riferimento: " + (d.reference_date_label || d.reference_date || "—");
@@ -860,6 +1169,7 @@
     try { renderBeefamily(d); } catch (e) { console.error("BeeFamily", e); }
     try { renderAGHC(d); } catch (e) { console.error("AGHC", e); }
     try { renderMedtech(d); } catch (e) { console.error("Med&Tech", e); }
+    try { renderCEA(d); } catch (e) { console.error("CEA", e); }
   }
 
   // ============================ DATE PICKER + LOAD ============================
@@ -886,8 +1196,10 @@
       });
   }
 
-  // Boot: load snapshots index then activate latest + load Med Tech reports list in parallel
+  // Boot: load snapshots index then activate latest + load Med Tech / CEA reports + Overview chart in parallel
   loadMedtechReports();
+  loadCEAReports();
+  loadOverviewChart();
   fetchJson("snapshots/index.json").then(idx => {
     const dates = (idx.dates || []).slice(0, 90);
     if (dates.length === 0) throw new Error("nessuno snapshot");
