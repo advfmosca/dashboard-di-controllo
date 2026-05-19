@@ -218,6 +218,8 @@ def transform(html: str, data: dict | None) -> str:
     html = re.sub(r'<div class="footer">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
     html = re.sub(r'<div class="footer-note">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
     html = re.sub(r'<div class="tagline">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
+    # 6b) Rimuovi 'rationale' (CPL ieri X € contro media 3gg Y € (+Z%, ...)) sotto al titolo
+    html = re.sub(r'<div class="rationale">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
 
     # 7) Signature (idempotente)
     if 'class="signature"' not in html:
@@ -232,36 +234,67 @@ def transform(html: str, data: dict | None) -> str:
 
 
 def patch_pipeline_script(root: Path):
-    """Patcha _scripts/run_daily_pipeline.py per usare orario corrente
-    al posto di '{cutoff_hour}:59' hardcoded (idempotente).
+    """Patcha _scripts/run_daily_pipeline.py per:
+      A) usare orario corrente al posto di '{cutoff_hour}:59' hardcoded
+      B) NON emettere più la riga <div class="rationale">...</div>
+    Idempotente.
     """
     p = root / "_scripts" / "run_daily_pipeline.py"
     if not p.exists():
         return False
     src = p.read_text(encoding="utf-8")
-    marker = "# CUTOFF_LABEL_NOW_PATCH"
-    if marker in src:
-        return False  # già patchato
-    # Sostituisci la formattazione del label per usare datetime.now()
-    new_src = src.replace(
-        'CUTOFF_LABEL_FMT = "{:02d}:59"',
-        f'CUTOFF_LABEL_FMT = "{{:02d}}:59"  {marker}',
-    )
-    # Inietta override del label dopo la riga `cutoff_label = CUTOFF_LABEL_FMT.format(args.cutoff_hour)`
-    inject = (
-        "    # CUTOFF_LABEL_NOW_PATCH: override con orario reale di esecuzione\n"
-        "    from datetime import datetime as _dt_now\n"
-        "    _now = _dt_now.now()\n"
-        "    cutoff_label = _now.strftime('%H:%M')\n"
-    )
-    new_src = re.sub(
-        r'(cutoff_label = CUTOFF_LABEL_FMT\.format\(args\.cutoff_hour\)\n)',
-        r'\1' + inject,
-        new_src,
-        count=1,
-    )
-    if new_src != src:
-        p.write_text(new_src, encoding="utf-8")
+    changed = False
+
+    # A) Cutoff label da datetime.now()
+    marker_a = "# CUTOFF_LABEL_NOW_PATCH"
+    if marker_a not in src:
+        new_src = src.replace(
+            'CUTOFF_LABEL_FMT = "{:02d}:59"',
+            f'CUTOFF_LABEL_FMT = "{{:02d}}:59"  {marker_a}',
+        )
+        inject = (
+            "    # CUTOFF_LABEL_NOW_PATCH: override con orario reale di esecuzione\n"
+            "    from datetime import datetime as _dt_now\n"
+            "    _now = _dt_now.now()\n"
+            "    cutoff_label = _now.strftime('%H:%M')\n"
+        )
+        new_src = re.sub(
+            r'(cutoff_label = CUTOFF_LABEL_FMT\.format\(args\.cutoff_hour\)\n)',
+            r'\1' + inject,
+            new_src,
+            count=1,
+        )
+        if new_src != src:
+            src = new_src
+            changed = True
+
+    # B) Rimuove la riga rationale dal template di render
+    marker_b = "# RATIONALE_REMOVED"
+    if marker_b not in src:
+        # Pattern: <div class="rationale">...</div> dentro render_card
+        new_src = re.sub(
+            r'<div class="rationale">\{[^}]+\}</div>\s*\n?',
+            f'{{}}  # {marker_b}\n  ',
+            src,
+            count=1,
+        )
+        # Approccio alternativo se sopra non matcha: sostituisce la singola f-string
+        # Più conservativo: usa indented multi-line f-string come nello script reale.
+        if new_src == src:
+            # Trova qualsiasi riga che inietti class="rationale" e neutralizzala
+            new_src = re.sub(
+                r'^(\s*)<div class="rationale">.*?</div>',
+                f'\\1{{"" }}  # {marker_b}',
+                src,
+                count=1,
+                flags=re.MULTILINE,
+            )
+        if new_src != src:
+            src = new_src
+            changed = True
+
+    if changed:
+        p.write_text(src, encoding="utf-8")
         return True
     return False
 

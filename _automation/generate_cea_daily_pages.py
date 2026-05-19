@@ -186,7 +186,6 @@ def render_daily(date_iso, cea):
     <div class="camp-name">{escape_html(name)}</div>
   </div>
   <div class="meta">{' · '.join(meta_bits)}</div>
-  <div class="reason">{escape_html(reason)}</div>
   {narrative_html}
   {perf_html}
 </div>""")

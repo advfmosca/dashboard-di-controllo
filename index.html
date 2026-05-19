@@ -967,7 +967,6 @@
       for (const e of entries) {
         const color = (e.status && e.status.color) || "black";
         const lbl = (e.status && e.status.label) || "—";
-        const reason = (e.status && e.status.reason) || "—";
         const trend = e.trend_3d || [];
         const trendHtml = trend.length
           ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
@@ -981,7 +980,6 @@
               <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
               ${escapeHtml(e.name)}
             </div>
-            <div class="rat">${escapeHtml(reason)}</div>
             ${narrative}
             ${perfEval}
             ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
@@ -1033,7 +1031,6 @@
       for (const e of entries) {
         const color = (e.status && e.status.color) || "black";
         const lbl = (e.status && e.status.label) || "—";
-        const reason = (e.status && e.status.reason) || "—";
         const trend = e.trend_3d || [];
         const trendHtml = trend.length
           ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
@@ -1047,7 +1044,6 @@
               <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
               ${escapeHtml(e.name)}
             </div>
-            <div class="rat">${escapeHtml(reason)}</div>
             ${narrative}
             ${perfEval}
             ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
