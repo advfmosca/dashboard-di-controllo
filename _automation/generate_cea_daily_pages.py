@@ -16,6 +16,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+# Orario di esecuzione (= orario di lettura/processing dei CSV di Alfredo)
+EXECUTION_DT = datetime.now()
+EXECUTION_LABEL = EXECUTION_DT.strftime("%H:%M")
+EXECUTION_DATE_LABEL = EXECUTION_DT.strftime("%d/%m/%Y")
+
 ROOT = Path(__file__).resolve().parent.parent  # /Dashboard di Controllo
 SNAP_DIR = ROOT / "snapshots"
 
@@ -203,6 +208,7 @@ def render_daily(date_iso, cea):
   <div class="brand-header">
     <h1>CEA — Daily Check</h1>
     <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Lead aggiornati alle <b>{EXECUTION_LABEL}</b> del {EXECUTION_DATE_LABEL}</p>
   </div>
 
   <div class="kpis">
