@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c1c1e">
+<title>CEA — Daily Check 2026-05-15</title>
+<link rel="icon" type="image/png" href="https://cea.management/wp-content/uploads/2024/12/434588461_122102218772274381_n.png" />
+<style>
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-card: #ffffff;
+  --border: #ececef;
+  --border-soft: #f4f4f5;
+  --text: #1c1c1e;
+  --text-muted: #6b6b70;
+  --text-dim: #8a8a90;
+  --red: #d93025;
+  --yellow: #f5a623;
+  --green: #1e8e3e;
+  --gray: #9a9aa0;
+  --black: #1a1a1a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
+
+.cea-logo-wrap { text-align: center; margin: 4px 0 18px; }
+.cea-logo { max-width: 220px; width: 50%; height: auto; display: inline-block; }
+h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; }
+.subtitle { color: var(--text-muted); font-size: 12.5px; margin: 0 0 18px; }
+
+/* KPI in alto */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.kpi { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; min-width: 0; }
+.kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+.kpi .value { font-size: 24px; font-weight: 700; line-height: 1.1; color: #0f0f10; font-variant-numeric: tabular-nums; }
+.kpi.total { background: #1c1c1e; border-color: #1c1c1e; }
+.kpi.total .label { color: #b8b8bf; }
+.kpi.total .value { color: #fff; }
+
+/* Conteggi semafori 4 colonne */
+.sem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+.sem-grid .kpi { padding: 11px 13px; }
+.sem-grid .kpi.rosso  { background: #fee2e2; border-color: #fca5a5; }
+.sem-grid .kpi.rosso  .label { color: #991b1b; }
+.sem-grid .kpi.rosso  .value { color: #991b1b; }
+.sem-grid .kpi.giallo { background: #ffedd5; border-color: #fed7aa; }
+.sem-grid .kpi.giallo .label { color: #9a3412; }
+.sem-grid .kpi.giallo .value { color: #9a3412; }
+.sem-grid .kpi.verde  { background: #d1fadf; border-color: #86efac; }
+.sem-grid .kpi.verde  .label { color: #14532d; }
+.sem-grid .kpi.verde  .value { color: #14532d; }
+.sem-grid .kpi.nero   { background: #1a1a1a; border-color: #1a1a1a; }
+.sem-grid .kpi.nero   .label { color: #b8b8bf; }
+.sem-grid .kpi.nero   .value { color: #fff; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
+.legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.dot-rosso { background: var(--red); }
+.dot-giallo { background: var(--yellow); }
+.dot-verde { background: var(--green); }
+.dot-nero  { background: var(--black); }
+
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 12px; padding: 14px 16px; }
+.card.rosso  { border-left-color: var(--red); }
+.card.giallo { border-left-color: var(--yellow); }
+.card.verde  { border-left-color: var(--green); }
+.card.nero   { border-left-color: var(--black); }
+.card-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; color: #fff; flex-shrink: 0; }
+.tag.rosso  { background: var(--red); }
+.tag.giallo { background: var(--yellow); color: var(--text); }
+.tag.verde  { background: var(--green); }
+.tag.nero   { background: var(--black); }
+.camp-name { font-weight: 700; font-size: 14px; flex: 1; }
+.meta { color: var(--text-muted); font-size: 12.5px; margin-top: 6px; }
+.reason { font-size: 12.5px; color: #2c2c2c; margin-top: 8px; line-height: 1.55; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; }
+
+/* Index list */
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 14px 0 10px; }
+.report-list { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 0; }
+.report-list a.report-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
+.report-list a.report-item:hover { background: var(--bg-soft); border-color: #d2d2d7; }
+.report-list .day-name { font-weight: 600; font-size: 13.5px; }
+.report-list .day-counts { font-size: 12.5px; color: var(--text-muted); margin-left: 12px; font-variant-numeric: tabular-nums; }
+.report-list .day-counts .c-rosso  { color: var(--red);   font-weight: 700; }
+.report-list .day-counts .c-giallo { color: #b88a00;      font-weight: 700; }
+.report-list .day-counts .c-verde  { color: var(--green); font-weight: 700; }
+.report-list .day-counts .c-nero   { color: #444;         font-weight: 700; }
+.report-list .arrow { margin-left: auto; color: var(--text-dim); font-size: 18px; }
+
+.signature { font-size: 11.5px; color: var(--text-dim); margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border-soft); text-align: center; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="cea-logo-wrap"><img class="cea-logo" src="https://cea.management/wp-content/uploads/2024/12/434588461_122102218772274381_n.png" alt="CEA"/></div>
+  <h1>CEA — Daily Check</h1>
+  <p class="subtitle">Snapshot del Venerdì 15 Maggio 2026 · 52 clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="label">Clienti attivi</div><div class="value">52</div></div>
+    <div class="kpi total"><div class="label">Spending</div><div class="value">1.094,19 €</div></div>
+    <div class="kpi"><div class="label">Lead generati</div><div class="value">83</div></div>
+    <div class="kpi"><div class="label">CPL medio</div><div class="value">13,18 €</div></div>
+  </div>
+
+  <div class="sem-grid">
+    <div class="kpi rosso"><div class="label">ROSSO</div><div class="value">19</div></div>
+    <div class="kpi giallo"><div class="label">GIALLO</div><div class="value">0</div></div>
+    <div class="kpi verde"><div class="label">VERDE</div><div class="value">33</div></div>
+    <div class="kpi nero"><div class="label">NERO</div><div class="value">0</div></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot dot-verde"></span><b>VERDE</b> — in linea o sotto media 3gg</span>
+    <span><span class="dot dot-giallo"></span><b>GIALLO</b> — CPL fino a +50% vs media 3gg</span>
+    <span><span class="dot dot-rosso"></span><b>ROSSO</b> — 0 lead o CPL &gt; +50% media 3gg</span>
+    <span><span class="dot dot-nero"></span><b>NERO</b> — nessuna spesa</span>
+  </div>
+
+  <div class="cards">
+
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Dott.ssa Orsola Bruno AP</div>
+  </div>
+  <div class="meta">Spesa <b>39,09 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 39,09 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Baldan Intelligence</div>
+  </div>
+  <div class="meta">Spesa <b>28,71 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 28,71 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV ESTETICA PAMELA</div>
+  </div>
+  <div class="meta">Spesa <b>26,54 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 26,54 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV LINEA PERFETTA</div>
+  </div>
+  <div class="meta">Spesa <b>23,57 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 23,57 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV - Farmacia Martelletto</div>
+  </div>
+  <div class="meta">Spesa <b>22,63 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 22,63 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Nuove Sensazioni</div>
+  </div>
+  <div class="meta">Spesa <b>22,07 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 22,07 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Leuce - Medicina Estetica</div>
+  </div>
+  <div class="meta">Spesa <b>21,65 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 21,65 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">SkinMedic Lecco new</div>
+  </div>
+  <div class="meta">Spesa <b>16,40 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 16,40 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">AD ACCOUNT 1 Estetica e mente</div>
+  </div>
+  <div class="meta">Spesa <b>15,33 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 15,33 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Tyla Institute Estetica</div>
+  </div>
+  <div class="meta">Spesa <b>14,84 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 14,84 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">SALUS 2024</div>
+  </div>
+  <div class="meta">Spesa <b>12,62 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 12,62 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV SANITAL ECO STORE</div>
+  </div>
+  <div class="meta">Spesa <b>10,35 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 10,35 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV - Centro Benessere Polverino</div>
+  </div>
+  <div class="meta">Spesa <b>9,40 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 9,40 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">aguaviva adv</div>
+  </div>
+  <div class="meta">Spesa <b>9,12 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 9,12 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV Slim&#39;Up</div>
+  </div>
+  <div class="meta">Spesa <b>9,02 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 9,02 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Centro estetico natura</div>
+  </div>
+  <div class="meta">Spesa <b>7,73 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 7,73 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Fiori di loto</div>
+  </div>
+  <div class="meta">Spesa <b>4,71 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 4,71 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">ADV CENTRO ESTETICO AMBRA</div>
+  </div>
+  <div class="meta">Spesa <b>2,77 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 2,77 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card rosso">
+  <div class="card-head">
+    <span class="tag rosso">ROSSO</span>
+    <div class="camp-name">Andreea Francu Renzo Gestione</div>
+  </div>
+  <div class="meta">Spesa <b>2,71 €</b> · Lead <b>0</b></div>
+  <div class="reason">Spesi 2,71 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">L&#39;estetica che ti cambia la vita - ITALIA</div>
+  </div>
+  <div class="meta">Spesa <b>76,21 €</b> · Lead <b>3</b> · CPL <b>25,40 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Arianna Menis</div>
+  </div>
+  <div class="meta">Spesa <b>58,04 €</b> · Lead <b>2</b> · CPL <b>29,02 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Linea Più Casale</div>
+  </div>
+  <div class="meta">Spesa <b>44,20 €</b> · Lead <b>2</b> · CPL <b>22,10 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Donnauomo</div>
+  </div>
+  <div class="meta">Spesa <b>42,38 €</b> · Lead <b>2</b> · CPL <b>21,19 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Farmacia Di Gennaro</div>
+  </div>
+  <div class="meta">Spesa <b>33,16 €</b> · Lead <b>4</b> · CPL <b>8,29 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Brera13 Beauty</div>
+  </div>
+  <div class="meta">Spesa <b>31,35 €</b> · Lead <b>5</b> · CPL <b>6,27 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Centro Estetico Eden</div>
+  </div>
+  <div class="meta">Spesa <b>27,01 €</b> · Lead <b>2</b> · CPL <b>13,51 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Beauty Point Srl</div>
+  </div>
+  <div class="meta">Spesa <b>26,57 €</b> · Lead <b>2</b> · CPL <b>13,29 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Body Laser</div>
+  </div>
+  <div class="meta">Spesa <b>26,07 €</b> · Lead <b>12</b> · CPL <b>2,17 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Exthetyc</div>
+  </div>
+  <div class="meta">Spesa <b>25,87 €</b> · Lead <b>3</b> · CPL <b>8,62 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Pietrabianca</div>
+  </div>
+  <div class="meta">Spesa <b>25,87 €</b> · Lead <b>4</b> · CPL <b>6,47 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Mudra Centro Benessere</div>
+  </div>
+  <div class="meta">Spesa <b>25,62 €</b> · Lead <b>3</b> · CPL <b>8,54 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - ELYSIR CURNO</div>
+  </div>
+  <div class="meta">Spesa <b>24,06 €</b> · Lead <b>2</b> · CPL <b>12,03 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Farmacia Gagliardelli</div>
+  </div>
+  <div class="meta">Spesa <b>22,42 €</b> · Lead <b>3</b> · CPL <b>7,47 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Charme estetica benessere</div>
+  </div>
+  <div class="meta">Spesa <b>22,27 €</b> · Lead <b>2</b> · CPL <b>11,13 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV ARTESTETICA</div>
+  </div>
+  <div class="meta">Spesa <b>21,91 €</b> · Lead <b>1</b> · CPL <b>21,91 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Maison Kuku</div>
+  </div>
+  <div class="meta">Spesa <b>21,16 €</b> · Lead <b>1</b> · CPL <b>21,16 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Dermal Center</div>
+  </div>
+  <div class="meta">Spesa <b>20,75 €</b> · Lead <b>2</b> · CPL <b>10,38 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Il bello delle donne Grosseto</div>
+  </div>
+  <div class="meta">Spesa <b>20,53 €</b> · Lead <b>2</b> · CPL <b>10,27 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Farmacia Padre Pio</div>
+  </div>
+  <div class="meta">Spesa <b>20,44 €</b> · Lead <b>1</b> · CPL <b>20,44 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Atelier Fiumara</div>
+  </div>
+  <div class="meta">Spesa <b>19,99 €</b> · Lead <b>3</b> · CPL <b>6,66 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">B-ewolution by Beauty Way</div>
+  </div>
+  <div class="meta">Spesa <b>19,98 €</b> · Lead <b>2</b> · CPL <b>9,99 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Oasi di Nadia</div>
+  </div>
+  <div class="meta">Spesa <b>18,07 €</b> · Lead <b>1</b> · CPL <b>18,07 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Tachi Estetica</div>
+  </div>
+  <div class="meta">Spesa <b>18,02 €</b> · Lead <b>2</b> · CPL <b>9,01 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Laboratorio Estetico Catia</div>
+  </div>
+  <div class="meta">Spesa <b>16,72 €</b> · Lead <b>2</b> · CPL <b>8,36 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Centro Estetico Enrica</div>
+  </div>
+  <div class="meta">Spesa <b>16,02 €</b> · Lead <b>4</b> · CPL <b>4,00 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Solelù</div>
+  </div>
+  <div class="meta">Spesa <b>14,60 €</b> · Lead <b>4</b> · CPL <b>3,65 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Riflesso Evolution</div>
+  </div>
+  <div class="meta">Spesa <b>12,54 €</b> · Lead <b>2</b> · CPL <b>6,27 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Black Queen Beauty Art</div>
+  </div>
+  <div class="meta">Spesa <b>12,30 €</b> · Lead <b>1</b> · CPL <b>12,30 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV Visamour</div>
+  </div>
+  <div class="meta">Spesa <b>12,25 €</b> · Lead <b>1</b> · CPL <b>12,25 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Beauty Art</div>
+  </div>
+  <div class="meta">Spesa <b>12,16 €</b> · Lead <b>1</b> · CPL <b>12,16 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">Eternity LB - Account pubblicitario</div>
+  </div>
+  <div class="meta">Spesa <b>4,52 €</b> · Lead <b>1</b> · CPL <b>4,52 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+<div class="card verde">
+  <div class="card-head">
+    <span class="tag verde">VERDE</span>
+    <div class="camp-name">ADV - Tetys</div>
+  </div>
+  <div class="meta">Spesa <b>1,87 €</b> · Lead <b>1</b> · CPL <b>1,87 €</b></div>
+  <div class="reason">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div>
+</div>
+  </div>
+
+  <div class="signature">© Francesco Maria Mosca 2026</div>
+</div>
+</body>
+</html>

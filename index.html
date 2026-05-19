@@ -467,6 +467,9 @@
     <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
       <div class="body">
         <div id="cea-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
+        <div style="margin-top: 10px;">
+          <a class="btn" href="cea-daily-check.html" target="_blank" rel="noopener">Apri archivio completo →</a>
+        </div>
       </div>
     </section>
   </section>
@@ -1203,17 +1206,22 @@
       for (const r of withCEA) {
         const k = r.cea.kpi || {};
         const counts = `<span class="c-r">${k.rosso||0} R</span> · <span class="c-y">${k.giallo||0} G</span> · <span class="c-v">${k.verde||0} V</span> · <span class="c-n">${k.nero||0} N</span>`;
-        html += `<a class="report-item" href="#cea" data-cea-date="${escapeHtml(r.date)}">
-          <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
-          <span class="ri-counts">${counts}</span>
-          <span class="ri-arrow">→</span>
-        </a>`;
+        // Pagina dedicata pubblica e condivisibile (stessa cartella della dashboard)
+        const pageUrl = `cea-daily-${r.date}.html`;
+        html += `<div class="report-item">
+          <a href="#cea" data-cea-date="${escapeHtml(r.date)}" style="flex:1;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+            <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
+            <span class="ri-counts">${counts}</span>
+          </a>
+          <a class="btn btn-mini" href="${pageUrl}" target="_blank" rel="noopener" title="Apri pagina dedicata">Pagina ↗</a>
+          <button class="btn btn-mini" data-copy-cea-link="${pageUrl}" title="Copia link cliente">📋</button>
+        </div>`;
       }
       html += `</div>`;
       root.innerHTML = html;
       if (pill) pill.textContent = withCEA.length + " report";
 
-      // Click handler: salta al giorno + attiva TAB CEA
+      // Click su data → salta al giorno + attiva TAB CEA
       root.querySelectorAll("[data-cea-date]").forEach(a => {
         a.addEventListener("click", function(e) {
           e.preventDefault();
@@ -1221,12 +1229,27 @@
           const sel = document.getElementById("date-select");
           if (sel && targetDate) {
             sel.value = targetDate;
-            // Forziamo l'evento change per innescare loadDate()
             sel.dispatchEvent(new Event("change"));
           }
           activateTab("cea");
-          // Scroll up dopo il switch
           window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+
+      // Click su 📋 → copia URL assoluto pagina cliente
+      root.querySelectorAll("[data-copy-cea-link]").forEach(b => {
+        b.addEventListener("click", function(e) {
+          e.preventDefault();
+          const rel = this.getAttribute("data-copy-cea-link");
+          const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
+          const fullUrl = baseHref + rel;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(fullUrl).then(() => {
+              const orig = this.textContent;
+              this.textContent = "✓";
+              setTimeout(() => { this.textContent = orig; }, 1500);
+            });
+          }
         });
       });
     }).catch(err => {

@@ -1334,13 +1334,13 @@ def _clean_sp(r):
         "ad_url": r.get("ad_url"),
     }
 
-def _medtech_status(spend_y, lead_y, cpl_mean_7d):
+def _medtech_status(spend_y, lead_y, cpl_mean_3d):
     """
-    Stessa logica della scheduled task med-tech-daily-total-lift-sculpt:
+    Med & Tech: campagne brevi (≈14 giorni) → ottimizzazione giornaliera, soglia media 3gg.
     - NERO: spend ieri == 0 (campagna ferma)
-    - ROSSO: 0 lead pur con spending OPPURE CPL ieri > 1.5x media 7gg
-    - GIALLO: CPL ieri tra 1.0x e 1.5x media 7gg
-    - VERDE: CPL ieri ≤ media 7gg
+    - ROSSO: 0 lead pur con spending OPPURE CPL ieri > 1.5x media 3gg
+    - GIALLO: CPL ieri tra 1.0x e 1.5x media 3gg
+    - VERDE: CPL ieri ≤ media 3gg
     """
     if spend_y == 0:
         return {"color": "black", "label": "NERO",
@@ -1349,19 +1349,19 @@ def _medtech_status(spend_y, lead_y, cpl_mean_7d):
         return {"color": "red", "label": "ROSSO",
                 "reason": f"Spesi {fmt_eur(spend_y)} ieri senza generare lead via modulo Lead Ad"}
     cpl_y = spend_y / lead_y
-    if cpl_mean_7d is None or cpl_mean_7d == 0:
+    if cpl_mean_3d is None or cpl_mean_3d == 0:
         return {"color": "green", "label": "VERDE",
                 "reason": f"Spesi {fmt_eur(spend_y)} con {lead_y} lead (CPL {fmt_eur(cpl_y)})"}
-    ratio = cpl_y / cpl_mean_7d
+    ratio = cpl_y / cpl_mean_3d
     delta_pct = (ratio - 1) * 100
     if ratio > 1.5:
         return {"color": "red", "label": "ROSSO",
-                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, oltre la soglia +50%)"}
+                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, oltre la soglia +50%)"}
     if ratio > 1.0:
         return {"color": "yellow", "label": "GIALLO",
-                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, lieve crescita)"}
+                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, lieve crescita)"}
     return {"color": "green", "label": "VERDE",
-            "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 7gg {fmt_eur(cpl_mean_7d)} ({fmt_pct(delta_pct)}, in linea o sotto)"}
+            "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, in linea o sotto)"}
 
 
 def _build_medtech(rows, y_iso, yesterday):
@@ -1389,10 +1389,10 @@ def _build_medtech(rows, y_iso, yesterday):
             e["status"] = r["campaign_effective_status"]
 
     # Helper: media CPL ultimi 7gg per una campagna (esclude eventuali giorni a 0 lead)
-    def cpl_mean_7d(daily, lead_daily, ref_iso):
+    def cpl_mean_3d(daily, lead_daily, ref_iso):
         ref = parse_iso(ref_iso)
         cpls = []
-        for i in range(1, 8):
+        for i in range(1, 4):
             d = iso(ref - timedelta(days=i))
             s = daily.get(d, 0)
             l = lead_daily.get(d, 0)
@@ -1417,7 +1417,7 @@ def _build_medtech(rows, y_iso, yesterday):
         spend_y = round(e["daily"].get(y_iso, 0), 2)
         lead_y = int(e["lead_daily"].get(y_iso, 0))
         cpl_y = (spend_y / lead_y) if lead_y > 0 else None
-        cpl_mean = cpl_mean_7d(e["daily"], e["lead_daily"], y_iso)
+        cpl_mean = cpl_mean_3d(e["daily"], e["lead_daily"], y_iso)
         status = _medtech_status(spend_y, lead_y, cpl_mean)
         trend = cpl_trend_3d(e["daily"], e["lead_daily"], y_iso)
         prev7_spend, _ = sum_prev_window(e["daily"], y_iso, 7)
@@ -1429,7 +1429,7 @@ def _build_medtech(rows, y_iso, yesterday):
             "lead_y": lead_y,
             "contatti_y": lead_y,  # alias backward-compat con UI esistente
             "cpl_y": round(cpl_y, 2) if cpl_y is not None else None,
-            "cpl_mean_7d": round(cpl_mean, 2) if cpl_mean is not None else None,
+            "cpl_mean_3d": round(cpl_mean, 2) if cpl_mean is not None else None,
             "trend_3d": trend,
             "prev7_spend": round(prev7_spend, 2),
             "prev7_lead": int(prev7_lead),
