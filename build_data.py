@@ -67,7 +67,7 @@ AGHC = [
     {"name": "MONTEMAGNO",      "meta_id": "752450855779035",   "tiktok_id": None},
     {"name": "TERRAZZA FLAVIA", "meta_id": "821188209852436",   "tiktok_id": None},
     {"name": "VILLA ERMELLINA", "meta_id": "30233607946222961", "tiktok_id": "7612666695502118929"},
-    {"name": "VILLA GIADA",     "meta_id": "1849759899186169",  "tiktok_id": None},
+    {"name": "VILLA GIADA",     "meta_id": "1849759899186169",  "tiktok_id": "7626418949391351815"},
     {"name": "VILLA MILIANI",   "meta_id": "1353024533007038",  "tiktok_id": None},
 ]
 
@@ -1470,7 +1470,7 @@ def main():
     ap.add_argument("--meta", required=True)
     ap.add_argument("--google", required=True)
     ap.add_argument("--tiktok", required=True)
-    ap.add_argument("--medtech", required=True)
+    ap.add_argument("--medtech", default=None, help="OPZIONALE: dal 2026-05-19 Med & Tech non passa più da Windsor, è popolato dal connettore CSV di Alfredo")
     ap.add_argument("--workspace", required=True, help="Path workspace (Dashboard di Controllo)")
     ap.add_argument("--aghc-vanity", default=None, help="Path opzionale a JSON con vanity metrics (impressions/clicks/landing_page_view) per AGHC")
     ap.add_argument("--aghc-budgets", default=None, help="Path opzionale a aghc_budgets.json con budget_annuale + ytd_seed per ogni meta_id")
@@ -1479,6 +1479,8 @@ def main():
     args = ap.parse_args()
 
     def load(path):
+        if not path or not os.path.exists(path):
+            return []
         with open(path, "r", encoding="utf-8") as f:
             j = json.load(f)
         return j.get("result", j) if isinstance(j, dict) else j
@@ -1486,7 +1488,7 @@ def main():
     meta = load(args.meta)
     google = load(args.google)
     tiktok = load(args.tiktok)
-    medtech = load(args.medtech)
+    medtech = load(args.medtech)  # Tollerato vuoto: Med & Tech ora viene da CSV di Alfredo
 
     ref_date = parse_iso(args.ref_date) if args.ref_date else None
     vanity_rows = load(args.aghc_vanity) if args.aghc_vanity and os.path.exists(args.aghc_vanity) else None
