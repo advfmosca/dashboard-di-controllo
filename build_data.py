@@ -1100,23 +1100,13 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     aghc_meta_s, aghc_meta_n = project_spend(meta_rows, aghc_meta_ids)
     aghc_tt_s, aghc_tt_n = project_spend(tiktok_rows, aghc_tt_ids)
 
-    mt_spend = 0.0
-    mt_camps = set()
-    for r in medtech_rows:
-        if r.get("date") != y_iso:
-            continue
-        camp = r.get("campaign", "")
-        if not MEDTECH_FILTER.search(camp or ""):
-            continue
-        sp = float(r.get("spend") or 0)
-        mt_spend += sp
-        if sp > 0:
-            mt_camps.add(camp)
+    # NOTA: Med & Tech NON viene più calcolato da Windsor. La TAB Med & Tech è
+    # alimentata esclusivamente dai CSV di Alfredo via _automation/build_dashboard_payload.py
+    # che aggiunge anche "Med & Tech" e "CEA" a overview.projects quando popolato.
 
     proj_data = [
         {"name": "BeeFamily",   "spend": round(bf_meta_s + bf_google_s, 2), "accounts": bf_meta_n + bf_google_n},
         {"name": "AGHC",        "spend": round(aghc_meta_s + aghc_tt_s, 2), "accounts": aghc_meta_n + aghc_tt_n},
-        {"name": "Med & Tech",  "spend": round(mt_spend, 2),                "accounts": len(mt_camps)},
     ]
     tot_proj = sum(p["spend"] for p in proj_data) or 1
     for p in proj_data:
@@ -1317,8 +1307,9 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
         "recap": recap_aghc_slack(aghc_cards, yesterday),
     }
 
-    # ============= MED & TECH =============
-    out["medtech"] = _build_medtech(medtech_rows, y_iso, yesterday)
+    # NOTA: data["medtech"] e data["cea"] vengono popolati ESCLUSIVAMENTE dal
+    # connettore _automation/build_dashboard_payload.py (CSV di Alfredo).
+    # build_data.py non legge più raw/medtech.json.
 
     return out
 
@@ -1624,8 +1615,11 @@ def main():
     print(f"  beefamily entries = {len(data['beefamily']['entries'])}, alerts = {bf_alerts}")
     aghc_alerts = sum(1 for c in data['aghc']['cards'] if c['status']['color'] in ('red','yellow'))
     print(f"  aghc cards = {len(data['aghc']['cards'])}, alerts = {aghc_alerts}")
-    mt_alerts = sum(1 for e in data['medtech']['entries'] if e['status']['color'] in ('red','yellow'))
-    print(f"  medtech entries = {len(data['medtech']['entries'])}, alerts = {mt_alerts}")
+    if 'medtech' in data:
+        mt_alerts = sum(1 for e in data['medtech']['entries'] if e['status']['color'] in ('red','yellow'))
+        print(f"  medtech entries = {len(data['medtech']['entries'])}, alerts = {mt_alerts}")
+    else:
+        print(f"  medtech: alimentato da CSV di Alfredo (build_data.py non lo gestisce più)")
 
 if __name__ == "__main__":
     main()

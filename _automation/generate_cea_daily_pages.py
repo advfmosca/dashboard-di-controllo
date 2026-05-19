@@ -107,6 +107,9 @@ h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .camp-name { font-weight: 700; font-size: 14px; flex: 1; }
 .meta { color: var(--text-muted); font-size: 12.5px; margin-top: 6px; }
 .reason { font-size: 12.5px; color: #2c2c2c; margin-top: 8px; line-height: 1.55; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; }
+.r-cpl  { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 8px; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid #0866FF; }
+.r-perf { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 8px; padding: 9px 11px; background: #fffaf0; border-radius: 8px; border-left: 3px solid var(--yellow); }
+.r-perf strong { color: #1c1c1e; }
 
 /* Index list */
 .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 14px 0 10px; }
@@ -168,6 +171,10 @@ def render_daily(date_iso, cea):
             meta_bits.append(f"CPL <b>{fmt_eur(cpl)}</b>")
         if cpl_m3 is not None:
             meta_bits.append(f"Media 3gg {fmt_eur(cpl_m3)}")
+        narrative = e.get("cpl_narrative")
+        perf_eval = e.get("performance_eval")
+        narrative_html = f'<div class="r-cpl">{escape_html(narrative)}</div>' if narrative else ""
+        perf_html = f'<div class="r-perf"><strong>Performance:</strong> {escape_html(perf_eval)}</div>' if perf_eval else ""
         cards_html.append(f"""
 <div class="card {cls}">
   <div class="card-head">
@@ -176,6 +183,8 @@ def render_daily(date_iso, cea):
   </div>
   <div class="meta">{' · '.join(meta_bits)}</div>
   <div class="reason">{escape_html(reason)}</div>
+  {narrative_html}
+  {perf_html}
 </div>""")
 
     if not cards_html:

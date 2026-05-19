@@ -70,10 +70,12 @@ def parse_window(adset):
 
 # -------- parse CSVs --------
 def parse_cea_csv():
+    # Schema: 0=Cliente; 1=Spesa; 2=Lead; 3=CPL; 4=CPM; 5=CTR; 9=Nome Campagna;
+    #         10=Nome Adset; 11=Data; 12=CPC; 13=Impressioni; 14=Click
     rows = []
     with open(WORK / f"cea_{DATA_REPORT}.csv", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter=";")
-        next(reader)  # header
+        next(reader)
         for row in reader:
             if not row or len(row) < 14: continue
             cliente = row[0].strip()
@@ -81,29 +83,47 @@ def parse_cea_csv():
             rows.append({
                 "cliente": cliente,
                 "spesa": to_float(row[1]),
-                "lead": to_int(row[2]),
+                "lead":  to_int(row[2]),
+                "cpm":   to_float(row[4]),
+                "ctr":   to_float(row[5]),
+                "impr":  to_int(row[13]) if len(row) > 13 else 0,
+                "click": to_int(row[14]) if len(row) > 14 else 0,
             })
-    # Aggregate
-    agg = defaultdict(lambda: {"spesa": 0.0, "lead": 0, "adset_count": 0})
+    # Aggregate per cliente: CPM e CTR vanno pesati per impressioni
+    agg = defaultdict(lambda: {"spesa": 0.0, "lead": 0, "adset_count": 0,
+                               "impr": 0, "click": 0,
+                               "cpm_sum": 0.0, "ctr_sum": 0.0})  # _sum sono numeratori pesati
     for r in rows:
         a = agg[r["cliente"]]
         a["spesa"] += r["spesa"]
-        a["lead"] += r["lead"]
+        a["lead"]  += r["lead"]
+        a["impr"]  += r["impr"]
+        a["click"] += r["click"]
+        # Media pesata: CPM/CTR pesato per impressioni del riga
+        a["cpm_sum"] += r["cpm"] * r["impr"]
+        a["ctr_sum"] += r["ctr"] * r["impr"]
         a["adset_count"] += 1
     out = []
     for cli, v in agg.items():
         cpl = (v["spesa"] / v["lead"]) if v["lead"] > 0 else None
+        cpm = (v["cpm_sum"] / v["impr"]) if v["impr"] > 0 else None
+        ctr = (v["ctr_sum"] / v["impr"]) if v["impr"] > 0 else None
         out.append({
             "cliente": cli,
-            "spesa": round(v["spesa"], 2),
-            "lead": v["lead"],
-            "cpl": round(cpl, 2) if cpl is not None else None,
+            "spesa":   round(v["spesa"], 2),
+            "lead":    v["lead"],
+            "cpl":     round(cpl, 2) if cpl is not None else None,
+            "cpm":     round(cpm, 2) if cpm is not None else None,
+            "ctr":     round(ctr, 2) if ctr is not None else None,
+            "impr":    v["impr"],
+            "click":   v["click"],
             "adset_count": v["adset_count"],
         })
     out.sort(key=lambda x: -x["spesa"])
     return out
 
 def parse_medtech_csv():
+    # Schema CSV: stesso del CEA. Campagna è singola entry (no aggregazione cliente).
     out = []
     with open(WORK / f"medtech_{DATA_REPORT}.csv", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter=";")
@@ -114,7 +134,10 @@ def parse_medtech_csv():
             adset = row[10].strip()
             spesa = to_float(row[1])
             lead = to_int(row[2])
-            # studio name
+            cpm  = to_float(row[4])
+            ctr  = to_float(row[5])
+            impr = to_int(row[13]) if len(row) > 13 else 0
+            click = to_int(row[14]) if len(row) > 14 else 0
             m = re.search(r"-\s*(?:Total\s+(?:Lift|Sculpt))\s*-\s*(.+)$", campagna, re.IGNORECASE)
             studio = m.group(1).strip() if m else campagna
             cpl = spesa / lead if lead > 0 else None
@@ -126,6 +149,10 @@ def parse_medtech_csv():
                 "spesa": round(spesa, 2),
                 "lead": lead,
                 "cpl": round(cpl, 2) if cpl is not None else None,
+                "cpm": round(cpm, 2) if cpm else None,
+                "ctr": round(ctr, 2) if ctr else None,
+                "impr": impr,
+                "click": click,
             })
     out.sort(key=lambda x: -x["spesa"])
     return out
@@ -173,6 +200,92 @@ def mean_cpl(history, section, key_field, key_value, current_date):
                 break
     return (sum(cpls) / len(cpls) if cpls else None), days_data
 
+# -------- narrative + performance evaluation --------
+def cpl_narrative(cpl, mean3, days_history, lead, spesa, color_it):
+    """Genera frase argomentata sul trend CPL: contesto + valutazione + cosa significa."""
+    if spesa == 0:
+        return "Campagna ferma in giornata: nessuna pressione sulle aste e nessun apprendimento aggiornato. Da capire se è una pausa voluta o un blocco tecnico."
+    if days_history < 3:
+        if lead == 0:
+            return f"Cold start (giorno {days_history+1}/3): {fmt_eur(spesa)} spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience."
+        if cpl is None:
+            return f"Cold start (giorno {days_history+1}/3): {lead} lead raccolti, ancora poca storia per giudicare il CPL. Servono altri giorni per attivare il confronto."
+        return f"Cold start (giorno {days_history+1}/3): primo CPL utile a {fmt_eur(cpl)}. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia."
+    if lead == 0:
+        return f"{fmt_eur(spesa)} bruciati ieri con zero contatti tracciati. Il problema può essere in 3 punti: tracking (pixel/CAPI), form (caricamento o campi), oppure offerta non chiara. Audit in priorità."
+    if mean3 is None or mean3 == 0:
+        return f"Primi lead consolidati a CPL {fmt_eur(cpl)}. Storico ancora corto per il confronto: monitoriamo se nei prossimi 2 giorni il valore resta stabile."
+    delta = (cpl - mean3) / mean3 * 100
+    if cpl <= mean3:
+        return f"CPL ieri {fmt_eur(cpl)}, sotto la media 3gg ({fmt_eur(mean3)}, {delta:+.0f}%). Apprendimento in consolidamento: c'è margine per uno scaling controllato del budget (+15–20%) senza far saltare l'efficienza."
+    if delta <= 25:
+        return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%): leggera salita, ancora ampiamente dentro la tolleranza. Da osservare oggi: se rimbalza sotto media è rumore, se cresce ancora si entra in zona gialla."
+    if delta <= 50:
+        return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%): trend in salita, vicino al limite +50%. È probabile saturazione creativa o asta più competitiva: rotazione creative entro 48h consigliata."
+    return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%, oltre +50%): fuori scala. La combinazione creative + audience + bidding non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + bid review."
+
+
+# Soglie performance Meta Lead Ads (settore estetica/medical leggermente diverso da retail)
+_CTR_GOOD = 1.5   # ≥ 1.5% buono, ≥ 2.0% ottimo
+_CTR_LOW  = 0.8   # < 0.8% basso
+_CPM_HIGH = 12.0  # > 12 € audience cara
+_CPM_LOW  = 8.0   # ≤ 8 € audience economica
+
+def performance_eval(ctr, cpm, impr, lead):
+    """Valutazione combinata CTR+CPM con suggerimento azione."""
+    if impr is None or impr == 0:
+        return "Nessun dato di visibilità in questo giorno (impressioni a zero)."
+    bits = []
+    # Classificazione CTR
+    ctr_v = ctr if ctr is not None else 0
+    cpm_v = cpm if cpm is not None else 0
+    if ctr_v >= 2.0:
+        ctr_lbl = f"CTR {ctr_v:.2f}% (ottimo)"
+        ctr_cat = "high"
+    elif ctr_v >= _CTR_GOOD:
+        ctr_lbl = f"CTR {ctr_v:.2f}% (buono)"
+        ctr_cat = "high"
+    elif ctr_v >= _CTR_LOW:
+        ctr_lbl = f"CTR {ctr_v:.2f}% (nella media)"
+        ctr_cat = "mid"
+    else:
+        ctr_lbl = f"CTR {ctr_v:.2f}% (basso)"
+        ctr_cat = "low"
+    # Classificazione CPM
+    if cpm_v == 0:
+        cpm_lbl = "CPM n/d"
+        cpm_cat = "mid"
+    elif cpm_v <= _CPM_LOW:
+        cpm_lbl = f"CPM {fmt_eur(cpm_v)} (contenuto)"
+        cpm_cat = "low"
+    elif cpm_v <= _CPM_HIGH:
+        cpm_lbl = f"CPM {fmt_eur(cpm_v)} (in media)"
+        cpm_cat = "mid"
+    else:
+        cpm_lbl = f"CPM {fmt_eur(cpm_v)} (alto)"
+        cpm_cat = "high"
+    # Suggerimento azione (matrix CTR × CPM)
+    if ctr_cat == "high" and cpm_cat == "low":
+        action = "Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta."
+    elif ctr_cat == "high" and cpm_cat == "mid":
+        action = "Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza."
+    elif ctr_cat == "high" and cpm_cat == "high":
+        action = "Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta."
+    elif ctr_cat == "mid" and cpm_cat == "low":
+        action = "Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR."
+    elif ctr_cat == "mid" and cpm_cat == "mid":
+        action = "Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana."
+    elif ctr_cat == "mid" and cpm_cat == "high":
+        action = "CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione."
+    elif ctr_cat == "low" and cpm_cat == "low":
+        action = "Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l'asset principale."
+    elif ctr_cat == "low" and cpm_cat == "mid":
+        action = "Creative non aggancia, costi in linea. Test di 2 nuove varianti creative su angolazioni diverse, mantenendo audience e budget."
+    else:  # low + high
+        action = "Audience cara E creative poco reattiva: combinazione peggiore. Ricostruire campagna: nuovo creative + revisione targeting + ripartire con budget contenuto."
+    return f"{ctr_lbl} · {cpm_lbl}. {action}"
+
+
 # -------- entry builders --------
 def entry_status(color_it, reason):
     return {
@@ -192,6 +305,8 @@ def build_cea_payload(items, history, date_str):
         counts[sem] += 1
         tot_spend += it["spesa"]
         tot_lead += it["lead"]
+        narrative = cpl_narrative(it["cpl"], mean7, days, it["lead"], it["spesa"], sem)
+        perf_eval = performance_eval(it.get("ctr"), it.get("cpm"), it.get("impr"), it["lead"])
         entries.append({
             "name": it["cliente"],
             "source": "ACTIVE",
@@ -200,12 +315,18 @@ def build_cea_payload(items, history, date_str):
             "contatti_y": it["lead"],
             "cpl_y": it["cpl"],
             "cpl_mean_3d": round(mean7, 2) if mean7 is not None else None,
-            "trend_3d": [],  # cold start: no history
+            "cpm": it.get("cpm"),
+            "ctr": it.get("ctr"),
+            "impressions": it.get("impr"),
+            "clicks": it.get("click"),
+            "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,
             "prev7_contatti": 0,
             "status": entry_status(sem, reason),
-            "ad_url": "",  # CEA non ha mapping cliente→meta_account_id nei CSV
+            "cpl_narrative": narrative,
+            "performance_eval": perf_eval,
+            "ad_url": "",
         })
     # sort: red > yellow > gray > green
     order = {"red": 0, "yellow": 1, "gray": 2, "green": 3}
@@ -240,19 +361,27 @@ def build_medtech_payload(items, history, date_str):
         counts[sem] += 1
         tot_spend += it["spesa"]
         tot_lead += it["lead"]
+        narrative = cpl_narrative(it["cpl"], mean7, days, it["lead"], it["spesa"], sem)
+        perf_eval = performance_eval(it.get("ctr"), it.get("cpm"), it.get("impr"), it["lead"])
         entries.append({
-            "name": it["campagna"],  # full campaign name (matches Windsor schema)
+            "name": it["campagna"],
             "source": "ACTIVE",
             "spend_y": it["spesa"],
             "lead_y": it["lead"],
             "contatti_y": it["lead"],
             "cpl_y": it["cpl"],
             "cpl_mean_3d": round(mean7, 2) if mean7 is not None else None,
+            "cpm": it.get("cpm"),
+            "ctr": it.get("ctr"),
+            "impressions": it.get("impr"),
+            "clicks": it.get("click"),
             "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,
             "prev7_contatti": 0,
             "status": entry_status(sem, reason),
+            "cpl_narrative": narrative,
+            "performance_eval": perf_eval,
             "ad_url": f"https://business.facebook.com/adsmanager/manage/campaigns?act={MEDTECH_META_ACCOUNT}",
         })
     order = {"red": 0, "yellow": 1, "gray": 2, "green": 3}
@@ -277,28 +406,47 @@ def build_medtech_payload(items, history, date_str):
     }
 
 # -------- merge into data.json + snapshot --------
+def _update_overview_projects(target, cea_payload, medtech_payload):
+    """Aggiunge/aggiorna 'Med & Tech' e 'CEA' in overview.projects, ricalcola pct."""
+    if "overview" not in target or "projects" not in target["overview"]:
+        return
+    projects = [p for p in target["overview"]["projects"] if p["name"] not in ("Med & Tech", "CEA")]
+    mt_spend = (medtech_payload.get("kpi", {}) or {}).get("total_spend", 0) or 0
+    mt_count = (medtech_payload.get("kpi", {}) or {}).get("total", 0) or 0
+    cea_spend = (cea_payload.get("kpi", {}) or {}).get("total_spend", 0) or 0
+    cea_count = (cea_payload.get("kpi", {}) or {}).get("total", 0) or 0
+    if mt_spend > 0 or mt_count > 0:
+        projects.append({"name": "Med & Tech", "spend": round(mt_spend, 2), "accounts": mt_count})
+    if cea_spend > 0 or cea_count > 0:
+        projects.append({"name": "CEA", "spend": round(cea_spend, 2), "accounts": cea_count})
+    tot = sum(p["spend"] for p in projects) or 1
+    for p in projects:
+        p["pct"] = round(p["spend"] / tot * 100, 2)
+    target["overview"]["projects"] = projects
+
 def merge_into_dashboard(cea_payload, medtech_payload, date_str):
     now = datetime.now()
     iso_now = now.strftime("%Y-%m-%dT%H:%M:%S.%f")
     iso_label = now.strftime("%d/%m/%Y %H:%M")
 
-    # Load existing data.json
+    # data.json: aggiorna cea/medtech + overview.projects + generated_at
     data = json.load(open(DATA_JSON))
     data["cea"] = cea_payload
     data["medtech"] = medtech_payload
-    # Update generated_at to reflect this update (preserve other Windsor sections)
+    _update_overview_projects(data, cea_payload, medtech_payload)
     data["generated_at"] = iso_now
     data["generated_at_label"] = iso_label
     with open(DATA_JSON, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    # Update the snapshot for this date (overwrite cea+medtech)
+    # snapshot del giorno: stesso trattamento
     if SNAP_FILE.exists():
         snap = json.load(open(SNAP_FILE))
     else:
-        snap = dict(data)  # if missing, base on data.json
+        snap = dict(data)
     snap["cea"] = cea_payload
     snap["medtech"] = medtech_payload
+    _update_overview_projects(snap, cea_payload, medtech_payload)
     snap["generated_at"] = iso_now
     snap["generated_at_label"] = iso_label
     with open(SNAP_FILE, "w", encoding="utf-8") as f:
