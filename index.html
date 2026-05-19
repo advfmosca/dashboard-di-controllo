@@ -391,6 +391,11 @@
     </div>
     <section class="card"><h2>Alert da analizzare <span class="pill" id="bf-alerts-pill">–</span></h2><div id="bf-alerts"></div></section>
     <section class="card"><h2>Status performance account <span class="pill" id="bf-status-pill">–</span></h2><div id="bf-status"></div></section>
+    <section class="card"><h2>Card per cliente <span class="pill" id="bf-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="bf-cards"></div>
+      </div>
+    </section>
     <section class="card"><h2>Recap copia-incolla per il team</h2>
       <div class="body">
         <div class="recap-box" id="bf-recap">–</div>
@@ -770,6 +775,42 @@
         </div>`;
       }
       statusRoot.innerHTML = html;
+    }
+
+    // Card per cliente (raggruppa Meta+Google per nome cliente)
+    const cards = proj.cards || [];
+    const cardsPill = document.getElementById("bf-cards-pill");
+    if (cardsPill) cardsPill.textContent = cards.length + " card";
+    const cardsRoot = document.getElementById("bf-cards");
+    if (cardsRoot) {
+      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card disponibile</div>`;
+      else {
+        let chtml = "";
+        for (const c of cards) {
+          const color = (c.status && c.status.color) || "gray";
+          const arrowCls = c.trend_arrow === "↑" ? "up" : (c.trend_arrow === "↓" ? "down" : "flat");
+          const metaBtn = c.ad_url_meta   ? openAccountBtn(c.ad_url_meta, "Meta")     : "";
+          const goolBtn = c.ad_url_google ? openAccountBtn(c.ad_url_google, "Google") : "";
+          chtml += `<div class="aghc-card ${color}">
+            <div class="name">${escapeHtml(c.name)}</div>
+            <div class="kpi-row">
+              <div class="item"><div class="lbl">Spesa ${c.window_days}gg</div><div class="val">${fmtEURcompact(c.spend_window)}</div></div>
+              <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(c.spend_y)}</div></div>
+            </div>
+            <div class="trend">
+              <span class="arrow ${arrowCls}">${c.trend_arrow}</span>
+              <span>${escapeHtml(c.trend_label)}</span>
+              ${c.trend_pct != null ? `<span class="small muted">(${fmtPct(c.trend_pct)})</span>` : ""}
+            </div>
+            <div class="footer">
+              <span class="status-pill ${color}">${escapeHtml((c.status && c.status.label) || "—")}</span>
+              ${metaBtn}
+              ${goolBtn}
+            </div>
+          </div>`;
+        }
+        cardsRoot.innerHTML = chtml;
+      }
     }
 
     document.getElementById("bf-recap").textContent = proj.recap || "—";

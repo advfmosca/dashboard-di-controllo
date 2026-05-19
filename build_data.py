@@ -1027,6 +1027,73 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     for e in bf_entries:
         e["prev7_spend"] = round(e["prev7_spend"], 2)
         e["prev7_contatti"] = int(e["prev7_contatti"])
+
+    # ---------- BeeFamily CARDS per cliente (raggruppa Meta + Google) ----------
+    bf_window_days = 15
+    bf_cards = []
+    for c in BEEFAMILY:
+        meta_id = c.get("meta_id")
+        google_id = c.get("google_id")
+        meta_e = meta_map.get(meta_id) if meta_id else None
+        google_e = google_map.get(google_id) if google_id else None
+        if not meta_e and not google_e:
+            continue
+
+        meta_daily   = (meta_e or {}).get("daily", {})
+        google_daily = (google_e or {}).get("daily", {})
+
+        meta_series   = daily_series(meta_daily, y_iso, bf_window_days)
+        google_series = daily_series(google_daily, y_iso, bf_window_days)
+        spend_window  = sum(s for _, s in meta_series) + sum(s for _, s in google_series)
+        spend_y       = (meta_daily.get(y_iso, 0) or 0) + (google_daily.get(y_iso, 0) or 0)
+
+        # Trend confrontando media prima vs seconda metà del periodo (sommando Meta+Google giorno per giorno)
+        merged_series = []
+        dates_iso = [d for d, _ in meta_series] if meta_series else [d for d, _ in google_series]
+        m_map = {d: s for d, s in meta_series}
+        g_map = {d: s for d, s in google_series}
+        for d in dates_iso:
+            merged_series.append((d, m_map.get(d, 0) + g_map.get(d, 0)))
+        mid_idx = len(merged_series) // 2
+        first_half = [s for _, s in merged_series[:mid_idx]]
+        second_half = [s for _, s in merged_series[mid_idx:]]
+        first_mean = sum(first_half) / len(first_half) if first_half else 0
+        second_mean = sum(second_half) / len(second_half) if second_half else 0
+        if first_mean > 0:
+            trend_pct = ((second_mean / first_mean) - 1) * 100
+            if trend_pct > 10: trend_arrow, trend_label = "↑", "in crescita"
+            elif trend_pct < -10: trend_arrow, trend_label = "↓", "in calo"
+            else: trend_arrow, trend_label = "→", "stabile"
+        else:
+            trend_pct, trend_arrow, trend_label = None, "—", "n/d"
+
+        # Status della card = peggiore status tra le entries Meta+Google di questo cliente
+        related = [e for e in bf_entries if e["name"] == c["name"]]
+        pri_color = {"red": 0, "yellow": 1, "gray": 2, "green": 3}
+        if related:
+            worst = sorted(related, key=lambda e: pri_color.get(e["status"]["color"], 4))[0]
+            card_status = worst["status"]
+        else:
+            card_status = {"color": "gray", "label": "Inattivo", "reason": "Nessun dato"}
+
+        bf_cards.append({
+            "id": c["name"].lower().replace(" ", "-").replace("&", "and"),
+            "name": c["name"],
+            "spend_window": round(spend_window, 2),
+            "spend_y": round(spend_y, 2),
+            "window_days": bf_window_days,
+            "trend_arrow": trend_arrow,
+            "trend_label": trend_label,
+            "trend_pct": round(trend_pct, 1) if trend_pct is not None else None,
+            "status": card_status,
+            "ad_url_meta":   url_meta(meta_id)     if meta_id   else None,
+            "ad_url_google": url_google(google_id) if google_id else None,
+        })
+
+    # Sort card: rossi/gialli prima, poi spend_window desc
+    pri_card = lambda c: {"red": 0, "yellow": 1, "gray": 2, "green": 3}.get(c["status"]["color"], 4)
+    bf_cards.sort(key=lambda c: (pri_card(c), -c["spend_window"]))
+
     out["beefamily"] = {
         "kpi": {
             "actives": bf_kpi["actives"],
@@ -1037,6 +1104,7 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
             "cpc_mean": round(bf_kpi["cpc_mean"], 2) if bf_kpi["cpc_mean"] is not None else None,
         },
         "entries": bf_entries,
+        "cards": bf_cards,
         "recap": recap_beefamily_slack(bf_kpi, bf_entries, yesterday),
     }
 
