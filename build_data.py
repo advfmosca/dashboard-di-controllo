@@ -73,6 +73,9 @@ AGHC = [
 
 MEDTECH_META_ACCOUNT = "533672775128363"
 MEDTECH_FILTER = re.compile(r"Total Lift|Total Sculpt", re.IGNORECASE)
+# CEA: campagne B2B Dentisti/CEA + B2B Francia presenti nello stesso feed medtech
+# (sono storicamente nello stesso ad account ma andamento gestito separatamente)
+CEA_FILTER = re.compile(r"CEA|B2B[_ ]Dentisti|B2B FRANCIA", re.IGNORECASE)
 
 EXCLUDED_SPENDING = {"1576344015714351", "533672775128363"}
 
@@ -1059,6 +1062,22 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     # ============= MED & TECH =============
     out["medtech"] = _build_medtech(medtech_rows, y_iso, yesterday)
 
+    # ============= CEA (B2B Dentisti / Francia) =============
+    out["cea"] = _build_cea(medtech_rows, y_iso, yesterday)
+
+    # Aggiorna breakdown progetti Overview con CEA: viene aggiunto in coda solo se ha spesa nel giorno
+    cea_spend_y = out["cea"]["kpi"].get("total_spend", 0) or 0
+    cea_camps = out["cea"]["kpi"].get("total", 0) or 0
+    if cea_spend_y > 0 or cea_camps > 0:
+        out["overview"]["projects"].append({
+            "name": "CEA",
+            "spend": round(cea_spend_y, 2),
+            "accounts": cea_camps,
+        })
+        tot_proj = sum(p["spend"] for p in out["overview"]["projects"]) or 1
+        for p in out["overview"]["projects"]:
+            p["pct"] = round(p["spend"] / tot_proj * 100, 2)
+
     return out
 
 def _clean_sp(r):
@@ -1209,6 +1228,109 @@ def _build_medtech(rows, y_iso, yesterday):
         "recap": recap_medtech_slack({"actives": actives, "total": len(entries),
                                        "total_spend": tot_spend, "total_contatti": tot_lead,
                                        "cpc_y": cpl_agg, "cpc_mean": None}, entries, yesterday),
+    }
+
+def _build_cea(rows, y_iso, yesterday):
+    """
+    Tab CEA — stessa logica semaforica di Med & Tech ma filtrata sulle campagne
+    B2B Dentisti / CEA / Francia. Vive nello stesso feed `raw/medtech.json` ma
+    rappresenta un cluster cliente diverso (Baldan B2B vs Med & Tech Total Lift/Sculpt).
+    """
+    camp_map = {}
+    for r in rows:
+        camp = r.get("campaign")
+        if not camp or not CEA_FILTER.search(camp):
+            continue
+        # Esclude doppia categorizzazione: una campagna NON deve mai stare sia in Med & Tech sia in CEA
+        if MEDTECH_FILTER.search(camp):
+            continue
+        if camp not in camp_map:
+            camp_map[camp] = {"daily": {}, "lead_daily": {}, "status": r.get("campaign_effective_status")}
+        e = camp_map[camp]
+        d = r.get("date")
+        e["daily"][d] = e["daily"].get(d, 0) + float(r.get("spend") or 0)
+        # CEA: anche le campagne LP-based usano `actions_lead` come fallback
+        ld = int(r.get("actions_onsite_conversion_lead_grouped") or r.get("actions_lead") or 0)
+        if ld:
+            e["lead_daily"][d] = e["lead_daily"].get(d, 0) + ld
+        if r.get("campaign_effective_status"):
+            e["status"] = r["campaign_effective_status"]
+
+    def cpl_mean_7d(daily, lead_daily, ref_iso):
+        ref = parse_iso(ref_iso)
+        cpls = []
+        for i in range(1, 8):
+            d = iso(ref - timedelta(days=i))
+            s = daily.get(d, 0)
+            l = lead_daily.get(d, 0)
+            if l > 0 and s > 0:
+                cpls.append(s / l)
+        return sum(cpls) / len(cpls) if cpls else None
+
+    def cpl_trend_3d(daily, lead_daily, ref_iso):
+        ref = parse_iso(ref_iso)
+        series = []
+        for i in range(2, -1, -1):
+            d = iso(ref - timedelta(days=i))
+            s = daily.get(d, 0)
+            l = lead_daily.get(d, 0)
+            cpl = (s / l) if l > 0 else None
+            series.append({"date": d, "cpl": (round(cpl, 2) if cpl is not None else None)})
+        return series
+
+    entries = []
+    for k, e in camp_map.items():
+        spend_y = round(e["daily"].get(y_iso, 0), 2)
+        lead_y = int(e["lead_daily"].get(y_iso, 0))
+        cpl_y = (spend_y / lead_y) if lead_y > 0 else None
+        cpl_mean = cpl_mean_7d(e["daily"], e["lead_daily"], y_iso)
+        status = _medtech_status(spend_y, lead_y, cpl_mean)
+        trend = cpl_trend_3d(e["daily"], e["lead_daily"], y_iso)
+        prev7_spend, _ = sum_prev_window(e["daily"], y_iso, 7)
+        prev7_lead, _ = sum_prev_window(e["lead_daily"], y_iso, 7)
+        entries.append({
+            "name": k,
+            "source": e.get("status") or "",
+            "spend_y": spend_y,
+            "lead_y": lead_y,
+            "contatti_y": lead_y,
+            "cpl_y": round(cpl_y, 2) if cpl_y is not None else None,
+            "cpl_mean_7d": round(cpl_mean, 2) if cpl_mean is not None else None,
+            "trend_3d": trend,
+            "prev7_spend": round(prev7_spend, 2),
+            "prev7_lead": int(prev7_lead),
+            "prev7_contatti": int(prev7_lead),
+            "status": status,
+            "ad_url": url_meta(MEDTECH_META_ACCOUNT),
+        })
+
+    pri = lambda e: {"red": 0, "yellow": 1, "green": 2, "black": 3}.get(e["status"]["color"], 4)
+    entries.sort(key=lambda e: (pri(e), -e["spend_y"]))
+
+    actives = sum(1 for e in entries if e["status"]["color"] != "black")
+    n_rosso = sum(1 for e in entries if e["status"]["color"] == "red")
+    n_giallo = sum(1 for e in entries if e["status"]["color"] == "yellow")
+    n_verde = sum(1 for e in entries if e["status"]["color"] == "green")
+    n_nero = sum(1 for e in entries if e["status"]["color"] == "black")
+    tot_spend = round(sum(e["spend_y"] for e in entries), 2)
+    tot_lead = sum(e["lead_y"] for e in entries)
+    cpl_agg = round(tot_spend / tot_lead, 2) if tot_lead > 0 else None
+
+    return {
+        "kpi": {
+            "actives": actives,
+            "total": len(entries),
+            "total_spend": tot_spend,
+            "total_contatti": tot_lead,
+            "total_lead": tot_lead,
+            "cpc_y": cpl_agg,
+            "cpl_y": cpl_agg,
+            "rosso": n_rosso,
+            "giallo": n_giallo,
+            "verde": n_verde,
+            "nero": n_nero,
+        },
+        "entries": entries,
     }
 
 # ============================ MAIN ============================
