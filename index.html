@@ -248,6 +248,16 @@
   .btn-mini { padding: 4px 10px; font-size: 12px; border-radius: 7px; }
   .btn-icon { padding: 4px 6px; border-radius: 6px; line-height: 1; }
   .btn-icon svg { width: 12px; height: 12px; display: block; }
+  /* Bottone "Apri account" con logo piattaforma */
+  .btn-platform { padding: 3px 5px; border-radius: 8px; line-height: 1; display: inline-flex; align-items: center; }
+  .btn-platform .plogo { width: 22px; height: 22px; }
+  .btn-platform:hover { background: var(--bg-soft); }
+
+  /* Filtro semaforico cliccabile */
+  .sem-cell { transition: transform .15s, box-shadow .15s, opacity .15s; user-select: none; }
+  .sem-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+  .sem-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+  .sem-grid-filter.has-active .sem-cell:not(.active-filter) { opacity: 0.42; }
   .copy-feedback { font-size: 12px; color: #1f6b3a; font-weight: 600; opacity: 0; transition: opacity .25s; }
   .copy-feedback.show { opacity: 1; }
 
@@ -314,7 +324,6 @@
     <div class="quick">
       <button data-quick="0" class="active">Ieri</button>
       <button data-quick="1">2gg fa</button>
-      <button data-quick="6">1 sett. fa</button>
     </div>
   </div>
 
@@ -434,12 +443,12 @@
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
     </div>
-    <!-- Conteggi semafori (allineati alla scheduled task med-tech-daily-total-lift-sculpt) -->
-    <div class="kpis" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="kpi" style="background:#fee2e2;border-color:#fca5a5;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
-      <div class="kpi" style="background:#ffedd5;border-color:#fed7aa;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
-      <div class="kpi" style="background:#d1fadf;border-color:#86efac;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
-      <div class="kpi" style="background:#1a1a1a;border-color:#1a1a1a;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
+    <!-- Conteggi semafori cliccabili: filtrano le entries -->
+    <div class="kpis sem-grid-filter" data-scope="mt" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
     </div>
     <section class="card"><h2>Daily check campagne <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
@@ -459,12 +468,12 @@
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="cea-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="cea-k-cpc">–</div></div>
     </div>
-    <!-- Conteggi semafori CEA (stessa struttura Med & Tech) -->
-    <div class="kpis" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="kpi" style="background:#fee2e2;border-color:#fca5a5;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
-      <div class="kpi" style="background:#ffedd5;border-color:#fed7aa;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
-      <div class="kpi" style="background:#d1fadf;border-color:#86efac;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
-      <div class="kpi" style="background:#1a1a1a;border-color:#1a1a1a;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
+    <!-- Conteggi semafori CEA cliccabili (filtrano le entries) -->
+    <div class="kpis sem-grid-filter" data-scope="cea" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
     </div>
     <section class="card"><h2>Daily check campagne <span class="pill" id="cea-alerts-pill">–</span></h2><div id="cea-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
@@ -513,12 +522,16 @@
 
   function openAccountBtn(url, platform) {
     if (!url) return "";
-    const lbl = platform === "Meta" ? "Apri Meta" : platform === "Google" ? "Apri Google" : platform === "TikTok" ? "Apri TikTok" : "Apri account";
-    return `<a class="btn btn-mini btn-icon" href="${escapeHtml(url)}" target="_blank" rel="noopener" title="${lbl}"><svg><use href="#i-ext"/></svg></a>`;
+    const lbl = platform === "Meta" ? "Apri Meta Ads Manager" : platform === "Google" ? "Apri Google Ads" : platform === "TikTok" ? "Apri TikTok Ads" : "Apri account";
+    // Il bottone usa il LOGO della piattaforma al posto della freccia generica
+    return `<a class="btn btn-mini btn-platform" href="${escapeHtml(url)}" target="_blank" rel="noopener" title="${lbl}">${platformLogo(platform)}</a>`;
   }
 
   // Module-scope cache of last loaded data (per filtri client-side)
   let LAST_DATA = null;
+
+  // Filtro semaforico per CEA + Med & Tech (null = mostra tutte; "red"/"yellow"/"green"/"black" = solo quel colore)
+  const SEM_FILTER = { mt: null, cea: null };
 
   // ============================ TAB SWITCHING ============================
   const tabBtns = document.querySelectorAll(".tab-btn");
@@ -588,6 +601,33 @@
       });
     });
     syncFilterUI(scope);
+  });
+
+  // ============================ SEMAFORI CLICCABILI (filtro CEA + Med & Tech) ============================
+  function syncSemUI(scope) {
+    const grid = document.querySelector(`.sem-grid-filter[data-scope="${scope}"]`);
+    if (!grid) return;
+    const filter = SEM_FILTER[scope];
+    grid.classList.toggle("has-active", !!filter);
+    grid.querySelectorAll(".sem-cell").forEach(c => {
+      c.classList.toggle("active-filter", c.getAttribute("data-filter") === filter);
+    });
+  }
+
+  document.querySelectorAll(".sem-grid-filter .sem-cell").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const grid = cell.closest(".sem-grid-filter");
+      if (!grid) return;
+      const scope = grid.getAttribute("data-scope");
+      const f = cell.getAttribute("data-filter");
+      // Toggle: clic sullo stesso filtro attivo = reset
+      SEM_FILTER[scope] = (SEM_FILTER[scope] === f) ? null : f;
+      syncSemUI(scope);
+      // Ri-rendering della tab interessata
+      if (!LAST_DATA) return;
+      if (scope === "mt")  renderMedtech(LAST_DATA);
+      if (scope === "cea") renderCEA(LAST_DATA);
+    });
   });
 
   // ============================ COPY HELPER ============================
@@ -898,6 +938,7 @@
   }
 
   function renderMedtech(d) {
+    LAST_DATA = d;
     const proj = d.medtech;
     if (!proj) return;
     const kpi = proj.kpi || {};
@@ -911,12 +952,16 @@
     document.getElementById("mt-k-verde").textContent = kpi.verde != null ? kpi.verde : "–";
     document.getElementById("mt-k-nero").textContent = kpi.nero != null ? kpi.nero : "–";
 
-    const entries = proj.entries || [];
+    const allEntries = proj.entries || [];
+    const filter = SEM_FILTER.mt;
+    const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
     const alertsPill = document.getElementById("mt-alerts-pill");
-    if (alertsPill) alertsPill.textContent = entries.length + " campagne";
+    if (alertsPill) alertsPill.textContent = filter
+      ? `${entries.length} di ${allEntries.length} (filtro ${filter.toUpperCase()})`
+      : `${allEntries.length} campagne`;
 
     const alertsRoot = document.getElementById("mt-alerts");
-    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessuna campagna attiva nel periodo</div>`;
+    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">${filter ? `Nessuna campagna ${filter.toUpperCase()} in questo giorno. Clic di nuovo sul filtro per resettare.` : 'Nessuna campagna attiva nel periodo'}</div>`;
     else {
       let html = "";
       for (const e of entries) {
@@ -950,6 +995,7 @@
 
   // ============================ CEA RENDER (stessa struttura Med & Tech) ============================
   function renderCEA(d) {
+    LAST_DATA = d;
     const proj = d.cea;
     if (!proj || !Array.isArray(proj.entries) || proj.entries.length === 0) {
       // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto + hint
@@ -972,12 +1018,16 @@
     document.getElementById("cea-k-verde").textContent  = kpi.verde  != null ? kpi.verde  : "–";
     document.getElementById("cea-k-nero").textContent   = kpi.nero   != null ? kpi.nero   : "–";
 
-    const entries = proj.entries || [];
+    const allEntries = proj.entries || [];
+    const filter = SEM_FILTER.cea;
+    const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
     const alertsPill = document.getElementById("cea-alerts-pill");
-    if (alertsPill) alertsPill.textContent = entries.length + " campagne";
+    if (alertsPill) alertsPill.textContent = filter
+      ? `${entries.length} di ${allEntries.length} (filtro ${filter.toUpperCase()})`
+      : `${allEntries.length} campagne`;
 
     const alertsRoot = document.getElementById("cea-alerts");
-    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessuna campagna CEA attiva nel periodo</div>`;
+    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">${filter ? `Nessun cliente ${filter.toUpperCase()} in questo giorno. Clic di nuovo sul filtro per resettare.` : 'Nessuna campagna CEA attiva nel periodo'}</div>`;
     else {
       let html = "";
       for (const e of entries) {
@@ -1212,56 +1262,21 @@
         if (pill) pill.textContent = "—";
         return;
       }
+      // Stesso layout di Med & Tech: solo lista cliccabile (link diretto alla pagina dedicata)
       let html = `<div class="report-list">`;
       for (const r of withCEA) {
         const k = r.cea.kpi || {};
         const counts = `<span class="c-r">${k.rosso||0} R</span> · <span class="c-y">${k.giallo||0} G</span> · <span class="c-v">${k.verde||0} V</span> · <span class="c-n">${k.nero||0} N</span>`;
-        // Pagina dedicata pubblica e condivisibile (stessa cartella della dashboard)
         const pageUrl = `cea-daily-${r.date}.html`;
-        html += `<div class="report-item">
-          <a href="#cea" data-cea-date="${escapeHtml(r.date)}" style="flex:1;display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
-            <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
-            <span class="ri-counts">${counts}</span>
-          </a>
-          <a class="btn btn-mini" href="${pageUrl}" target="_blank" rel="noopener" title="Apri pagina dedicata">Pagina ↗</a>
-          <button class="btn btn-mini" data-copy-cea-link="${pageUrl}" title="Copia link cliente">📋</button>
-        </div>`;
+        html += `<a class="report-item" href="${pageUrl}" target="_blank" rel="noopener">
+          <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
+          <span class="ri-counts">${counts}</span>
+          <span class="ri-arrow">→</span>
+        </a>`;
       }
       html += `</div>`;
       root.innerHTML = html;
       if (pill) pill.textContent = withCEA.length + " report";
-
-      // Click su data → salta al giorno + attiva TAB CEA
-      root.querySelectorAll("[data-cea-date]").forEach(a => {
-        a.addEventListener("click", function(e) {
-          e.preventDefault();
-          const targetDate = this.getAttribute("data-cea-date");
-          const sel = document.getElementById("date-select");
-          if (sel && targetDate) {
-            sel.value = targetDate;
-            sel.dispatchEvent(new Event("change"));
-          }
-          activateTab("cea");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      });
-
-      // Click su 📋 → copia URL assoluto pagina cliente
-      root.querySelectorAll("[data-copy-cea-link]").forEach(b => {
-        b.addEventListener("click", function(e) {
-          e.preventDefault();
-          const rel = this.getAttribute("data-copy-cea-link");
-          const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
-          const fullUrl = baseHref + rel;
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(fullUrl).then(() => {
-              const orig = this.textContent;
-              this.textContent = "✓";
-              setTimeout(() => { this.textContent = orig; }, 1500);
-            });
-          }
-        });
-      });
     }).catch(err => {
       console.warn("CEA reports list failed:", err);
       root.innerHTML = `<div class="empty">Impossibile caricare la lista report (${escapeHtml(err.message)})</div>`;
