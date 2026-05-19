@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent  # /Dashboard di Controllo
 SNAP_DIR = ROOT / "snapshots"
 
-LOGO_CEA = "https://cea.management/wp-content/uploads/2024/12/434588461_122102218772274381_n.png"
+LOGO_CEA = None  # Loghi disabilitati su richiesta utente — header solo testo
 
 # Mappa color → classe italiana (replica medtech style)
 COL2CLS = {"red": "rosso", "yellow": "giallo", "green": "verde", "gray": "nero", "black": "nero"}
@@ -55,9 +55,8 @@ body {
 }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
 
-.cea-logo-wrap { text-align: center; margin: 4px 0 18px; }
-.cea-logo { max-width: 220px; width: 50%; height: auto; display: inline-block; }
-h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; }
+.brand-header { text-align: center; margin: 4px 0 14px; padding: 14px 18px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; }
+h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; }
 .subtitle { color: var(--text-muted); font-size: 12.5px; margin: 0 0 18px; }
 
 /* KPI in alto */
@@ -197,14 +196,14 @@ def render_daily(date_iso, cea):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1c1e">
 <title>CEA — Daily Check {date_iso}</title>
-<link rel="icon" type="image/png" href="{LOGO_CEA}" />
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
-  <div class="cea-logo-wrap"><img class="cea-logo" src="{LOGO_CEA}" alt="CEA"/></div>
-  <h1>CEA — Daily Check</h1>
-  <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
+  <div class="brand-header">
+    <h1>CEA — Daily Check</h1>
+    <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
+  </div>
 
   <div class="kpis">
     <div class="kpi"><div class="label">Clienti attivi</div><div class="value">{kpi.get('actives', '–')}</div></div>
@@ -258,14 +257,14 @@ def render_index(items):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CEA — Archivio Daily Check</title>
-<link rel="icon" type="image/png" href="{LOGO_CEA}" />
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
-  <div class="cea-logo-wrap"><img class="cea-logo" src="{LOGO_CEA}" alt="CEA"/></div>
-  <h1>CEA — Archivio Daily Check</h1>
-  <p class="subtitle">Snapshot giornalieri · semaforica su media 3gg</p>
+  <div class="brand-header">
+    <h1>CEA — Archivio Daily Check</h1>
+    <p class="subtitle">Snapshot giornalieri · semaforica su media 3gg</p>
+  </div>
   <div class="section-label">Report disponibili</div>
   <div class="report-list">
 {''.join(items_html) if items_html else '<div class="reason">Nessun report ancora disponibile.</div>'}

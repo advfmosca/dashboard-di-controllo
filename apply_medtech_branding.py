@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""
+Applica branding + layout uniforme alla Dashboard di Controllo
+a TUTTI i file HTML del repo med-tech-daily-check, in modo idempotente.
+
+Modifiche applicate:
+  1. Sostituisce il blocco <style>...</style> con un CSS uniforme alla dashboard
+     (palette --bg/--bg-soft/--red/--yellow/--green, wrap container, card r-12)
+  2. Aggiunge wrapper <div class="wrap"> dentro <body> (se non presente)
+  3. Inserisce il logo Med & Tech ufficiale (medetech.it) come header
+  4. Rimuove footer 'Snapshot generato automaticamente...' e tagline simili
+  5. Aggiunge signature minimale '© Francesco Maria Mosca 2026' in fondo
+
+Idempotente: rilanciato non aggiunge duplicati (controlla la presenza di marker).
+"""
+import re
+import sys
+import glob
+import os
+from pathlib import Path
+
+LOGO_URL = None  # Loghi disabilitati su richiesta utente
+
+NEW_CSS = """
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-card: #ffffff;
+  --border: #ececef;
+  --border-soft: #f4f4f5;
+  --text: #1c1c1e;
+  --text-muted: #6b6b70;
+  --text-dim: #8a8a90;
+  --red: #d93025;
+  --yellow: #f5a623;
+  --green: #1e8e3e;
+  --gray: #9a9aa0;
+  --black: #1a1a1a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
+
+h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 4px 0; text-align: center; }
+.subtitle { color: var(--text-muted); font-size: 12.5px; margin: 0 0 18px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
+.legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.dot-rosso  { background: var(--red); }
+.dot-giallo { background: var(--yellow); }
+.dot-verde  { background: var(--green); }
+.dot-nero   { background: var(--black); }
+
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 12px; padding: 14px 16px; }
+.card.rosso  { border-left-color: var(--red); }
+.card.giallo { border-left-color: var(--yellow); }
+.card.verde  { border-left-color: var(--green); }
+.card.nero   { border-left-color: var(--black); }
+.card-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; color: #fff; flex-shrink: 0; }
+.tag.rosso  { background: var(--red); }
+.tag.giallo { background: var(--yellow); color: var(--text); }
+.tag.verde  { background: var(--green); }
+.tag.nero   { background: var(--black); }
+.camp-name { font-weight: 700; font-size: 14px; flex: 1; }
+.meta { color: var(--text-muted); font-size: 12.5px; margin-top: 6px; }
+.rationale { font-size: 13px; margin-top: 4px; }
+.reading { font-size: 12.5px; color: #2c2c2c; margin-top: 8px; line-height: 1.55; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; }
+.path { font-size: 12.5px; color: var(--text); margin-top: 6px; line-height: 1.55; background: var(--bg-soft); border-left: 3px solid #0b57d0; padding: 8px 12px; border-radius: 8px; }
+.path b { color: #0b57d0; font-weight: 700; }
+.path.urgent { border-left-color: var(--red); } .path.urgent b { color: var(--red); }
+.path.soft   { border-left-color: var(--green); } .path.soft   b { color: var(--green); }
+.freq-badge { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-left: 4px; vertical-align: middle; }
+.freq-healthy { background: #d1fadf; color: #14532d; }
+.freq-monitor { background: var(--border); color: var(--text-muted); }
+.freq-alta    { background: #ffedd5; color: #9a3412; }
+.freq-critica { background: #fee2e2; color: #991b1b; }
+.empty { color: var(--text-dim); font-style: italic; padding: 16px 0; }
+
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 10px; }
+.report-list { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 0; }
+.report-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
+.report-item a { display: flex; align-items: center; width: 100%; text-decoration: none; color: inherit; gap: 10px; }
+.report-item:hover { background: var(--bg-soft); border-color: #d2d2d7; }
+.report-item .day-name { font-weight: 600; font-size: 13.5px; }
+.report-item .day-counts { font-size: 12.5px; color: var(--text-muted); margin-left: 12px; font-variant-numeric: tabular-nums; }
+.report-item .day-counts .c-rosso  { color: var(--red);   font-weight: 700; }
+.report-item .day-counts .c-giallo { color: #b88a00;      font-weight: 700; }
+.report-item .day-counts .c-verde  { color: var(--green); font-weight: 700; }
+.report-item .day-counts .c-nero   { color: #444;         font-weight: 700; }
+.report-item .arrow { margin-left: auto; color: var(--text-dim); font-size: 18px; }
+
+.signature { font-size: 11.5px; color: var(--text-dim); margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border-soft); text-align: center; letter-spacing: 0.02em; }
+"""
+
+
+def transform(html: str) -> str:
+    # 1) Sostituisci il blocco <style> con il nuovo CSS
+    if "<style" in html:
+        html = re.sub(
+            r"<style[^>]*>[\s\S]*?</style>",
+            f"<style>{NEW_CSS}</style>",
+            html,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+    else:
+        # Inserisci <style> nel <head>
+        html = re.sub(
+            r"(</head>)",
+            f"<style>{NEW_CSS}</style>\\1",
+            html,
+            count=1,
+        )
+
+    # 2) Wrap content in <div class="wrap">...</div> (idempotente)
+    if 'class="wrap"' not in html:
+        if "<body" in html and "</body>" in html:
+            html = re.sub(r"(<body[^>]*>)", r"\1\n<div class=\"wrap\">", html, count=1)
+            html = re.sub(r"</body>", "</div>\n</body>", html, count=1)
+    # Caso speciale: se aveva <div class="container"> rinominalo a wrap
+    html = re.sub(r'<div class="container">', '<div class="wrap">', html, count=1)
+
+    # 3) Logo rimosso su richiesta — niente <img> nell'header
+    # (Se in passato lo script aveva aggiunto un logo, lo togliamo)
+    html = re.sub(r'<div class="med-logo-wrap">[\s\S]*?</div>\s*', '', html, flags=re.IGNORECASE)
+
+    # 4) Rimuovi footer 'Snapshot generato...' e tagline simili
+    html = re.sub(r'<div class="footer">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
+    html = re.sub(r'<div class="footer-note">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
+    html = re.sub(r'<div class="tagline">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
+
+    # 5) Aggiungi signature minimale (idempotente)
+    if 'class="signature"' not in html:
+        html = re.sub(
+            r"(</div>\s*</body>)",
+            '<div class="signature">© Francesco Maria Mosca 2026</div>\n\\1',
+            html,
+            count=1,
+        )
+
+    return html
+
+
+def main():
+    root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
+    if not (root / ".git").exists():
+        print(f"❌ {root} non è un repo git", file=sys.stderr)
+        sys.exit(1)
+
+    os.chdir(root)
+
+    files = sorted(
+        set(
+            glob.glob("med-tech-daily-*.html")
+            + glob.glob("_template/*.html")
+            + (["index.html"] if os.path.isfile("index.html") else [])
+        )
+    )
+    if not files:
+        print("❌ Nessun file HTML trovato.", file=sys.stderr)
+        sys.exit(1)
+
+    changed = 0
+    for f in files:
+        original = open(f, encoding="utf-8").read()
+        new = transform(original)
+        if new != original:
+            open(f, "w", encoding="utf-8").write(new)
+            changed += 1
+            print(f"  [updated] {f}")
+        else:
+            print(f"  [skip]    {f}")
+
+    print(f"\nFile aggiornati: {changed}/{len(files)}")
+
+
+if __name__ == "__main__":
+    main()
