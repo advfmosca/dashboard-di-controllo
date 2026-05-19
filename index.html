@@ -826,12 +826,15 @@
     }
 
     // Card per cliente (raggruppa Meta+Google per nome cliente)
-    const cards = proj.cards || [];
+    // FILTRO: solo card con campagne attive ieri (spend_y > 0).
+    // I clienti fermi sono comunque visibili nel blocco "Status performance account" sopra.
+    const allCards = proj.cards || [];
+    const cards = allCards.filter(c => (c.spend_y || 0) > 0);
     const cardsPill = document.getElementById("bf-cards-pill");
-    if (cardsPill) cardsPill.textContent = cards.length + " card";
+    if (cardsPill) cardsPill.textContent = `${cards.length} attive · ${allCards.length} totale`;
     const cardsRoot = document.getElementById("bf-cards");
     if (cardsRoot) {
-      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card disponibile</div>`;
+      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card attiva oggi (spend ieri 0). Vedi <b>Status performance account</b> sopra per il dettaglio dei ${allCards.length} clienti.</div>`;
       else {
         let chtml = "";
         for (const c of cards) {
