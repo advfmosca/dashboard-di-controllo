@@ -1389,8 +1389,45 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
 
     # NOTA: data["medtech"] e data["cea"] vengono popolati ESCLUSIVAMENTE dal
     # connettore _automation/build_dashboard_payload.py (CSV di Alfredo).
-    # build_data.py non legge più raw/medtech.json.
+    # build_data.py non legge più raw/medtech.json. Tuttavia, se esistono già
+    # nel data.json precedente, li PRESERVA (importante per evitare di
+    # cancellarli accidentalmente quando si rilancia build_data.py).
+    return out
 
+
+def preserve_csv_sections(out, workspace):
+    """Se data.json esistente nel workspace contiene `cea` o `medtech` (popolati
+    da dashboard-csv-update / build_dashboard_payload.py), li ri-inietta in `out`
+    prima di sovrascrivere. Evita perdita dati durante rebuild Windsor.
+    Stesso trattamento per overview.projects (sezione Med & Tech + CEA aggiunte
+    dal connettore CSV).
+    """
+    import os as _os
+    data_json = _os.path.join(workspace, "data.json")
+    if not _os.path.exists(data_json):
+        return out
+    try:
+        with open(data_json, "r", encoding="utf-8") as f:
+            prev = json.load(f)
+    except Exception:
+        return out
+    # Preserva cea
+    if "cea" in prev and prev["cea"].get("entries"):
+        out["cea"] = prev["cea"]
+    # Preserva medtech
+    if "medtech" in prev and prev["medtech"].get("entries"):
+        out["medtech"] = prev["medtech"]
+    # Aggiungi Med & Tech + CEA in overview.projects se erano lì
+    if "overview" in out and "projects" in out["overview"] and "overview" in prev:
+        prev_projects = prev.get("overview", {}).get("projects", [])
+        existing_names = {p["name"] for p in out["overview"]["projects"]}
+        for p in prev_projects:
+            if p.get("name") in ("Med & Tech", "CEA") and p["name"] not in existing_names:
+                out["overview"]["projects"].append(p)
+        # Ricalcola pct
+        tot = sum(p.get("spend", 0) for p in out["overview"]["projects"]) or 1
+        for p in out["overview"]["projects"]:
+            p["pct"] = round((p.get("spend", 0) or 0) / tot * 100, 2)
     return out
 
 def _clean_sp(r):
@@ -1581,6 +1618,10 @@ def main():
     workspace = args.workspace
     snap_dir = os.path.join(workspace, "snapshots")
     os.makedirs(snap_dir, exist_ok=True)
+
+    # Preserve cea/medtech eventualmente popolati da dashboard-csv-update
+    # (build_data.py non li costruisce, ma non deve nemmeno cancellarli)
+    data = preserve_csv_sections(data, workspace)
 
     # Write latest
     latest_path = os.path.join(workspace, "data.json")
