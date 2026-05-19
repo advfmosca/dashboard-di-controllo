@@ -200,21 +200,21 @@ def status_account(spend_y, contatti_y, prev7_spend, prev7_contatti, project_typ
             ratio = cpc_y / cpc_mean
             delta_pct = (ratio - 1) * 100
             if ratio > 1.5:
-                return {"color": "red", "label": "CPC critico",
-                        "reason": f"CPC {fmt_eur(cpc_y)} vs media 7gg {fmt_eur(cpc_mean)} ({fmt_pct(delta_pct)})"}
+                return {"color": "red", "label": "CPL critico",
+                        "reason": f"CPL {fmt_eur(cpc_y)} vs media 7gg {fmt_eur(cpc_mean)} ({fmt_pct(delta_pct)})"}
             if ratio > 1.2:
-                return {"color": "yellow", "label": "CPC in salita",
-                        "reason": f"CPC {fmt_eur(cpc_y)} vs media 7gg {fmt_eur(cpc_mean)} ({fmt_pct(delta_pct)})"}
+                return {"color": "yellow", "label": "CPL in salita",
+                        "reason": f"CPL {fmt_eur(cpc_y)} vs media 7gg {fmt_eur(cpc_mean)} ({fmt_pct(delta_pct)})"}
             return {"color": "green", "label": "In linea",
-                    "reason": f"CPC {fmt_eur(cpc_y)} (media 7gg {fmt_eur(cpc_mean)}, {fmt_pct(delta_pct)})"}
+                    "reason": f"CPL {fmt_eur(cpc_y)} (media 7gg {fmt_eur(cpc_mean)}, {fmt_pct(delta_pct)})"}
         return {"color": "green", "label": "Attivo",
-                "reason": f"Spesi {fmt_eur(spend_y)} con {contatti_y} contatti (CPC {fmt_eur(cpc_y) if cpc_y else '—'})"}
+                "reason": f"Spesi {fmt_eur(spend_y)} con {contatti_y} contatti (CPL {fmt_eur(cpc_y) if cpc_y else '—'})"}
 
     # hotel — status su spending anomalo vs media 7gg
     info_c = ""
     if contatti_y > 0:
         cpc_y = spend_y / contatti_y
-        info_c = f" · {contatti_y} contatti (CPC {fmt_eur(cpc_y)})"
+        info_c = f" · {contatti_y} contatti (CPL {fmt_eur(cpc_y)})"
     if mean7 > 0:
         ratio = spend_y / mean7
         delta_pct = (ratio - 1) * 100
@@ -261,7 +261,7 @@ def recap_beefamily_slack(kpi, entries, yesterday):
     lines = [
         f"Bee Family — Daily Check del {date_slash(yesterday)}",
         f"{kpi['actives']} account attivi su {kpi['total']} · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {grays} NERO",
-        f"Spending: {fmt_eur(kpi['total_spend'])} · Contatti: {kpi['total_contatti']} · CPC medio: {fmt_eur(kpi['cpc_y']) if kpi['cpc_y'] else '—'}",
+        f"Spending: {fmt_eur(kpi['total_spend'])} · Contatti: {kpi['total_contatti']} · CPL medio: {fmt_eur(kpi['cpc_y']) if kpi['cpc_y'] else '—'}",
         f"Dashboard cliente: {PAGES_URL}beefamily.html",
     ]
     return "\n".join(lines)
@@ -393,7 +393,7 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
     """
     Rational a 3 paragrafi per le card BeeFamily, stile AGHC ma adattato:
     - Mix di canali Meta + Google (al posto di Meta + TikTok in AGHC)
-    - Focus contatti generati (lead) e CPC sul periodo, non vanity metrics di brand
+    - Focus contatti generati (lead) e CPL sul periodo, non vanity metrics di brand
     - 3 paragrafi: Cosa è successo / Perché conta / Cosa faremo
     """
     avg_daily = total_spend_window / max(window_days, 1)
@@ -606,7 +606,7 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
         ])
     else:
         p3 = _pick(cn + "·BF·p3·steady", [
-            "Per la settimana prossima manteniamo l'impostazione e introduciamo un piccolo test creativo a basso budget: vogliamo verificare se possiamo abbassare ulteriormente il CPC senza perdere volume.",
+            "Per la settimana prossima manteniamo l'impostazione e introduciamo un piccolo test creativo a basso budget: vogliamo verificare se possiamo abbassare ulteriormente il CPL senza perdere volume.",
             "Per i prossimi giorni teniamo la rotta e introduciamo un test controllato su una creative nuova, così iniziamo a costruire la coda creativa per la prossima fase del piano.",
             "Confermiamo l'assetto e iniziamo a preparare il refresh creativo successivo, per non arrivare al passaggio di stagione con asset stanchi.",
         ])
@@ -841,11 +841,11 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
     # ============================================================
     if trend_pct is not None and trend_pct > 25:
         p3 = _pick(cn + "·p3·up", [
-            f"Lasciamo correre la spinta ma teniamo l'occhio su CPC e frequenza: se la frequenza supera 2,5 entriamo "
+            f"Lasciamo correre la spinta ma teniamo l'occhio su CPL e frequenza: se la frequenza supera 2,5 entriamo "
             f"subito con un test creativo nuovo per non bruciare il pubblico.",
-            f"La crescita la cavalchiamo, però la prossima settimana misuriamo CPC giornaliero e frequenza — se l'asta "
+            f"La crescita la cavalchiamo, però la prossima settimana misuriamo CPL giornaliero e frequenza — se l'asta "
             f"si surriscalda alziamo il prezzo per evitare di pagare di più ogni nuovo utente.",
-            f"Cavalchiamo il momentum senza forzare: alziamo i tetti budget solo se il CPC resta stabile, e ruotiamo "
+            f"Cavalchiamo il momentum senza forzare: alziamo i tetti budget solo se il CPL resta stabile, e ruotiamo "
             f"creatività appena la frequenza tocca 2,5.",
         ])
     elif trend_pct is not None and trend_pct < -25:
@@ -874,11 +874,11 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
     else:
         p3 = _pick(cn + "·p3·ok", [
             f"Nessuna mossa urgente: la prossima settimana facciamo solo refresh creativo sugli annunci più stanchi e "
-            f"teniamo monitorato il CPC giorno per giorno.",
-            f"Per ora si va così: rotazione creativa di routine, monitoraggio CPC giornaliero, niente intervento "
+            f"teniamo monitorato il CPL giorno per giorno.",
+            f"Per ora si va così: rotazione creativa di routine, monitoraggio CPL giornaliero, niente intervento "
             f"strutturale fino al prossimo segnale.",
             f"Si naviga: nessuna correzione di rotta, solo refresh creativo se compaiono segnali di saturazione e "
-            f"controllo del CPC sulla media settimanale.",
+            f"controllo del CPL sulla media settimanale.",
         ])
 
     return wrap(p1, p2, p3)
