@@ -262,7 +262,7 @@ def recap_beefamily_slack(kpi, entries, yesterday):
         f"Bee Family — Daily Check del {date_slash(yesterday)}",
         f"{kpi['actives']} account attivi su {kpi['total']} · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {grays} NERO",
         f"Spending: {fmt_eur(kpi['total_spend'])} · Contatti: {kpi['total_contatti']} · CPC medio: {fmt_eur(kpi['cpc_y']) if kpi['cpc_y'] else '—'}",
-        f"Apri dashboard live: {PAGES_URL}",
+        f"Dashboard cliente: {PAGES_URL}beefamily.html",
     ]
     return "\n".join(lines)
 
