@@ -233,7 +233,9 @@ function ensureSnapshotDates() {
       .then(j => Array.isArray(j) ? j : (j.dates || []))
       .catch(() => []);
   }
-  return SNAP_INDEX_PROMISE.then(dates => dates.slice(-15));
+  // index.json ha date in ordine DESC (più recente prima). Prendiamo le ultime 15 finestra
+  // (= le 15 più recenti) e le mettiamo in ordine ASC per il chart.
+  return SNAP_INDEX_PROMISE.then(dates => dates.slice(0, 15).reverse());
 }
 function extractDailyForClient(snap, clientName) {
   const empty = { spend: null, leads: null, impressions: null, clicks: null, reach: null, page_engagement: null, cpl: null };
