@@ -452,13 +452,14 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
                                meta_contatti_window=None, google_contatti_window=None,
                                meta_campaigns=None, google_campaigns=None):
     """
-    Rational BeeFamily in stile AGHC: 3 paragrafi narrativi (Cosa è successo /
-    Perché conta / Cosa faremo ora) con CPL+contatti come metriche centrali.
+    Rational BeeFamily analitico-consulenziale a 3 paragrafi:
+    P1 Contesto periodo · P2 Lettura dei dati di acquisizione · P3 Prospettiva strategica.
+    Tono professionale, KPI integrati nel testo (CPL + contatti + breakdown Meta/Google).
     """
     avg_daily = total_spend_window / max(window_days, 1)
     pct_zero = (zero_days / max(window_days, 1)) * 100
 
-    # Peak day estratto dalla serie giornaliera (Meta+Google sommati)
+    # Peak day
     peak_iso, peak_spend = None, 0
     if daily_series_data:
         for d, s in daily_series_data:
@@ -466,14 +467,11 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
                 peak_iso, peak_spend = d, s
     peak_wd = ""
     if peak_iso:
-        try:
-            peak_wd = _WEEKDAYS_IT[parse_iso(peak_iso).weekday()]
-        except Exception:
-            peak_wd = ""
+        try: peak_wd = _WEEKDAYS_IT[parse_iso(peak_iso).weekday()]
+        except Exception: peak_wd = ""
 
-    google_share = (google_spend_total / total_spend_window * 100) if total_spend_window else 0
-    cpl_window = (total_spend_window / contatti_window) if contatti_window > 0 else None
     cn = client_name
+    cpl_window = (total_spend_window / contatti_window) if contatti_window > 0 else None
     meta_contatti = meta_contatti_window if meta_contatti_window is not None else contatti_window
     google_contatti = google_contatti_window if google_contatti_window is not None else 0
     has_meta = meta_spend_total > 0 or meta_contatti > 0
@@ -486,213 +484,122 @@ def _build_beefamily_rational(client_name, window_days, total_spend_window,
         return f"{int(n):,}".replace(",", ".")
 
     def wrap(p1, p2, p3):
-        # Stile descrittivo argomentato come AGHC: tre paragrafi prosa, niente label uppercase.
         return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
 
-    # ============================================================
-    # RAMO A — Pausa pulita (nessuno spending nel periodo)
-    # ============================================================
+    # =====================================================================
+    # P1 — Contesto periodo
+    # =====================================================================
+    peak_clause = f", con la giornata di massima erogazione di {peak_wd or 'centro periodo'} a {fmt_eur(peak_spend)}" if peak_iso else ""
     if total_spend_window == 0:
-        p1 = _pick(cn + "·BF·A·p1", [
-            f"In queste due settimane {cn} è rimasto fermo: nessuna spesa, l'account ha tenuto la riserva di budget al sicuro.",
-            f"Le ultime giornate per {cn} sono passate in silenzio pubblicitario, in linea con la pianificazione stagionale.",
-            f"Per {cn} il periodo è stato di stand-by programmato: zero erogazione e zero contatti generati.",
-        ])
-        p2 = _pick(cn + "·BF·A·p2", [
-            "Quello che non è speso adesso resta a disposizione per le finestre commerciali più calde, dove ogni euro pesa di più sul CPL finale.",
-            "La riserva di budget intatta diventa la nostra leva nella prossima apertura di stagione: meno disperso, più mirato sui contatti che convertono.",
-            "Nessun consumo a vuoto significa che possiamo concentrare il fuoco esattamente dove sappiamo che la domanda risponderà.",
-        ])
-        p3 = _pick(cn + "·BF·A·p3", [
-            "Quando rialzeremo lo switch ripartiamo con un set creativo nuovo e una distribuzione piena su tutta la settimana, così non perdiamo i primi giorni in fase di apprendimento.",
-            "Per la riapertura prepariamo un test creativo fresco e una cadenza distribuita: l'algoritmo deve poter scaldare l'apprendimento da subito sui contatti giusti.",
-            "Alla ripresa lavoreremo su creatività rinnovate e copertura quotidiana: l'obiettivo è entrare nella seconda settimana già a regime sul CPL target.",
-        ])
-        return wrap(p1, p2, p3)
-
-    # ============================================================
-    # RAMO B — Erogazione frammentata (>30% giorni a zero)
-    # ============================================================
-    if pct_zero > 30 and zero_days >= 3:
+        p1 = (f"Nelle ultime due settimane {cn} è rimasto fermo: nessuna spesa sull'account, "
+              f"con la riserva di budget tenuta integra per i cicli successivi.")
+    elif pct_zero > 30 and zero_days >= 3:
         avg_active = total_spend_window / max(active_days, 1)
-        p1 = _pick(cn + "·BF·B·p1", [
-            f"L'erogazione di {cn} è andata a strappi: in {zero_days} giornate su {window_days} l'account è rimasto fermo, "
-            f"e i {fmt_eur(total_spend_window)} totali si sono concentrati nei pochi giorni di attività piena.",
-            f"Quindici giornate spezzate per {cn}: {zero_days} a zero, le altre {active_days} che si sono divise tutto il "
-            f"carico — {fmt_eur(total_spend_window)} investiti senza una distribuzione regolare.",
-            f"Per {cn} è stata una finestra a singhiozzo: solo {active_days} giorni effettivi di spinta, dove sono confluiti "
-            f"i {fmt_eur(total_spend_window)} di periodo.",
-        ])
-        if contatti_window > 0 and cpl_window is not None:
-            p2 = _pick(cn + "·BF·B·p2a", [
-                f"Sui giorni effettivamente attivi la media sale a {fmt_eur(avg_active)} e i contatti generati sono {fmt_int(contatti_window)} "
-                f"per un CPL medio di {fmt_eur(cpl_window)}, ma la discontinuità penalizza la curva di apprendimento e fa oscillare il costo per lead.",
-                f"Quando l'account spinge, spinge forte ({fmt_eur(avg_active)} al giorno) e porta a casa {fmt_int(contatti_window)} contatti a CPL {fmt_eur(cpl_window)}, "
-                f"ma le pause obbligano l'algoritmo a ricominciare da capo ogni volta che torniamo live.",
-            ])
-        else:
-            p2 = _pick(cn + "·BF·B·p2b", [
-                f"Sui giorni effettivamente attivi la media sale a {fmt_eur(avg_active)}, ma la discontinuità ha bloccato la generazione di contatti: "
-                f"l'algoritmo non ha mai stabilizzato il pubblico.",
-                f"Il problema non è il quanto — sui giorni attivi si arriva a {fmt_eur(avg_active)} medi — ma il quando: senza continuità "
-                f"il pubblico non si scalda e i contatti non arrivano.",
-            ])
-        if contatti_y > 0:
-            p3 = _pick(cn + "·BF·B·p3a", [
-                f"Per la prossima settimana l'obiettivo è uno solo: riportare l'erogazione a sette giorni su sette. Ieri "
-                f"abbiamo già visto {contatti_y} contatti, segnale che il messaggio risponde — non manca la domanda, manca la presenza.",
-                f"Riallineiamo la cadenza: l'ultimo giorno ha portato {contatti_y} contatti pur con erogazione interrotta, "
-                f"quindi sappiamo che il pubblico c'è. La priorità è eliminare i buchi di copertura.",
-            ])
-        else:
-            p3 = _pick(cn + "·BF·B·p3b", [
-                f"La prima mossa è ripristinare la continuità quotidiana — poi controlleremo bidding e creatività per "
-                f"capire perché non stiamo intercettando contatti nemmeno nei giorni attivi.",
-                f"Riattiviamo l'erogazione stabile e poi facciamo un audit veloce: senza contatti su {active_days} giorni di "
-                f"spinta serve verificare offerta, audience e creative.",
-            ])
-        return wrap(p1, p2, p3)
-
-    # ============================================================
-    # P1 — Cosa è successo (per i rami principali: accelerazione / raffreddamento / crescita / stabilità)
-    # ============================================================
-    if trend_pct is not None and trend_pct > 25:
-        peak_clause = f" con un picco {peak_wd or 'centrale'} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·BF·C·p1", [
-            f"{cn} ha cambiato passo nelle ultime due settimane: la spesa nella seconda metà è {trend_pct:.0f}% sopra la prima, "
-            f"portando il totale a {fmt_eur(total_spend_window)}{peak_clause}.",
-            f"Per {cn} è stato un periodo in accelerazione netta: +{trend_pct:.0f}% di spesa tra prima e seconda settimana, "
-            f"{fmt_eur(total_spend_window)} investiti con una curva chiaramente in salita{peak_clause}.",
-            f"Le ultime giornate di {cn} hanno alzato l'asticella: +{trend_pct:.0f}% nella seconda parte della finestra, "
-            f"con il monte spese che chiude a {fmt_eur(total_spend_window)}{peak_clause}.",
-        ])
+        p1 = (f"Negli ultimi {window_days} giorni {cn} mostra un'erogazione frammentata: "
+              f"l'account è rimasto fermo per {zero_days} giornate su {window_days} e i "
+              f"{fmt_eur(total_spend_window)} di periodo si concentrano sui {active_days} "
+              f"giorni effettivi, con una media a regime di {fmt_eur(avg_active)} al giorno.")
+    elif trend_pct is not None and trend_pct > 25:
+        p1 = (f"Negli ultimi {window_days} giorni {cn} accelera in modo netto: la spesa della "
+              f"seconda metà del periodo cresce del {trend_pct:.0f}% rispetto alla prima, "
+              f"portando il totale a {fmt_eur(total_spend_window)} con un ritmo medio di "
+              f"{fmt_eur(avg_daily)} al giorno{peak_clause}.")
     elif trend_pct is not None and trend_pct < -25:
-        p1 = _pick(cn + "·BF·D·p1", [
-            f"{cn} ha rallentato visibilmente: la spesa della seconda metà è {abs(trend_pct):.0f}% sotto la prima, "
-            f"chiudendo il periodo a {fmt_eur(total_spend_window)} totali.",
-            f"Per {cn} la curva si è raffreddata: −{abs(trend_pct):.0f}% nella seconda settimana, segno che qualcosa "
-            f"nell'erogazione o nel bidding ha frenato.",
-            f"Nelle ultime giornate {cn} ha ridotto la presenza: cala del {abs(trend_pct):.0f}% tra prima e seconda metà, "
-            f"a fronte di un totale di {fmt_eur(total_spend_window)} sul periodo.",
-        ])
-    elif trend_pct is not None and trend_pct > 5:
-        peak_clause = f", con il picco {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·BF·E·p1", [
-            f"Negli ultimi {window_days} giorni {cn} ha tenuto una traiettoria in lieve salita, con un +{trend_pct:.0f}% "
-            f"tra la prima e la seconda metà del periodo: in totale sono stati investiti {fmt_eur(total_spend_window)}, "
-            f"distribuiti con regolarità su tutta la finestra{peak_clause}.",
-            f"Per {cn} la finestra appena chiusa è stata una crescita controllata (+{trend_pct:.0f}%): "
-            f"{fmt_eur(total_spend_window)} di investimento spalmati su {window_days} giorni che hanno respirato bene"
-            f"{peak_clause}.",
-            f"Curva in lieve risalita per {cn} nelle ultime due settimane, con un +{trend_pct:.0f}% di spesa nella "
-            f"seconda parte del periodo e {fmt_eur(total_spend_window)} totali messi a terra senza giorni fuori scala"
-            f"{peak_clause}.",
-        ])
+        p1 = (f"Negli ultimi {window_days} giorni {cn} attraversa una fase di raffreddamento: "
+              f"la spesa della seconda metà scende del {abs(trend_pct):.0f}% rispetto alla prima, "
+              f"chiudendo il periodo a {fmt_eur(total_spend_window)} totali con una media di "
+              f"{fmt_eur(avg_daily)} al giorno{peak_clause}.")
     else:
-        delta_str = f" ({trend_pct:+.0f}% tra prima e seconda metà del periodo)" if trend_pct is not None else ""
-        peak_clause = f", con la giornata più importante {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·BF·F·p1", [
-            f"Nelle ultime due settimane {cn} ha mantenuto la rotta che ci siamo dati: {fmt_eur(total_spend_window)} "
-            f"investiti su {active_days} giorni effettivi di erogazione, senza scossoni rilevanti{delta_str}{peak_clause}.",
-            f"Per {cn} il periodo è stato di crociera: {fmt_eur(total_spend_window)} spesi con una cadenza prevedibile "
-            f"giorno per giorno{delta_str}{peak_clause}. È esattamente il ritmo che il piano media richiede in questa parte della stagione.",
-            f"Andamento regolare per {cn} negli ultimi {window_days} giorni, con {fmt_eur(total_spend_window)} totali "
-            f"distribuiti sui {active_days} giorni attivi e nessuna oscillazione meritevole di intervento{delta_str}{peak_clause}.",
-        ])
+        delta = f" ({trend_pct:+.0f}% tra prima e seconda metà del periodo)" if trend_pct is not None else ""
+        p1 = (f"Negli ultimi {window_days} giorni {cn} mantiene una traiettoria di crociera"
+              f"{delta}: {fmt_eur(total_spend_window)} di investimento distribuiti su "
+              f"{active_days} giorni effettivi, a un ritmo medio di {fmt_eur(avg_daily)} "
+              f"al giorno{peak_clause}.")
 
-    # ============================================================
-    # P2 — Perché conta: CPL/Contatti totali + breakdown Meta/Google
-    # ============================================================
-    total_leads = contatti_window
-    if total_leads > 0 and cpl_window is not None:
-        p2_opener = _pick(cn + "·BF·p2·core+", [
-            f"Sul fronte conversioni il bilancio del periodo è chiaro: {fmt_int(total_leads)} contatti generati a un CPL medio "
-            f"di {fmt_eur(cpl_window)}, su un investimento medio di {fmt_eur(avg_daily)} al giorno",
-            f"In termini di contatti il quadro tiene: {fmt_int(total_leads)} lead raccolti nella finestra a {fmt_eur(cpl_window)} di CPL medio, "
-            f"con un ritmo di {fmt_eur(avg_daily)} di spesa giornaliera",
-            f"La fotografia conversioni del periodo restituisce {fmt_int(total_leads)} contatti a CPL {fmt_eur(cpl_window)}, "
-            f"sostenuti da un investimento medio quotidiano di {fmt_eur(avg_daily)}",
-        ])
+    # =====================================================================
+    # P2 — Lettura dei dati: contatti, CPL, breakdown canale
+    # =====================================================================
+    if contatti_window > 0 and cpl_window is not None:
+        # Lettura efficienza CPL
+        if cpl_window < 5:
+            cpl_qual = "molto efficiente"
+        elif cpl_window < 15:
+            cpl_qual = "in linea con il benchmark di settore"
+        elif cpl_window < 30:
+            cpl_qual = "leggermente sopra il benchmark"
+        else:
+            cpl_qual = "sopra il benchmark, da consolidare"
+
+        opener = (f"Sul fronte conversioni il periodo restituisce <strong>{fmt_int(contatti_window)} "
+                  f"contatti generati</strong> a un CPL medio di <strong>{fmt_eur(cpl_window)}</strong> "
+                  f"— un costo per lead {cpl_qual} considerato l'investimento medio di "
+                  f"{fmt_eur(avg_daily)} al giorno.")
     else:
-        p2_opener = _pick(cn + "·BF·p2·core0", [
-            f"Sul fronte conversioni il periodo è chiuso a zero contatti, a fronte di {fmt_eur(total_spend_window)} di investimento "
-            f"({fmt_eur(avg_daily)} al giorno di ritmo medio)",
-            f"Sul lato lead il bilancio è nullo: la spesa di {fmt_eur(total_spend_window)} non ha tradotto in contatti, "
-            f"con una media giornaliera di {fmt_eur(avg_daily)}",
-        ])
+        opener = (f"Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di "
+                  f"{fmt_eur(total_spend_window)} di investimento, con una media di "
+                  f"{fmt_eur(avg_daily)} al giorno.")
 
-    # Channel mix clause (Meta+Google se entrambi attivi)
+    # Mix canali
     mix_clause = ""
     if has_meta and has_g:
         bits = []
         if meta_cpl is not None:
-            bits.append(f"Meta che ha portato {fmt_int(meta_contatti)} contatti a CPL {fmt_eur(meta_cpl)}")
+            bits.append(f"<strong>Meta</strong> con {fmt_int(meta_contatti)} contatti a CPL {fmt_eur(meta_cpl)}")
         elif meta_spend_total > 0:
-            bits.append(f"Meta che ha assorbito {fmt_eur(meta_spend_total)} senza contatti")
+            bits.append(f"<strong>Meta</strong> con {fmt_eur(meta_spend_total)} di spesa ma nessun contatto attribuito")
         if google_cpl is not None:
-            bits.append(f"Google con {fmt_int(google_contatti)} contatti a CPL {fmt_eur(google_cpl)}")
+            bits.append(f"<strong>Google</strong> con {fmt_int(google_contatti)} contatti a CPL {fmt_eur(google_cpl)}")
         elif google_spend_total > 0:
-            bits.append(f"Google fermo sui contatti a fronte di {fmt_eur(google_spend_total)} di spesa")
+            bits.append(f"<strong>Google</strong> con {fmt_eur(google_spend_total)} di spesa senza contatti attribuiti")
         if bits:
-            mix_clause = ", divisi tra " + " e ".join(bits)
-    elif has_meta and meta_cpl is not None and total_leads > 0:
-        mix_clause = f", con il pubblico interamente lavorato su Meta a CPL {fmt_eur(meta_cpl)}"
-    elif has_g and google_cpl is not None and total_leads > 0:
-        mix_clause = f", con Google come unico canale di lead generation (CPL {fmt_eur(google_cpl)})"
+            mix_clause = " Il mix di acquisizione si divide tra " + " e ".join(bits) + "."
+    elif has_meta and meta_cpl is not None and contatti_window > 0:
+        mix_clause = f" L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL {fmt_eur(meta_cpl)}."
+    elif has_g and google_cpl is not None and contatti_window > 0:
+        mix_clause = f" <strong>Google</strong> ha lavorato come unico canale di lead generation, con CPL {fmt_eur(google_cpl)}."
 
-    p2 = p2_opener + mix_clause + "."
-
-    # Frase narrativa sui contatti di ieri (come AGHC)
+    # Frase contatti di ieri
+    yesterday_clause = ""
     if contatti_y > 50:
-        p2 += _pick(cn + "·BF·p2·c+", [
-            f" Ieri sono entrati anche {contatti_y} contatti diretti, segnale che il messaggio attuale sta intercettando bene la domanda.",
-            f" Sul fronte conversioni l'ultimo giorno ha portato {contatti_y} contatti, conferma che la creatività gira sul pubblico giusto.",
-        ])
+        yesterday_clause = f" L'ultimo giorno ha registrato <strong>{contatti_y} contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda."
     elif contatti_y > 0:
-        p2 += _pick(cn + "·BF·p2·c-", [
-            f" L'ultimo giorno ha portato anche {contatti_y} contatti diretti, dentro le aspettative del funnel.",
-            f" Tra le conversioni dirette di ieri abbiamo {contatti_y} contatti, in linea con la media del periodo.",
-        ])
+        yesterday_clause = f" Tra le conversioni di ieri sono entrati {contatti_y} contatti, in linea con la media del periodo."
 
-    # ============================================================
-    # P3 — Cosa faremo ora (concreto, niente cliché)
-    # ============================================================
-    is_cooling   = trend_pct is not None and trend_pct < -25
-    is_accel     = trend_pct is not None and trend_pct > 25
-    no_contacts  = total_leads == 0
-    yesterday_active = spend_y > 0
+    p2 = opener + mix_clause + yesterday_clause
 
-    if no_contacts and yesterday_active:
-        p3 = _pick(cn + "·BF·p3·nolead", [
-            "Apriamo un audit veloce su creative + tracking: c'è spesa ma zero lead, qualcosa si rompe nel funnel. "
-            "Controlliamo prima pixel/CAPI e poi il form lato landing.",
-            "Refresh creative immediato + verifica pixel/CAPI: stiamo spendendo a vuoto e non possiamo permetterci un'altra settimana così.",
-        ])
-    elif is_cooling:
-        p3 = _pick(cn + "·BF·p3·cool", [
-            "Per invertire la curva entro 7gg facciamo un rinfresco delle creative top e una review del bidding: serve "
-            "ripartire dalla seconda metà senza perdere il pubblico già lavorato.",
-            "Mettiamo in coda un nuovo lotto creativo e rivediamo le bid strategy: la curva attuale va riportata al ritmo "
-            "della prima metà.",
-        ])
-    elif is_accel:
-        p3 = _pick(cn + "·BF·p3·acc", [
-            "Lasciamo correre la spinta ma teniamo d'occhio il CPL: se sale oltre il 20% del benchmark entriamo subito "
-            "con un secondo set creativo per non bruciare il pubblico.",
-            "La crescita la cavalchiamo, però la prossima settimana misuriamo CPL giornaliero e frequenza — appena la "
-            "frequency tocca 2,5 entriamo con creative nuove.",
-        ])
+    # =====================================================================
+    # P3 — Prospettiva strategica
+    # =====================================================================
+    no_contacts = contatti_window == 0
+
+    if total_spend_window == 0:
+        p3 = (f"Lo scenario è di attesa controllata: la riserva di budget intatta permetterà "
+              f"di riaprire il canale con un assetto fresco quando la domanda tornerà sui livelli previsti.")
+    elif pct_zero > 30 and zero_days >= 3:
+        p3 = (f"La priorità è ripristinare una continuità di erogazione su 7 giorni: "
+              f"l'attuale frammentazione costringe l'algoritmo a ricalibrarsi a ogni ripartenza, "
+              f"impedendo di stabilizzare il CPL e di consolidare i bacini di pubblico già lavorati.")
+    elif no_contacts and spend_y > 0:
+        p3 = (f"Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: "
+              f"si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento "
+              f"tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.")
+    elif trend_pct is not None and trend_pct > 25:
+        p3 = (f"L'accelerazione in corso va sostenuta con un'attenta lettura della frequency e "
+              f"del CPL giornaliero: in fase di pressione competitiva crescente, la sostenibilità "
+              f"della curva dipende dalla rotazione tempestiva dell'asset creativo, prima che il "
+              f"pubblico mostri segnali di saturazione.")
+    elif trend_pct is not None and trend_pct < -25:
+        p3 = (f"La contrazione dei volumi nella seconda metà del periodo evidenzia una perdita di "
+              f"presenza che, se prolungata, rischia di erodere il bacino di pubblico già qualificato. "
+              f"La lettura strategica suggerisce un rilancio controllato prima che l'algoritmo perda "
+              f"la curva di apprendimento.")
     else:
-        p3 = _pick(cn + "·BF·p3·steady", [
-            "Si tiene la rotta: mettiamo in coda un test creativo a basso budget per non far invecchiare il messaggio "
-            "e teniamo monitorato il CPL giorno per giorno.",
-            "Nessuna mossa urgente: confermiamo l'assetto e prepariamo il refresh creativo della prossima finestra, "
-            "così l'algoritmo non si siede sul pubblico attuale.",
-        ])
+        p3 = (f"In uno scenario competitivo che continua a comprimere i margini di efficienza, "
+              f"mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: "
+              f"la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione "
+              f"concordato ed è la fondazione su cui si misurerà la stagione.")
 
     return wrap(p1, p2, p3)
-
-
 
 
 def _build_aghc_rational(client_name, window_days, total_spend_window,
@@ -701,266 +608,143 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
                           contatti_y, spend_y, daily_series_data=None,
                           vanity_window=None):
     """
-    Rational a 3 paragrafi (Cosa è successo / Perché conta / Cosa faremo ora).
-    Variants pool deterministiche per client + dati specifici (peak day, weekday).
+    Rational AGHC analitico-consulenziale a 3 paragrafi:
+    P1 Contesto periodo · P2 Lettura dei dati di visibilità · P3 Prospettiva strategica.
+    Tono professionale, KPI integrati nel testo, niente bullet o label uppercase.
     """
     avg_daily = total_spend_window / max(window_days, 1)
     pct_zero = (zero_days / max(window_days, 1)) * 100
 
-    # === Peak/low day estratti dalla serie giornaliera ===
+    # Peak day estratto dalla serie giornaliera
     peak_iso, peak_spend = None, 0
-    low_iso, low_spend = None, None
     if daily_series_data:
         for d, s in daily_series_data:
             if s and s > peak_spend:
                 peak_iso, peak_spend = d, s
-            if s and s > 0 and (low_spend is None or s < low_spend):
-                low_iso, low_spend = d, s
     peak_wd = ""
     if peak_iso:
-        try:
-            peak_wd = _WEEKDAYS_IT[parse_iso(peak_iso).weekday()]
-        except Exception:
-            peak_wd = ""
+        try: peak_wd = _WEEKDAYS_IT[parse_iso(peak_iso).weekday()]
+        except Exception: peak_wd = ""
 
+    cn = client_name
     tt_share = (tt_spend_total / total_spend_window * 100) if total_spend_window else 0
-    cn = client_name  # alias
+
+    # Vanity 15gg
+    v = vanity_window or {}
+    v_impr   = int(v.get("impressions", 0) or 0)
+    v_reach  = int(v.get("reach", 0) or 0)
+    v_clicks = int(v.get("clicks", 0) or 0)
+    v_eng    = int(v.get("page_eng", 0) or 0)
+    v_lpv    = int(v.get("lpv", 0) or 0)
+    has_vanity = (v_impr + v_clicks + v_eng) > 0
 
     def fmt_int(n):
         if n is None or n == 0: return "0"
         return f"{int(n):,}".replace(",", ".")
 
     def wrap(p1, p2, p3):
-        # Stile descrittivo argomentato: niente label uppercase, solo prosa
         return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
 
-    # Vanity inline string (riga "visibilità" da incastonare nei paragrafi)
-    v = vanity_window or {}
-    v_impr = v.get("impressions", 0)
-    v_clicks = v.get("clicks", 0)
-    v_lpv = v.get("lpv", 0)
-    v_eng = v.get("page_eng", 0)
-    has_vanity = (v_impr + v_clicks + v_eng) > 0
-    vanity_phrase = ""
-    if has_vanity:
-        parts = []
-        if v_impr > 0:
-            parts.append(f"{fmt_int(v_impr)} visualizzazioni")
-        if v_clicks > 0:
-            parts.append(f"{fmt_int(v_clicks)} click")
-        if v_eng > 0:
-            parts.append(f"{fmt_int(v_eng)} interazioni con la pagina")
-        if v_lpv > 50:
-            parts.append(f"{fmt_int(v_lpv)} visite landing")
-        vanity_phrase = ", ".join(parts)
-
-    # ============================================================
-    # RAMO A — Pausa pulita (nessuno spending nel periodo)
-    # ============================================================
+    # =====================================================================
+    # P1 — Contesto: andamento spesa e cadenza del periodo
+    # =====================================================================
+    peak_clause = f", con la giornata di massima erogazione di {peak_wd or 'centro periodo'} a {fmt_eur(peak_spend)}" if peak_iso else ""
     if total_spend_window == 0:
-        p1 = _pick(cn + "·A·p1", [
-            f"In queste due settimane {cn} è rimasto fermo: nessuna spesa, l'account ha tenuto la riserva di budget al sicuro.",
-            f"Le ultime giornate per {cn} sono passate in silenzio pubblicitario, in linea con la stagionalità del piano.",
-            f"Per {cn} il periodo è stato di stand-by programmato: zero erogazione e zero rumore.",
-        ])
-        p2 = _pick(cn + "·A·p2", [
-            "Quello che non è speso adesso resta a disposizione per le finestre commerciali più calde, dove ogni euro pesa di più.",
-            "La riserva di budget intatta diventa la nostra leva nella prossima apertura di stagione: meno disperso, più mirato.",
-            "Nessun consumo a vuoto significa che possiamo concentrare il fuoco esattamente dove sappiamo che la domanda risponderà.",
-        ])
-        p3 = _pick(cn + "·A·p3", [
-            "Quando rialzeremo lo switch ripartiamo con un set creativo nuovo e una distribuzione piena su tutta la settimana, così non perdiamo i primi giorni in start-up.",
-            "Per la riapertura prepariamo un test creativo fresco e una cadenza distribuita: l'algoritmo deve poter scaldare l'apprendimento da subito.",
-            "Alla ripresa lavoreremo su creatività rinnovate e copertura quotidiana: l'obiettivo è entrare nella seconda settimana già a regime.",
-        ])
-        return wrap(p1, p2, p3)
-
-    # ============================================================
-    # RAMO B — Erogazione frammentata (>30% giorni a zero)
-    # ============================================================
-    if pct_zero > 30 and zero_days >= 3:
-        p1 = _pick(cn + "·B·p1", [
-            f"L'erogazione di {cn} è andata a strappi: in {zero_days} giornate su {window_days} l'account è rimasto fermo, "
-            f"e i {fmt_eur(total_spend_window)} totali si sono concentrati in pochi giorni di attività piena.",
-            f"Quindici giornate spezzate per {cn}: {zero_days} a zero, le altre {active_days} che si sono divise tutto il "
-            f"carico — {fmt_eur(total_spend_window)} bruciati senza una distribuzione regolare.",
-            f"Per {cn} è stata una finestra a singhiozzo: solo {active_days} giorni effettivi di spinta, dove sono confluiti i "
-            f"{fmt_eur(total_spend_window)} di periodo.",
-        ])
+        p1 = (f"Nelle ultime due settimane {cn} è rimasto fermo: nessuna spesa sull'account, "
+              f"con la riserva di budget tenuta integra per le finestre commerciali successive.")
+    elif pct_zero > 30 and zero_days >= 3:
         avg_active = total_spend_window / max(active_days, 1)
-        p2 = _pick(cn + "·B·p2", [
-            f"Sui giorni effettivamente attivi la media sale a {fmt_eur(avg_active)}, ma la discontinuità penalizza la "
-            f"curva di apprendimento e la stabilità delle aste.",
-            f"Quando l'account spinge, spinge forte ({fmt_eur(avg_active)} al giorno), ma le pause obbligano l'algoritmo a "
-            f"ricominciare da capo ogni volta che torniamo live.",
-            f"Il problema non è il quanto — sui giorni attivi si arriva a {fmt_eur(avg_active)} medi — ma il quando: senza "
-            f"continuità il pubblico non si scalda e la frequenza non si stabilizza.",
-        ])
-        if contatti_y > 0:
-            p3 = _pick(cn + "·B·p3a", [
-                f"Per la prossima settimana l'obiettivo è uno solo: riportare l'erogazione a sette giorni su sette. Ieri "
-                f"abbiamo già visto {contatti_y} contatti, segnale che il messaggio risponde — non manca la domanda, manca la presenza.",
-                f"Riallineiamo la cadenza: l'ultimo giorno ha portato {contatti_y} contatti pur con erogazione interrotta, "
-                f"quindi sappiamo che il pubblico c'è. La priorità è eliminare i buchi di copertura.",
-            ])
-        else:
-            p3 = _pick(cn + "·B·p3b", [
-                f"La prima mossa è ripristinare la continuità quotidiana — poi controlleremo bidding e creatività per "
-                f"capire perché non stiamo intercettando contatti nemmeno nei giorni attivi.",
-                f"Riattiviamo l'erogazione stabile e poi facciamo un audit veloce: senza contatti su {active_days} giorni di "
-                f"spinta serve verificare offerta, audience e creative.",
-            ])
-        return wrap(p1, p2, p3)
-
-    # ============================================================
-    # RAMO C — Accelerazione forte (+25%)
-    # ============================================================
-    if trend_pct is not None and trend_pct > 25:
-        peak_clause = f" con un picco {peak_wd or 'centrale'} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·C·p1", [
-            f"{cn} ha cambiato passo nelle ultime due settimane: la spesa nella seconda metà è {trend_pct:.0f}% sopra la prima, "
-            f"portando il totale a {fmt_eur(total_spend_window)}{peak_clause}.",
-            f"Per {cn} è stato un periodo in accelerazione netta: +{trend_pct:.0f}% di spesa tra prima e seconda settimana, "
-            f"{fmt_eur(total_spend_window)} bruciati con una curva chiaramente in salita{peak_clause}.",
-            f"Le ultime giornate di {cn} hanno alzato l'asticella: +{trend_pct:.0f}% nella seconda parte della finestra, "
-            f"con il monte spese che chiude a {fmt_eur(total_spend_window)}{peak_clause}.",
-        ])
+        p1 = (f"Negli ultimi {window_days} giorni {cn} mostra un'erogazione frammentata: "
+              f"l'account è rimasto fermo per {zero_days} giornate su {window_days} e i "
+              f"{fmt_eur(total_spend_window)} di periodo si concentrano sui {active_days} "
+              f"giorni effettivi, con una media a regime di {fmt_eur(avg_active)} al giorno.")
+    elif trend_pct is not None and trend_pct > 25:
+        p1 = (f"Negli ultimi {window_days} giorni {cn} accelera in modo netto: la spesa della "
+              f"seconda metà del periodo cresce del {trend_pct:.0f}% rispetto alla prima, "
+              f"portando il totale a {fmt_eur(total_spend_window)} con un ritmo medio di "
+              f"{fmt_eur(avg_daily)} al giorno{peak_clause}.")
     elif trend_pct is not None and trend_pct < -25:
-        # ============================================================
-        # RAMO D — Raffreddamento (-25%)
-        # ============================================================
-        p1 = _pick(cn + "·D·p1", [
-            f"{cn} ha rallentato visibilmente: la spesa della seconda metà è {abs(trend_pct):.0f}% sotto la prima, "
-            f"chiudendo il periodo a {fmt_eur(total_spend_window)} totali.",
-            f"Per {cn} la curva si è raffreddata: −{abs(trend_pct):.0f}% nella seconda settimana, segno che qualcosa "
-            f"nell'erogazione o nel bidding ha frenato.",
-            f"Nelle ultime giornate {cn} ha ridotto la presenza: cala del {abs(trend_pct):.0f}% tra prima e seconda metà, "
-            f"a fronte di un totale di {fmt_eur(total_spend_window)} sul periodo.",
-        ])
-    elif trend_pct is not None and trend_pct > 5:
-        # ============================================================
-        # RAMO E — Crescita misurata (+5 a +25%)
-        # ============================================================
-        peak_clause = f", con il picco {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·E·p1", [
-            f"Negli ultimi {window_days} giorni {cn} ha tenuto una traiettoria in lieve salita, con un +{trend_pct:.0f}% "
-            f"tra la prima e la seconda metà del periodo: in totale sono stati investiti {fmt_eur(total_spend_window)}, "
-            f"distribuiti con regolarità su tutta la finestra{peak_clause}.",
-            f"Per {cn} la finestra appena chiusa è stata una crescita controllata (+{trend_pct:.0f}%): "
-            f"{fmt_eur(total_spend_window)} di investimento spalmati su {window_days} giorni che hanno respirato bene"
-            f"{peak_clause}.",
-            f"Curva in lieve risalita per {cn} nelle ultime due settimane, con un +{trend_pct:.0f}% di spesa nella "
-            f"seconda parte del periodo e {fmt_eur(total_spend_window)} totali messi a terra senza giorni fuori scala"
-            f"{peak_clause}.",
-        ])
+        p1 = (f"Negli ultimi {window_days} giorni {cn} attraversa una fase di raffreddamento: "
+              f"la spesa della seconda metà scende del {abs(trend_pct):.0f}% rispetto alla prima, "
+              f"chiudendo il periodo a {fmt_eur(total_spend_window)} totali con una media di "
+              f"{fmt_eur(avg_daily)} al giorno{peak_clause}.")
     else:
-        # ============================================================
-        # RAMO F — Stabilità / leggero calo
-        # ============================================================
-        delta_str = f" ({trend_pct:+.0f}% tra prima e seconda metà del periodo)" if trend_pct is not None else ""
-        peak_clause = f", con la giornata più importante {peak_wd} a {fmt_eur(peak_spend)}" if peak_iso else ""
-        p1 = _pick(cn + "·F·p1", [
-            f"Nelle ultime due settimane {cn} ha mantenuto la rotta che ci siamo dati: {fmt_eur(total_spend_window)} "
-            f"investiti su {active_days} giorni effettivi di erogazione, senza scossoni rilevanti{delta_str}{peak_clause}.",
-            f"Per {cn} il periodo è stato di crociera: {fmt_eur(total_spend_window)} spesi con una cadenza prevedibile "
-            f"giorno per giorno{delta_str}{peak_clause}. È esattamente il ritmo che il piano media richiede in questa parte della stagione.",
-            f"Andamento regolare per {cn} negli ultimi {window_days} giorni, con {fmt_eur(total_spend_window)} totali "
-            f"distribuiti sui {active_days} giorni attivi e nessuna oscillazione meritevole di intervento{delta_str}{peak_clause}.",
-        ])
+        delta = f" ({trend_pct:+.0f}% tra prima e seconda metà del periodo)" if trend_pct is not None else ""
+        p1 = (f"Negli ultimi {window_days} giorni {cn} mantiene una traiettoria di crociera"
+              f"{delta}: {fmt_eur(total_spend_window)} di investimento distribuiti su "
+              f"{active_days} giorni effettivi di erogazione, a un ritmo medio di "
+              f"{fmt_eur(avg_daily)} al giorno{peak_clause}.")
 
-    # ============================================================
-    # P2 — Perché conta: VANITY metrics nel testo + composizione canali
-    # ============================================================
+    # =====================================================================
+    # P2 — Lettura dei dati: visibilità, reach, engagement, mix canali
+    # =====================================================================
+    parts_p2 = []
     if has_vanity:
-        # Frase principale: vanity in evidenza, poi media giornaliera come contesto.
-        p2_opener = _pick(cn + "·p2·van", [
-            f"Sul fronte della visibilità i numeri parlano da soli: le campagne hanno totalizzato {vanity_phrase}, "
-            f"con una spesa media giornaliera di {fmt_eur(avg_daily)}",
-            f"In termini di copertura il bilancio è solido — abbiamo portato a casa {vanity_phrase}, "
-            f"a fronte di {fmt_eur(avg_daily)} di investimento medio al giorno",
-            f"La fotografia di visibilità del periodo restituisce {vanity_phrase}, "
-            f"con un ritmo giornaliero di {fmt_eur(avg_daily)} di spesa",
-        ])
-    else:
-        p2_opener = _pick(cn + "·p2·noVan", [
-            f"La media giornaliera nel periodo è {fmt_eur(avg_daily)}",
-            f"Il ritmo è di {fmt_eur(avg_daily)} al giorno",
-        ])
+        # Bilancio aggregato visibilità
+        vis_phrase = f"<strong>{fmt_int(v_impr)} impression</strong>"
+        if v_reach > 0:
+            vis_phrase += f" che hanno raggiunto <strong>{fmt_int(v_reach)} persone uniche</strong>"
+        vis_phrase += f", <strong>{fmt_int(v_eng)} interazioni</strong> con la pagina e <strong>{fmt_int(v_clicks)} click</strong>"
+        if v_lpv > 50:
+            vis_phrase += f" — di cui {fmt_int(v_lpv)} con atterraggio sul sito"
 
-    # TikTok clause
-    tk_clause = ""
+        # Engagement rate (interazioni / impression)
+        eng_rate = (v_eng / v_impr * 100) if v_impr > 0 else 0
+        if eng_rate >= 20:
+            bench_clause = f" Il rapporto interazioni/impression del {eng_rate:.1f}% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality."
+        elif eng_rate >= 10:
+            bench_clause = f" Il rapporto interazioni/impression del {eng_rate:.1f}% si colloca <strong>in linea con il benchmark</strong> di settore."
+        else:
+            bench_clause = f" Il rapporto interazioni/impression del {eng_rate:.1f}% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio."
+
+        parts_p2.append(f"L'analisi della visibilità del periodo restituisce {vis_phrase}.{bench_clause}")
+    else:
+        parts_p2.append(f"Sul piano dei volumi il periodo si è mosso su un ritmo medio di {fmt_eur(avg_daily)} giornalieri, senza picchi di esposizione fuori scala.")
+
+    # Mix canali
     if has_tiktok and tt_spend_total > 0 and tt_share >= 8:
-        tk_clause = _pick(cn + "·p2·tk", [
-            f", con il canale TikTok che pesa per il {tt_share:.0f}% del mix ({fmt_eur(tt_spend_total)}) sul pubblico più giovane",
-            f", con TikTok in affiancamento al {tt_share:.0f}% ({fmt_eur(tt_spend_total)}) come secondo canale di presidio",
-            f" e con TikTok che porta il {tt_share:.0f}% del totale ({fmt_eur(tt_spend_total)}) a presidiare il target sotto i 35 anni",
-        ])
+        parts_p2.append(
+            f"Il mix di investimento vede <strong>TikTok al {tt_share:.0f}%</strong> "
+            f"({fmt_eur(tt_spend_total)}) come secondo canale di presidio sul target sotto i "
+            f"35 anni, mentre Meta lavora il pubblico storico del brand."
+        )
     elif has_tiktok and tt_spend_total > 0:
-        tk_clause = f", con TikTok in attivazione marginale ({fmt_eur(tt_spend_total)} di affiancamento)"
+        parts_p2.append(
+            f"TikTok contribuisce in modo marginale ({fmt_eur(tt_spend_total)}, "
+            f"{tt_share:.0f}% del mix) come supporto al canale Meta principale."
+        )
     elif has_tiktok and tt_spend_total == 0:
-        tk_clause = _pick(cn + "·p2·tk0", [
-            " — concentrati per ora sul solo canale Meta, mentre TikTok resta in stand-by",
-            "; per la finestra appena chiusa TikTok è rimasto fermo, scelta che andrà rivalutata alla prossima apertura",
-        ])
+        parts_p2.append("Nel periodo è stato presidiato il solo canale Meta, con TikTok in stand-by.")
 
-    p2 = p2_opener + tk_clause + "."
+    p2 = " ".join(parts_p2)
 
-    # Contatti aggiunti come frase narrativa successiva
-    if contatti_y > 50:
-        p2 += _pick(cn + "·p2·c+", [
-            f" Ieri sono entrati anche {contatti_y} contatti diretti, segnale che il messaggio attuale sta intercettando bene la domanda.",
-            f" Sul fronte conversioni l'ultimo giorno ha portato {contatti_y} contatti, conferma che la creatività gira sul pubblico giusto.",
-        ])
-    elif contatti_y > 0:
-        p2 += _pick(cn + "·p2·c-", [
-            f" L'ultimo giorno ha portato anche {contatti_y} contatti diretti, dentro le aspettative del funnel.",
-            f" Tra le conversioni dirette di ieri abbiamo {contatti_y} contatti, in linea con la media del periodo.",
-        ])
-
-    # ============================================================
-    # P3 — Cosa faremo ora (concreto, niente cliché)
-    # ============================================================
-    if trend_pct is not None and trend_pct > 25:
-        p3 = _pick(cn + "·p3·up", [
-            f"Lasciamo correre la spinta ma teniamo l'occhio su CPL e frequenza: se la frequenza supera 2,5 entriamo "
-            f"subito con un test creativo nuovo per non bruciare il pubblico.",
-            f"La crescita la cavalchiamo, però la prossima settimana misuriamo CPL giornaliero e frequenza — se l'asta "
-            f"si surriscalda alziamo il prezzo per evitare di pagare di più ogni nuovo utente.",
-            f"Cavalchiamo il momentum senza forzare: alziamo i tetti budget solo se il CPL resta stabile, e ruotiamo "
-            f"creatività appena la frequenza tocca 2,5.",
-        ])
+    # =====================================================================
+    # P3 — Prospettiva strategica (sostituisce "prossima mossa interna")
+    # =====================================================================
+    if total_spend_window == 0:
+        p3 = (f"Lo scenario è di attesa controllata: la riserva di budget intatta diventa la "
+              f"leva per la prossima apertura stagionale, dove la concentrazione del fuoco su "
+              f"finestre di domanda mirate permetterà di massimizzare il rendimento di ogni euro investito.")
+    elif pct_zero > 30 and zero_days >= 3:
+        p3 = (f"L'elemento da consolidare nel prossimo ciclo è la continuità quotidiana: "
+              f"senza copertura su tutti i giorni della settimana l'algoritmo perde la curva di "
+              f"apprendimento e la frequenza non si stabilizza, indebolendo la presenza nelle aste "
+              f"competitive del segmento.")
+    elif trend_pct is not None and trend_pct > 25:
+        p3 = (f"L'accelerazione in corso va monitorata in chiave CPM e frequency: in questa fase "
+              f"di pressione competitiva crescente, la sostenibilità della curva si misura sulla "
+              f"capacità di rinnovare l'asset creativo prima che il pubblico si saturi e i costi "
+              f"d'asta inizino a salire più rapidamente dei volumi.")
     elif trend_pct is not None and trend_pct < -25:
-        p3 = _pick(cn + "·p3·down", [
-            f"La prossima cosa da fare è capire se il calo è strategico o tecnico: controlliamo bidding, copertura del "
-            f"pubblico e vivacità delle creatività, e poi decidiamo se rialzare la spinta.",
-            f"Riapro le campagne lunedì per un audit veloce: CTR, copertura giornaliera e budget non spesi. Se il calo "
-            f"non è voluto, riallineo bidding e creatività in giornata.",
-            f"Programmo subito una revisione: vedo se è un raffreddamento naturale del pubblico (servono creatività nuove) "
-            f"o un limite di bidding/copertura, e ti dico cosa muovere.",
-        ])
-    elif zero_days > 0 and zero_days <= 2:
-        p3 = _pick(cn + "·p3·zd", [
-            f"Da chiarire {zero_days} {'giorno' if zero_days == 1 else 'giorni'} a zero nel periodo: oggi verifico che "
-            f"non sia un blocco budget o billing e ti aggiorno entro l'orario operativo.",
-            f"Quei {zero_days} giorni a spending nullo me li guardo subito: controllo limiti carta, billing e "
-            f"campaign status, così sappiamo se è stata una pausa voluta.",
-        ])
-    elif has_tiktok and tt_spend_total == 0:
-        p3 = _pick(cn + "·p3·tk0", [
-            f"Nella prossima finestra rimettiamo in moto TikTok: serve quel canale per non lasciare scoperto il pubblico "
-            f"sotto i 30 anni, dove ormai la prima ricerca passa da lì.",
-            f"La prima cosa da decidere è quando riattivare TikTok — il pubblico più giovane sta scivolando fuori dal "
-            f"funnel solo Meta e dobbiamo ricaricarlo.",
-        ])
+        p3 = (f"La contrazione dei volumi richiede un'analisi di scenario: il calo di "
+              f"{abs(trend_pct):.0f}% nella seconda metà del periodo evidenzia una perdita di "
+              f"presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica "
+              f"costruita nelle settimane precedenti.")
     else:
-        p3 = _pick(cn + "·p3·ok", [
-            f"Nessuna mossa urgente: la prossima settimana facciamo solo refresh creativo sugli annunci più stanchi e "
-            f"teniamo monitorato il CPL giorno per giorno.",
-            f"Per ora si va così: rotazione creativa di routine, monitoraggio CPL giornaliero, niente intervento "
-            f"strutturale fino al prossimo segnale.",
-            f"Si naviga: nessuna correzione di rotta, solo refresh creativo se compaiono segnali di saturazione e "
-            f"controllo del CPL sulla media settimanale.",
-        ])
+        p3 = (f"In uno scenario competitivo che continua a comprimere i margini di visibilità, "
+              f"mantenere questa cadenza significa preservare il presidio sui canali principali "
+              f"senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui "
+              f"si fonderà la lettura della stagione, ed è coerente con il piano media concordato.")
 
     return wrap(p1, p2, p3)
 
@@ -1151,7 +935,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             client_name=merged_name,
             window_days=effective_window,
             daily_series_data=actual_series,
-            vanity_window={"impressions": van_impr_w, "clicks": van_clicks_w, "lpv": van_lpv_w, "page_eng": van_eng_w},
+            vanity_window={"impressions": van_impr_w, "reach": van_reach_w, "clicks": van_clicks_w, "lpv": van_lpv_w, "page_eng": van_eng_w},
             total_spend_window=total_spend_window,
             meta_spend_total=meta_spend_total,
             tt_spend_total=tt_spend_total,
