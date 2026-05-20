@@ -767,8 +767,20 @@
     document.body.removeChild(ta); cb && cb();
   }
 
-  // (Handler per "Copia link vista cliente" rimosso: i bottoni non sono piu generati.
-  // La pagina cliente.html resta accessibile via URL diretta se serve.)
+  // ============================ OPEN VISTA CLIENTE (per-card) ============================
+  // Ogni card AGHC/BF ha un bottone "👁 Anteprima cliente" con data-client-preview="<nome>".
+  // Apre cliente.html?name=<nome>&date=<giorno selezionato> in una nuova finestra/tab.
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest("[data-client-preview]");
+    if (!btn) return;
+    const name = btn.getAttribute("data-client-preview");
+    if (!name) return;
+    const sel = document.getElementById("date-select");
+    const day = sel && sel.value && /^\d{4}-\d{2}-\d{2}$/.test(sel.value) ? sel.value : "";
+    const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
+    const url = baseHref + "cliente.html?name=" + encodeURIComponent(name) + (day ? "&date=" + day : "");
+    window.open(url, "_blank", "noopener");
+  });
 
   function showError(msg) { document.getElementById("error-box").innerHTML = `<div class="error">${escapeHtml(msg)}</div>`; }
   function clearError() { document.getElementById("error-box").innerHTML = ""; }
@@ -1585,7 +1597,9 @@
       ad.Google ? openAccountBtn(ad.Google, "Google") : "",
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}</div>`;
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}${copyBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}
@@ -1750,7 +1764,9 @@
       ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}</div>`;
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}${copyBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}
