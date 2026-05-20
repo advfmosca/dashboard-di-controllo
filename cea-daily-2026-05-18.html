@@ -76,6 +76,79 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .search-bar .clear-btn.hidden { display: none; }
 .empty-result { padding: 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 13px; background: var(--bg-soft); border-radius: 10px; border: 1px dashed var(--border); }
 
+/* ─── HERO STATO SALUTE ─── */
+.smart-summary { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 12px; padding: 16px; background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; align-items: stretch; }
+.smart-summary .ss-hero { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); border-radius: 10px; padding: 14px 16px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+.smart-summary .ss-hero .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #b8b8bf; }
+.smart-summary .ss-hero .val { font-size: 32px; font-weight: 800; line-height: 1.05; margin: 2px 0 1px; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-hero .sub { font-size: 11.5px; color: #d1d5db; }
+.smart-summary .ss-cell { padding: 10px 12px; border-radius: 10px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; display: flex; flex-direction: column; gap: 3px; }
+.smart-summary .ss-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.smart-summary .ss-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.smart-summary.has-active .ss-cell:not(.active-filter):not(.ss-hero) { opacity: 0.42; }
+.smart-summary .ss-cell .ico { font-size: 16px; line-height: 1; }
+.smart-summary .ss-cell .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.smart-summary .ss-cell .val { font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-cell .micro { font-size: 10.5px; opacity: 0.85; }
+.smart-summary .ss-cell.rosso  { background: #fee2e2; color: #991b1b; }
+.smart-summary .ss-cell.giallo { background: #ffedd5; color: #9a3412; }
+.smart-summary .ss-cell.verde  { background: #d1fadf; color: #14532d; }
+.smart-summary .ss-cell.nero   { background: #1a1a1a; color: #fff; }
+@media (max-width: 820px) {
+  .smart-summary { grid-template-columns: 1fr 1fr; }
+  .smart-summary .ss-hero { grid-column: 1 / -1; }
+}
+
+/* ─── CARD RIPROGETTATA ─── */
+.card-new { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04); display: flex; flex-direction: column; margin-bottom: 12px; }
+.card-new.rosso  { border-top: 5px solid var(--red); }
+.card-new.giallo { border-top: 5px solid var(--yellow); }
+.card-new.verde  { border-top: 5px solid var(--green); }
+.card-new.nero   { border-top: 5px solid var(--black); }
+.card-new .nc-hero { padding: 14px 16px 10px; }
+.card-new.rosso  .nc-hero { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); }
+.card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
+.card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
+.card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
+.card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
+.card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
+.card-new.verde  .nc-status { background: #d1fadf; color: #14532d; }
+.card-new.nero   .nc-status { background: #1a1a1a; color: #fff; }
+.card-new .nc-status .ico { font-size: 13px; }
+.card-new .nc-since { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.card-new .nc-name { font-size: 15px; font-weight: 700; line-height: 1.25; margin: 0; word-break: break-word; }
+.card-new .nc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; padding: 0 16px 14px; }
+.card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
+.card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.card-new .nc-kpi .delta { font-size: 11px; font-weight: 600; margin-top: 2px; color: var(--text-muted); }
+.card-new .nc-kpi .delta.up   { color: var(--red); }
+.card-new .nc-kpi .delta.down { color: var(--green); }
+.card-new .nc-kpi.highlight   { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); }
+.card-new .nc-kpi.highlight .lbl { color: #b8b8bf; }
+.card-new .nc-kpi.highlight .val { color: #fff; }
+.card-new .nc-kpi.highlight .delta { color: #d1d5db; }
+.card-new .nc-body { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); }
+.card-new .nc-section-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 6px 0 4px; }
+.card-new .nc-story { font-size: 13px; line-height: 1.55; color: #2c2c2c; margin: 0; }
+.card-new .nc-action { display: flex; gap: 10px; padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-action .arrow { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+.card-new.rosso  .nc-action .arrow { color: var(--red); }
+.card-new.giallo .nc-action .arrow { color: var(--yellow); }
+.card-new.verde  .nc-action .arrow { color: var(--green); }
+.card-new.nero   .nc-action .arrow { color: #555; }
+.card-new .nc-action .text { font-size: 13px; line-height: 1.5; color: #2c2c2c; flex: 1; }
+.card-new .nc-action .text b { color: #1c1c1e; }
+.card-new details { padding: 8px 16px 14px; font-size: 12.5px; color: var(--text-muted); border-top: 1px dashed var(--border-soft); }
+.card-new details summary { cursor: pointer; user-select: none; font-weight: 600; color: var(--text); list-style: none; padding: 4px 0; }
+.card-new details summary::-webkit-details-marker { display: none; }
+.card-new details summary::before { content: "▸ "; color: var(--text-dim); display: inline-block; transition: transform .15s; }
+.card-new details[open] summary::before { transform: rotate(90deg); }
+.card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
+.card-new details .det-content b { color: var(--text); }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .dot-rosso { background: var(--red); }
@@ -123,7 +196,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="brand-header">
     <h1>CEA — Daily Check</h1>
     <p class="subtitle">Snapshot del Lunedì 18 Maggio 2026 · 46 clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
-    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Lead aggiornati alle <b>10:36</b> del 20/05/2026</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Lead aggiornati alle <b>11:20</b> del 20/05/2026</p>
   </div>
 
   <div class="kpis">
@@ -133,11 +206,16 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
     <div class="kpi"><div class="label">CPL medio</div><div class="value">32,86 €</div></div>
   </div>
 
-  <div class="sem-grid" id="sem-grid">
-    <div class="kpi rosso"  data-filter="rosso"><div class="label">ROSSO</div><div class="value">17</div></div>
-    <div class="kpi giallo" data-filter="giallo"><div class="label">GIALLO</div><div class="value">0</div></div>
-    <div class="kpi verde"  data-filter="verde"><div class="label">VERDE</div><div class="value">29</div></div>
-    <div class="kpi nero"   data-filter="nero"><div class="label">NERO</div><div class="value">0</div></div>
+  <div class="smart-summary" id="sem-grid">
+    <div class="ss-hero">
+      <div class="lbl">Stato salute portafoglio</div>
+      <div class="val">63%</div>
+      <div class="sub">29 di 46 campagne in linea</div>
+    </div>
+    <div class="ss-cell rosso"  data-filter="rosso"><div class="ico">🔴</div><div class="lbl">Da rivedere</div><div class="val">17</div><div class="micro">in zona critica</div></div>
+    <div class="ss-cell giallo" data-filter="giallo"><div class="ico">🟡</div><div class="lbl">Da monitorare</div><div class="val">0</div><div class="micro">scostamento lieve</div></div>
+    <div class="ss-cell verde"  data-filter="verde"><div class="ico">🟢</div><div class="lbl">In linea</div><div class="val">29</div><div class="micro">o sotto media</div></div>
+    <div class="ss-cell nero"   data-filter="nero"><div class="ico">⚫</div><div class="lbl">Spente</div><div class="val">0</div><div class="micro">nessuna spesa</div></div>
   </div>
 
   <div class="search-bar">
@@ -148,428 +226,658 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   </div>
 
   <div class="legend">
-    <span><span class="dot dot-verde"></span><b>VERDE</b> — in linea o sotto media 3gg</span>
-    <span><span class="dot dot-giallo"></span><b>GIALLO</b> — CPL fino a +50% vs media 3gg</span>
-    <span><span class="dot dot-rosso"></span><b>ROSSO</b> — 0 lead o CPL &gt; +50% media 3gg</span>
-    <span><span class="dot dot-nero"></span><b>NERO</b> — nessuna spesa</span>
-    <span style="opacity:.7">· Clicca un riquadro semaforico per filtrare</span>
+    <span><span class="dot dot-verde"></span><b>In linea</b> — sotto o pari alla media 3gg</span>
+    <span><span class="dot dot-giallo"></span><b>Da monitorare</b> — CPL fino a +50% vs media</span>
+    <span><span class="dot dot-rosso"></span><b>Da rivedere</b> — 0 lead o CPL &gt; +50% media</span>
+    <span><span class="dot dot-nero"></span><b>Spenta</b> — nessuna spesa</span>
+    <span style="opacity:.7">· Clicca un riquadro in alto per filtrare</span>
   </div>
 
   <div class="cards" id="cards">
 
-<div class="card rosso" data-name="adv linea più casale" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV Linea Più Casale</div>
+<div class="card-new rosso" data-name="adv linea più casale" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV Linea Più Casale</div>
   </div>
-  <div class="meta">Spesa <b>46,65 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 46,65 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.97% (buono) · CPM 9,89 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 46,65 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">46,65 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 46,65 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.97% (buono) · CPM 9,89 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 46,65 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="dott.ssa orsola bruno ap" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Dott.ssa Orsola Bruno AP</div>
+<div class="card-new rosso" data-name="dott.ssa orsola bruno ap" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Dott.ssa Orsola Bruno AP</div>
   </div>
-  <div class="meta">Spesa <b>46,64 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 46,64 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.69% (ottimo) · CPM 22,77 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 46,64 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">46,64 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 46,64 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.69% (ottimo) · CPM 22,77 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 46,64 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv sanital eco store" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV SANITAL ECO STORE</div>
+<div class="card-new rosso" data-name="adv sanital eco store" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV SANITAL ECO STORE</div>
   </div>
-  <div class="meta">Spesa <b>31,16 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 31,16 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.57% (ottimo) · CPM 9,54 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 31,16 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,16 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 31,16 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.57% (ottimo) · CPM 9,54 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 31,16 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="baldan intelligence" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Baldan Intelligence</div>
+<div class="card-new rosso" data-name="baldan intelligence" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Baldan Intelligence</div>
   </div>
-  <div class="meta">Spesa <b>30,07 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 30,07 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.23% (basso) · CPM 0,71 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 30,07 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">30,07 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 30,07 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.23% (basso) · CPM 0,71 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 30,07 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="beauty point srl" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Beauty Point Srl</div>
+<div class="card-new rosso" data-name="beauty point srl" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Beauty Point Srl</div>
   </div>
-  <div class="meta">Spesa <b>26,25 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 26,25 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.42% (nella media) · CPM 9,79 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 26,25 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,25 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 26,25 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.42% (nella media) · CPM 9,79 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 26,25 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv - charme estetica benessere" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV - Charme estetica benessere</div>
+<div class="card-new rosso" data-name="adv - charme estetica benessere" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV - Charme estetica benessere</div>
   </div>
-  <div class="meta">Spesa <b>24,88 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 24,88 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.08% (ottimo) · CPM 12,05 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 24,88 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">24,88 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 24,88 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.08% (ottimo) · CPM 12,05 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 24,88 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv artestetica" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV ARTESTETICA</div>
+<div class="card-new rosso" data-name="adv artestetica" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV ARTESTETICA</div>
   </div>
-  <div class="meta">Spesa <b>19,99 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 19,99 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.05% (ottimo) · CPM 12,03 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 19,99 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,99 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 19,99 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.05% (ottimo) · CPM 12,03 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 19,99 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv - atelier fiumara" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV - Atelier Fiumara</div>
+<div class="card-new rosso" data-name="adv - atelier fiumara" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV - Atelier Fiumara</div>
   </div>
-  <div class="meta">Spesa <b>18,75 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 18,75 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.97% (ottimo) · CPM 18,55 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 18,75 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,75 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 18,75 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.97% (ottimo) · CPM 18,55 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 18,75 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="nicola cossater beauty" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Nicola Cossater Beauty</div>
+<div class="card-new rosso" data-name="nicola cossater beauty" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Nicola Cossater Beauty</div>
   </div>
-  <div class="meta">Spesa <b>15,70 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 15,70 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.22% (nella media) · CPM 3,30 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 15,70 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">15,70 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 15,70 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.22% (nella media) · CPM 3,30 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 15,70 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="centro estetico natura" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Centro estetico natura</div>
+<div class="card-new rosso" data-name="centro estetico natura" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Centro estetico natura</div>
   </div>
-  <div class="meta">Spesa <b>13,72 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 13,72 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.30% (nella media) · CPM 12,74 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 13,72 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">13,72 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 13,72 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.30% (nella media) · CPM 12,74 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 13,72 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="donnauomo" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Donnauomo</div>
+<div class="card-new rosso" data-name="donnauomo" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Donnauomo</div>
   </div>
-  <div class="meta">Spesa <b>11,53 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 11,53 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.91% (buono) · CPM 4,41 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 11,53 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">11,53 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 11,53 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.91% (buono) · CPM 4,41 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 11,53 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv - centro benessere polverino" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV - Centro Benessere Polverino</div>
+<div class="card-new rosso" data-name="adv - centro benessere polverino" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV - Centro Benessere Polverino</div>
   </div>
-  <div class="meta">Spesa <b>9,73 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 9,73 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.77% (buono) · CPM 4,52 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 9,73 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,73 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 9,73 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.77% (buono) · CPM 4,52 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 9,73 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv centro estetico eden" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV Centro Estetico Eden</div>
+<div class="card-new rosso" data-name="adv centro estetico eden" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV Centro Estetico Eden</div>
   </div>
-  <div class="meta">Spesa <b>8,07 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 8,07 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.77% (basso) · CPM 4,81 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 8,07 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,07 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 8,07 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.77% (basso) · CPM 4,81 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 8,07 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv centro estetico ambra" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV CENTRO ESTETICO AMBRA</div>
+<div class="card-new rosso" data-name="adv centro estetico ambra" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV CENTRO ESTETICO AMBRA</div>
   </div>
-  <div class="meta">Spesa <b>6,13 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 6,13 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.86% (nella media) · CPM 5,88 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 6,13 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">6,13 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 6,13 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.86% (nella media) · CPM 5,88 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 6,13 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="fiori di loto" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Fiori di loto</div>
+<div class="card-new rosso" data-name="fiori di loto" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Fiori di loto</div>
   </div>
-  <div class="meta">Spesa <b>5,46 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 5,46 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 5.85% (ottimo) · CPM 2,82 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 5,46 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">5,46 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 5,46 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 5.85% (ottimo) · CPM 2,82 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 5,46 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="beauty art" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">Beauty Art</div>
+<div class="card-new rosso" data-name="beauty art" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">Beauty Art</div>
   </div>
-  <div class="meta">Spesa <b>5,00 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 5,00 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.28% (basso) · CPM 2,00 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 5,00 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">5,00 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 5,00 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.28% (basso) · CPM 2,00 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 5,00 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card rosso" data-name="adv slim&#39;up" data-color="rosso">
-  <div class="card-head">
-    <span class="tag rosso">ROSSO</span>
-    <div class="camp-name">ADV Slim&#39;Up</div>
+<div class="card-new rosso" data-name="adv slim&#39;up" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+    </div>
+    <div class="nc-name">ADV Slim&#39;Up</div>
   </div>
-  <div class="meta">Spesa <b>3,19 €</b> · Lead <b>0</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): 3,19 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.21% (nella media) · CPM 4,29 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">0</div><div class="delta">su 3,19 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">3,19 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): 3,19 € spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.21% (nella media) · CPM 4,29 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Spesi 3,19 € ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno 1/3 cold start).</div></details>
 </div>
-<div class="card verde" data-name="baldan group usa" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Baldan Group USA</div>
+<div class="card-new verde" data-name="baldan group usa" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Baldan Group USA</div>
   </div>
-  <div class="meta">Spesa <b>1.317,63 €</b> · Lead <b>19</b> · CPL <b>69,35 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 69,35 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 7.69% (ottimo) · CPM 189,53 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">19</div><div class="delta">su 1.317,63 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">69,35 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">1.317,63 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 69,35 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 7.69% (ottimo) · CPM 189,53 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="l&#39;estetica che ti cambia la vita - italia" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">L&#39;estetica che ti cambia la vita - ITALIA</div>
+<div class="card-new verde" data-name="l&#39;estetica che ti cambia la vita - italia" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">L&#39;estetica che ti cambia la vita - ITALIA</div>
   </div>
-  <div class="meta">Spesa <b>100,59 €</b> · Lead <b>2</b> · CPL <b>50,29 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 50,29 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.79% (buono) · CPM 9,05 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 100,59 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">50,29 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">100,59 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 50,29 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.79% (buono) · CPM 9,05 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="exthetyc" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Exthetyc</div>
+<div class="card-new verde" data-name="exthetyc" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Exthetyc</div>
   </div>
-  <div class="meta">Spesa <b>55,35 €</b> · Lead <b>1</b> · CPL <b>55,35 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 55,35 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.63% (ottimo) · CPM 3,19 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 55,35 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">55,35 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">55,35 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 55,35 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.63% (ottimo) · CPM 3,19 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="tyla institute estetica" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Tyla Institute Estetica</div>
+<div class="card-new verde" data-name="tyla institute estetica" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Tyla Institute Estetica</div>
   </div>
-  <div class="meta">Spesa <b>39,33 €</b> · Lead <b>2</b> · CPL <b>19,66 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 19,66 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 4.53% (ottimo) · CPM 13,40 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 39,33 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">19,66 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">39,33 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 19,66 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.53% (ottimo) · CPM 13,40 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - brera13 beauty" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Brera13 Beauty</div>
+<div class="card-new verde" data-name="adv - brera13 beauty" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Brera13 Beauty</div>
   </div>
-  <div class="meta">Spesa <b>33,92 €</b> · Lead <b>2</b> · CPL <b>16,96 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 16,96 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.17% (ottimo) · CPM 23,70 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 33,92 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">16,96 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">33,92 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 16,96 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.17% (ottimo) · CPM 23,70 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv visamour" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV Visamour</div>
+<div class="card-new verde" data-name="adv visamour" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV Visamour</div>
   </div>
-  <div class="meta">Spesa <b>31,22 €</b> · Lead <b>2</b> · CPL <b>15,61 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 15,61 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.93% (buono) · CPM 6,56 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 31,22 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">15,61 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,22 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 15,61 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.93% (buono) · CPM 6,56 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - farmacia martelletto" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Farmacia Martelletto</div>
+<div class="card-new verde" data-name="adv - farmacia martelletto" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Farmacia Martelletto</div>
   </div>
-  <div class="meta">Spesa <b>30,27 €</b> · Lead <b>1</b> · CPL <b>30,27 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 30,27 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.67% (basso) · CPM 2,30 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 30,27 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">30,27 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">30,27 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 30,27 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.67% (basso) · CPM 2,30 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - oasi di nadia" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Oasi di Nadia</div>
+<div class="card-new verde" data-name="adv - oasi di nadia" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Oasi di Nadia</div>
   </div>
-  <div class="meta">Spesa <b>27,19 €</b> · Lead <b>2</b> · CPL <b>13,60 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 13,60 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.45% (nella media) · CPM 15,74 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 27,19 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">13,60 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,19 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 13,60 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.45% (nella media) · CPM 15,74 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - dermal center" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Dermal Center</div>
+<div class="card-new verde" data-name="adv - dermal center" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Dermal Center</div>
   </div>
-  <div class="meta">Spesa <b>26,89 €</b> · Lead <b>3</b> · CPL <b>8,96 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 8,96 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.78% (buono) · CPM 15,93 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">3</div><div class="delta">su 26,89 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">8,96 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,89 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 8,96 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.78% (buono) · CPM 15,93 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv linea perfetta" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV LINEA PERFETTA</div>
+<div class="card-new verde" data-name="adv linea perfetta" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV LINEA PERFETTA</div>
   </div>
-  <div class="meta">Spesa <b>24,28 €</b> · Lead <b>1</b> · CPL <b>24,28 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 24,28 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.78% (buono) · CPM 16,05 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 24,28 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">24,28 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">24,28 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 24,28 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.78% (buono) · CPM 16,05 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="black queen beauty art" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Black Queen Beauty Art</div>
+<div class="card-new verde" data-name="black queen beauty art" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Black Queen Beauty Art</div>
   </div>
-  <div class="meta">Spesa <b>23,81 €</b> · Lead <b>1</b> · CPL <b>23,81 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 23,81 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.56% (buono) · CPM 9,08 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 23,81 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">23,81 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,81 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 23,81 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.56% (buono) · CPM 9,08 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="leuce - medicina estetica" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Leuce - Medicina Estetica</div>
+<div class="card-new verde" data-name="leuce - medicina estetica" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Leuce - Medicina Estetica</div>
   </div>
-  <div class="meta">Spesa <b>23,73 €</b> · Lead <b>1</b> · CPL <b>23,73 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 23,73 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.07% (nella media) · CPM 7,72 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 23,73 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">23,73 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,73 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 23,73 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.07% (nella media) · CPM 7,72 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - mudra centro benessere" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Mudra Centro Benessere</div>
+<div class="card-new verde" data-name="adv - mudra centro benessere" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Mudra Centro Benessere</div>
   </div>
-  <div class="meta">Spesa <b>23,64 €</b> · Lead <b>1</b> · CPL <b>23,64 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 23,64 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.45% (nella media) · CPM 10,40 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 23,64 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">23,64 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,64 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 23,64 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.45% (nella media) · CPM 10,40 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="farmacia padre pio" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Farmacia Padre Pio</div>
+<div class="card-new verde" data-name="farmacia padre pio" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Farmacia Padre Pio</div>
   </div>
-  <div class="meta">Spesa <b>23,54 €</b> · Lead <b>2</b> · CPL <b>11,77 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 11,77 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.52% (buono) · CPM 5,59 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 23,54 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">11,77 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,54 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 11,77 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.52% (buono) · CPM 5,59 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="b-ewolution by beauty way" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">B-ewolution by Beauty Way</div>
+<div class="card-new verde" data-name="b-ewolution by beauty way" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">B-ewolution by Beauty Way</div>
   </div>
-  <div class="meta">Spesa <b>21,98 €</b> · Lead <b>2</b> · CPL <b>10,99 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 10,99 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.33% (nella media) · CPM 13,88 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 21,98 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">10,99 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,98 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 10,99 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.33% (nella media) · CPM 13,88 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="farmacia gagliardelli" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Farmacia Gagliardelli</div>
+<div class="card-new verde" data-name="farmacia gagliardelli" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Farmacia Gagliardelli</div>
   </div>
-  <div class="meta">Spesa <b>21,58 €</b> · Lead <b>2</b> · CPL <b>10,79 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 10,79 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.46% (ottimo) · CPM 9,00 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 21,58 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">10,79 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,58 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 10,79 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.46% (ottimo) · CPM 9,00 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="farmacia di gennaro" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Farmacia Di Gennaro</div>
+<div class="card-new verde" data-name="farmacia di gennaro" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Farmacia Di Gennaro</div>
   </div>
-  <div class="meta">Spesa <b>20,65 €</b> · Lead <b>4</b> · CPL <b>5,16 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 5,16 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.67% (buono) · CPM 4,22 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">4</div><div class="delta">su 20,65 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">5,16 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,65 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 5,16 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.67% (buono) · CPM 4,22 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="skinmedic lecco new" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">SkinMedic Lecco new</div>
+<div class="card-new verde" data-name="skinmedic lecco new" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">SkinMedic Lecco new</div>
   </div>
-  <div class="meta">Spesa <b>20,59 €</b> · Lead <b>3</b> · CPL <b>6,86 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 6,86 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.51% (buono) · CPM 4,99 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">3</div><div class="delta">su 20,59 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">6,86 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,59 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 6,86 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.51% (buono) · CPM 4,99 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv maison kuku" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV Maison Kuku</div>
+<div class="card-new verde" data-name="adv maison kuku" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV Maison Kuku</div>
   </div>
-  <div class="meta">Spesa <b>20,58 €</b> · Lead <b>1</b> · CPL <b>20,58 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 20,58 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 3.23% (ottimo) · CPM 7,55 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 20,58 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">20,58 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,58 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 20,58 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.23% (ottimo) · CPM 7,55 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="salus 2024" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">SALUS 2024</div>
+<div class="card-new verde" data-name="salus 2024" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">SALUS 2024</div>
   </div>
-  <div class="meta">Spesa <b>19,09 €</b> · Lead <b>3</b> · CPL <b>6,36 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 6,36 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.12% (nella media) · CPM 5,20 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">3</div><div class="delta">su 19,09 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">6,36 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,09 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 6,36 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.12% (nella media) · CPM 5,20 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv solelù" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV Solelù</div>
+<div class="card-new verde" data-name="adv solelù" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV Solelù</div>
   </div>
-  <div class="meta">Spesa <b>18,05 €</b> · Lead <b>1</b> · CPL <b>18,05 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 18,05 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.34% (nella media) · CPM 4,95 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 18,05 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">18,05 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,05 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 18,05 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.34% (nella media) · CPM 4,95 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="laboratorio estetico catia" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Laboratorio Estetico Catia</div>
+<div class="card-new verde" data-name="laboratorio estetico catia" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Laboratorio Estetico Catia</div>
   </div>
-  <div class="meta">Spesa <b>17,86 €</b> · Lead <b>1</b> · CPL <b>17,86 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 17,86 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 3.54% (ottimo) · CPM 4,31 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 17,86 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">17,86 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,86 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 17,86 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.54% (ottimo) · CPM 4,31 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="centro estetico enrica" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Centro Estetico Enrica</div>
+<div class="card-new verde" data-name="centro estetico enrica" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Centro Estetico Enrica</div>
   </div>
-  <div class="meta">Spesa <b>17,71 €</b> · Lead <b>3</b> · CPL <b>5,90 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 5,90 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.89% (buono) · CPM 4,53 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">3</div><div class="delta">su 17,71 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">5,90 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,71 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 5,90 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.89% (buono) · CPM 4,53 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - body laser" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Body Laser</div>
+<div class="card-new verde" data-name="adv - body laser" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Body Laser</div>
   </div>
-  <div class="meta">Spesa <b>17,09 €</b> · Lead <b>4</b> · CPL <b>4,27 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 4,27 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 4.63% (ottimo) · CPM 12,97 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">4</div><div class="delta">su 17,09 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">4,27 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,09 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 4,27 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.63% (ottimo) · CPM 12,97 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="riflesso evolution" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Riflesso Evolution</div>
+<div class="card-new verde" data-name="riflesso evolution" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Riflesso Evolution</div>
   </div>
-  <div class="meta">Spesa <b>16,71 €</b> · Lead <b>1</b> · CPL <b>16,71 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 16,71 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.27% (nella media) · CPM 9,63 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 16,71 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">16,71 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,71 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 16,71 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.27% (nella media) · CPM 9,63 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="nuove sensazioni" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Nuove Sensazioni</div>
+<div class="card-new verde" data-name="nuove sensazioni" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Nuove Sensazioni</div>
   </div>
-  <div class="meta">Spesa <b>14,64 €</b> · Lead <b>1</b> · CPL <b>14,64 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 14,64 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.15% (nella media) · CPM 6,23 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 14,64 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">14,64 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,64 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 14,64 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.15% (nella media) · CPM 6,23 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="andreea francu renzo gestione" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Andreea Francu Renzo Gestione</div>
+<div class="card-new verde" data-name="andreea francu renzo gestione" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Andreea Francu Renzo Gestione</div>
   </div>
-  <div class="meta">Spesa <b>14,51 €</b> · Lead <b>1</b> · CPL <b>14,51 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 14,51 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 0.79% (basso) · CPM 5,43 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">1</div><div class="delta">su 14,51 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">14,51 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,51 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 14,51 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.79% (basso) · CPM 5,43 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="adv - pietrabianca" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">ADV - Pietrabianca</div>
+<div class="card-new verde" data-name="adv - pietrabianca" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">ADV - Pietrabianca</div>
   </div>
-  <div class="meta">Spesa <b>14,36 €</b> · Lead <b>3</b> · CPL <b>4,79 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 4,79 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 2.64% (ottimo) · CPM 4,58 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">3</div><div class="delta">su 14,36 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">4,79 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,36 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 4,79 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.64% (ottimo) · CPM 4,58 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
-<div class="card verde" data-name="eternity lb - account pubblicitario" data-color="verde">
-  <div class="card-head">
-    <span class="tag verde">VERDE</span>
-    <div class="camp-name">Eternity LB - Account pubblicitario</div>
+<div class="card-new verde" data-name="eternity lb - account pubblicitario" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+    </div>
+    <div class="nc-name">Eternity LB - Account pubblicitario</div>
   </div>
-  <div class="meta">Spesa <b>6,31 €</b> · Lead <b>2</b> · CPL <b>3,15 €</b></div>
-  <div class="r-cpl">Cold start (giorno 1/3): primo CPL utile a 3,15 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</div>
-  <div class="r-perf"><strong>Performance:</strong> CTR 1.59% (buono) · CPM 10,05 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">2</div><div class="delta">su 6,31 € spesi</div></div><div class="nc-kpi"><div class="lbl">CPL</div><div class="val">3,15 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">6,31 €</div></div>
+  </div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Cold start (giorno 1/3): primo CPL utile a 3,15 €. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.59% (buono) · CPM 10,05 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Lead acquisiti in cold start (giorno 1/3). In attesa di consolidare storico per attivare confronto media 3gg.</div></details>
 </div>
   </div>
   <div class="empty-result" id="empty-result" style="display:none">Nessuna campagna corrisponde ai filtri attivi.</div>
@@ -584,7 +892,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   const searchInput = document.getElementById("search-input");
   const clearBtn    = document.getElementById("search-clear");
   const semGrid     = document.getElementById("sem-grid");
-  const cards       = Array.from(document.querySelectorAll("#cards .card"));
+  const cards       = Array.from(document.querySelectorAll("#cards .card-new, #cards .card"));
   const cntEl       = document.getElementById("filter-count");
   const emptyEl     = document.getElementById("empty-result");
 
@@ -625,7 +933,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   }
 
   if (semGrid) {
-    semGrid.querySelectorAll(".kpi[data-filter]").forEach(el => {
+    semGrid.querySelectorAll("[data-filter]").forEach(el => {
       el.addEventListener("click", () => {
         const c = el.dataset.filter;
         if (SEM_FILTERS.has(c)) SEM_FILTERS.delete(c);

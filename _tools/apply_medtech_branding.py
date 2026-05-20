@@ -93,6 +93,79 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .search-bar .clear-btn.hidden { display: none; }
 .empty-result { padding: 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 13px; background: var(--bg-soft); border-radius: 10px; border: 1px dashed var(--border); }
 
+/* ─── HERO STATO SALUTE ─── */
+.smart-summary { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 12px; padding: 16px; background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; align-items: stretch; }
+.smart-summary .ss-hero { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); border-radius: 10px; padding: 14px 16px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+.smart-summary .ss-hero .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #b8b8bf; }
+.smart-summary .ss-hero .val { font-size: 32px; font-weight: 800; line-height: 1.05; margin: 2px 0 1px; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-hero .sub { font-size: 11.5px; color: #d1d5db; }
+.smart-summary .ss-cell { padding: 10px 12px; border-radius: 10px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; display: flex; flex-direction: column; gap: 3px; }
+.smart-summary .ss-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.smart-summary .ss-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.smart-summary.has-active .ss-cell:not(.active-filter):not(.ss-hero) { opacity: 0.42; }
+.smart-summary .ss-cell .ico { font-size: 16px; line-height: 1; }
+.smart-summary .ss-cell .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.smart-summary .ss-cell .val { font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-cell .micro { font-size: 10.5px; opacity: 0.85; }
+.smart-summary .ss-cell.rosso  { background: #fee2e2; color: #991b1b; }
+.smart-summary .ss-cell.giallo { background: #ffedd5; color: #9a3412; }
+.smart-summary .ss-cell.verde  { background: #d1fadf; color: #14532d; }
+.smart-summary .ss-cell.nero   { background: #1a1a1a; color: #fff; }
+@media (max-width: 820px) {
+  .smart-summary { grid-template-columns: 1fr 1fr; }
+  .smart-summary .ss-hero { grid-column: 1 / -1; }
+}
+
+/* ─── CARD RIPROGETTATA ─── */
+.card-new { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04); display: flex; flex-direction: column; margin-bottom: 12px; }
+.card-new.rosso  { border-top: 5px solid var(--red); }
+.card-new.giallo { border-top: 5px solid var(--yellow); }
+.card-new.verde  { border-top: 5px solid var(--green); }
+.card-new.nero   { border-top: 5px solid var(--black); }
+.card-new .nc-hero { padding: 14px 16px 10px; }
+.card-new.rosso  .nc-hero { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); }
+.card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
+.card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
+.card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
+.card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
+.card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
+.card-new.verde  .nc-status { background: #d1fadf; color: #14532d; }
+.card-new.nero   .nc-status { background: #1a1a1a; color: #fff; }
+.card-new .nc-status .ico { font-size: 13px; }
+.card-new .nc-since { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.card-new .nc-name { font-size: 15px; font-weight: 700; line-height: 1.25; margin: 0; word-break: break-word; }
+.card-new .nc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; padding: 0 16px 14px; }
+.card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
+.card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.card-new .nc-kpi .delta { font-size: 11px; font-weight: 600; margin-top: 2px; color: var(--text-muted); }
+.card-new .nc-kpi .delta.up   { color: var(--red); }
+.card-new .nc-kpi .delta.down { color: var(--green); }
+.card-new .nc-kpi.highlight   { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); }
+.card-new .nc-kpi.highlight .lbl { color: #b8b8bf; }
+.card-new .nc-kpi.highlight .val { color: #fff; }
+.card-new .nc-kpi.highlight .delta { color: #d1d5db; }
+.card-new .nc-body { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); }
+.card-new .nc-section-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 6px 0 4px; }
+.card-new .nc-story { font-size: 13px; line-height: 1.55; color: #2c2c2c; margin: 0; }
+.card-new .nc-action { display: flex; gap: 10px; padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-action .arrow { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+.card-new.rosso  .nc-action .arrow { color: var(--red); }
+.card-new.giallo .nc-action .arrow { color: var(--yellow); }
+.card-new.verde  .nc-action .arrow { color: var(--green); }
+.card-new.nero   .nc-action .arrow { color: #555; }
+.card-new .nc-action .text { font-size: 13px; line-height: 1.5; color: #2c2c2c; flex: 1; }
+.card-new .nc-action .text b { color: #1c1c1e; }
+.card-new details { padding: 8px 16px 14px; font-size: 12.5px; color: var(--text-muted); border-top: 1px dashed var(--border-soft); }
+.card-new details summary { cursor: pointer; user-select: none; font-weight: 600; color: var(--text); list-style: none; padding: 4px 0; }
+.card-new details summary::-webkit-details-marker { display: none; }
+.card-new details summary::before { content: "▸ "; color: var(--text-dim); display: inline-block; transition: transform .15s; }
+.card-new details[open] summary::before { transform: rotate(90deg); }
+.card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
+.card-new details .det-content b { color: var(--text); }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .dot-rosso  { background: var(--red); }
@@ -212,6 +285,8 @@ def transform(html, data):
         lead_ieri = sum(int(c.get("leads_ieri_so_far", 0) or 0) for c in cards)
         rosso = counts.get("rosso", 0); giallo = counts.get("giallo", 0)
         verde = counts.get("verde", 0); nero   = counts.get("nero", 0)
+        total = rosso + giallo + verde + nero
+        salute_pct = int(round(verde / total * 100)) if total > 0 else 0
         kpi_block = f"""
 <div class="kpis">
   <div class="kpi"><div class="label">Campagne attive</div><div class="value">{n_camp}</div></div>
@@ -219,11 +294,16 @@ def transform(html, data):
   <div class="kpi"><div class="label">Lead IERI (stesso orario)</div><div class="value">{lead_ieri}</div></div>
   <div class="kpi"><div class="label">Δ Lead</div><div class="value">{lead_oggi - lead_ieri:+d}</div></div>
 </div>
-<div class="sem-grid" id="sem-grid">
-  <div class="kpi rosso"  data-filter="rosso"><div class="label">ROSSO</div><div class="value">{rosso}</div></div>
-  <div class="kpi giallo" data-filter="giallo"><div class="label">GIALLO</div><div class="value">{giallo}</div></div>
-  <div class="kpi verde"  data-filter="verde"><div class="label">VERDE</div><div class="value">{verde}</div></div>
-  <div class="kpi nero"   data-filter="nero"><div class="label">NERO</div><div class="value">{nero}</div></div>
+<div class="smart-summary" id="sem-grid">
+  <div class="ss-hero">
+    <div class="lbl">Stato salute portafoglio</div>
+    <div class="val">{salute_pct}%</div>
+    <div class="sub">{verde} di {total} campagne in linea</div>
+  </div>
+  <div class="ss-cell rosso"  data-filter="rosso"><div class="ico">🔴</div><div class="lbl">Da rivedere</div><div class="val">{rosso}</div><div class="micro">in zona critica</div></div>
+  <div class="ss-cell giallo" data-filter="giallo"><div class="ico">🟡</div><div class="lbl">Da monitorare</div><div class="val">{giallo}</div><div class="micro">scostamento lieve</div></div>
+  <div class="ss-cell verde"  data-filter="verde"><div class="ico">🟢</div><div class="lbl">In linea</div><div class="val">{verde}</div><div class="micro">o sotto media</div></div>
+  <div class="ss-cell nero"   data-filter="nero"><div class="ico">⚫</div><div class="lbl">Spente</div><div class="val">{nero}</div><div class="micro">nessuna spesa</div></div>
 </div>
 <div class="search-bar">
   <span class="search-ico">🔎</span>
@@ -253,6 +333,132 @@ def transform(html, data):
         new_open = opening[:-1] + f' data-name="{name}" data-color="{color}">'
         html = html[:start] + new_open + html[end:]
         offset += len(new_open) - len(opening)
+
+    # 5c) Trasforma ogni <div class="card COLOR" ...> nella nuova struttura .card-new
+    #     (idempotente: se ha già class="card-new" skippa)
+    STATE_HUMAN = {
+        "rosso":  ("Da rivedere",  "🔴"),
+        "giallo": ("Da monitorare","🟡"),
+        "verde":  ("In linea",     "🟢"),
+        "nero":   ("Spenta",       "⚫"),
+    }
+    def _convert_medtech_card(match):
+        full = match.group(0)
+        if "card-new" in full:
+            return full
+        color = match.group(1)
+        body  = match.group(2)
+        human_label, icon = STATE_HUMAN.get(color, ("—", "·"))
+
+        # Estrai i campi
+        def grab(pattern, txt, default=""):
+            mm = re.search(pattern, txt, re.IGNORECASE | re.DOTALL)
+            return mm.group(1).strip() if mm else default
+
+        name = grab(r'<div class="camp-name"[^>]*>([\s\S]*?)</div>', body)
+        name = re.sub(r"<[^>]+>", "", name).strip()
+        # data-name dal contenitore esterno (lower)
+        name_lower = name.lower().replace('"', '')
+
+        # meta_block: tutto il testo delle <div class="meta">
+        meta_parts = re.findall(r'<div class="meta"[^>]*>([\s\S]*?)</div>', body, re.IGNORECASE)
+        meta_combined = " · ".join(re.sub(r"<[^>]+>", "", x).strip() for x in meta_parts if x.strip())
+
+        # Partita date + giorni rimanenti
+        since_str = ""
+        m_since = re.search(r"Partita:?\s*([0-9/]+)(?:\s*·\s*([^·]+))?", meta_combined)
+        if m_since:
+            partita = m_since.group(1)
+            extra = (m_since.group(2) or "").strip()
+            since_str = f"Partita {partita}" + (f" · {extra}" if extra else "")
+
+        # Lead oggi vs ieri stesso orario
+        m_lead = re.search(r"Lead OGGI alle\s*([0-9:]+):\s*<b>(\d+)</b>\s*\(ieri stesso orario\s*(\d+)\)", body)
+        if not m_lead:
+            m_lead = re.search(r"Lead OGGI alle\s*([0-9:]+):\s*(\d+)\s*\(ieri stesso orario\s*(\d+)\)", body)
+        lead_oggi = m_lead.group(2) if m_lead else None
+        lead_ieri = m_lead.group(3) if m_lead else None
+        ora = m_lead.group(1) if m_lead else ""
+
+        # CPL e delta dal "reading"
+        reading = grab(r'<div class="reading"[^>]*>([\s\S]*?)</div>', body)
+        reading_text = re.sub(r"<[^>]+>", "", reading).strip()
+        m_cpl = re.search(r"CPL\s*([0-9.,]+)\s*€", reading_text)
+        cpl_val = m_cpl.group(1) if m_cpl else None
+        m_delta = re.search(r"([+\-]\d+(?:[.,]\d+)?)%", reading_text)
+        delta_str = m_delta.group(1) if m_delta else None
+        m_media = re.search(r"media\s*([0-9.,]+)\s*€", reading_text)
+        media_cpl = m_media.group(1) if m_media else None
+
+        # Trend lead/gg
+        m_trend = re.search(r"Trend ultimi 3 giorni:\s*<b>([0-9.,]+)</b>", body)
+        trend_lead = m_trend.group(1) if m_trend else None
+
+        # Frequency
+        m_freq = re.search(r"Frequency 7gg:\s*<b>([0-9.,]+)</b>", body)
+        freq = m_freq.group(1) if m_freq else None
+
+        # Cosa faremo (path)
+        path = grab(r'<div class="path[^"]*"[^>]*>([\s\S]*?)</div>', body)
+        path_text = re.sub(r"<[^>]+>", "", path)
+        path_text = re.sub(r"^\s*Cosa faremo per migliorare le performance:\s*", "", path_text).strip()
+
+        # Costruisci KPI cells: lead oggi (highlight), CPL ieri, Media lead/gg, Trend cpl mancante → media
+        kpis = []
+        if lead_oggi is not None:
+            sub = f"stesso ieri: {lead_ieri}" if lead_ieri is not None else ""
+            kpis.append(f'<div class="nc-kpi highlight"><div class="lbl">Lead oggi {ora}</div><div class="val">{lead_oggi}</div><div class="delta">{sub}</div></div>')
+        if cpl_val is not None:
+            delta_html = ""
+            if delta_str:
+                cls = "up" if delta_str.startswith("+") else "down"
+                delta_html = f'<div class="delta {cls}">{delta_str}% vs media</div>'
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">CPL ieri</div><div class="val">{cpl_val}&nbsp;€</div>{delta_html}</div>')
+        if trend_lead is not None:
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">Media lead/gg</div><div class="val">{trend_lead}</div><div class="delta">ultimi 3gg</div></div>')
+        if media_cpl is not None:
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">Media CPL</div><div class="val">{media_cpl}&nbsp;€</div></div>')
+
+        # "Cosa è successo" = il testo del reading senza il pezzo "Ieri CPL..." già nei KPI
+        story_html = ""
+        if reading_text:
+            story_html = f'<div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">{reading_text}</p></div>'
+
+        action_html = ""
+        if path_text:
+            action_html = f'<div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> {path_text}</div></div>'
+
+        # Details: freq + meta tecnici
+        details_inner = []
+        if freq:
+            details_inner.append(f'<b>Frequency 7gg:</b> {freq}')
+        if meta_combined:
+            details_inner.append(meta_combined)
+        details_html = ""
+        if details_inner:
+            details_html = f'<details><summary>Dettaglio tecnico</summary><div class="det-content">{" · ".join(details_inner)}</div></details>'
+
+        return f'''<div class="card-new {color}" data-name="{name_lower}" data-color="{color}">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">{icon}</span> {human_label}</span>
+      {f'<span class="nc-since">{since_str}</span>' if since_str else ''}
+    </div>
+    <div class="nc-name">{name}</div>
+  </div>
+  <div class="nc-kpis">
+    {"".join(kpis)}
+  </div>
+  {story_html}
+  {action_html}
+  {details_html}
+</div>'''
+
+    html = re.sub(
+        r'<div class="card\s+(rosso|giallo|verde|nero)[^"]*"[^>]*>([\s\S]*?)</div>\s*(?=<div class="card\s+(?:rosso|giallo|verde|nero)|</div>\s*</div>\s*(?:<div class="empty-result"|<div class="signature"|<script|</body>))',
+        _convert_medtech_card,
+        html,
+    )
 
     # 6) Rimuovi footer 'Snapshot generato...' / tagline
     html = re.sub(r'<div class="footer">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
@@ -291,7 +497,7 @@ def transform(html, data):
   const searchInput = document.getElementById("search-input");
   const clearBtn    = document.getElementById("search-clear");
   const semGrid     = document.getElementById("sem-grid");
-  const cards       = Array.from(document.querySelectorAll(".cards .card"));
+  const cards       = Array.from(document.querySelectorAll(".cards .card-new, .cards .card"));
   const cntEl       = document.getElementById("filter-count");
   const emptyEl     = document.getElementById("empty-result");
 
@@ -332,7 +538,7 @@ def transform(html, data):
   }
 
   if (semGrid) {
-    semGrid.querySelectorAll(".kpi[data-filter]").forEach(el => {
+    semGrid.querySelectorAll("[data-filter]").forEach(el => {
       el.addEventListener("click", () => {
         const c = el.dataset.filter;
         if (SEM_FILTERS.has(c)) SEM_FILTERS.delete(c);

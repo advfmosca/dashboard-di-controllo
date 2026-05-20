@@ -103,6 +103,79 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .search-bar .clear-btn.hidden { display: none; }
 .empty-result { padding: 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 13px; background: var(--bg-soft); border-radius: 10px; border: 1px dashed var(--border); }
 
+/* ─── HERO STATO SALUTE ─── */
+.smart-summary { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 12px; padding: 16px; background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; align-items: stretch; }
+.smart-summary .ss-hero { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); border-radius: 10px; padding: 14px 16px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+.smart-summary .ss-hero .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #b8b8bf; }
+.smart-summary .ss-hero .val { font-size: 32px; font-weight: 800; line-height: 1.05; margin: 2px 0 1px; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-hero .sub { font-size: 11.5px; color: #d1d5db; }
+.smart-summary .ss-cell { padding: 10px 12px; border-radius: 10px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; display: flex; flex-direction: column; gap: 3px; }
+.smart-summary .ss-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.smart-summary .ss-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.smart-summary.has-active .ss-cell:not(.active-filter):not(.ss-hero) { opacity: 0.42; }
+.smart-summary .ss-cell .ico { font-size: 16px; line-height: 1; }
+.smart-summary .ss-cell .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.smart-summary .ss-cell .val { font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-cell .micro { font-size: 10.5px; opacity: 0.85; }
+.smart-summary .ss-cell.rosso  { background: #fee2e2; color: #991b1b; }
+.smart-summary .ss-cell.giallo { background: #ffedd5; color: #9a3412; }
+.smart-summary .ss-cell.verde  { background: #d1fadf; color: #14532d; }
+.smart-summary .ss-cell.nero   { background: #1a1a1a; color: #fff; }
+@media (max-width: 820px) {
+  .smart-summary { grid-template-columns: 1fr 1fr; }
+  .smart-summary .ss-hero { grid-column: 1 / -1; }
+}
+
+/* ─── CARD RIPROGETTATA ─── */
+.card-new { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04); display: flex; flex-direction: column; margin-bottom: 12px; }
+.card-new.rosso  { border-top: 5px solid var(--red); }
+.card-new.giallo { border-top: 5px solid var(--yellow); }
+.card-new.verde  { border-top: 5px solid var(--green); }
+.card-new.nero   { border-top: 5px solid var(--black); }
+.card-new .nc-hero { padding: 14px 16px 10px; }
+.card-new.rosso  .nc-hero { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); }
+.card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
+.card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
+.card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
+.card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
+.card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
+.card-new.verde  .nc-status { background: #d1fadf; color: #14532d; }
+.card-new.nero   .nc-status { background: #1a1a1a; color: #fff; }
+.card-new .nc-status .ico { font-size: 13px; }
+.card-new .nc-since { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.card-new .nc-name { font-size: 15px; font-weight: 700; line-height: 1.25; margin: 0; word-break: break-word; }
+.card-new .nc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; padding: 0 16px 14px; }
+.card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
+.card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.card-new .nc-kpi .delta { font-size: 11px; font-weight: 600; margin-top: 2px; color: var(--text-muted); }
+.card-new .nc-kpi .delta.up   { color: var(--red); }
+.card-new .nc-kpi .delta.down { color: var(--green); }
+.card-new .nc-kpi.highlight   { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); }
+.card-new .nc-kpi.highlight .lbl { color: #b8b8bf; }
+.card-new .nc-kpi.highlight .val { color: #fff; }
+.card-new .nc-kpi.highlight .delta { color: #d1d5db; }
+.card-new .nc-body { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); }
+.card-new .nc-section-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 6px 0 4px; }
+.card-new .nc-story { font-size: 13px; line-height: 1.55; color: #2c2c2c; margin: 0; }
+.card-new .nc-action { display: flex; gap: 10px; padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-action .arrow { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+.card-new.rosso  .nc-action .arrow { color: var(--red); }
+.card-new.giallo .nc-action .arrow { color: var(--yellow); }
+.card-new.verde  .nc-action .arrow { color: var(--green); }
+.card-new.nero   .nc-action .arrow { color: #555; }
+.card-new .nc-action .text { font-size: 13px; line-height: 1.5; color: #2c2c2c; flex: 1; }
+.card-new .nc-action .text b { color: #1c1c1e; }
+.card-new details { padding: 8px 16px 14px; font-size: 12.5px; color: var(--text-muted); border-top: 1px dashed var(--border-soft); }
+.card-new details summary { cursor: pointer; user-select: none; font-weight: 600; color: var(--text); list-style: none; padding: 4px 0; }
+.card-new details summary::-webkit-details-marker { display: none; }
+.card-new details summary::before { content: "▸ "; color: var(--text-dim); display: inline-block; transition: transform .15s; }
+.card-new details[open] summary::before { transform: rotate(90deg); }
+.card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
+.card-new details .det-content b { color: var(--text); }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .dot-rosso { background: var(--red); }
@@ -166,42 +239,87 @@ def escape_html(s):
     return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             .replace('"', "&quot;").replace("'", "&#39;"))
 
+# Etichette "umane" per stato e fase campagna
+STATE_LABEL = {
+    "rosso":  ("Da rivedere",  "🔴"),
+    "giallo": ("Da monitorare","🟡"),
+    "verde":  ("In linea",     "🟢"),
+    "nero":   ("Spenta",       "⚫"),
+}
+
 def render_daily(date_iso, cea):
     kpi = cea.get("kpi", {})
     entries = cea.get("entries", [])
     title_date = fmt_date_long(date_iso)
     rosso = kpi.get("rosso", 0); giallo = kpi.get("giallo", 0)
     verde = kpi.get("verde", 0); nero   = kpi.get("nero", 0)
+    total_camp = len(entries) if entries else (rosso + giallo + verde + nero)
+    # Stato salute = verde / totale
+    salute_pct = int(round(verde / total_camp * 100)) if total_camp > 0 else 0
 
     cards_html = []
     for e in entries:
         col = e.get("status", {}).get("color", "gray")
         cls = COL2CLS.get(col, "nero")
-        label = e.get("status", {}).get("label", "—")
+        human_label, icon = STATE_LABEL.get(cls, ("—", "·"))
         reason = e.get("status", {}).get("reason", "")
         name = e.get("name", "—")
         spend = e.get("spend_y", 0)
         lead = e.get("lead_y", 0)
         cpl = e.get("cpl_y")
         cpl_m3 = e.get("cpl_mean_3d")
-        meta_bits = [f"Spesa <b>{fmt_eur(spend)}</b>", f"Lead <b>{lead}</b>"]
-        if cpl is not None:
-            meta_bits.append(f"CPL <b>{fmt_eur(cpl)}</b>")
+        narrative = e.get("cpl_narrative") or ""
+        perf_eval = e.get("performance_eval") or ""
+
+        # Δ CPL vs media 3gg
+        delta_html = ""
+        if cpl is not None and cpl_m3 is not None and cpl_m3 > 0:
+            delta_pct = (cpl - cpl_m3) / cpl_m3 * 100
+            if delta_pct >= 5:
+                delta_html = f'<div class="delta up">+{delta_pct:.0f}% vs media 3gg</div>'
+            elif delta_pct <= -5:
+                delta_html = f'<div class="delta down">{delta_pct:.0f}% vs media 3gg</div>'
+            else:
+                delta_html = f'<div class="delta">In linea con media 3gg</div>'
+
+        # KPI in evidenza: il primo box è "Lead ieri" (sfondo nero) per tutte le card
+        kpis_inner = [
+            f'<div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">{fmt_int(lead)}</div><div class="delta">su {fmt_eur(spend)} spesi</div></div>',
+            f'<div class="nc-kpi"><div class="lbl">CPL</div><div class="val">{fmt_eur(cpl)}</div>{delta_html}</div>',
+            f'<div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">{fmt_eur(spend)}</div></div>',
+        ]
         if cpl_m3 is not None:
-            meta_bits.append(f"Media 3gg {fmt_eur(cpl_m3)}")
-        narrative = e.get("cpl_narrative")
-        perf_eval = e.get("performance_eval")
-        narrative_html = f'<div class="r-cpl">{escape_html(narrative)}</div>' if narrative else ""
-        perf_html = f'<div class="r-perf"><strong>Performance:</strong> {escape_html(perf_eval)}</div>' if perf_eval else ""
+            kpis_inner.append(
+                f'<div class="nc-kpi"><div class="lbl">Media CPL 3gg</div><div class="val">{fmt_eur(cpl_m3)}</div></div>'
+            )
+
+        # Storia + azione: usiamo cpl_narrative per "cosa è successo" e performance_eval per "cosa faremo"
+        story_html = ""
+        if narrative:
+            story_html = f'<div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">{escape_html(narrative)}</p></div>'
+        action_html = ""
+        if perf_eval:
+            action_html = f'<div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> {escape_html(perf_eval)}</div></div>'
+
+        # Reason in details (più tecnico)
+        details_html = ""
+        if reason:
+            details_html = f'<details><summary>Dettaglio tecnico</summary><div class="det-content">{escape_html(reason)}</div></details>'
+
         cards_html.append(f"""
-<div class="card {cls}" data-name="{escape_html(name).lower()}" data-color="{cls}">
-  <div class="card-head">
-    <span class="tag {cls}">{escape_html(label)}</span>
-    <div class="camp-name">{escape_html(name)}</div>
+<div class="card-new {cls}" data-name="{escape_html(name).lower()}" data-color="{cls}">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">{icon}</span> {human_label}</span>
+    </div>
+    <div class="nc-name">{escape_html(name)}</div>
   </div>
-  <div class="meta">{' · '.join(meta_bits)}</div>
-  {narrative_html}
-  {perf_html}
+  <div class="nc-kpis">
+    {''.join(kpis_inner)}
+  </div>
+  {story_html}
+  {action_html}
+  {details_html}
 </div>""")
 
     if not cards_html:
@@ -231,11 +349,16 @@ def render_daily(date_iso, cea):
     <div class="kpi"><div class="label">CPL medio</div><div class="value">{fmt_eur(kpi.get('cpl_y'))}</div></div>
   </div>
 
-  <div class="sem-grid" id="sem-grid">
-    <div class="kpi rosso"  data-filter="rosso"><div class="label">ROSSO</div><div class="value">{rosso}</div></div>
-    <div class="kpi giallo" data-filter="giallo"><div class="label">GIALLO</div><div class="value">{giallo}</div></div>
-    <div class="kpi verde"  data-filter="verde"><div class="label">VERDE</div><div class="value">{verde}</div></div>
-    <div class="kpi nero"   data-filter="nero"><div class="label">NERO</div><div class="value">{nero}</div></div>
+  <div class="smart-summary" id="sem-grid">
+    <div class="ss-hero">
+      <div class="lbl">Stato salute portafoglio</div>
+      <div class="val">{salute_pct}%</div>
+      <div class="sub">{verde} di {total_camp} campagne in linea</div>
+    </div>
+    <div class="ss-cell rosso"  data-filter="rosso"><div class="ico">🔴</div><div class="lbl">Da rivedere</div><div class="val">{rosso}</div><div class="micro">in zona critica</div></div>
+    <div class="ss-cell giallo" data-filter="giallo"><div class="ico">🟡</div><div class="lbl">Da monitorare</div><div class="val">{giallo}</div><div class="micro">scostamento lieve</div></div>
+    <div class="ss-cell verde"  data-filter="verde"><div class="ico">🟢</div><div class="lbl">In linea</div><div class="val">{verde}</div><div class="micro">o sotto media</div></div>
+    <div class="ss-cell nero"   data-filter="nero"><div class="ico">⚫</div><div class="lbl">Spente</div><div class="val">{nero}</div><div class="micro">nessuna spesa</div></div>
   </div>
 
   <div class="search-bar">
@@ -246,11 +369,11 @@ def render_daily(date_iso, cea):
   </div>
 
   <div class="legend">
-    <span><span class="dot dot-verde"></span><b>VERDE</b> — in linea o sotto media 3gg</span>
-    <span><span class="dot dot-giallo"></span><b>GIALLO</b> — CPL fino a +50% vs media 3gg</span>
-    <span><span class="dot dot-rosso"></span><b>ROSSO</b> — 0 lead o CPL &gt; +50% media 3gg</span>
-    <span><span class="dot dot-nero"></span><b>NERO</b> — nessuna spesa</span>
-    <span style="opacity:.7">· Clicca un riquadro semaforico per filtrare</span>
+    <span><span class="dot dot-verde"></span><b>In linea</b> — sotto o pari alla media 3gg</span>
+    <span><span class="dot dot-giallo"></span><b>Da monitorare</b> — CPL fino a +50% vs media</span>
+    <span><span class="dot dot-rosso"></span><b>Da rivedere</b> — 0 lead o CPL &gt; +50% media</span>
+    <span><span class="dot dot-nero"></span><b>Spenta</b> — nessuna spesa</span>
+    <span style="opacity:.7">· Clicca un riquadro in alto per filtrare</span>
   </div>
 
   <div class="cards" id="cards">
@@ -268,7 +391,7 @@ def render_daily(date_iso, cea):
   const searchInput = document.getElementById("search-input");
   const clearBtn    = document.getElementById("search-clear");
   const semGrid     = document.getElementById("sem-grid");
-  const cards       = Array.from(document.querySelectorAll("#cards .card"));
+  const cards       = Array.from(document.querySelectorAll("#cards .card-new, #cards .card"));
   const cntEl       = document.getElementById("filter-count");
   const emptyEl     = document.getElementById("empty-result");
 
@@ -309,7 +432,7 @@ def render_daily(date_iso, cea):
   }}
 
   if (semGrid) {{
-    semGrid.querySelectorAll(".kpi[data-filter]").forEach(el => {{
+    semGrid.querySelectorAll("[data-filter]").forEach(el => {{
       el.addEventListener("click", () => {{
         const c = el.dataset.filter;
         if (SEM_FILTERS.has(c)) SEM_FILTERS.delete(c);
