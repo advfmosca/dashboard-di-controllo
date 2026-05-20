@@ -343,7 +343,7 @@ def recap_medtech_slack(kpi, entries, yesterday):
     return "\n".join(lines)
 
 def recap_aghc_slack(cards, yesterday):
-    """Recap copia-incolla stile 'Ciao team' con KPI di gasazione (vanity)."""
+    """Recap copia-incolla stile 'Ciao team' con KPI di visibilità (vanity)."""
     actives = sum(1 for c in cards if c["spend_y"] > 0)
     tot_spend_y = sum(c["spend_y"] for c in cards)
     tot_spend_w = sum(c["spend_window"] for c in cards)
@@ -657,7 +657,7 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
         # Stile descrittivo argomentato: niente label uppercase, solo prosa
         return f"<p>{p1}</p><p>{p2}</p><p>{p3}</p>"
 
-    # Vanity inline string (riga "gasazione" da incastonare nei paragrafi)
+    # Vanity inline string (riga "visibilità" da incastonare nei paragrafi)
     v = vanity_window or {}
     v_impr = v.get("impressions", 0)
     v_clicks = v.get("clicks", 0)
@@ -801,7 +801,7 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
             f"con una spesa media giornaliera di {fmt_eur(avg_daily)}",
             f"In termini di copertura il bilancio è solido — abbiamo portato a casa {vanity_phrase}, "
             f"a fronte di {fmt_eur(avg_daily)} di investimento medio al giorno",
-            f"La fotografia di gasazione del periodo restituisce {vanity_phrase}, "
+            f"La fotografia di visibilità del periodo restituisce {vanity_phrase}, "
             f"con un ritmo giornaliero di {fmt_eur(avg_daily)} di spesa",
         ])
     else:
@@ -1392,11 +1392,17 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
         meta_campaigns   = bf_meta_camps_by_aid.get(meta_id, [])     if meta_id   else []
         google_campaigns = bf_google_camps_by_aid.get(google_id, []) if google_id else []
 
+        # CPL window (BF lavora a Contatti+CPL, non a vanity metrics)
+        cpl_window = (spend_window / contatti_window) if contatti_window > 0 else None
+
         bf_cards.append({
             "id": c["name"].lower().replace(" ", "-").replace("&", "and"),
             "name": c["name"],
             "spend_window": round(spend_window, 2),
             "spend_y": round(spend_y, 2),
+            "contatti_window": contatti_window,
+            "contatti_y": contatti_y,
+            "cpl_window": round(cpl_window, 2) if cpl_window is not None else None,
             "window_days": bf_window_days,
             "trend_arrow": trend_arrow,
             "trend_label": trend_label,
