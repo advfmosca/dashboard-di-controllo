@@ -26,15 +26,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 DATA_REPORT = sys.argv[1] if len(sys.argv) > 1 else "2026-05-18"
-import os
-import glob as _glob
-_default_work = "/sessions/intelligent-amazing-einstein/mnt/outputs/work"
-if not os.path.isdir(_default_work):
-    # auto-detect: pick first /sessions/*/mnt/outputs/work that exists
-    cands = _glob.glob("/sessions/*/mnt/outputs/work")
-    if cands:
-        _default_work = cands[0]
-WORK = Path(os.environ.get("DASHBOARD_WORK_DIR", _default_work))
+WORK = Path("/sessions/dazzling-upbeat-pascal/mnt/outputs/work")
 REPO_DASH = Path("/tmp/dashboard-di-controllo")
 DATA_JSON = REPO_DASH / "data.json"
 SNAP_DIR = REPO_DASH / "snapshots"

@@ -76,6 +76,15 @@ MEDTECH_FILTER = re.compile(r"Total Lift|Total Sculpt", re.IGNORECASE)
 
 EXCLUDED_SPENDING = {"1576344015714351", "533672775128363"}
 
+# CEA Meta ids — placeholder. CEA è alimentato dai CSV di Alfredo, non da Windsor.
+# In linea generale gli account CEA NON compaiono nei rows Meta di Windsor (non sono connessi),
+# quindi non finiscono in other_roster. Tenuto come set vuoto per esclusione esplicita.
+CEA_META_IDS: set = set()
+
+# Slack targets per le azioni slack auto-generate (assorbiti da fmm-dashboard legacy).
+SLACK_CHANNEL_ANOMALIE_SPENDING = "C0B2RE5KSHG"  # #anomalie-spending
+SLACK_DM_FRANCESCO = "U0B0P0N7A2U"               # DM Francesco (fallback)
+
 MONTHS_IT = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"]
 
 # Ad account URLs
@@ -1392,7 +1401,70 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     # build_data.py non legge più raw/medtech.json. Tuttavia, se esistono già
     # nel data.json precedente, li PRESERVA (importante per evitare di
     # cancellarli accidentalmente quando si rilancia build_data.py).
+
+    # ============= OTHER ROSTER (assorbe fmm-discover-other-accounts) =============
+    # Account Meta visibili nel dataset Windsor che NON appartengono a BF/AGHC/medtech/CEA.
+    exclude_other = set(bf_meta_ids) | set(aghc_meta_ids) | {MEDTECH_META_ACCOUNT} | set(CEA_META_IDS) | set(EXCLUDED_SPENDING)
+    out["other_roster"] = _build_other_roster(
+        meta_rows=meta_rows,
+        meta_map=meta_map,
+        exclude_ids=exclude_other,
+        y_iso=y_iso,
+        window_days=15,
+    )
+
     return out
+
+
+def _build_other_roster(meta_rows, meta_map, exclude_ids, y_iso, window_days=15):
+    """Lista account Meta visibili in Windsor (meta_rows) che NON sono in
+    BeeFamily / AGHC / Med&Tech / CEA / EXCLUDED. Per ciascuno calcola lo
+    spend_window_15d (somma su `window_days` precedenti a y_iso incluso) e
+    spend_y (spend di reference_date).
+
+    Output:
+      {
+        "generated_at": "<iso>",
+        "window_days": 15,
+        "reference_date": "<y_iso>",
+        "accounts": [
+            {"account_id","account_name","spend_y","spend_window_15d","ad_url"}, ...
+        ]
+      }
+    """
+    exclude_set = {str(x) for x in (exclude_ids or set())}
+    # Account_id distinti presenti nei rows meta
+    seen = []
+    seen_set = set()
+    for r in meta_rows:
+        aid = str(r.get("account_id") or "")
+        if not aid or aid in seen_set or aid in exclude_set:
+            continue
+        seen.append(aid)
+        seen_set.add(aid)
+    accounts = []
+    for aid in seen:
+        e = meta_map.get(aid) or {"name": aid, "daily": {}}
+        daily = e.get("daily", {})
+        spend_y = float(daily.get(y_iso, 0) or 0)
+        series = daily_series(daily, y_iso, window_days)
+        spend_window = sum(s for _, s in series)
+        accounts.append({
+            "account_id": aid,
+            "account_name": e.get("name") or aid,
+            "spend_y": round(spend_y, 2),
+            "spend_window_15d": round(spend_window, 2),
+            "ad_url": url_meta(aid),
+        })
+    # Sort: prima spend_window desc, fallback nome
+    accounts.sort(key=lambda a: (-a["spend_window_15d"], (a["account_name"] or "").lower()))
+    return {
+        "reference_date": y_iso,
+        "window_days": window_days,
+        "accounts": accounts,
+        "total_count": len(accounts),
+        "total_spend_window": round(sum(a["spend_window_15d"] for a in accounts), 2),
+    }
 
 
 def preserve_csv_sections(out, workspace):
@@ -1591,6 +1663,7 @@ def main():
     ap.add_argument("--workspace", required=True, help="Path workspace (Dashboard di Controllo)")
     ap.add_argument("--aghc-vanity", default=None, help="Path opzionale a JSON con vanity metrics (impressions/clicks/landing_page_view) per AGHC")
     ap.add_argument("--aghc-budgets", default=None, help="Path opzionale a aghc_budgets.json con budget_annuale + ytd_seed per ogni meta_id")
+    ap.add_argument("--owners", default=None, help="Path opzionale a owners.json (mapping meta_id → slack_user_id del referente) per popolare slack_target sulle azioni bf_fermo. Se assente, fallback DM Francesco.")
     ap.add_argument("--retention-days", type=int, default=90, help="Quanti snapshot/<date>.json tenere; più vecchi vengono cancellati")
     ap.add_argument("--ref-date", default=None, help="Override reference date (YYYY-MM-DD); default = ieri")
     args = ap.parse_args()
@@ -1613,6 +1686,17 @@ def main():
     if args.aghc_budgets and os.path.exists(args.aghc_budgets):
         with open(args.aghc_budgets, "r", encoding="utf-8") as f:
             budgets_config = json.load(f)
+    owners_map = {}
+    if args.owners and os.path.exists(args.owners):
+        try:
+            with open(args.owners, "r", encoding="utf-8") as f:
+                owners_raw = json.load(f)
+            # owners.json formato atteso: {"meta_id_to_slack_user": {"<meta_id>": "<U...>"}}
+            # oppure root-level {"<meta_id>": "<U...>"}; supporta entrambi.
+            if isinstance(owners_raw, dict):
+                owners_map = owners_raw.get("meta_id_to_slack_user") or owners_raw
+        except Exception as _e:
+            owners_map = {}
     data = build(meta, google, tiktok, medtech, ref_date=ref_date, vanity_rows=vanity_rows, budgets_config=budgets_config)
 
     workspace = args.workspace
@@ -1654,10 +1738,12 @@ def main():
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump({"dates": available_dates}, f, ensure_ascii=False, indent=2)
 
-    # ============= ACTIONS.JSON per Calendar =============
+    # ============= ACTIONS.JSON per Calendar + Slack =============
     # Trigger:
     # - HIGH spending: account con BOTH triggers (>50€ + >30% vs media 7gg) — più critico
     # - NEW fermo: account in spending.zero oggi che NON era in spending.zero ieri (diff snapshot)
+    # - SPENDING_ANOMALY: ogni zero + high per loop Slack #anomalie-spending (assorbe alert-spending-anomalie-windsor)
+    # - BF_FERMO: account BeeFamily a spend_y=0 con prev7_spend>0, DM al referente cliente (assorbe daily-check-beefamily)
     actions = []
     ref_date_iso = data["reference_date"]
     ref_date_label = data["reference_date_label"]
@@ -1666,16 +1752,20 @@ def main():
     prev_date = (parse_iso(ref_date_iso) - timedelta(days=1)).strftime("%Y-%m-%d")
     prev_snap_path = os.path.join(snap_dir, prev_date + ".json")
     prev_zero_ids = set()
+    prev_bf_fermo_ids = set()
     prev_snapshot_exists = os.path.exists(prev_snap_path)
     if prev_snapshot_exists:
         try:
             with open(prev_snap_path, "r", encoding="utf-8") as f:
                 prev_data = json.load(f)
             prev_zero_ids = {f"{r['platform']}:{r['account_id']}" for r in prev_data.get("spending", {}).get("zero", [])}
+            for e in prev_data.get("beefamily", {}).get("entries", []):
+                if (e.get("spend_y") or 0) == 0 and (e.get("prev7_spend") or 0) > 0:
+                    prev_bf_fermo_ids.add(f"{e.get('source')}:{e.get('name')}")
         except Exception:
             prev_snapshot_exists = False
 
-    # 1) HIGH spending critici (entrambi trigger)
+    # 1) HIGH spending critici (entrambi trigger) — solo Calendar
     for r in data["spending"]["high"]:
         triggers = r.get("triggers", [])
         if ">50€" in triggers and ">30%" in triggers:
@@ -1691,9 +1781,7 @@ def main():
                 "reference_date_label": ref_date_label,
             })
 
-    # 2) NEW fermi (in zero oggi, non c'erano ieri)
-    # Solo se abbiamo lo snapshot di ieri per fare il diff. Al primo run salta del tutto
-    # (altrimenti tutti i fermi sarebbero "nuovi" e riempirebbe il calendar).
+    # 2) NEW fermi (in zero oggi, non c'erano ieri) — Calendar
     if prev_snapshot_exists:
         new_fermi = []
         for r in data["spending"]["zero"]:
@@ -1710,12 +1798,101 @@ def main():
                     "reference_date": ref_date_iso,
                     "reference_date_label": ref_date_label,
                 })
-        # Sort by media7 desc — prima i più "importanti" (spendevano di più prima del fermo)
         new_fermi.sort(key=lambda a: -float(a['details'].split('precedente ')[1].split(' €')[0].replace('.','').replace(',','.')) if 'precedente' in a['details'] else 0)
         actions.extend(new_fermi[:10])  # max 10 new_fermi al giorno
 
-    # Cap globale per non saturare il Calendar: max 15 azioni totali
-    actions = actions[:15]
+    # ===== Cap Calendar a 15 (high_spending + new_fermo) =====
+    cal_actions = [a for a in actions if a["type"] in ("high_spending", "new_fermo")]
+    cal_actions = cal_actions[:15]
+    actions = cal_actions  # ripartiamo con le sole calendar capped
+
+    # 3) SPENDING_ANOMALY → Slack #anomalie-spending (assorbe alert-spending-anomalie-windsor)
+    # Top alert già pre-formattato per il loop slack della SKILL refresh-dashboard-data.
+    spending_zero = data["spending"]["zero"]
+    spending_high = data["spending"]["high"]
+    spending_total = len(spending_zero) + len(spending_high)
+    if spending_total > 0:
+        # Top 3: prima zero, poi high (per spend desc)
+        top3_lines = []
+        for r in sorted(spending_zero, key=lambda x: -x.get("mean7", 0))[:3]:
+            top3_lines.append(f"• :zap: {r['account_name']} ({r['platform']}) — 0,00 € (storico {fmt_eur(r['mean7'])}) · _Causa da verificare_")
+        remaining = 3 - len(top3_lines)
+        if remaining > 0:
+            for r in sorted(spending_high, key=lambda x: -x.get("target", 0))[:remaining]:
+                delta = r.get("delta")
+                delta_str = (fmt_pct(delta) if delta is not None else "n/d")
+                top3_lines.append(f"• :fire: {r['account_name']} ({r['platform']}) — {fmt_eur(r['target'])} ({delta_str})")
+        more = spending_total - len(top3_lines)
+        more_line = f"\n_+ {more} altri alert sulla dashboard_" if more > 0 else ""
+        date_slash_str = date_slash(parse_iso(ref_date_iso))
+        slack_text = (
+            f":rotating_light: *Check spending — {date_slash_str}*\n"
+            f"*Top alert:*\n"
+            + "\n".join(top3_lines)
+            + more_line
+            + f"\n\n<{PAGES_URL}?section=spending&date={ref_date_iso}|:link: Apri dashboard →>"
+        )
+        actions.append({
+            "type": "spending_anomaly",
+            "priority": "high",
+            "title": f"Alert spending — {date_slash_str}",
+            "details": f"{len(spending_zero)} zero + {len(spending_high)} high",
+            "reference_date": ref_date_iso,
+            "reference_date_label": ref_date_label,
+            "slack_target": SLACK_CHANNEL_ANOMALIE_SPENDING,
+            "slack_template": slack_text,
+            "skip_if_quiet": False,
+        })
+
+    # 4) BF_FERMO → Slack DM al referente cliente (assorbe daily-check-beefamily)
+    # Logica: account BeeFamily con spend_y=0 e prev7_spend>0 → DM al referente del cliente.
+    # Distinguiamo "nuovo" (non era fermo ieri) vs "persistente" (era già fermo).
+    bf_fermi_actions = []
+    for e in data.get("beefamily", {}).get("entries", []):
+        spend_y = e.get("spend_y") or 0
+        prev7 = e.get("prev7_spend") or 0
+        if spend_y == 0 and prev7 > 0:
+            key = f"{e.get('source')}:{e.get('name')}"
+            is_new = key not in prev_bf_fermo_ids
+            # Risolvi slack_target: cerca per meta_id (se source=Meta) o google_id (se source=Google) in owners_map.
+            # owners_map può essere keyed per meta_id OPPURE per name del cliente. Proviamo entrambe.
+            slack_target = None
+            # Trova meta_id/google_id dal roster BEEFAMILY
+            roster_entry = next((c for c in BEEFAMILY if c["name"] == e.get("name")), None)
+            if roster_entry:
+                if e.get("source") == "Meta" and roster_entry.get("meta_id"):
+                    slack_target = owners_map.get(str(roster_entry["meta_id"]))
+                elif e.get("source") == "Google" and roster_entry.get("google_id"):
+                    slack_target = owners_map.get(str(roster_entry["google_id"]))
+            if not slack_target:
+                slack_target = owners_map.get(e.get("name", ""))
+            if not slack_target:
+                slack_target = SLACK_DM_FRANCESCO  # fallback DM Francesco
+            label = "nuovo fermo" if is_new else "fermo persistente"
+            emoji = "⚫" if is_new else "⚠️"
+            slack_text = (
+                f"{emoji} *Bee Family — {e.get('name')} ({e.get('source')})*: {label}\n"
+                f"Spending ieri: 0,00 € · Media 7gg precedente: {fmt_eur(prev7)}\n"
+                f"<{e.get('ad_url', '')}|Apri account →>"
+            )
+            bf_fermi_actions.append({
+                "type": "bf_fermo",
+                "priority": "high" if is_new else "medium",
+                "title": f"{emoji} Bee Family {e.get('name')} — {label}",
+                "source": e.get("source"),
+                "client_name": e.get("name"),
+                "ad_url": e.get("ad_url"),
+                "details": f"spend_y=0, prev7={fmt_eur(prev7)}",
+                "reference_date": ref_date_iso,
+                "reference_date_label": ref_date_label,
+                "slack_target": slack_target,
+                "slack_template": slack_text,
+                "skip_if_quiet": (not is_new),  # se persistente → solo notifica se severity high
+                "severity": "high" if is_new else "medium",
+            })
+    # priorità: nuovi prima
+    bf_fermi_actions.sort(key=lambda a: 0 if a["priority"] == "high" else 1)
+    actions.extend(bf_fermi_actions)
 
     actions_path = os.path.join(workspace, "actions.json")
     with open(actions_path, "w", encoding="utf-8") as f:
@@ -1724,7 +1901,11 @@ def main():
             "reference_date": ref_date_iso,
             "actions": actions,
         }, f, ensure_ascii=False, indent=2)
-    print(f"✓ actions.json: {len(actions)} azioni (high={sum(1 for a in actions if a['type']=='high_spending')}, new_fermo={sum(1 for a in actions if a['type']=='new_fermo')})")
+    n_high = sum(1 for a in actions if a['type']=='high_spending')
+    n_newf = sum(1 for a in actions if a['type']=='new_fermo')
+    n_spa  = sum(1 for a in actions if a['type']=='spending_anomaly')
+    n_bff  = sum(1 for a in actions if a['type']=='bf_fermo')
+    print(f"✓ actions.json: {len(actions)} azioni (high={n_high}, new_fermo={n_newf}, spending_anomaly={n_spa}, bf_fermo={n_bff})")
 
     print(f"✓ data.json:   {latest_path} ({os.path.getsize(latest_path)} bytes)")
     print(f"✓ snapshot:    {snap_path}")
@@ -1743,6 +1924,9 @@ def main():
         print(f"  medtech entries = {len(data['medtech']['entries'])}, alerts = {mt_alerts}")
     else:
         print(f"  medtech: alimentato da CSV di Alfredo (build_data.py non lo gestisce più)")
+    if 'other_roster' in data:
+        otr = data['other_roster']
+        print(f"  other_roster = {otr.get('total_count', 0)} account · spend_window_15d totale {otr.get('total_spend_window', 0)} €")
 
 if __name__ == "__main__":
     main()
