@@ -281,6 +281,26 @@
   .single-card .lead-row .lead-item .lbl { font-size: 10px; font-weight: 700; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; }
   .single-card .lead-row .lead-item .val { font-size: 15px; font-weight: 700; color: #14532d; font-variant-numeric: tabular-nums; line-height: 1.15; }
 
+  /* Performance summary block — versione leggibile sopra al rational tecnico */
+  .single-card .perf-block { padding: 12px 14px; border-radius: 10px; line-height: 1.55; font-size: 13px; border-left: 4px solid var(--gray); background: var(--bg-soft); }
+  .single-card .perf-block.tier-learning { background: #eef4ff; border-left-color: #0866FF; color: #1e3a8a; }
+  .single-card .perf-block.tier-ottimo   { background: #d1fadf; border-left-color: var(--green); color: #14532d; }
+  .single-card .perf-block.tier-pessimo  { background: #fee2e2; border-left-color: var(--red); color: #7f1d1d; }
+  .single-card .perf-block.tier-in_line  { background: #fff3cd; border-left-color: var(--yellow); color: #6b4500; }
+  .single-card .perf-block .pb-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-weight: 700; font-size: 12.5px; }
+  .single-card .perf-block .pb-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.7); font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+  .single-card .perf-block .pb-meta { font-size: 11px; font-weight: 600; opacity: 0.75; }
+  .single-card .perf-block p { margin: 4px 0; }
+  .single-card .perf-block .pb-stats { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 4px; padding: 8px 10px; background: rgba(255,255,255,.65); border-radius: 8px; font-size: 12.5px; }
+  .single-card .perf-block .pb-stats .s-item { display: flex; flex-direction: column; }
+  .single-card .perf-block .pb-stats .s-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
+  .single-card .perf-block .pb-stats .s-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .single-card .perf-block .pb-creative { padding: 8px 10px; background: rgba(255,255,255,.7); border-radius: 8px; margin-top: 6px; font-size: 12.5px; }
+  .single-card .perf-block .pb-creative .pc-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; display: block; margin-bottom: 3px; }
+  .single-card .perf-block .pb-creative .pc-name { font-weight: 700; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+  .single-card .perf-block .pb-creative .pc-meta { font-size: 11.5px; opacity: 0.75; margin-top: 2px; }
+  .single-card .perf-block .pb-action { margin-top: 6px; font-size: 12.5px; font-weight: 600; }
+
   /* Mini chart per card (riusa stile chart-wrap) */
   .single-card .mini-chart-wrap { background: #fafafa; border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px 6px; }
   .single-card .mini-chart-wrap .mc-title { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: flex; justify-content: space-between; }
@@ -881,6 +901,8 @@
         contatti_y: null, // BF card non lo espone in aggregato — lo recuperiamo dalle entries sotto
         trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
         status: c.status, rational: c.rational,
+        meta_campaigns: c.meta_campaigns || [],
+        google_campaigns: c.google_campaigns || [],
         ad_urls: adUrls,
         search_terms: [c.name, c.id].concat(campNames)
       });
@@ -1318,6 +1340,197 @@
     return sum / withLead.length;
   }
 
+  // ============================ PERFORMANCE ASSESSMENT ============================
+  // Valutazione semplificata "ottimo / in_line / pessimo / learning" per il blocco Performance.
+  // Sorgenti del segnale:
+  //   1. status.color del giorno corrente (red/yellow/green/gray)
+  //   2. days_active sui 7gg → se < 3 → "learning" (campagna troppo giovane per ottimizzare)
+  //   3. Per CEA/Med&Tech: anche il CTR (>1.5% buono, <0.7% pessimo)
+  function assessPerformance(item, series) {
+    const daysActive = series.filter(p => p.spend != null && p.spend > 0).length;
+    // Primo giorno della finestra con spesa = "start visible" (può essere precedente, non lo sappiamo)
+    const firstActive = series.find(p => p.spend != null && p.spend > 0);
+    const startDate = firstActive ? firstActive.date : null;
+
+    // Tier base da status del giorno corrente
+    let tier = "in_line";
+    const color = (item.status && item.status.color) || "gray";
+    if (color === "green") tier = "ottimo";
+    else if (color === "red") tier = "pessimo";
+    else if (color === "yellow") tier = "in_line";
+    else tier = "in_line";
+
+    // Override learning se troppo giovane
+    if (daysActive < 3) tier = "learning";
+
+    // CTR signal per CEA/MedTech: medio ultimi 7gg
+    let ctrAvg = null;
+    if (item.project === "CEA" || item.project === "Med & Tech") {
+      const ctrVals = series.map(p => p.ctr).filter(v => v != null);
+      if (ctrVals.length > 0) ctrAvg = ctrVals.reduce((a,b)=>a+b,0) / ctrVals.length;
+      // Se il tier è "in_line" ma CTR forte/debole, sposta
+      if (tier !== "learning") {
+        if (ctrAvg != null) {
+          if (ctrAvg >= 1.5 && tier === "in_line") tier = "ottimo";
+          else if (ctrAvg < 0.7 && tier !== "pessimo") tier = "pessimo";
+        }
+      }
+    }
+
+    // CPL signal: confronto ultimi 3gg vs media precedente
+    const cplVals = series.map(p => p.cpl).filter(v => v != null);
+    let cplAvg = cplVals.length ? cplVals.reduce((a,b)=>a+b,0) / cplVals.length : null;
+
+    return { tier, daysActive, startDate, ctrAvg, cplAvg, color };
+  }
+
+  // Per BeeFamily: trova la campagna con miglior CPL nei 15gg (campagne meta che hanno lead > 0)
+  function bestCreativeBF(item) {
+    const all = []
+      .concat((item.meta_campaigns || []).map(c => Object.assign({ channel: "META" }, c)))
+      .concat((item.google_campaigns || []).map(c => Object.assign({ channel: "GOOGLE" }, c)));
+    const withLead = all.filter(c => c.lead != null && c.lead > 0 && c.cpl != null);
+    if (withLead.length === 0) {
+      // Fallback: campagna con più spesa
+      const bySpend = all.filter(c => c.spend != null && c.spend > 0).sort((a,b) => (b.spend||0) - (a.spend||0));
+      return bySpend[0] || null;
+    }
+    withLead.sort((a,b) => a.cpl - b.cpl);
+    return withLead[0];
+  }
+
+  // Restante "tempo contratto" disponibile solo per AGHC con budget annuo.
+  // Calcoliamo i giorni residui rispetto al 31/12 dell'anno del budget.
+  function daysToYearEnd(budgetYear) {
+    if (!budgetYear) return null;
+    const today = new Date();
+    const end = new Date(Number(budgetYear), 11, 31);
+    const ms = end - today;
+    if (ms <= 0) return 0;
+    return Math.ceil(ms / (1000 * 60 * 60 * 24));
+  }
+
+  // Costruisce l'HTML del blocco "Performance" leggibile.
+  function buildPerformanceBlock(item, series) {
+    if (!series || series.length === 0) return ""; // niente serie → niente blocco
+    const assess = assessPerformance(item, series);
+    const { tier, daysActive, startDate, ctrAvg, cplAvg } = assess;
+
+    // Aggregati 7gg
+    const totSpend = series.reduce((s,p) => s + (p.spend || 0), 0);
+    const totLeads = series.reduce((s,p) => s + (p.leads || 0), 0);
+    const cplOverall = totLeads > 0 ? totSpend / totLeads : null;
+
+    // Header
+    const tierLabel = tier === "learning" ? "In apprendimento"
+                    : tier === "ottimo"   ? "Performance ottime"
+                    : tier === "pessimo"  ? "Performance da rivedere"
+                    : "Performance in linea";
+
+    const startMeta = [];
+    if (startDate) {
+      const fromDays = daysActive >= series.length ? `≥${series.length}` : daysActive;
+      startMeta.push(`Attiva da almeno ${fromDays} ${daysActive === 1 ? "giorno" : "giorni"} nella finestra · primo giorno visto: ${escapeHtml(dayLabelIT(startDate))}`);
+    }
+    // Giorni residui anno solo per AGHC con budget anno
+    if (item.project === "AGHC" && item.budget && item.budget.year) {
+      const rem = daysToYearEnd(item.budget.year);
+      if (rem != null) startMeta.push(`Anno ${item.budget.year}: ${rem} giorni residui al 31/12`);
+    }
+    const metaHtml = startMeta.length ? `<div class="pb-meta">${startMeta.map(escapeHtml).join(" · ")}</div>` : "";
+
+    // Statistiche compatte
+    const stats = [];
+    stats.push(`<div class="s-item"><div class="s-lbl">Spesa 7gg</div><div class="s-val">${fmtEUR(totSpend)}</div></div>`);
+    if (totLeads > 0) stats.push(`<div class="s-item"><div class="s-lbl">Lead 7gg</div><div class="s-val">${totLeads.toLocaleString("it-IT")}</div></div>`);
+    if (cplOverall != null) stats.push(`<div class="s-item"><div class="s-lbl">CPL medio</div><div class="s-val">${fmtEUR(cplOverall)}</div></div>`);
+    if ((item.project === "CEA" || item.project === "Med & Tech") && ctrAvg != null) {
+      stats.push(`<div class="s-item"><div class="s-lbl">CTR medio</div><div class="s-val">${ctrAvg.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div></div>`);
+    }
+    const statsHtml = stats.length ? `<div class="pb-stats">${stats.join("")}</div>` : "";
+
+    // Body testuale (3 fasce + variazione per progetto)
+    let body = "";
+    const projName = item.project;
+    const nameDisplay = escapeHtml(item.name);
+
+    if (tier === "learning") {
+      body = `<p>La campagna è attiva da meno di 3 giorni nella finestra osservata, quindi <b>non ha ancora raggiunto la fase di ottimizzazione</b>. Le metriche di questi primi giorni vanno lette come indicative — nelle prime 72 ore Meta/Google sono in apprendimento e tendono a spendere in modo discontinuo finché l'algoritmo non identifica gli utenti più reattivi.</p>
+              <p class="pb-action">▶ Prossimo step: lasciar maturare il learning per altri 2-3 giorni prima di intervenire su budget o creative.</p>`;
+    } else if (projName === "CEA" || projName === "Med & Tech") {
+      // Focus su CTR (appetibilità offerta)
+      const ctrTxt = ctrAvg != null
+        ? `Il CTR medio è di <b>${ctrAvg.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2})}%</b>`
+        : "Il CTR non è ancora calcolabile su questa finestra";
+      if (tier === "ottimo") {
+        body = `<p>${ctrTxt} — un valore <b>alto</b>, segnale che <b>l'offerta è appetibile</b> per il pubblico raggiunto e che le creative funzionano. La combinazione audience + messaggio sta lavorando bene.</p>
+                <p class="pb-action">▶ Procederemo in questa direzione: mantenere creative e offerta, valutare un incremento incrementale di budget (+10-20%) per non saturare il pubblico, monitorare il CPL.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${ctrTxt} — un valore <b>basso</b>: l'offerta che stiamo proponendo non sta intercettando interesse. Quando il CTR è basso e il CPL alto significa che la creative non aggancia o l'audience non è in target.</p>
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: refresh creative (testo + visual), test di una nuova promo/incentivo, restringimento o riprofilazione dell'audience. CTR è il primo indicatore da rialzare.</p>`;
+      } else { // in_line
+        body = `<p>${ctrTxt} — siamo <b>in linea con le aspettative</b>. C'è spazio per migliorare l'appetibilità dell'offerta: un CTR più alto significa meno spreco di impression e CPL più basso a parità di budget.</p>
+                <p class="pb-action">▶ Faremo in modo di migliorare: A/B test su 2 nuove varianti di copy/visual, eventuale ritocco dell'offerta o della headline per alzare il CTR.</p>`;
+      }
+    } else if (projName === "BeeFamily") {
+      // Contatti, costo per contatto, miglior creative
+      const best = bestCreativeBF(item);
+      let creativeHtml = "";
+      if (best) {
+        const channel = escapeHtml(best.channel || "—");
+        const cplTxt  = best.cpl  != null ? fmtEUR(best.cpl)  : "—";
+        const leadTxt = best.lead != null ? best.lead.toLocaleString("it-IT") : "—";
+        const spendTxt = best.spend != null ? fmtEUR(best.spend) : "—";
+        creativeHtml = `<div class="pb-creative">
+          <span class="pc-lbl">Creative più performante (media 15gg)</span>
+          <div class="pc-name">${channel} · ${escapeHtml(best.name)}</div>
+          <div class="pc-meta">CPL ${cplTxt} · ${leadTxt} lead · spesa ${spendTxt}</div>
+        </div>`;
+      }
+      const leadLine = totLeads > 0
+        ? `Nei 7 giorni la campagna ha generato <b>${totLeads.toLocaleString("it-IT")} contatti</b>${cplOverall != null ? ` con un costo per contatto medio di <b>${fmtEUR(cplOverall)}</b>` : ""}.`
+        : `Nei 7 giorni non risultano contatti tracciati lato data feed.`;
+      if (tier === "ottimo") {
+        body = `<p>${leadLine} I dati indicano una <b>performance ottima</b>: volume di lead solido e costo per contatto sotto controllo.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Procederemo in questa direzione: scaling progressivo del budget sulla creative migliore, refresh delle creative secondarie senza toccare la winner.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${leadLine} <b>Le performance non sono soddisfacenti</b>: costo per contatto fuori range e/o volume insufficiente rispetto al budget allocato.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: spegnimento delle creative sottoperformanti, test di un nuovo angolo creativo, eventuale revisione del modulo lead.</p>`;
+      } else {
+        body = `<p>${leadLine} La performance è <b>in linea con le aspettative</b> ma c'è margine per spingere CPL e volume.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Faremo in modo di migliorarla: A/B test creative, aggiornamento copy con leve stagionali, eventuale split di una nuova ad-set sulla winner.</p>`;
+      }
+    } else {
+      // AGHC / Altri — focus CPL + giorni residui
+      const cplLine = cplOverall != null
+        ? `Il CPL medio nei 7 giorni è di <b>${fmtEUR(cplOverall)}</b>`
+        : `Su questa finestra il CPL non è tracciabile in aggregato (lead non lato canale)`;
+      if (tier === "ottimo") {
+        body = `<p>${cplLine}. I dati indicano una <b>performance ottima</b> della campagna sull'asse spesa/risultati. La traiettoria attuale è quella corretta.</p>
+                <p class="pb-action">▶ Procederemo in questa direzione: manteniamo assetto creative e budget, valutiamo un eventuale upscale stagionale.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${cplLine}. <b>Performance da rivedere</b>: la traiettoria attuale non è sostenibile rispetto al benchmark di progetto.</p>
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: revisione targeting, refresh creative, eventuale rebalancing del budget tra creative/audience.</p>`;
+      } else {
+        body = `<p>${cplLine}. Performance <b>in linea</b> con il benchmark di progetto, con spazio per migliorare.</p>
+                <p class="pb-action">▶ Faremo in modo di migliorarla: A/B su nuova ad-set, test creative aggiuntiva, monitor CPL settimanale.</p>`;
+      }
+    }
+
+    return `<div class="perf-block tier-${tier}">
+      <div class="pb-head">
+        <span class="pb-pill">${escapeHtml(tierLabel)}</span>
+        <span>${nameDisplay} · ${escapeHtml(projName)}</span>
+      </div>
+      ${metaHtml}
+      ${statsHtml}
+      ${body}
+    </div>`;
+  }
+
   function renderSingleCard(item) {
     const card = document.getElementById("ov-search-result-card");
     const root = document.getElementById("ov-search-result");
@@ -1417,12 +1630,15 @@
         <div class="day-kpis" id="oc-day-kpis" style="display:none"></div>
       </div>`;
 
-    // Rational (BF + AGHC)
+    // Blocco Performance (leggibile) — popolato dopo loadSeries
+    const performanceBlock = `<div id="oc-perf-block"></div>`;
+
+    // Rational tecnico (BF + AGHC) — dettaglio dopo il blocco performance
     const rationalBlock = item.rational ? `<div class="rational">${item.rational}</div>` : "";
 
-    // Performance eval (Med&Tech / CEA)
+    // Performance eval breve (Med&Tech / CEA) — già presente nel feed
     const perfBlock = item.performance_eval
-      ? `<div class="rational"><span class="rat-label">Performance</span>${escapeHtml(item.performance_eval)}</div>` : "";
+      ? `<div class="rational"><span class="rat-label">Performance (analisi rapida)</span>${escapeHtml(item.performance_eval)}</div>` : "";
 
     // Footer con status + link account
     const ad = item.ad_urls || {};
@@ -1442,6 +1658,7 @@
       ${trendBlock}
       ${budgetBlock}
       ${chartBlock}
+      ${performanceBlock}
       ${rationalBlock}
       ${perfBlock}
       ${footer}
@@ -1501,6 +1718,10 @@
         card.tabIndex = 0;
         card.addEventListener("keydown", keyHandler);
       }
+
+      // Blocco Performance (rational leggibile basato sui 7gg + start date)
+      const perfRoot = document.getElementById("oc-perf-block");
+      if (perfRoot) perfRoot.innerHTML = buildPerformanceBlock(item, series);
 
       const stab = stabilityFromSeries(series);
       const stabEl = document.getElementById("oc-stability");
