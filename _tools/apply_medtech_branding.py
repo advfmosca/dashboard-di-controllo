@@ -63,9 +63,12 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .kpi.total .label { color: #b8b8bf; }
 .kpi.total .value { color: #fff; }
 
-/* Semafori grid 4 colonne */
-.sem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
-.sem-grid .kpi { padding: 11px 13px; }
+/* Semafori grid 4 colonne — CLICCABILI come filtro */
+.sem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.sem-grid .kpi { padding: 11px 13px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; }
+.sem-grid .kpi:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+.sem-grid .kpi.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.sem-grid.has-active .kpi:not(.active-filter) { opacity: 0.42; }
 .sem-grid .kpi.rosso  { background: #fee2e2; border-color: #fca5a5; }
 .sem-grid .kpi.rosso  .label { color: #991b1b; }
 .sem-grid .kpi.rosso  .value { color: #991b1b; }
@@ -78,6 +81,17 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .sem-grid .kpi.nero   { background: #1a1a1a; border-color: #1a1a1a; }
 .sem-grid .kpi.nero   .label { color: #b8b8bf; }
 .sem-grid .kpi.nero   .value { color: #fff; }
+
+/* Search bar */
+.search-bar { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; flex-wrap: wrap; }
+.search-bar .search-ico { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+.search-bar input[type="search"] { flex: 1; font: inherit; font-size: 13px; padding: 6px 8px; border: 0; background: transparent; color: var(--text); outline: none; min-width: 160px; }
+.search-bar input[type="search"]::placeholder { color: var(--text-dim); }
+.search-bar .filter-count { font-size: 11.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.search-bar .clear-btn { font: inherit; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text-muted); cursor: pointer; flex-shrink: 0; }
+.search-bar .clear-btn:hover { background: #f5f5f7; color: var(--text); }
+.search-bar .clear-btn.hidden { display: none; }
+.empty-result { padding: 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 13px; background: var(--bg-soft); border-radius: 10px; border: 1px dashed var(--border); }
 
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
@@ -205,14 +219,40 @@ def transform(html: str, data: dict | None) -> str:
   <div class="kpi"><div class="label">Lead IERI (stesso orario)</div><div class="value">{lead_ieri}</div></div>
   <div class="kpi"><div class="label">Δ Lead</div><div class="value">{lead_oggi - lead_ieri:+d}</div></div>
 </div>
-<div class="sem-grid">
-  <div class="kpi rosso"><div class="label">ROSSO</div><div class="value">{rosso}</div></div>
-  <div class="kpi giallo"><div class="label">GIALLO</div><div class="value">{giallo}</div></div>
-  <div class="kpi verde"><div class="label">VERDE</div><div class="value">{verde}</div></div>
-  <div class="kpi nero"><div class="label">NERO</div><div class="value">{nero}</div></div>
+<div class="sem-grid" id="sem-grid">
+  <div class="kpi rosso"  data-filter="rosso"><div class="label">ROSSO</div><div class="value">{rosso}</div></div>
+  <div class="kpi giallo" data-filter="giallo"><div class="label">GIALLO</div><div class="value">{giallo}</div></div>
+  <div class="kpi verde"  data-filter="verde"><div class="label">VERDE</div><div class="value">{verde}</div></div>
+  <div class="kpi nero"   data-filter="nero"><div class="label">NERO</div><div class="value">{nero}</div></div>
+</div>
+<div class="search-bar">
+  <span class="search-ico">🔎</span>
+  <input id="search-input" type="search" autocomplete="off" spellcheck="false" placeholder="Cerca campagna o cliente…" />
+  <span class="filter-count" id="filter-count"></span>
+  <button type="button" class="clear-btn hidden" id="search-clear" title="Pulisci">Pulisci</button>
 </div>
 """
         html = re.sub(r'(<div class="legend"[^>]*>)', kpi_block + r'\1', html, count=1)
+
+    # 5b) Aggiungi data-name e data-color a ogni <div class="card rosso/giallo/verde/nero">
+    #     che non ce l'abbia già (idempotente). Estrae il nome dal successivo <div class="camp-name">.
+    pattern = re.compile(r'<div class="card\s+(rosso|giallo|verde|nero)([^"]*)">', re.IGNORECASE)
+    offset = 0
+    for m in list(pattern.finditer(html)):
+        color = m.group(1)
+        start = m.start() + offset
+        end = m.end() + offset
+        opening = html[start:end]
+        if "data-name=" in opening:
+            continue
+        # Cerca il prossimo <div class="camp-name">...</div> dopo questa apertura
+        camp_m = re.search(r'<div class="camp-name"[^>]*>([\s\S]*?)</div>', html[end:end+1500])
+        name = ""
+        if camp_m:
+            name = re.sub(r'<[^>]+>', '', camp_m.group(1)).strip().lower().replace('"', '').replace('\n', ' ')
+        new_open = opening[:-1] + f' data-name="{name}" data-color="{color}">'
+        html = html[:start] + new_open + html[end:]
+        offset += len(new_open) - len(opening)
 
     # 6) Rimuovi footer 'Snapshot generato...' / tagline
     html = re.sub(r'<div class="footer">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
@@ -229,6 +269,85 @@ def transform(html: str, data: dict | None) -> str:
             html,
             count=1,
         )
+
+    # 7b) Empty-state placeholder (mostrato dal JS quando i filtri non producono risultati)
+    if 'id="empty-result"' not in html and 'class="signature"' in html:
+        html = html.replace(
+            '<div class="signature">',
+            '<div class="empty-result" id="empty-result" style="display:none">Nessuna campagna corrisponde ai filtri attivi.</div>\n<div class="signature">',
+            1,
+        )
+
+    # 8) Script JS per search + filtro semafori cliccabili (idempotente con marker)
+    JS_MARKER = "/* MEDTECH_FILTER_JS_INJECTED */"
+    if JS_MARKER not in html:
+        js_block = """
+<script>
+""" + JS_MARKER + """
+(function() {
+  "use strict";
+  const SEM_FILTERS = new Set();
+  let SEARCH_Q = "";
+  const searchInput = document.getElementById("search-input");
+  const clearBtn    = document.getElementById("search-clear");
+  const semGrid     = document.getElementById("sem-grid");
+  const cards       = Array.from(document.querySelectorAll(".cards .card"));
+  const cntEl       = document.getElementById("filter-count");
+  const emptyEl     = document.getElementById("empty-result");
+
+  function applyFilters() {
+    const q = SEARCH_Q.toLowerCase().trim();
+    let visible = 0;
+    for (const c of cards) {
+      const name = (c.dataset.name || "").toLowerCase();
+      const color = c.dataset.color || "";
+      const matchName  = !q || name.indexOf(q) !== -1;
+      const matchColor = SEM_FILTERS.size === 0 || SEM_FILTERS.has(color);
+      const show = matchName && matchColor;
+      c.style.display = show ? "" : "none";
+      if (show) visible++;
+    }
+    if (cntEl) {
+      if (q || SEM_FILTERS.size > 0) cntEl.textContent = visible + " su " + cards.length;
+      else cntEl.textContent = "";
+    }
+    if (emptyEl) emptyEl.style.display = (visible === 0 && cards.length > 0) ? "" : "none";
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      SEARCH_Q = searchInput.value;
+      if (clearBtn) clearBtn.classList.toggle("hidden", !SEARCH_Q);
+      applyFilters();
+    });
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { searchInput.value = ""; SEARCH_Q = ""; clearBtn.classList.add("hidden"); applyFilters(); }
+    });
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = ""; SEARCH_Q = ""; clearBtn.classList.add("hidden");
+      applyFilters(); searchInput.focus();
+    });
+  }
+
+  if (semGrid) {
+    semGrid.querySelectorAll(".kpi[data-filter]").forEach(el => {
+      el.addEventListener("click", () => {
+        const c = el.dataset.filter;
+        if (SEM_FILTERS.has(c)) SEM_FILTERS.delete(c);
+        else SEM_FILTERS.add(c);
+        el.classList.toggle("active-filter", SEM_FILTERS.has(c));
+        semGrid.classList.toggle("has-active", SEM_FILTERS.size > 0);
+        applyFilters();
+      });
+    });
+  }
+})();
+</script>
+"""
+        if "</body>" in html:
+            html = html.replace("</body>", js_block + "\n</body>", 1)
 
     return html
 

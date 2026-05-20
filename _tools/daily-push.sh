@@ -75,6 +75,15 @@ if [ -n "$CEA_DATES" ] && [ -f "_automation/generate_cea_daily_pages.py" ]; then
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Step 2b — applica branding + search + filtri semafori al repo med-tech-daily-check
+#           (in background, non blocca il push principale se fallisce)
+# ──────────────────────────────────────────────────────────────────────────────
+if [ -x "_tools/apply-medtech-patch.sh" ]; then
+  echo "→ Applico branding/search/filtri al repo med-tech-daily-check…"
+  bash _tools/apply-medtech-patch.sh 2>&1 | tail -20 || echo "  (apply-medtech-patch.sh fallito — non blocca il push)"
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Step 3 — commit + push (solo se ci sono modifiche)
 # ──────────────────────────────────────────────────────────────────────────────
 git add -A
