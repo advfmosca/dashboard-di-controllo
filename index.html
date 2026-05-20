@@ -767,28 +767,8 @@
     document.body.removeChild(ta); cb && cb();
   }
 
-  // ============================ COPY LINK VISTA CLIENTE (per-card) ============================
-  // Ogni card AGHC/BF ha un bottone "🔗 Copia link vista cliente" con data-client-link="<nome>".
-  // Il link punta a cliente.html?name=<nome>&date=<giorno selezionato>, bloccato sul giorno.
-  document.addEventListener("click", function(e) {
-    const btn = e.target.closest("[data-client-link]");
-    if (!btn) return;
-    const name = btn.getAttribute("data-client-link");
-    if (!name) return;
-    const sel = document.getElementById("date-select");
-    const day = sel && sel.value && /^\d{4}-\d{2}-\d{2}$/.test(sel.value) ? sel.value : "";
-    const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
-    const url = baseHref + "cliente.html?name=" + encodeURIComponent(name) + (day ? "&date=" + day : "");
-    const fbId = btn.getAttribute("data-client-link-fb");
-    const finalize = () => {
-      if (fbId) {
-        const fb = document.getElementById(fbId);
-        if (fb) { fb.classList.add("show"); setTimeout(() => fb.classList.remove("show"), 1800); }
-      }
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(finalize, () => fallbackCopy(url, finalize));
-    else fallbackCopy(url, finalize);
-  });
+  // (Handler per "Copia link vista cliente" rimosso: i bottoni non sono piu generati.
+  // La pagina cliente.html resta accessibile via URL diretta se serve.)
 
   function showError(msg) { document.getElementById("error-box").innerHTML = `<div class="error">${escapeHtml(msg)}</div>`; }
   function clearError() { document.getElementById("error-box").innerHTML = ""; }
@@ -1605,10 +1585,7 @@
       ad.Google ? openAccountBtn(ad.Google, "Google") : "",
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-    const clientLinkFbId = `${idPrefix}-client-link-fb`;
-    const clientLinkBtn = `<button class="btn btn-mini" data-client-link="${escapeHtml(item.name)}" data-client-link-fb="${clientLinkFbId}" title="Copia link vista cliente (read-only, no prossima mossa)">🔗 Vista cliente</button><span class="copy-feedback" id="${clientLinkFbId}">Copiato ✓</span>`;
-    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb" style="margin-left:auto;">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}${clientLinkBtn}${copyBtn}</div>`;
+    const footer = `<div class="footer">${statusPill}${links}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}
@@ -1773,10 +1750,7 @@
       ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-    const clientLinkFbId = `${idPrefix}-client-link-fb`;
-    const clientLinkBtn = `<button class="btn btn-mini" data-client-link="${escapeHtml(item.name)}" data-client-link-fb="${clientLinkFbId}" title="Copia link vista cliente (read-only, no prossima mossa)">🔗 Vista cliente</button><span class="copy-feedback" id="${clientLinkFbId}">Copiato ✓</span>`;
-    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb" style="margin-left:auto;">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}${clientLinkBtn}${copyBtn}</div>`;
+    const footer = `<div class="footer">${statusPill}${links}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}
