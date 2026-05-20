@@ -1559,16 +1559,194 @@
     </div>`;
   }
 
+  // Helper condivisa: genera l'HTML completo della card AGHC con ID prefissati.
+  // idPrefix = "oc" per la single-card view (Overview search) | "ag-<id>" per il grid del tab AGHC.
+  function buildAGHCCardHTML(item, idPrefix) {
+    const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
+    const statusColor = (item.status && item.status.color) || "gray";
+    const header = `<div class="header-row">
+      <span class="proj-badge aghc">AGHC</span>
+      <div class="name">${escapeHtml(item.name)}</div>
+      <div class="stability unknown" id="${idPrefix}-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
+    </div>`;
+    const kpiItems = [];
+    if (item.spend_window != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
+    if (item.spend_y != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
+    const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
+    const v = item.vanity || {};
+    const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+    const reachHasData = v.reach_window != null && v.reach_window > 0;
+    const win = item.window_days || 15;
+    const aghcVanityRow = `<div class="aghc-vanity-row">
+      <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachHasData ? fmtN(v.reach_window) : '—'}</div></div>
+      <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>
+    </div>`;
+    const trendBlock = (item.trend_arrow || item.trend_label)
+      ? `<div class="trend"><span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span><span>${escapeHtml(item.trend_label || "")}</span>${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}</div>`
+      : "";
+    let budgetBlock = "";
+    if (item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) {
+      const b = item.budget;
+      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
+      const residuo = (b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null;
+      const pctVal = b.budget_pct;
+      let barFillCls = "";
+      let barWidth = 0;
+      if (pctVal != null) {
+        barWidth = Math.min(100, pctVal);
+        if (pctVal >= 95) barFillCls = "danger";
+        else if (pctVal >= 80) barFillCls = "warn";
+      }
+      budgetBlock = `<div class="budget">
+        <div class="row">
+          <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
+          <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
+        </div>
+        <div class="row" style="margin-top:4px">
+          <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
+          ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
+        </div>
+        ${pctVal != null ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div>` : ''}
+      </div>`;
+    }
+    const chartBlock = `<div class="mini-chart-wrap">
+      <div class="mc-title"><span>Andamento spesa (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span></span></div>
+      <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
+        <button type="button" class="nav-btn" id="${idPrefix}-prev" title="Giorno precedente">←</button>
+        <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
+        <button type="button" class="nav-btn" id="${idPrefix}-next" title="Giorno successivo">→</button>
+      </div>
+      <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
+    </div>`;
+    const rationalCopyId = `${idPrefix}-rat`;
+    const rationalBlock = item.rational ? `<div class="rational" id="${rationalCopyId}">${item.rational}</div>` : "";
+    const ad = item.ad_urls || {};
+    const links = [
+      ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
+      ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
+    ].join("");
+    const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
+    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb" style="margin-left:auto;">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
+    const footer = `<div class="footer">${statusPill}${links}${copyBtn}</div>`;
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
+      ${header}
+      ${kpiRow}
+      ${aghcVanityRow}
+      ${trendBlock}
+      ${budgetBlock}
+      ${chartBlock}
+      ${rationalBlock}
+      ${footer}
+    </div>`;
+  }
+
+  // Helper condivisa: carica la series 15gg, disegna chart, wirea day-nav e day-panel.
+  // attachKeyboardOn: HTMLElement opzionale a cui attaccare il keyboard nav (solo single-card).
+  function wireAGHCSeries(item, idPrefix, attachKeyboardOn) {
+    loadDailySeries15d(item.name).then(series => {
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
+      const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
+      const labelEl   = document.getElementById(`${idPrefix}-day-label`);
+      const prevBtn   = document.getElementById(`${idPrefix}-prev`);
+      const nextBtn   = document.getElementById(`${idPrefix}-next`);
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+      const hasAnySpend = series.some(p => p.spend != null);
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = "";
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+      }
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = hasAnySpend ? "" : "none";
+        if (kpiRoot) kpiRoot.style.display = hasAnySpend ? "" : "none";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx, true);
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+      if (attachKeyboardOn) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        if (attachKeyboardOn._keyHandler) attachKeyboardOn.removeEventListener("keydown", attachKeyboardOn._keyHandler);
+        attachKeyboardOn._keyHandler = keyHandler;
+        attachKeyboardOn.tabIndex = 0;
+        attachKeyboardOn.addEventListener("keydown", keyHandler);
+      }
+      const stab = stabilityFromSeries(series);
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) {
+        if (stab.cls === "unknown") {
+          stabEl.style.display = "none";
+        } else {
+          stabEl.style.display = "";
+          stabEl.className = "stability " + stab.cls;
+          const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : "!";
+          stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        }
+      }
+    }).catch(err => {
+      console.warn("Daily series load failed:", err);
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie (${escapeHtml(err.message)})</div>`;
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) stabEl.innerHTML = `<span>·</span><span>Stabilità n/d</span>`;
+    });
+  }
+
+  // Normalizza un oggetto card AGHC (dal feed d.aghc.cards) nel formato `item` atteso
+  // dalle helper. Centralizza il mapping ad_url_meta/tiktok → ad_urls.
+  function normalizeAGHCItem(c) {
+    const adUrls = {};
+    if (c.ad_url_meta)   adUrls.Meta   = c.ad_url_meta;
+    if (c.ad_url_tiktok) adUrls.TikTok = c.ad_url_tiktok;
+    return {
+      name: c.name, project: "AGHC",
+      spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days,
+      contatti_y: c.contatti_y,
+      trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+      status: c.status, rational: c.rational,
+      budget: c.budget, vanity: c.vanity,
+      ad_urls: adUrls,
+    };
+  }
+
   function renderSingleCard(item) {
     const card = document.getElementById("ov-search-result-card");
     const root = document.getElementById("ov-search-result");
     const pill = document.getElementById("ov-search-result-pill");
     if (!card || !root) return;
     card.style.display = "";
+    pill.textContent = item.project + " · " + item.name;
+
+    // AGHC: usa le helper condivise per allinearsi al grid del tab AGHC.
+    if (item.project === "AGHC") {
+      root.innerHTML = buildAGHCCardHTML(item, "oc");
+      wireAGHCSeries(item, "oc", card);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
     const pk = projectKey(item.project);
     const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
     const statusColor = (item.status && item.status.color) || "gray";
-    pill.textContent = item.project + " · " + item.name;
 
     // KPI row: spesa finestra + spesa ieri (mostriamo solo i campi popolati)
     const kpiItems = [];
@@ -2077,69 +2255,22 @@
     const pill = document.getElementById("ag-cards-pill");
     if (pill) pill.textContent = cards.length + " card";
     if (cards.length === 0) { root.innerHTML = `<div class="empty">Nessun cliente AGHC nei dati</div>`; return; }
+
+    // Render IDENTICO alla single-card view: per ogni cliente AGHC genero la card completa
+    // (badge AGHC, pill stabilità, riga 5 KPI vanity, budget esteso con Residuo/% consumato,
+    // chart 7gg + day-navigator + day-panel, rational, footer). idPrefix univoco per evitare
+    // collisioni di ID HTML quando ci sono N card sulla stessa pagina.
     let html = "";
-    for (const c of cards) {
-      const color = c.status.color;
-      const arrowCls = c.trend_arrow === "↑" ? "up" : (c.trend_arrow === "↓" ? "down" : "flat");
-      const ttBtn = c.ad_url_tiktok ? openAccountBtn(c.ad_url_tiktok, "TikTok") : "";
-      const cardCopyId = "ag-card-rat-" + c.id;
-      // Budget row: budget approvato + speso YTD + progress bar
-      const b = c.budget || {};
-      const hasBudget = b.budget_annuale != null && b.budget_annuale > 0;
-      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
-      const pctVal = b.budget_pct;
-      let barFillCls = "";
-      let barWidth = 0;
-      if (pctVal != null) {
-        barWidth = Math.min(100, pctVal);
-        if (pctVal >= 95) barFillCls = "danger";
-        else if (pctVal >= 80) barFillCls = "warn";
-      }
-      const budgetBlock = `
-        <div class="budget">
-          <div class="row">
-            <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val ${hasBudget?'':'placeholder'}">${hasBudget ? fmtEUR(b.budget_annuale) : 'Da configurare'}</div></div>
-            <div style="text-align:right"><div class="lbl">Speso ad oggi (YTD)</div><div class="val">${ytdVal}</div></div>
-          </div>
-          ${hasBudget ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div><div class="pct">${pctVal.toFixed(1).replace('.', ',')}% del budget consumato</div>` : ''}
-        </div>`;
-
-      // Riga 5 KPI 15gg (Impression/Copertura/Interazioni/Clic/Budget) — coerente con la single-card
-      const v = c.vanity || {};
-      const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
-      const reachHasData = v.reach_window != null && v.reach_window > 0;
-      const aghcVanityRow = `<div class="aghc-vanity-row">
-        <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
-        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachHasData ? fmtN(v.reach_window) : '—'}</div></div>
-        <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
-        <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
-        <div class="av-item"><div class="av-lbl">Budget ${c.window_days}gg</div><div class="av-val">${c.spend_window != null ? fmtEURcompact(c.spend_window) : '—'}</div></div>
-      </div>`;
-
-      html += `<div class="aghc-card ${color}">
-        <div class="name">${escapeHtml(c.name)}</div>
-        <div class="kpi-row">
-          <div class="item"><div class="lbl">Spesa ${c.window_days}gg</div><div class="val">${fmtEURcompact(c.spend_window)}</div></div>
-          <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(c.spend_y)}</div></div>
-        </div>
-        ${aghcVanityRow}
-        ${budgetBlock}
-        <div class="trend">
-          <span class="arrow ${arrowCls}">${c.trend_arrow}</span>
-          <span>${escapeHtml(c.trend_label)}</span>
-          ${c.trend_pct != null ? `<span class="small muted">(${fmtPct(c.trend_pct)})</span>` : ""}
-        </div>
-        <div class="rational" id="${cardCopyId}">${c.rational || ""}</div>
-        <div class="footer">
-          <span class="status-pill ${color}">${escapeHtml(c.status.label)}</span>
-          ${openAccountBtn(c.ad_url_meta, "Meta")}
-          ${ttBtn}
-          <button class="btn btn-mini" data-copy="${cardCopyId}" data-copy-fb="${cardCopyId}-fb" style="margin-left:auto;">Copia rational</button>
-          <span class="copy-feedback" id="${cardCopyId}-fb">Copiato ✓</span>
-        </div>
-      </div>`;
+    const items = cards.map(c => ({ c, item: normalizeAGHCItem(c), idPrefix: `ag-${c.id}` }));
+    for (const { item, idPrefix } of items) {
+      html += buildAGHCCardHTML(item, idPrefix);
     }
     root.innerHTML = html;
+    // Wire async per ogni card (no keyboard nav: troppe card focusabili sarebbero confuse;
+    // la keyboard nav resta sulla single-card view dell'Overview).
+    for (const { item, idPrefix } of items) {
+      wireAGHCSeries(item, idPrefix, null);
+    }
   }
 
   function renderMedtech(d) {
