@@ -297,16 +297,14 @@
   .single-card .day-nav .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .single-card .day-nav .day-label { font-weight: 700; font-size: 12.5px; font-variant-numeric: tabular-nums; min-width: 120px; text-align: center; }
   .single-card .day-nav .day-label .small { display: block; font-size: 10.5px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
-  .single-card .day-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; }
+  .single-card .day-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 6px; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; }
   .single-card .day-kpis .dk-cell { text-align: center; padding: 6px 4px; border-right: 1px solid var(--border-soft); }
   .single-card .day-kpis .dk-cell:last-child { border-right: 0; }
   .single-card .day-kpis .dk-lbl { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
   .single-card .day-kpis .dk-val { font-size: 14px; font-weight: 700; color: #0f0f10; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 3px; word-break: break-word; }
-  .single-card .day-kpis .dk-val.empty { color: var(--text-dim); font-weight: 500; font-style: italic; }
-  @media (max-width: 540px) {
-    .single-card .day-kpis { grid-template-columns: repeat(3, 1fr); }
-    .single-card .day-kpis .dk-cell:nth-child(3) { border-right: 0; }
-  }
+  .single-card .day-kpis-empty { padding: 10px 12px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 12px; background: #fafafa; border: 1px dashed var(--border); border-radius: 8px; margin-top: 6px; }
+  /* Lead row adattiva (1 o 2 colonne) */
+  .single-card .lead-row.cols-1 { grid-template-columns: 1fr; }
 
   /* Reports list */
   .report-list { display: flex; flex-direction: column; gap: 4px; }
@@ -1259,22 +1257,32 @@
   }
 
   // Pannello "giorno selezionato" con i 5 KPI (Budget/Lead/CPL/CTR/CPM)
+  // Mostra SOLO le celle con dato disponibile per quel giorno.
+  // Restituisce il numero di celle renderizzate (0 = pannello vuoto → mostriamo messaggio).
   function renderDayPanel(panelRoot, series, idx) {
-    if (!panelRoot) return;
+    if (!panelRoot) return 0;
     const p = series[idx] || {};
-    function cell(lbl, val, isEmpty) {
-      return `<div class="dk-cell"><div class="dk-lbl">${escapeHtml(lbl)}</div><div class="dk-val ${isEmpty ? 'empty' : ''}">${val}</div></div>`;
+    function cell(lbl, val) {
+      return `<div class="dk-cell"><div class="dk-lbl">${escapeHtml(lbl)}</div><div class="dk-val">${val}</div></div>`;
     }
-    const fmtNum = v => v == null ? "—" : Math.round(v).toLocaleString("it-IT");
-    const fmtPctVal = v => v == null ? "—" : v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
-    const cells = [
-      cell("Budget",  p.spend == null ? "—" : fmtEUR(p.spend), p.spend == null),
-      cell("Lead",    fmtNum(p.leads),                         p.leads == null),
-      cell("CPL",     p.cpl == null ? "—" : fmtEUR(p.cpl),      p.cpl == null),
-      cell("CTR",     fmtPctVal(p.ctr),                          p.ctr == null),
-      cell("CPM",     p.cpm == null ? "—" : fmtEUR(p.cpm),      p.cpm == null),
-    ].join("");
-    panelRoot.innerHTML = cells;
+    const fmtNum = v => Math.round(v).toLocaleString("it-IT");
+    const fmtPctVal = v => v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+    const cells = [];
+    if (p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
+    if (p.leads != null) cells.push(cell("Lead",   fmtNum(p.leads)));
+    if (p.cpl   != null) cells.push(cell("CPL",    fmtEUR(p.cpl)));
+    if (p.ctr   != null) cells.push(cell("CTR",    fmtPctVal(p.ctr)));
+    if (p.cpm   != null) cells.push(cell("CPM",    fmtEUR(p.cpm)));
+    if (cells.length === 0) {
+      panelRoot.classList.add("day-kpis-empty");
+      panelRoot.classList.remove("day-kpis");
+      panelRoot.innerHTML = "Nessun KPI disponibile per questo giorno";
+    } else {
+      panelRoot.classList.remove("day-kpis-empty");
+      panelRoot.classList.add("day-kpis");
+      panelRoot.innerHTML = cells.join("");
+    }
+    return cells.length;
   }
 
   // Etichetta giorno italiana per la day-nav
@@ -1321,19 +1329,22 @@
     const statusColor = (item.status && item.status.color) || "gray";
     pill.textContent = item.project + " · " + item.name;
 
-    // KPI row obbligatorio: spesa 15gg + spesa ieri
-    const kpiRow = `
-      <div class="kpi-row">
-        <div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>
-        <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>
-      </div>`;
+    // KPI row: spesa finestra + spesa ieri (mostriamo solo i campi popolati)
+    const kpiItems = [];
+    if (item.spend_window != null) {
+      kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
+    }
+    if (item.spend_y != null) {
+      kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
+    }
+    const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
 
-    // Header con badge progetto + stabilità (placeholder; aggiornato dopo loadSeries)
+    // Header con badge progetto + stabilità (placeholder; aggiornato/nascosto dopo loadSeries)
     const header = `
       <div class="header-row">
         <span class="proj-badge ${pk}">${escapeHtml(item.project)}</span>
         <div class="name">${escapeHtml(item.name)}</div>
-        <div class="stability unknown" id="oc-stability"><span>⏳</span><span>Calcolo stabilità…</span></div>
+        <div class="stability unknown" id="oc-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
       </div>`;
 
     // Alert spesa
@@ -1355,13 +1366,15 @@
       </div>`;
     }
 
-    // Lead row (placeholder — aggiornato dopo loadSeries; ieri lo abbiamo già)
-    const leadIeri = item.contatti_y != null ? item.contatti_y.toLocaleString("it-IT") : "—";
-    const leadRow = `
-      <div class="lead-row">
-        <div class="lead-item"><div class="lbl">Lead generati ieri</div><div class="val" id="oc-lead-y">${escapeHtml(leadIeri)}</div></div>
-        <div class="lead-item"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">⏳</div></div>
-      </div>`;
+    // Lead row (mostriamo solo i campi popolati; "Lead medi 7gg" è un placeholder che viene
+    // valorizzato dopo loadSeries — se la serie non produce nulla, lo nascondiamo)
+    const leadItems = [];
+    if (item.contatti_y != null) {
+      leadItems.push(`<div class="lead-item" id="oc-lead-y-cell"><div class="lbl">Lead generati ieri</div><div class="val">${escapeHtml(item.contatti_y.toLocaleString("it-IT"))}</div></div>`);
+    }
+    // Cella media 7gg sempre presente come placeholder (se rimane vuota la nascondiamo dopo)
+    leadItems.push(`<div class="lead-item" id="oc-lead-avg7-cell" style="display:none"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">—</div></div>`);
+    const leadRow = `<div class="lead-row" id="oc-lead-row">${leadItems.join("")}</div>`;
 
     // Budget (solo se presente — AGHC)
     let budgetBlock = "";
@@ -1450,15 +1463,23 @@
       }
       if (selIdx < 0) selIdx = series.length - 1;
 
+      // Se la serie non ha NESSUN giorno con spesa, nascondiamo del tutto chart + nav + day-kpis
+      const hasAnySpend = series.some(p => p.spend != null);
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = ""; // nessun chart
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+      }
+
       function update() {
         if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
-        if (navRoot) navRoot.style.display = "";
-        if (kpiRoot) kpiRoot.style.display = "";
+        if (navRoot) navRoot.style.display = hasAnySpend ? "" : "none";
+        if (kpiRoot) kpiRoot.style.display = hasAnySpend ? "" : "none";
         if (labelEl) {
           const d = series[selIdx] && series[selIdx].date;
           labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
         }
-        if (kpiRoot) renderDayPanel(kpiRoot, series, selIdx);
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx);
         if (prevBtn) prevBtn.disabled = selIdx <= 0;
         if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
       }
@@ -1484,13 +1505,31 @@
       const stab = stabilityFromSeries(series);
       const stabEl = document.getElementById("oc-stability");
       if (stabEl) {
-        stabEl.className = "stability " + stab.cls;
-        const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : stab.cls === "volatile" ? "!" : "·";
-        stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        if (stab.cls === "unknown") {
+          stabEl.style.display = "none";
+        } else {
+          stabEl.style.display = "";
+          stabEl.className = "stability " + stab.cls;
+          const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : "!";
+          stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        }
       }
       const leadAvg = leadAvg7d(series);
       const leadAvgEl = document.getElementById("oc-lead-avg7");
-      if (leadAvgEl) leadAvgEl.textContent = leadAvg == null ? "—" : (Math.round(leadAvg * 10) / 10).toLocaleString("it-IT");
+      const leadAvgCell = document.getElementById("oc-lead-avg7-cell");
+      if (leadAvg == null) {
+        if (leadAvgCell) leadAvgCell.style.display = "none";
+      } else {
+        if (leadAvgCell) leadAvgCell.style.display = "";
+        if (leadAvgEl) leadAvgEl.textContent = (Math.round(leadAvg * 10) / 10).toLocaleString("it-IT");
+      }
+      // Adatta lead-row: se rimane una sola cella visibile, occupa tutta la larghezza
+      const leadRow = document.getElementById("oc-lead-row");
+      if (leadRow) {
+        const visibles = Array.from(leadRow.querySelectorAll(".lead-item")).filter(el => el.style.display !== "none");
+        leadRow.classList.toggle("cols-1", visibles.length === 1);
+        if (visibles.length === 0) leadRow.style.display = "none";
+      }
     }).catch(err => {
       console.warn("Daily series load failed:", err);
       const chartRoot = document.getElementById("oc-chart");
