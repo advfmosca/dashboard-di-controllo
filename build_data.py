@@ -888,6 +888,29 @@ def _build_aghc_rational(client_name, window_days, total_spend_window,
     return wrap(p1, p2, p3)
 
 
+def _build_aghc_day_entry(date_iso, spend_combined, vanity_for_day):
+    """Costruisce l'entry giornaliera per `aghc.cards[].series`.
+
+    - `spend_combined` = spend Meta+TikTok aggregato del giorno (sempre presente).
+    - `vanity_for_day` = dict da vanity_idx per (account_id, date) o None. Se presente,
+      arricchisce con impressions/reach/page_engagement/clicks/lpv (solo Meta).
+    Backward-compat: se vanity assente, l'entry resta {date, spend}.
+    """
+    entry = {"date": date_iso, "spend": round(spend_combined, 2)}
+    if vanity_for_day:
+        if vanity_for_day.get("impressions"):
+            entry["impressions"] = vanity_for_day["impressions"]
+        if vanity_for_day.get("reach"):
+            entry["reach"] = vanity_for_day["reach"]
+        if vanity_for_day.get("page_eng"):
+            entry["page_engagement"] = vanity_for_day["page_eng"]
+        if vanity_for_day.get("clicks"):
+            entry["clicks"] = vanity_for_day["clicks"]
+        if vanity_for_day.get("lpv"):
+            entry["lpv"] = vanity_for_day["lpv"]
+    return entry
+
+
 def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, vanity_rows=None, budgets_config=None):
     """
     Una card per cliente AGHC. Se più voci roster condividono lo stesso meta_id,
@@ -916,17 +939,25 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
         aid = str(r.get("account_id"))
         ytd_by_account[aid] = ytd_by_account.get(aid, 0) + float(r.get("spend") or 0)
 
-    # Indice vanity (account_id, date) → {impressions, clicks, lpv, page_eng}
+    # Indice vanity (account_id, date) → {impressions, reach, clicks, lpv, page_eng}
+    # `reach` è opzionale: il fetch Meta del refresh-dashboard-data lo include solo dal 2026-05-20.
+    # Per i record precedenti il campo sarà 0 e gli aggregati `reach_window`/`reach_y` resteranno 0.
+    # NOTA Meta: la riga ha più record per giorno (uno per campaign). Sommiamo impressions/clicks/lpv/page_eng
+    # in modo additivo, ma `reach` di Meta è già deduplicato a livello account/giorno — quindi prendiamo
+    # il MASSIMO osservato (proxy ragionevole della reach unica account-level).
     vanity_idx = {}
     if vanity_rows:
         for r in vanity_rows:
             key = (str(r.get("account_id")), r.get("date"))
-            vanity_idx[key] = {
-                "impressions": int(r.get("impressions") or 0),
-                "clicks": int(r.get("clicks") or 0),
-                "lpv": int(r.get("actions_landing_page_view") or 0),
-                "page_eng": int(r.get("actions_page_engagement") or 0),
+            cur = vanity_idx.get(key) or {
+                "impressions": 0, "reach": 0, "clicks": 0, "lpv": 0, "page_eng": 0,
             }
+            cur["impressions"] += int(r.get("impressions") or 0)
+            cur["clicks"] += int(r.get("clicks") or 0)
+            cur["lpv"] += int(r.get("actions_landing_page_view") or 0)
+            cur["page_eng"] += int(r.get("actions_page_engagement") or 0)
+            cur["reach"] = max(cur["reach"], int(r.get("reach") or 0))
+            vanity_idx[key] = cur
 
     # group AGHC voci per meta_id
     by_meta = {}
@@ -997,13 +1028,18 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
         else:
             trend_arrow, trend_label = "→", "stabile"
 
-        # Vanity metrics aggregati sul window (impressions, clicks, landing page views, page engagement)
-        # CALCOLATI PRIMA del rational così possono essere passati come argomento
+        # Vanity metrics aggregati sul window (impressions, reach, clicks, landing page views, page engagement)
+        # CALCOLATI PRIMA del rational così possono essere passati come argomento.
+        # Per `reach` la window NON è la somma giornaliera (over-count perché utenti unici si ripetono)
+        # ma il MAX giornaliero osservato sulla finestra — proxy ragionevole della reach account-level.
+        # Da rivedere appena disponibile l'endpoint Meta `reach` con time_increment=15.
         van_impr_w = 0
+        van_reach_w = 0
         van_clicks_w = 0
         van_lpv_w = 0
         van_eng_w = 0
         van_impr_y = 0
+        van_reach_y = 0
         van_clicks_y = 0
         van_lpv_y = 0
         van_eng_y = 0
@@ -1011,11 +1047,13 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             v = vanity_idx.get((mid, d))
             if v:
                 van_impr_w += v["impressions"]
+                van_reach_w = max(van_reach_w, v.get("reach", 0))
                 van_clicks_w += v["clicks"]
                 van_lpv_w += v["lpv"]
                 van_eng_w += v.get("page_eng", 0)
                 if d == y_iso:
                     van_impr_y = v["impressions"]
+                    van_reach_y = v.get("reach", 0)
                     van_clicks_y = v["clicks"]
                     van_lpv_y = v["lpv"]
                     van_eng_y = v.get("page_eng", 0)
@@ -1066,14 +1104,23 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             "trend_label": trend_label,
             "status": st,
             "rational": rational,
-            "series": [{"date": d, "spend": round(s, 2)} for d, s in meta_series],
+            # Series giornaliera arricchita: oltre a `spend` (Meta+TikTok combinato), aggiungiamo
+            # i KPI vanity per giorno (Meta-only finché TikTok non espone metriche analoghe).
+            # I campi sono presenti solo se vanity_idx ha dati per quel (account_id, date),
+            # altrimenti il giorno resta {date, spend} backward-compat.
+            "series": [
+                _build_aghc_day_entry(d, s, vanity_idx.get((mid, d)))
+                for d, s in meta_series
+            ],
             "window_days": window_days,
             "vanity": {
                 "impressions_window": van_impr_w,
+                "reach_window": van_reach_w,
                 "clicks_window": van_clicks_w,
                 "lpv_window": van_lpv_w,
                 "page_eng_window": van_eng_w,
                 "impressions_y": van_impr_y,
+                "reach_y": van_reach_y,
                 "clicks_y": van_clicks_y,
                 "lpv_y": van_lpv_y,
                 "page_eng_y": van_eng_y,

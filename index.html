@@ -1127,12 +1127,13 @@
   //   aghc.cards → BF cards → BF entries → CEA entries → Medtech entries → other_roster
   // I valori derivati (cpl/ctr/cpm) sono calcolati a partire dai totali se non già forniti.
   function extractDailyForClient(snap, clientName) {
-    const empty = { spend: null, leads: null, impressions: null, clicks: null, cpl: null, ctr: null, cpm: null };
+    const empty = { spend: null, leads: null, impressions: null, clicks: null, reach: null, page_engagement: null, cpl: null, ctr: null, cpm: null };
     if (!snap) return empty;
     const key = normalize(clientName);
 
     // Stati di aggregazione (somma sui campi che si possono sommare)
     let spend = null, leads = null, impressions = null, clicks = null;
+    let reach = null, page_engagement = null; // AGHC-only (Meta-side, dal vanity_y)
     function add(s, l, imp, clk) {
       if (s   != null) spend       = (spend       || 0) + (Number(s)   || 0);
       if (l   != null) leads       = (leads       || 0) + (Number(l)   || 0);
@@ -1141,10 +1142,17 @@
     }
     let touched = false;
 
-    // 1) AGHC card (Meta + opt TikTok aggregati lato server in spend_y/contatti_y)
+    // 1) AGHC card (Meta + opt TikTok aggregati lato server in spend_y/contatti_y).
+    // Per AGHC popoliamo anche impressions/reach/page_engagement/clicks dal vanity_y
+    // se presenti nello snapshot (i campi sono Meta-only).
     for (const c of (snap.aghc && snap.aghc.cards) || []) {
       if (normalize(c.name) === key) {
         add(c.spend_y, c.contatti_y, null, null);
+        const v = c.vanity || {};
+        if (v.impressions_y != null) impressions = (impressions || 0) + Number(v.impressions_y);
+        if (v.clicks_y      != null) clicks      = (clicks      || 0) + Number(v.clicks_y);
+        if (v.reach_y       != null && v.reach_y > 0) reach = Number(v.reach_y);
+        if (v.page_eng_y    != null) page_engagement = Number(v.page_eng_y);
         touched = true;
         break;
       }
@@ -1198,7 +1206,7 @@
     const ctr = (impressions != null && impressions > 0 && clicks != null) ? (clicks / impressions * 100) : null;
     const cpm = (impressions != null && impressions > 0 && spend  != null) ? (spend / impressions * 1000) : null;
 
-    return { spend, leads, impressions, clicks, cpl, ctr, cpm };
+    return { spend, leads, impressions, clicks, reach, page_engagement, cpl, ctr, cpm };
   }
 
   function loadDailySeries15d(clientName) {
@@ -1287,9 +1295,11 @@
     }
   }
 
-  // Pannello "giorno selezionato" con i 5 KPI (Budget/Lead/CPL/CTR/CPM)
+  // Pannello "giorno selezionato" con i KPI del giorno.
+  // - Sempre: Budget (=spend). Lead/CPL/CTR/CPM se presenti (BF/CEA/MedTech).
+  // - AGHC: Impression / Copertura / Interazioni / Clic dal vanity giornaliero
+  //   (popolato da build_data.py quando vanity_idx ha la riga).
   // Mostra SOLO le celle con dato disponibile per quel giorno.
-  // Restituisce il numero di celle renderizzate (0 = pannello vuoto → mostriamo messaggio).
   function renderDayPanel(panelRoot, series, idx) {
     if (!panelRoot) return 0;
     const p = series[idx] || {};
@@ -1300,6 +1310,12 @@
     const fmtPctVal = v => v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
     const cells = [];
     if (p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
+    // KPI AGHC giornalieri (presenti solo se la series è stata arricchita da build_data.py).
+    // Reach: mostriamo solo se > 0 (mentre il refresh script non scarica ancora `reach`, il campo è 0/assente).
+    if (p.impressions != null && p.impressions > 0)      cells.push(cell("Impression",  fmtNum(p.impressions)));
+    if (p.reach != null && p.reach > 0)                  cells.push(cell("Copertura",   fmtNum(p.reach)));
+    if (p.page_engagement != null && p.page_engagement > 0) cells.push(cell("Interazioni", fmtNum(p.page_engagement)));
+    if (p.clicks != null && p.clicks > 0)                cells.push(cell("Clic",        fmtNum(p.clicks)));
     if (p.leads != null) cells.push(cell("Lead",   fmtNum(p.leads)));
     if (p.cpl   != null) cells.push(cell("CPL",    fmtEUR(p.cpl)));
     if (p.ctr   != null) cells.push(cell("CTR",    fmtPctVal(p.ctr)));
@@ -1602,16 +1618,17 @@
     }
 
     // Riga 5 KPI 15gg per AGHC: Impression / Copertura / Interazioni / Clic / Budget
-    // (Copertura placeholder finché il refresh script non popola reach_window)
+    // Reach: mostriamo "—" se reach_window è null o 0 (il refresh script popola reach solo dal 2026-05-20+).
     let aghcVanityRow = "";
     if (isAGHC) {
       const v = item.vanity || {};
       const win = item.window_days || 15;
       const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
-      const reachVal = v.reach_window != null ? fmtN(v.reach_window) : "—";
+      const reachHasData = v.reach_window != null && v.reach_window > 0;
+      const reachVal = reachHasData ? fmtN(v.reach_window) : "—";
       aghcVanityRow = `<div class="aghc-vanity-row">
         <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
-        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${v.reach_window == null ? 'placeholder' : ''}">${reachVal}</div></div>
+        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachVal}</div></div>
         <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
         <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
         <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>

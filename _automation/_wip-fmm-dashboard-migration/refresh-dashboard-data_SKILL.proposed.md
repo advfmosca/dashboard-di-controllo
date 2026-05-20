@@ -13,7 +13,7 @@ WORKSPACE = `/Users/francescomariamosca/Desktop/Dashboard di Controllo`
 
 Tool `mcp__c87c8c90-4665-43dd-9bf9-8a1e72f5809a__get_data`. Tutte con `date_preset=last_16d`.
 
-- **Meta full**: `connector=facebook`, `fields=["account_id","account_name","date","campaign","campaign_effective_status","spend","clicks","impressions","actions_landing_page_view","actions_page_engagement","actions_lead","actions_onsite_conversion_lead_grouped","account_status"]`
+- **Meta full**: `connector=facebook`, `fields=["account_id","account_name","date","campaign","campaign_effective_status","spend","clicks","impressions","reach","actions_landing_page_view","actions_page_engagement","actions_lead","actions_onsite_conversion_lead_grouped","account_status"]`
 - **Google**: `connector=google_ads`, `fields=["account_id","account_name","date","campaign","spend","clicks","impressions"]`
 - **TikTok**: `connector=tiktok`, `fields=["account_id","account_name","date","spend","clicks","impressions"]`
 
