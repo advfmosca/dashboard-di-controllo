@@ -286,6 +286,27 @@
   .single-card .mini-chart-wrap .mc-title { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: flex; justify-content: space-between; }
   .single-card .mini-chart-wrap .mc-loading { color: var(--text-dim); font-size: 12px; padding: 14px 0; text-align: center; font-style: italic; }
   .single-card .mini-chart-wrap svg { width: 100%; height: auto; display: block; }
+  .single-card .mini-chart-wrap .dot-spend.sel { r: 5; stroke: #1c1c1e; stroke-width: 2; }
+  .single-card .mini-chart-wrap .dot-leads.sel { r: 5; stroke: #0866FF; stroke-width: 2; }
+  .single-card .mini-chart-wrap .pt-target { cursor: pointer; }
+  .single-card .mini-chart-wrap .day-marker { stroke: #1c1c1e; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.4; }
+  /* Day-navigator panel */
+  .single-card .day-nav { display: flex; align-items: center; gap: 10px; margin-top: 6px; padding: 8px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; flex-wrap: wrap; }
+  .single-card .day-nav .nav-btn { font: inherit; font-size: 14px; padding: 3px 9px; border-radius: 6px; border: 1px solid #d2d2d7; background: #fff; cursor: pointer; line-height: 1; color: var(--text); }
+  .single-card .day-nav .nav-btn:hover { background: var(--bg-soft); }
+  .single-card .day-nav .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .single-card .day-nav .day-label { font-weight: 700; font-size: 12.5px; font-variant-numeric: tabular-nums; min-width: 120px; text-align: center; }
+  .single-card .day-nav .day-label .small { display: block; font-size: 10.5px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+  .single-card .day-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; }
+  .single-card .day-kpis .dk-cell { text-align: center; padding: 6px 4px; border-right: 1px solid var(--border-soft); }
+  .single-card .day-kpis .dk-cell:last-child { border-right: 0; }
+  .single-card .day-kpis .dk-lbl { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .single-card .day-kpis .dk-val { font-size: 14px; font-weight: 700; color: #0f0f10; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 3px; word-break: break-word; }
+  .single-card .day-kpis .dk-val.empty { color: var(--text-dim); font-weight: 500; font-style: italic; }
+  @media (max-width: 540px) {
+    .single-card .day-kpis { grid-template-columns: repeat(3, 1fr); }
+    .single-card .day-kpis .dk-cell:nth-child(3) { border-right: 0; }
+  }
 
   /* Reports list */
   .report-list { display: flex; flex-direction: column; gap: 4px; }
@@ -1055,11 +1076,12 @@
     renderSingleCard(item);
   }
 
-  // Calcola la serie 15gg per il cliente partendo dai snapshot (lazy).
+  // Calcola la serie 7gg per il cliente partendo dai snapshot (lazy).
+  const SNAP_WINDOW_DAYS = 7;
   function ensureSnapshotDates() {
     if (LAST_15D_DATES) return Promise.resolve(LAST_15D_DATES);
     return fetchJson("snapshots/index.json").then(idx => {
-      const dates = (idx.dates || []).slice(0, 15).reverse(); // ASC
+      const dates = (idx.dates || []).slice(0, SNAP_WINDOW_DAYS).reverse(); // ASC
       LAST_15D_DATES = dates;
       return dates;
     });
@@ -1071,50 +1093,83 @@
     return p;
   }
 
-  // Per uno snapshot, estrae { spend, leads } per il cliente. Cerca per nome (normalizzato)
-  // in: aghc.cards → BF cards → BF entries → CEA entries → Medtech entries → other_roster
+  // Per uno snapshot, estrae { spend, leads, impressions, clicks, cpl, ctr, cpm } per il cliente.
+  // Cerca per nome (normalizzato) in:
+  //   aghc.cards → BF cards → BF entries → CEA entries → Medtech entries → other_roster
+  // I valori derivati (cpl/ctr/cpm) sono calcolati a partire dai totali se non già forniti.
   function extractDailyForClient(snap, clientName) {
-    if (!snap) return { spend: null, leads: null };
+    const empty = { spend: null, leads: null, impressions: null, clicks: null, cpl: null, ctr: null, cpm: null };
+    if (!snap) return empty;
     const key = normalize(clientName);
-    let spend = null, leads = null;
-    function tryAdd(s, l) {
-      if (s != null) spend = (spend || 0) + (Number(s) || 0);
-      if (l != null) leads = (leads || 0) + (Number(l) || 0);
+
+    // Stati di aggregazione (somma sui campi che si possono sommare)
+    let spend = null, leads = null, impressions = null, clicks = null;
+    function add(s, l, imp, clk) {
+      if (s   != null) spend       = (spend       || 0) + (Number(s)   || 0);
+      if (l   != null) leads       = (leads       || 0) + (Number(l)   || 0);
+      if (imp != null) impressions = (impressions || 0) + (Number(imp) || 0);
+      if (clk != null) clicks      = (clicks      || 0) + (Number(clk) || 0);
     }
+    let touched = false;
+
+    // 1) AGHC card (Meta + opt TikTok aggregati lato server in spend_y/contatti_y)
     for (const c of (snap.aghc && snap.aghc.cards) || []) {
-      if (normalize(c.name) === key) { tryAdd(c.spend_y, c.contatti_y); break; }
-    }
-    if (spend == null) {
-      for (const c of (snap.beefamily && snap.beefamily.cards) || []) {
-        if (normalize(c.name) === key) { tryAdd(c.spend_y, null); break; }
+      if (normalize(c.name) === key) {
+        add(c.spend_y, c.contatti_y, null, null);
+        touched = true;
+        break;
       }
-      // Somma contatti per la BF dalle entries (lead non sono sulla card)
-      let bfLead = null;
+    }
+
+    // 2) BF card (solo spesa) + somma contatti dalle entries
+    if (!touched) {
+      for (const c of (snap.beefamily && snap.beefamily.cards) || []) {
+        if (normalize(c.name) === key) { add(c.spend_y, null, null, null); touched = true; break; }
+      }
+      // Aggiungi contatti dalle entries (lead non sono sulla card BF aggregata)
       for (const e of (snap.beefamily && snap.beefamily.entries) || []) {
         if (normalize(e.name) === key) {
-          if (bfLead == null) bfLead = 0;
-          bfLead += Number(e.contatti_y) || 0;
-          if (spend == null) tryAdd(e.spend_y, null);
+          if (touched) { add(null, e.contatti_y, null, null); }
+          else { add(e.spend_y, e.contatti_y, null, null); touched = true; }
         }
       }
-      if (bfLead != null && leads == null) leads = bfLead;
     }
-    if (spend == null) {
+
+    // 3) CEA / Med&Tech entries (hanno impressions, clicks, cpl_y, ctr, cpm)
+    if (!touched) {
       for (const e of (snap.cea && snap.cea.entries) || []) {
-        if (normalize(e.name) === key) { tryAdd(e.spend_y, e.contatti_y != null ? e.contatti_y : e.lead_y); }
+        if (normalize(e.name) === key) {
+          const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
+          add(e.spend_y, l, e.impressions, e.clicks);
+          touched = true;
+        }
       }
     }
-    if (spend == null) {
+    if (!touched) {
       for (const e of (snap.medtech && snap.medtech.entries) || []) {
-        if (normalize(e.name) === key) { tryAdd(e.spend_y, e.contatti_y != null ? e.contatti_y : e.lead_y); }
+        if (normalize(e.name) === key) {
+          const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
+          add(e.spend_y, l, e.impressions, e.clicks);
+          touched = true;
+        }
       }
     }
-    if (spend == null) {
+
+    // 4) Other roster (solo spend_y)
+    if (!touched) {
       for (const a of (snap.other_roster && snap.other_roster.accounts) || []) {
-        if (normalize(a.account_name) === key) { tryAdd(a.spend_y, null); break; }
+        if (normalize(a.account_name) === key) { add(a.spend_y, null, null, null); touched = true; break; }
       }
     }
-    return { spend, leads };
+
+    if (!touched) return empty;
+
+    // Derivati
+    const cpl = (leads != null && leads > 0 && spend != null) ? (spend / leads) : null;
+    const ctr = (impressions != null && impressions > 0 && clicks != null) ? (clicks / impressions * 100) : null;
+    const cpm = (impressions != null && impressions > 0 && spend  != null) ? (spend / impressions * 1000) : null;
+
+    return { spend, leads, impressions, clicks, cpl, ctr, cpm };
   }
 
   function loadDailySeries15d(clientName) {
@@ -1124,12 +1179,18 @@
     );
   }
 
-  // Mini-chart spesa+lead. Riusa pattern del chart overview ma più compatto.
-  function drawMiniChart(root, series) {
-    const valid = series.filter(p => p.spend != null);
+  // Mini-chart spesa+lead INTERATTIVO. Cliccando un punto / hitbox cambia il giorno selezionato.
+  // onSelect(i) viene chiamato con l'indice rispetto a `series` (compresi i giorni con spend=null).
+  function drawMiniChart(root, series, selectedIdx, onSelect) {
+    // Costruiamo la mappa idx_originale ↔ indice nei valid (per evidenziare il punto del giorno selezionato).
+    const valid = [];
+    const validToOrig = [];
+    for (let i = 0; i < series.length; i++) {
+      if (series[i].spend != null) { valid.push(series[i]); validToOrig.push(i); }
+    }
     if (valid.length === 0) { root.innerHTML = `<div class="mc-loading">Nessun dato giornaliero negli snapshot</div>`; return; }
-    const W = 640, H = 160;
-    const padL = 44, padR = 44, padT = 8, padB = 24;
+    const W = 640, H = 170;
+    const padL = 44, padR = 44, padT = 8, padB = 30;
     const innerW = W - padL - padR, innerH = H - padT - padB;
     const n = valid.length;
     const spends = valid.map(p => p.spend);
@@ -1147,29 +1208,83 @@
       const y = padT + (innerH * i) / steps;
       grid += `<line class="grid-line" x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}"/>`;
     }
-    // x labels: prima, mezzo, ultima
+
+    // x labels: una sotto ogni punto (con N=7 ci sta tutto)
     const xLabels = [];
-    const labelIdx = n <= 1 ? [0] : (n <= 5 ? valid.map((_,i)=>i) : [0, Math.floor((n-1)/2), n - 1]);
-    for (const i of labelIdx) {
+    for (let i = 0; i < n; i++) {
       xLabels.push(`<text class="x-label" x="${xAt(i)}" y="${H - padB + 14}" text-anchor="middle">${escapeHtml(shortDate(valid[i].date))}</text>`);
     }
     const pathSpend = spends.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + ySpend(v)).join(" ");
     const pathLeads = hasLeads ? leads.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + yLeads(v)).join(" ") : "";
-    let dots = "";
+
+    // Indice valid corrispondente al giorno selezionato
+    let selValidIdx = validToOrig.indexOf(selectedIdx);
+    if (selValidIdx < 0) selValidIdx = n - 1;
+
+    // Day-marker: linea verticale tratteggiata sul giorno selezionato
+    const selX = xAt(selValidIdx);
+    const dayMarker = `<line class="day-marker" x1="${selX}" x2="${selX}" y1="${padT}" y2="${padT + innerH}"/>`;
+
+    // Dots + hitbox cliccabili
+    let dots = "", interact = "";
     for (let i = 0; i < n; i++) {
       const xs = xAt(i);
-      dots += `<circle class="dot-spend" cx="${xs}" cy="${ySpend(spends[i])}" r="2.5"/>`;
-      if (hasLeads) dots += `<circle class="dot-leads" cx="${xs}" cy="${yLeads(leads[i])}" r="2.5"/>`;
+      const isSel = i === selValidIdx;
+      dots += `<circle class="dot-spend ${isSel ? 'sel' : ''}" cx="${xs}" cy="${ySpend(spends[i])}" r="${isSel ? 4 : 2.5}"/>`;
+      if (hasLeads) dots += `<circle class="dot-leads ${isSel ? 'sel' : ''}" cx="${xs}" cy="${yLeads(leads[i])}" r="${isSel ? 4 : 2.5}"/>`;
+      interact += `<rect class="pt-target" x="${xs - innerW/(n*2)}" y="${padT}" width="${innerW/n}" height="${innerH}" data-orig-idx="${validToOrig[i]}"/>`;
     }
-    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Serie giornaliera spesa e lead">
+
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Serie giornaliera spesa e lead — naviga giorno per giorno">
       ${grid}
       <line class="ax-line" x1="${padL}" x2="${W - padR}" y1="${padT + innerH}" y2="${padT + innerH}"/>
+      ${dayMarker}
       <path class="line-spend" d="${pathSpend}"/>
       ${pathLeads ? `<path class="line-leads" d="${pathLeads}"/>` : ""}
       ${dots}
       ${xLabels.join("")}
+      ${interact}
     </svg>`;
     root.innerHTML = svg;
+
+    // Wire click handlers
+    if (onSelect) {
+      root.querySelectorAll(".pt-target").forEach(el => {
+        el.addEventListener("click", () => {
+          const i = Number(el.getAttribute("data-orig-idx"));
+          if (!isNaN(i)) onSelect(i);
+        });
+      });
+    }
+  }
+
+  // Pannello "giorno selezionato" con i 5 KPI (Budget/Lead/CPL/CTR/CPM)
+  function renderDayPanel(panelRoot, series, idx) {
+    if (!panelRoot) return;
+    const p = series[idx] || {};
+    function cell(lbl, val, isEmpty) {
+      return `<div class="dk-cell"><div class="dk-lbl">${escapeHtml(lbl)}</div><div class="dk-val ${isEmpty ? 'empty' : ''}">${val}</div></div>`;
+    }
+    const fmtNum = v => v == null ? "—" : Math.round(v).toLocaleString("it-IT");
+    const fmtPctVal = v => v == null ? "—" : v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+    const cells = [
+      cell("Budget",  p.spend == null ? "—" : fmtEUR(p.spend), p.spend == null),
+      cell("Lead",    fmtNum(p.leads),                         p.leads == null),
+      cell("CPL",     p.cpl == null ? "—" : fmtEUR(p.cpl),      p.cpl == null),
+      cell("CTR",     fmtPctVal(p.ctr),                          p.ctr == null),
+      cell("CPM",     p.cpm == null ? "—" : fmtEUR(p.cpm),      p.cpm == null),
+    ].join("");
+    panelRoot.innerHTML = cells;
+  }
+
+  // Etichetta giorno italiana per la day-nav
+  function dayLabelIT(iso) {
+    const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return iso || "—";
+    const wd = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+    const mo = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+    const dt = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return `${wd[dt.getDay()]} ${Number(m[3])} ${mo[dt.getMonth()]}`;
   }
 
   function stabilityFromSeries(series) {
@@ -1276,11 +1391,17 @@
         </div>`;
     }
 
-    // Mini-chart 15gg
+    // Mini-chart 7gg + pannello giorno navigabile
     const chartBlock = `
       <div class="mini-chart-wrap">
-        <div class="mc-title"><span>Spesa &amp; Lead giornalieri (15gg)</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span></div>
+        <div class="mc-title"><span>Spesa &amp; Lead giornalieri (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span></div>
         <div class="chart-wrap" id="oc-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+        <div class="day-nav" id="oc-day-nav" style="display:none">
+          <button type="button" class="nav-btn" id="oc-prev" title="Giorno precedente">←</button>
+          <div class="day-label" id="oc-day-label">—<span class="small">giorno selezionato</span></div>
+          <button type="button" class="nav-btn" id="oc-next" title="Giorno successivo">→</button>
+        </div>
+        <div class="day-kpis" id="oc-day-kpis" style="display:none"></div>
       </div>`;
 
     // Rational (BF + AGHC)
@@ -1316,7 +1437,50 @@
     // Carica la serie giornaliera e aggiorna chart + stabilità + lead medi 7gg
     loadDailySeries15d(item.name).then(series => {
       const chartRoot = document.getElementById("oc-chart");
-      if (chartRoot) drawMiniChart(chartRoot, series);
+      const navRoot   = document.getElementById("oc-day-nav");
+      const kpiRoot   = document.getElementById("oc-day-kpis");
+      const labelEl   = document.getElementById("oc-day-label");
+      const prevBtn   = document.getElementById("oc-prev");
+      const nextBtn   = document.getElementById("oc-next");
+
+      // Default selected day = ultimo giorno con dati (= ieri di solito)
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = "";
+        if (kpiRoot) kpiRoot.style.display = "";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot) renderDayPanel(kpiRoot, series, selIdx);
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+
+      // Frecce da tastiera quando il focus è sui pulsanti / chart-wrap (delegato all'intero card)
+      const card = document.getElementById("ov-search-result-card");
+      if (card) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        // Rimuovi eventuale handler precedente (rendering multiplo della stessa card)
+        if (card._keyHandler) card.removeEventListener("keydown", card._keyHandler);
+        card._keyHandler = keyHandler;
+        card.tabIndex = 0;
+        card.addEventListener("keydown", keyHandler);
+      }
+
       const stab = stabilityFromSeries(series);
       const stabEl = document.getElementById("oc-stability");
       if (stabEl) {
