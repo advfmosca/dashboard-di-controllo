@@ -144,13 +144,9 @@
   /* AGHC cards — single column, full-width */
   .cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
   .aghc-card {
-    background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--gray);
+    background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px;
   }
-  .aghc-card.red    { border-left-color: var(--red); }
-  .aghc-card.yellow { border-left-color: var(--yellow); }
-  .aghc-card.green  { border-left-color: var(--green); }
-  .aghc-card.gray   { border-left-color: var(--gray); }
   .aghc-card .name { font-weight: 700; font-size: 14px; line-height: 1.2; }
   .aghc-card .kpi-row { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
   .aghc-card .kpi-row .item .lbl { font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
@@ -1598,8 +1594,7 @@
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
     const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
-    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}${previewBtn}${copyBtn}</div>`;
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}
@@ -1765,8 +1760,7 @@
     ].join("");
     const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
     const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
-    const copyBtn = item.rational ? `<button class="btn btn-mini" data-copy="${rationalCopyId}" data-copy-fb="${rationalCopyId}-fb">Copia rational</button><span class="copy-feedback" id="${rationalCopyId}-fb">Copiato ✓</span>` : "";
-    const footer = `<div class="footer">${statusPill}${links}${previewBtn}${copyBtn}</div>`;
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
       ${kpiRow}

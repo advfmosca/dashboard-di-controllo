@@ -39,15 +39,11 @@
   header.h .sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
   header.h .date-tag { display: inline-block; font-size: 12px; color: #8a5a00; font-weight: 600; padding: 4px 12px; background: #fff7eb; border-radius: 999px; margin-top: 6px; }
 
-  /* Card layout — copiato da index.html per coerenza visiva */
+  /* Card layout — coerente con la vista interna (nessuna riga colorata laterale) */
   .aghc-card {
-    background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--gray);
+    background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 11px;
   }
-  .aghc-card.red    { border-left-color: var(--red); }
-  .aghc-card.yellow { border-left-color: var(--yellow); }
-  .aghc-card.green  { border-left-color: var(--green); }
-  .aghc-card.gray   { border-left-color: var(--gray); }
   .aghc-card .header-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .aghc-card .proj-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; }
   .aghc-card .proj-badge.aghc { background: #eafff1; color: #14532d; }
@@ -95,7 +91,7 @@
   .mc-title { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
   .chart-wrap { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 6px; }
   .mc-loading { padding: 14px; text-align: center; color: var(--text-dim); font-size: 12px; }
-  .mini-chart-wrap svg { width: 100%; height: 170px; display: block; }
+  .mini-chart-wrap svg { width: 100%; height: 260px; display: block; }
   .mini-chart-wrap .grid-line { stroke: #ececef; stroke-dasharray: 3 3; }
   .mini-chart-wrap .ax-line { stroke: #d2d2d7; }
   .mini-chart-wrap .day-marker { stroke: #8a8a90; stroke-dasharray: 3 3; }
@@ -310,8 +306,8 @@ function drawMiniChart(root, series, selectedIdx, onSelect) {
     if (series[i].spend != null) { valid.push(series[i]); validToOrig.push(i); }
   }
   if (valid.length === 0) { root.innerHTML = `<div class="mc-loading">Nessun dato giornaliero disponibile</div>`; return; }
-  const W = 640, H = 170;
-  const padL = 44, padR = 44, padT = 8, padB = 30;
+  const W = 640, H = 260;
+  const padL = 44, padR = 44, padT = 12, padB = 36;
   const innerW = W - padL - padR, innerH = H - padT - padB;
   const n = valid.length;
   const spends = valid.map(p => p.spend);
@@ -461,17 +457,17 @@ function buildAGHCCardHTML(item, idPrefix) {
     <h3>Cosa significano questi numeri</h3>
     <dl>
       <dt>Impression</dt>
-      <dd>Quante volte i tuoi annunci sono apparsi sullo schermo delle persone (visualizzazioni totali).</dd>
+      <dd>Quante volte gli annunci sono apparsi sullo schermo delle persone (visualizzazioni totali).</dd>
       <dt>Copertura</dt>
-      <dd>Quante persone uniche hanno visto almeno una volta i tuoi annunci.</dd>
+      <dd>Quante persone uniche hanno visto almeno una volta gli annunci.</dd>
       <dt>Interazioni</dt>
-      <dd>Tutte le azioni delle persone con la pagina e i contenuti: like, commenti, condivisioni, salvataggi, click sul profilo.</dd>
+      <dd>Tutte le azioni compiute sulla pagina e sui contenuti: like, commenti, condivisioni, salvataggi, click sul profilo.</dd>
       <dt>Clic (tutti)</dt>
-      <dd>Quante volte qualcuno ha cliccato sui tuoi annunci: link, immagine, profilo, "altro".</dd>
+      <dd>Quante volte è stato cliccato un annuncio (link, immagine, profilo, voce "altro").</dd>
       <dt>Budget ${item.window_days || 15}gg</dt>
       <dd>Quanto è stato investito negli ultimi ${item.window_days || 15} giorni per portare visibilità al brand.</dd>
       <dt>Andamento spesa (7gg)</dt>
-      <dd>L'investimento giornaliero degli ultimi 7 giorni. Cliccando un punto del grafico — o usando le frecce — si vedono i dati del singolo giorno.</dd>
+      <dd>L'investimento giornaliero degli ultimi 7 giorni. Cliccando un punto del grafico — o usando le frecce — si visualizzano i dati del singolo giorno.</dd>
     </dl>
   </div>`;
   return `<div class="aghc-card single-card ${statusColor}">${header}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}</div>${legend}`;
@@ -514,9 +510,9 @@ function buildBFCardHTML(item, idPrefix) {
       <dt>Contatti generati ${item.window_days || 15}gg</dt>
       <dd>Il numero di nuove richieste/lead arrivate attraverso le campagne nello stesso periodo.</dd>
       <dt>CPL ${item.window_days || 15}gg</dt>
-      <dd>Costo medio per ottenere un singolo contatto (Budget diviso Contatti). Più il numero è basso, più la campagna sta lavorando bene.</dd>
+      <dd>Costo medio per ottenere un singolo contatto (Budget diviso Contatti). Più il valore è basso, più la campagna sta lavorando in modo efficiente.</dd>
       <dt>Andamento spesa &amp; contatti (7gg)</dt>
-      <dd>Il grafico mostra giorno per giorno quanto è stato investito (linea nera) e quanti contatti sono arrivati (linea blu) nell'ultima settimana. Le frecce o i punti del grafico permettono di vedere i dettagli del singolo giorno.</dd>
+      <dd>Il grafico riporta giorno per giorno quanto è stato investito (linea nera) e quanti contatti sono arrivati (linea blu) nell'ultima settimana. Le frecce o i punti del grafico permettono di visualizzare i dettagli del singolo giorno.</dd>
     </dl>
   </div>`;
   return `<div class="aghc-card single-card ${statusColor}">${header}${bfVanityRow}${trendBlock}${chartBlock}${rationalBlock}</div>${legend}`;
