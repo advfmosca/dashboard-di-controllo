@@ -529,7 +529,6 @@
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="bf-k-cpc">–</div><div class="sub">€ / lead</div></div>
     </div>
     <section class="card"><h2>Alert da analizzare <span class="pill" id="bf-alerts-pill">–</span></h2><div id="bf-alerts"></div></section>
-    <section class="card"><h2>Status performance account <span class="pill" id="bf-status-pill">–</span></h2><div id="bf-status"></div></section>
     <section class="card"><h2>Card per cliente <span class="pill" id="bf-cards-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px;">
         <div class="cards-grid" id="bf-cards"></div>
@@ -2327,27 +2326,9 @@
       alertsRoot.innerHTML = html;
     }
 
-    const statusPill = document.getElementById("bf-status-pill");
-    if (statusPill) statusPill.textContent = entries.length + " entry";
-    const statusRoot = document.getElementById("bf-status");
-    if (entries.length === 0) statusRoot.innerHTML = `<div class="empty">Nessun dato disponibile</div>`;
-    else {
-      let html = "";
-      for (const e of entries) {
-        const color = (e.status && e.status.color) || "gray";
-        const label = (e.status && e.status.label) || "—";
-        const reason = (e.status && e.status.reason) || "—";
-        html += `<div class="status-row">
-          <div class="status-dot ${color}"></div>
-          <div class="body-row">
-            <div class="name">${platformLogo(e.source)} ${escapeHtml(e.name)} <span class="small muted">· ${escapeHtml(e.source)}</span></div>
-            <div class="rat">${escapeHtml(label)} — ${escapeHtml(reason)}</div>
-          </div>
-          <div class="row-actions">${openAccountBtn(e.ad_url, e.source)}</div>
-        </div>`;
-      }
-      statusRoot.innerHTML = html;
-    }
+    // Sezione "Status performance account" rimossa dal layout (le info per account
+    // sono già visibili nelle card per cliente sotto, evitiamo duplicazione).
+
 
     // Card per cliente (raggruppa Meta+Google per nome cliente)
     const cards = proj.cards || [];
