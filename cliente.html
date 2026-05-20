@@ -133,7 +133,13 @@
   .plogo svg { display: block; }
 
   .error { background: #fdf2f0; color: #b32f1f; border: 1px solid #fecaca; padding: 14px 18px; border-radius: 8px; font-size: 13px; margin: 20px 0; text-align: center; }
-  .signature { font-size: 11.5px; color: var(--text-dim); margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border-soft); text-align: center; }
+
+  /* Legenda KPI in fondo alla vista cliente */
+  .kpi-legend { margin-top: 18px; padding: 16px 18px; background: var(--bg-soft); border-radius: 12px; border: 1px solid var(--border); }
+  .kpi-legend h3 { margin: 0 0 10px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .kpi-legend dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 9px; }
+  .kpi-legend dt { font-size: 12px; font-weight: 700; color: #1c1c1e; text-transform: uppercase; letter-spacing: 0.03em; }
+  .kpi-legend dd { margin: 2px 0 0; font-size: 12.5px; color: #4a4a50; line-height: 1.5; }
 
   @media (max-width: 720px) {
     .wrap { padding: 16px 14px 50px; }
@@ -451,7 +457,24 @@ function buildAGHCCardHTML(item, idPrefix) {
   // Rational SENZA P3 (prossima mossa esclusa dalla vista cliente)
   const ratClean = stripActionParagraph(item.rational || "");
   const rationalBlock = ratClean ? `<div class="rational">${ratClean}</div>` : "";
-  return `<div class="aghc-card single-card ${statusColor}">${header}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}</div>`;
+  const legend = `<div class="kpi-legend">
+    <h3>Cosa significano questi numeri</h3>
+    <dl>
+      <dt>Impression</dt>
+      <dd>Quante volte i tuoi annunci sono apparsi sullo schermo delle persone (visualizzazioni totali).</dd>
+      <dt>Copertura</dt>
+      <dd>Quante persone uniche hanno visto almeno una volta i tuoi annunci.</dd>
+      <dt>Interazioni</dt>
+      <dd>Tutte le azioni delle persone con la pagina e i contenuti: like, commenti, condivisioni, salvataggi, click sul profilo.</dd>
+      <dt>Clic (tutti)</dt>
+      <dd>Quante volte qualcuno ha cliccato sui tuoi annunci: link, immagine, profilo, "altro".</dd>
+      <dt>Budget ${item.window_days || 15}gg</dt>
+      <dd>Quanto è stato investito negli ultimi ${item.window_days || 15} giorni per portare visibilità al brand.</dd>
+      <dt>Andamento spesa (7gg)</dt>
+      <dd>L'investimento giornaliero degli ultimi 7 giorni. Cliccando un punto del grafico — o usando le frecce — si vedono i dati del singolo giorno.</dd>
+    </dl>
+  </div>`;
+  return `<div class="aghc-card single-card ${statusColor}">${header}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}</div>${legend}`;
 }
 
 function buildBFCardHTML(item, idPrefix) {
@@ -483,7 +506,20 @@ function buildBFCardHTML(item, idPrefix) {
   </div>`;
   const ratClean = stripActionParagraph(item.rational || "");
   const rationalBlock = ratClean ? `<div class="rational">${ratClean}</div>` : "";
-  return `<div class="aghc-card single-card ${statusColor}">${header}${bfVanityRow}${trendBlock}${chartBlock}${rationalBlock}</div>`;
+  const legend = `<div class="kpi-legend">
+    <h3>Cosa significano questi numeri</h3>
+    <dl>
+      <dt>Budget ${item.window_days || 15}gg</dt>
+      <dd>Quanto è stato investito negli ultimi ${item.window_days || 15} giorni per generare nuovi contatti.</dd>
+      <dt>Contatti generati ${item.window_days || 15}gg</dt>
+      <dd>Il numero di nuove richieste/lead arrivate attraverso le campagne nello stesso periodo.</dd>
+      <dt>CPL ${item.window_days || 15}gg</dt>
+      <dd>Costo medio per ottenere un singolo contatto (Budget diviso Contatti). Più il numero è basso, più la campagna sta lavorando bene.</dd>
+      <dt>Andamento spesa &amp; contatti (7gg)</dt>
+      <dd>Il grafico mostra giorno per giorno quanto è stato investito (linea nera) e quanti contatti sono arrivati (linea blu) nell'ultima settimana. Le frecce o i punti del grafico permettono di vedere i dettagli del singolo giorno.</dd>
+    </dl>
+  </div>`;
+  return `<div class="aghc-card single-card ${statusColor}">${header}${bfVanityRow}${trendBlock}${chartBlock}${rationalBlock}</div>${legend}`;
 }
 
 function wireSeries(item, idPrefix, kind) {
