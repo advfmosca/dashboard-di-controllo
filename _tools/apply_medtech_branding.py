@@ -161,7 +161,7 @@ def get_data_for(html_path: Path):
     return None
 
 
-def transform(html: str, data: dict | None) -> str:
+def transform(html, data):
     # 1) Rimuovi prima il vecchio logo wrap (se ancora presente)
     html = re.sub(r'<div class="med-logo-wrap">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
 
