@@ -564,7 +564,6 @@
         <div class="cards-grid" id="mt-cards"></div>
       </div>
     </section>
-    <section class="card"><h2>Daily check campagne <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
       <div class="body">
         <div id="mt-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
@@ -594,7 +593,6 @@
         <div class="cards-grid" id="cea-cards"></div>
       </div>
     </section>
-    <section class="card"><h2>Daily check campagne <span class="pill" id="cea-alerts-pill">–</span></h2><div id="cea-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
       <div class="body">
         <div id="cea-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
@@ -2648,42 +2646,9 @@
       }
     }
 
-    const filter = SEM_FILTER.mt;
-    const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
-    const alertsPill = document.getElementById("mt-alerts-pill");
-    if (alertsPill) alertsPill.textContent = filter
-      ? `${entries.length} di ${allEntries.length} (filtro ${filter.toUpperCase()})`
-      : `${allEntries.length} campagne`;
-
-    const alertsRoot = document.getElementById("mt-alerts");
-    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">${filter ? `Nessuna campagna ${filter.toUpperCase()} in questo giorno. Clic di nuovo sul filtro per resettare.` : 'Nessuna campagna attiva nel periodo'}</div>`;
-    else {
-      let html = "";
-      for (const e of entries) {
-        const color = (e.status && e.status.color) || "black";
-        const lbl = (e.status && e.status.label) || "—";
-        const trend = e.trend_3d || [];
-        const trendHtml = trend.length
-          ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
-          : "";
-        const narrative = e.cpl_narrative ? `<div class="r-cpl">${escapeHtml(e.cpl_narrative)}</div>` : "";
-        const perfEval = e.performance_eval ? `<div class="r-perf"><strong>Performance:</strong> ${escapeHtml(e.performance_eval)}</div>` : "";
-        html += `<div class="status-row">
-          <div class="status-dot ${color}"></div>
-          <div class="body-row">
-            <div class="name">
-              <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
-              ${escapeHtml(e.name)}
-            </div>
-            ${narrative}
-            ${perfEval}
-            ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
-          </div>
-          <div class="row-actions">${openAccountBtn(e.ad_url, "Meta")}</div>
-        </div>`;
-      }
-      alertsRoot.innerHTML = html;
-    }
+    // 'Daily check campagne' rimosso: la card per cliente sopra (con rational sintetico)
+    // copre la lettura quotidiana. Il drill-down tecnico vive ora nei daily snapshot
+    // (Report disponibili) che mantengono cpl_narrative + performance_eval per campagna.
   }
 
   // ============================ CEA RENDER (stessa struttura Med & Tech) ============================
@@ -2730,42 +2695,7 @@
       }
     }
 
-    const filter = SEM_FILTER.cea;
-    const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
-    const alertsPill = document.getElementById("cea-alerts-pill");
-    if (alertsPill) alertsPill.textContent = filter
-      ? `${entries.length} di ${allEntries.length} (filtro ${filter.toUpperCase()})`
-      : `${allEntries.length} campagne`;
-
-    const alertsRoot = document.getElementById("cea-alerts");
-    if (entries.length === 0) alertsRoot.innerHTML = `<div class="empty">${filter ? `Nessun cliente ${filter.toUpperCase()} in questo giorno. Clic di nuovo sul filtro per resettare.` : 'Nessuna campagna CEA attiva nel periodo'}</div>`;
-    else {
-      let html = "";
-      for (const e of entries) {
-        const color = (e.status && e.status.color) || "black";
-        const lbl = (e.status && e.status.label) || "—";
-        const trend = e.trend_3d || [];
-        const trendHtml = trend.length
-          ? '<span class="small muted">Trend CPL 3gg: ' + trend.map(t => t.cpl != null ? fmtEUR(t.cpl) : "—").join(" → ") + '</span>'
-          : "";
-        const narrative = e.cpl_narrative ? `<div class="r-cpl">${escapeHtml(e.cpl_narrative)}</div>` : "";
-        const perfEval = e.performance_eval ? `<div class="r-perf"><strong>Performance:</strong> ${escapeHtml(e.performance_eval)}</div>` : "";
-        html += `<div class="status-row">
-          <div class="status-dot ${color}"></div>
-          <div class="body-row">
-            <div class="name">
-              <span class="mt-status-pill ${color}">${escapeHtml(lbl)}</span>
-              ${escapeHtml(e.name)}
-            </div>
-            ${narrative}
-            ${perfEval}
-            ${trendHtml ? `<div style="margin-top:3px">${trendHtml}</div>` : ""}
-          </div>
-          <div class="row-actions">${openAccountBtn(e.ad_url, "Meta")}</div>
-        </div>`;
-      }
-      alertsRoot.innerHTML = html;
-    }
+    // 'Daily check campagne' rimosso anche da CEA (stessa decisione presa per MT).
   }
 
   // ============================ MED TECH REPORTS (fetch live) ============================

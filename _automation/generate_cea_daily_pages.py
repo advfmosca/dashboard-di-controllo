@@ -282,15 +282,15 @@ def render_daily(date_iso, cea):
             else:
                 delta_html = f'<div class="delta">In linea con media 3gg</div>'
 
-        # KPI in evidenza: il primo box è "Lead ieri" (sfondo nero) per tutte le card
+        # KPI in evidenza: il primo box è "Contatti ieri" (sfondo nero) per tutte le card
         kpis_inner = [
-            f'<div class="nc-kpi highlight"><div class="lbl">Lead ieri</div><div class="val">{fmt_int(lead)}</div><div class="delta">su {fmt_eur(spend)} spesi</div></div>',
-            f'<div class="nc-kpi"><div class="lbl">CPL</div><div class="val">{fmt_eur(cpl)}</div>{delta_html}</div>',
+            f'<div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">{fmt_int(lead)}</div><div class="delta">su {fmt_eur(spend)} di spesa</div></div>',
+            f'<div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">{fmt_eur(cpl)}</div>{delta_html}</div>',
             f'<div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">{fmt_eur(spend)}</div></div>',
         ]
         if cpl_m3 is not None:
             kpis_inner.append(
-                f'<div class="nc-kpi"><div class="lbl">Media CPL 3gg</div><div class="val">{fmt_eur(cpl_m3)}</div></div>'
+                f'<div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">{fmt_eur(cpl_m3)}</div></div>'
             )
 
         # Storia + azione: usiamo cpl_narrative per "cosa è successo" e performance_eval per "cosa faremo"
@@ -331,22 +331,22 @@ def render_daily(date_iso, cea):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1c1e">
-<title>CEA — Daily Check {date_iso}</title>
+<title>CEA — Andamento campagne {date_iso}</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand-header">
-    <h1>CEA — Daily Check</h1>
-    <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con spend nel periodo · soglia semaforica su media 3gg (campagne brevi)</p>
-    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Lead aggiornati alle <b>{EXECUTION_LABEL}</b> del {EXECUTION_DATE_LABEL}</p>
+    <h1>CEA — Andamento campagne</h1>
+    <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>{EXECUTION_LABEL}</b> del {EXECUTION_DATE_LABEL}</p>
   </div>
 
   <div class="kpis">
     <div class="kpi"><div class="label">Clienti attivi</div><div class="value">{kpi.get('actives', '–')}</div></div>
-    <div class="kpi total"><div class="label">Spending</div><div class="value">{fmt_eur(kpi.get('total_spend'))}</div></div>
-    <div class="kpi"><div class="label">Lead generati</div><div class="value">{fmt_int(kpi.get('total_lead'))}</div></div>
-    <div class="kpi"><div class="label">CPL medio</div><div class="value">{fmt_eur(kpi.get('cpl_y'))}</div></div>
+    <div class="kpi total"><div class="label">Spesa totale</div><div class="value">{fmt_eur(kpi.get('total_spend'))}</div></div>
+    <div class="kpi"><div class="label">Contatti generati</div><div class="value">{fmt_int(kpi.get('total_lead'))}</div></div>
+    <div class="kpi"><div class="label">Costo medio per contatto</div><div class="value">{fmt_eur(kpi.get('cpl_y'))}</div></div>
   </div>
 
   <div class="smart-summary" id="sem-grid">
@@ -469,14 +469,14 @@ def render_index(items):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CEA — Archivio Daily Check</title>
+<title>CEA — Archivio andamento campagne</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand-header">
-    <h1>CEA — Archivio Daily Check</h1>
-    <p class="subtitle">Snapshot giornalieri · semaforica su media 3gg</p>
+    <h1>CEA — Archivio andamento campagne</h1>
+    <p class="subtitle">Snapshot giornalieri · semaforica calcolata sul costo medio per contatto 3gg</p>
   </div>
   <div class="section-label">Report disponibili</div>
   <div class="report-list">
