@@ -192,6 +192,14 @@
   .aghc-card .budget .pct { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; text-align: right; font-variant-numeric: tabular-nums; }
 
   /* Vanity row (gasazione) — sempre verde-friendly per i clienti hotel */
+  /* Riga 5 KPI 15gg AGHC (Impression / Copertura / Interazioni / Clic / Budget) */
+  .aghc-card .aghc-vanity-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .aghc-card .aghc-vanity-row .av-item { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+  .aghc-card .aghc-vanity-row .av-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .aghc-card .aghc-vanity-row .av-val { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .aghc-card .aghc-vanity-row .av-val.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+  @media (max-width: 560px) { .aghc-card .aghc-vanity-row { grid-template-columns: repeat(3, 1fr); } }
+
   .aghc-card .vanity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px 10px; background: #f1faf3; border: 1px solid #d5ebd9; border-radius: 8px; }
   .aghc-card .vanity .v-item { text-align: center; }
   .aghc-card .vanity .v-item .v-lbl { font-size: 10px; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
@@ -879,6 +887,7 @@
         trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
         status: c.status, rational: c.rational,
         budget: c.budget, series_spend: c.series,
+        vanity: c.vanity || null,
         ad_urls: adUrls,
         search_terms: [c.name, c.id]
       });
@@ -1579,15 +1588,35 @@
       </div>`;
     }
 
-    // Lead row (mostriamo solo i campi popolati; "Lead medi 7gg" è un placeholder che viene
-    // valorizzato dopo loadSeries — se la serie non produce nulla, lo nascondiamo)
-    const leadItems = [];
-    if (item.contatti_y != null) {
-      leadItems.push(`<div class="lead-item" id="oc-lead-y-cell"><div class="lbl">Lead generati ieri</div><div class="val">${escapeHtml(item.contatti_y.toLocaleString("it-IT"))}</div></div>`);
+    // Lead row (nascosta per AGHC — gli AGHC non tracciano lead lato canale)
+    const isAGHC = item.project === "AGHC";
+    let leadRow = "";
+    if (!isAGHC) {
+      const leadItems = [];
+      if (item.contatti_y != null) {
+        leadItems.push(`<div class="lead-item" id="oc-lead-y-cell"><div class="lbl">Lead generati ieri</div><div class="val">${escapeHtml(item.contatti_y.toLocaleString("it-IT"))}</div></div>`);
+      }
+      // Cella media 7gg sempre presente come placeholder (se rimane vuota la nascondiamo dopo)
+      leadItems.push(`<div class="lead-item" id="oc-lead-avg7-cell" style="display:none"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">—</div></div>`);
+      leadRow = `<div class="lead-row" id="oc-lead-row">${leadItems.join("")}</div>`;
     }
-    // Cella media 7gg sempre presente come placeholder (se rimane vuota la nascondiamo dopo)
-    leadItems.push(`<div class="lead-item" id="oc-lead-avg7-cell" style="display:none"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">—</div></div>`);
-    const leadRow = `<div class="lead-row" id="oc-lead-row">${leadItems.join("")}</div>`;
+
+    // Riga 5 KPI 15gg per AGHC: Impression / Copertura / Interazioni / Clic / Budget
+    // (Copertura placeholder finché il refresh script non popola reach_window)
+    let aghcVanityRow = "";
+    if (isAGHC) {
+      const v = item.vanity || {};
+      const win = item.window_days || 15;
+      const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+      const reachVal = v.reach_window != null ? fmtN(v.reach_window) : "—";
+      aghcVanityRow = `<div class="aghc-vanity-row">
+        <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${v.reach_window == null ? 'placeholder' : ''}">${reachVal}</div></div>
+        <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>
+      </div>`;
+    }
 
     // Budget (solo se presente — AGHC)
     let budgetBlock = "";
@@ -1618,9 +1647,14 @@
     }
 
     // Mini-chart 7gg + pannello giorno navigabile
+    // Per AGHC: titolo e legenda solo "Spesa" (no lead).
+    const chartTitle = isAGHC ? "Andamento spesa (7gg) — naviga con ← →" : "Spesa &amp; Lead giornalieri (7gg) — naviga con ← →";
+    const chartLegend = isAGHC
+      ? `<span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span></span>`
+      : `<span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span>`;
     const chartBlock = `
       <div class="mini-chart-wrap">
-        <div class="mc-title"><span>Spesa &amp; Lead giornalieri (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span></div>
+        <div class="mc-title"><span>${chartTitle}</span>${chartLegend}</div>
         <div class="chart-wrap" id="oc-chart"><div class="mc-loading">Carico la serie storica…</div></div>
         <div class="day-nav" id="oc-day-nav" style="display:none">
           <button type="button" class="nav-btn" id="oc-prev" title="Giorno precedente">←</button>
@@ -1630,8 +1664,9 @@
         <div class="day-kpis" id="oc-day-kpis" style="display:none"></div>
       </div>`;
 
-    // Blocco Performance (leggibile) — popolato dopo loadSeries
-    const performanceBlock = `<div id="oc-perf-block"></div>`;
+    // Blocco Performance (leggibile) — popolato dopo loadSeries.
+    // Per AGHC NON lo mostriamo: il rational copre già "come stanno andando le campagne".
+    const performanceBlock = isAGHC ? "" : `<div id="oc-perf-block"></div>`;
 
     // Rational tecnico (BF + AGHC) — dettaglio dopo il blocco performance
     const rationalBlock = item.rational ? `<div class="rational">${item.rational}</div>` : "";
@@ -1655,6 +1690,7 @@
       ${alertBlock}
       ${kpiRow}
       ${leadRow}
+      ${aghcVanityRow}
       ${trendBlock}
       ${budgetBlock}
       ${chartBlock}
