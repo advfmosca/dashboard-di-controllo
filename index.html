@@ -1296,11 +1296,11 @@
   }
 
   // Pannello "giorno selezionato" con i KPI del giorno.
-  // - Sempre: Budget (=spend). Lead/CPL/CTR/CPM se presenti (BF/CEA/MedTech).
-  // - AGHC: Impression / Copertura / Interazioni / Clic dal vanity giornaliero
-  //   (popolato da build_data.py quando vanity_idx ha la riga).
+  // - AGHC: SOLO Budget + Impression + Copertura + Interazioni + Clic (no Lead/CPL/CTR/CPM:
+  //   Lead non è KPI del piano AGHC; CTR/CPM derivati non rilevanti lato channel).
+  // - Altri progetti (BF/CEA/MedTech): Budget + Lead + CPL + CTR + CPM se calcolabili.
   // Mostra SOLO le celle con dato disponibile per quel giorno.
-  function renderDayPanel(panelRoot, series, idx) {
+  function renderDayPanel(panelRoot, series, idx, isAGHC) {
     if (!panelRoot) return 0;
     const p = series[idx] || {};
     function cell(lbl, val) {
@@ -1310,16 +1310,19 @@
     const fmtPctVal = v => v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
     const cells = [];
     if (p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
-    // KPI AGHC giornalieri (presenti solo se la series è stata arricchita da build_data.py).
-    // Reach: mostriamo solo se > 0 (mentre il refresh script non scarica ancora `reach`, il campo è 0/assente).
-    if (p.impressions != null && p.impressions > 0)      cells.push(cell("Impression",  fmtNum(p.impressions)));
-    if (p.reach != null && p.reach > 0)                  cells.push(cell("Copertura",   fmtNum(p.reach)));
-    if (p.page_engagement != null && p.page_engagement > 0) cells.push(cell("Interazioni", fmtNum(p.page_engagement)));
-    if (p.clicks != null && p.clicks > 0)                cells.push(cell("Clic",        fmtNum(p.clicks)));
-    if (p.leads != null) cells.push(cell("Lead",   fmtNum(p.leads)));
-    if (p.cpl   != null) cells.push(cell("CPL",    fmtEUR(p.cpl)));
-    if (p.ctr   != null) cells.push(cell("CTR",    fmtPctVal(p.ctr)));
-    if (p.cpm   != null) cells.push(cell("CPM",    fmtEUR(p.cpm)));
+    if (isAGHC) {
+      // KPI AGHC giornalieri (presenti solo se la series è stata arricchita da build_data.py).
+      // Reach: mostrato solo se > 0 (il refresh script popola `reach` da Meta solo dal 2026-05-20).
+      if (p.impressions     != null && p.impressions     > 0) cells.push(cell("Impression",  fmtNum(p.impressions)));
+      if (p.reach           != null && p.reach           > 0) cells.push(cell("Copertura",   fmtNum(p.reach)));
+      if (p.page_engagement != null && p.page_engagement > 0) cells.push(cell("Interazioni", fmtNum(p.page_engagement)));
+      if (p.clicks          != null && p.clicks          > 0) cells.push(cell("Clic",        fmtNum(p.clicks)));
+    } else {
+      if (p.leads != null) cells.push(cell("Lead", fmtNum(p.leads)));
+      if (p.cpl   != null) cells.push(cell("CPL",  fmtEUR(p.cpl)));
+      if (p.ctr   != null) cells.push(cell("CTR",  fmtPctVal(p.ctr)));
+      if (p.cpm   != null) cells.push(cell("CPM",  fmtEUR(p.cpm)));
+    }
     if (cells.length === 0) {
       panelRoot.classList.add("day-kpis-empty");
       panelRoot.classList.remove("day-kpis");
@@ -1749,7 +1752,7 @@
           const d = series[selIdx] && series[selIdx].date;
           labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
         }
-        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx);
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx, isAGHC);
         if (prevBtn) prevBtn.disabled = selIdx <= 0;
         if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
       }
