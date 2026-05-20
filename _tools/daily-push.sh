@@ -62,7 +62,28 @@ git pull --rebase -X theirs origin main 2>&1 | tail -10 || {
 # Ripristina lo stash se fatto
 if [ "$STASHED" = "1" ]; then
   echo "→ Ripristino stash…"
-  git stash pop 2>&1 | tail -3 || true
+  if ! git stash pop 2>&1 | tail -3; then
+    # Stash pop in conflitto. Su data.json e snapshots/*.json la fonte
+    # autoritativa è il REMOTO (li scrive dashboard-csv-update via Cowork),
+    # non la copia locale ricreata da Windsor da cache stale.
+    # Per tutti gli altri file, manteniamo la versione locale (stash).
+    echo "→ Conflitti stash → file dati autoritativi dal remoto, altri dal locale"
+    while IFS= read -r line; do
+      f="${line:3}"
+      case "$f" in
+        data.json|snapshots/*.json)
+          echo "  ↓ HEAD (remoto): $f"
+          git checkout HEAD -- "$f" 2>/dev/null || true
+          ;;
+        *)
+          echo "  ← stash (locale): $f"
+          git checkout --theirs -- "$f" 2>/dev/null || true
+          ;;
+      esac
+      git add "$f" 2>/dev/null || true
+    done < <(git status --porcelain | grep -E '^(UU|AA|UA|AU|DU|UD) ')
+    git stash drop 2>&1 | tail -1 || true
+  fi
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────

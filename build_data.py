@@ -1468,35 +1468,85 @@ def _build_other_roster(meta_rows, meta_map, exclude_ids, y_iso, window_days=15)
 
 
 def preserve_csv_sections(out, workspace):
-    """Se data.json esistente nel workspace contiene `cea` o `medtech` (popolati
-    da dashboard-csv-update / build_dashboard_payload.py), li ri-inietta in `out`
-    prima di sovrascrivere. Evita perdita dati durante rebuild Windsor.
-    Stesso trattamento per overview.projects (sezione Med & Tech + CEA aggiunte
-    dal connettore CSV).
+    """Re-inietta in `out` le sezioni `cea`, `medtech` e overview.projects(CEA/Med&Tech)
+    scritte da dashboard-csv-update / build_dashboard_payload.py, scegliendo la
+    fonte FRESCA per la `reference_date` corrente.
+
+    Sorgenti, in ordine di affidabilità decrescente:
+      1. snapshots/<reference_date>.json  → scritto SOLO dallo script di sync,
+         autoritativo per quel giorno specifico.
+      2. data.json                        → fallback, ma considerato valido solo
+         se _meta.reference_date (o reference_date top-level) coincide con
+         l'output corrente.
+
+    Una sezione cea/medtech viene presa solo se "fresca" (= il marker
+    `_meta.reference_date` coincide con `out["reference_date"]`). Se nessuna
+    fonte è fresca, la sezione resta vuota — meglio vuoto che valori del giorno
+    sbagliato (regression osservata il 20/05/2026: rebuild Windsor + stash pop
+    in daily-push.sh sovrascrivevano cea/medtech con dati del giorno precedente).
     """
     import os as _os
+    ref_date = out.get("reference_date")
+
+    # Costruisci candidati in ordine di priorità
+    candidates = []
+    if ref_date:
+        snap_path = _os.path.join(workspace, "snapshots", f"{ref_date}.json")
+        if _os.path.exists(snap_path):
+            candidates.append(("snapshots/" + ref_date + ".json", snap_path))
     data_json = _os.path.join(workspace, "data.json")
-    if not _os.path.exists(data_json):
-        return out
-    try:
-        with open(data_json, "r", encoding="utf-8") as f:
-            prev = json.load(f)
-    except Exception:
-        return out
-    # Preserva cea
-    if "cea" in prev and prev["cea"].get("entries"):
-        out["cea"] = prev["cea"]
-    # Preserva medtech
-    if "medtech" in prev and prev["medtech"].get("entries"):
-        out["medtech"] = prev["medtech"]
-    # Aggiungi Med & Tech + CEA in overview.projects se erano lì
-    if "overview" in out and "projects" in out["overview"] and "overview" in prev:
-        prev_projects = prev.get("overview", {}).get("projects", [])
+    if _os.path.exists(data_json):
+        candidates.append(("data.json", data_json))
+
+    def _is_fresh(section, expected_ref, container_ref):
+        """Una sezione cea/medtech è fresca se il suo `_meta.reference_date`
+        coincide con `expected_ref`. Per backward-compat (file pre-fix che
+        non hanno _meta), accetta anche match sul `reference_date` top-level
+        del container."""
+        if not isinstance(section, dict) or not expected_ref:
+            return False
+        meta_ref = (section.get("_meta") or {}).get("reference_date")
+        if meta_ref == expected_ref:
+            return True
+        # Backward-compat fallback: nessun _meta, ma il container ha
+        # reference_date corretto e la sezione ha entries → trustabile.
+        if meta_ref is None and container_ref == expected_ref:
+            return True
+        return False
+
+    cea_taken = False
+    medtech_taken = False
+    overview_src = None
+
+    for label, path in candidates:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                prev = json.load(f)
+        except Exception:
+            continue
+        prev_ref = prev.get("reference_date")
+        if not cea_taken:
+            cea_sec = prev.get("cea") or {}
+            if cea_sec.get("entries") and _is_fresh(cea_sec, ref_date, prev_ref):
+                out["cea"] = cea_sec
+                cea_taken = True
+        if not medtech_taken:
+            mt_sec = prev.get("medtech") or {}
+            if mt_sec.get("entries") and _is_fresh(mt_sec, ref_date, prev_ref):
+                out["medtech"] = mt_sec
+                medtech_taken = True
+        if overview_src is None and prev.get("overview", {}).get("projects") and prev_ref == ref_date:
+            overview_src = prev
+        if cea_taken and medtech_taken and overview_src is not None:
+            break
+
+    # Aggiungi Med & Tech + CEA in overview.projects (dal source più affidabile)
+    if overview_src is not None and "overview" in out and "projects" in out["overview"]:
+        prev_projects = overview_src.get("overview", {}).get("projects", [])
         existing_names = {p["name"] for p in out["overview"]["projects"]}
         for p in prev_projects:
             if p.get("name") in ("Med & Tech", "CEA") and p["name"] not in existing_names:
                 out["overview"]["projects"].append(p)
-        # Ricalcola pct
         tot = sum(p.get("spend", 0) for p in out["overview"]["projects"]) or 1
         for p in out["overview"]["projects"]:
             p["pct"] = round((p.get("spend", 0) or 0) / tot * 100, 2)

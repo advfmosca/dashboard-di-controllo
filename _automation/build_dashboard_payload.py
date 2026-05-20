@@ -437,6 +437,17 @@ def merge_into_dashboard(cea_payload, medtech_payload, date_str):
     iso_now = now.strftime("%Y-%m-%dT%H:%M:%S.%f")
     iso_label = now.strftime("%d/%m/%Y %H:%M")
 
+    # Tag di freschezza: serve a preserve_csv_sections() in build_data.py per
+    # distinguere sezioni "appena sincronizzate dal CSV" da copie stale lette
+    # da un data.json locale non ancora aggiornato dal git pull.
+    csv_meta = {
+        "reference_date": date_str,
+        "synced_at": iso_now,
+        "source": "csv_alfredo",
+    }
+    cea_payload["_meta"] = dict(csv_meta)
+    medtech_payload["_meta"] = dict(csv_meta)
+
     # data.json: aggiorna cea/medtech + overview.projects + generated_at
     data = json.load(open(DATA_JSON))
     data["cea"] = cea_payload
