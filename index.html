@@ -2101,12 +2101,25 @@
           ${hasBudget ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div><div class="pct">${pctVal.toFixed(1).replace('.', ',')}% del budget consumato</div>` : ''}
         </div>`;
 
+      // Riga 5 KPI 15gg (Impression/Copertura/Interazioni/Clic/Budget) — coerente con la single-card
+      const v = c.vanity || {};
+      const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+      const reachHasData = v.reach_window != null && v.reach_window > 0;
+      const aghcVanityRow = `<div class="aghc-vanity-row">
+        <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachHasData ? fmtN(v.reach_window) : '—'}</div></div>
+        <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Budget ${c.window_days}gg</div><div class="av-val">${c.spend_window != null ? fmtEURcompact(c.spend_window) : '—'}</div></div>
+      </div>`;
+
       html += `<div class="aghc-card ${color}">
         <div class="name">${escapeHtml(c.name)}</div>
         <div class="kpi-row">
           <div class="item"><div class="lbl">Spesa ${c.window_days}gg</div><div class="val">${fmtEURcompact(c.spend_window)}</div></div>
           <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(c.spend_y)}</div></div>
         </div>
+        ${aghcVanityRow}
         ${budgetBlock}
         <div class="trend">
           <span class="arrow ${arrowCls}">${c.trend_arrow}</span>
