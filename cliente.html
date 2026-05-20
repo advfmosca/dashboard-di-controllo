@@ -148,14 +148,11 @@
 
   <header class="h">
     <h1 id="hdr-name">Caricamento…</h1>
-    <div class="sub" id="hdr-sub">Vista cliente — Dashboard di Controllo</div>
     <div class="date-tag" id="hdr-date" style="display:none;"></div>
   </header>
 
   <div id="card-root"></div>
   <div id="err-root"></div>
-
-  <div class="signature">Dashboard di Controllo · FMM Consulting</div>
 
 </div>
 
@@ -405,12 +402,7 @@ function buildAGHCCardHTML(item, idPrefix) {
   const header = `<div class="header-row">
     <span class="proj-badge aghc">AGHC</span>
     <div class="name">${escapeHtml(item.name)}</div>
-    <div class="stability unknown" id="${idPrefix}-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
   </div>`;
-  const kpiItems = [];
-  if (item.spend_window != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
-  if (item.spend_y != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
-  const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
   const v = item.vanity || {};
   const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
   const reachHasData = v.reach_window != null && v.reach_window > 0;
@@ -457,14 +449,7 @@ function buildAGHCCardHTML(item, idPrefix) {
   // Rational SENZA P3 (prossima mossa esclusa dalla vista cliente)
   const ratClean = stripActionParagraph(item.rational || "");
   const rationalBlock = ratClean ? `<div class="rational">${ratClean}</div>` : "";
-  const ad = item.ad_urls || {};
-  const links = [
-    ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
-    ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
-  ].join("");
-  const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-  const footer = `<div class="footer">${statusPill}${links}</div>`;
-  return `<div class="aghc-card single-card ${statusColor}">${header}${kpiRow}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}${footer}</div>`;
+  return `<div class="aghc-card single-card ${statusColor}">${header}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}</div>`;
 }
 
 function buildBFCardHTML(item, idPrefix) {
@@ -473,12 +458,7 @@ function buildBFCardHTML(item, idPrefix) {
   const header = `<div class="header-row">
     <span class="proj-badge beefamily">BeeFamily</span>
     <div class="name">${escapeHtml(item.name)}</div>
-    <div class="stability unknown" id="${idPrefix}-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
   </div>`;
-  const kpiItems = [];
-  if (item.spend_window != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
-  if (item.spend_y != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
-  const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
   const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
   const win = item.window_days || 15;
   const bfVanityRow = `<div class="aghc-vanity-row bf-3col">
@@ -501,14 +481,7 @@ function buildBFCardHTML(item, idPrefix) {
   </div>`;
   const ratClean = stripActionParagraph(item.rational || "");
   const rationalBlock = ratClean ? `<div class="rational">${ratClean}</div>` : "";
-  const ad = item.ad_urls || {};
-  const links = [
-    ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
-    ad.Google ? openAccountBtn(ad.Google, "Google") : "",
-  ].join("");
-  const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
-  const footer = `<div class="footer">${statusPill}${links}</div>`;
-  return `<div class="aghc-card single-card ${statusColor}">${header}${kpiRow}${bfVanityRow}${trendBlock}${chartBlock}${rationalBlock}${footer}</div>`;
+  return `<div class="aghc-card single-card ${statusColor}">${header}${bfVanityRow}${trendBlock}${chartBlock}${rationalBlock}</div>`;
 }
 
 function wireSeries(item, idPrefix, kind) {
@@ -605,7 +578,6 @@ const dateParam = urlParam("date");
 
 if (!clienteName) {
   document.getElementById("hdr-name").textContent = "Cliente non specificato";
-  document.getElementById("hdr-sub").textContent = "Aggiungi ?name=NOME alla URL";
   showError("Parametro 'name' mancante nella URL. Esempio: cliente.html?name=Lunetta");
 } else {
   // Carica snapshot specifico se date, altrimenti data.json (più recente)
@@ -636,7 +608,6 @@ if (!clienteName) {
       return;
     }
     document.getElementById("hdr-name").textContent = found.name;
-    document.getElementById("hdr-sub").textContent = project + " · Vista cliente";
 
     const root = document.getElementById("card-root");
     const idPrefix = "vc";
