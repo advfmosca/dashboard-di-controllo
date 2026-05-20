@@ -233,6 +233,60 @@
   .chart-wrap .tooltip-txt { fill: #fff; font-size: 11px; font-family: inherit; opacity: 0; pointer-events: none; }
   .chart-wrap .x-label { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
 
+  /* Overview search */
+  .ov-search { position: relative; margin-bottom: 14px; }
+  .ov-search .search-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; }
+  .ov-search .search-row .search-ico { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+  .ov-search input[type="search"] { flex: 1; font: inherit; font-size: 13px; padding: 6px 8px; border: 0; background: transparent; color: var(--text); outline: none; min-width: 0; }
+  .ov-search input[type="search"]::placeholder { color: var(--text-dim); }
+  .ov-search .clear-btn { font: inherit; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text-muted); cursor: pointer; flex-shrink: 0; }
+  .ov-search .clear-btn:hover { background: #f5f5f7; color: var(--text); }
+  .ov-search .clear-btn.hidden { display: none; }
+  .ov-search .hint { font-size: 11px; color: var(--text-dim); padding: 4px 4px 0; }
+  .ov-search .suggestions { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.08); max-height: 320px; overflow-y: auto; z-index: 50; display: none; }
+  .ov-search .suggestions.show { display: block; }
+  .ov-search .sug-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
+  .ov-search .sug-item:last-child { border-bottom: 0; }
+  .ov-search .sug-item:hover, .ov-search .sug-item.kbd-focus { background: var(--bg-soft); }
+  .ov-search .sug-item .sug-name { font-weight: 600; font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ov-search .sug-item .sug-proj { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; }
+  .ov-search .sug-item .sug-proj.beefamily { background: #fff7d6; color: #8a6a00; }
+  .ov-search .sug-item .sug-proj.aghc { background: #eafff1; color: #14532d; }
+  .ov-search .sug-item .sug-proj.medtech { background: #fde2e2; color: #991b1b; }
+  .ov-search .sug-item .sug-proj.cea { background: #ede0ff; color: #4c1d95; }
+  .ov-search .sug-item .sug-proj.altri { background: #eceff1; color: #455a64; }
+  .ov-search .sug-item .sug-platforms { display: inline-flex; gap: 4px; flex-shrink: 0; }
+  .ov-search .sug-item .sug-platforms .plogo { width: 18px; height: 18px; font-size: 11px; }
+  .ov-search .sug-empty { padding: 14px 16px; color: var(--text-dim); font-style: italic; font-size: 12.5px; text-align: center; }
+
+  /* Single-client card in Overview */
+  .single-card .proj-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; }
+  .single-card .proj-badge.beefamily { background: #fff7d6; color: #8a6a00; }
+  .single-card .proj-badge.aghc { background: #eafff1; color: #14532d; }
+  .single-card .proj-badge.medtech { background: #fde2e2; color: #991b1b; }
+  .single-card .proj-badge.cea { background: #ede0ff; color: #4c1d95; }
+  .single-card .proj-badge.altri { background: #eceff1; color: #455a64; }
+  .single-card .header-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .single-card .header-row .name { font-size: 16px; font-weight: 700; }
+  .single-card .stability { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--bg-soft); border: 1px solid var(--border); }
+  .single-card .stability.stable { background: #d1fadf; border-color: #86efac; color: #14532d; }
+  .single-card .stability.medium { background: #fff3cd; border-color: #ffe69c; color: #8a6500; }
+  .single-card .stability.volatile { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+  .single-card .stability.unknown { color: var(--text-dim); }
+  .single-card .alert-banner { padding: 9px 12px; border-radius: 8px; font-size: 12.5px; line-height: 1.45; display: flex; gap: 8px; align-items: flex-start; }
+  .single-card .alert-banner.red { background: #fee2e2; border-left: 3px solid var(--red); color: #7f1d1d; }
+  .single-card .alert-banner.yellow { background: #fff3cd; border-left: 3px solid var(--yellow); color: #6b4500; }
+  .single-card .lead-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .single-card .lead-row .lead-item { background: #f1faf3; border: 1px solid #d5ebd9; border-radius: 8px; padding: 8px 10px; }
+  .single-card .lead-row .lead-item .lbl { font-size: 10px; font-weight: 700; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; }
+  .single-card .lead-row .lead-item .val { font-size: 15px; font-weight: 700; color: #14532d; font-variant-numeric: tabular-nums; line-height: 1.15; }
+
+  /* Mini chart per card (riusa stile chart-wrap) */
+  .single-card .mini-chart-wrap { background: #fafafa; border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px 6px; }
+  .single-card .mini-chart-wrap .mc-title { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .single-card .mini-chart-wrap .mc-loading { color: var(--text-dim); font-size: 12px; padding: 14px 0; text-align: center; font-style: italic; }
+  .single-card .mini-chart-wrap svg { width: 100%; height: auto; display: block; }
+
   /* Reports list */
   .report-list { display: flex; flex-direction: column; gap: 4px; }
   .report-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
@@ -345,6 +399,21 @@
   <div id="error-box"></div>
 
   <section class="tab-panel active" id="tab-overview">
+    <div class="ov-search">
+      <div class="search-row">
+        <span class="search-ico">🔎</span>
+        <input id="ov-search-input" type="search" autocomplete="off" spellcheck="false" placeholder="Cerca account o cliente (es. H&amp;V, Lunetta, CIA ADV…)" />
+        <button type="button" class="clear-btn hidden" id="ov-search-clear" title="Pulisci ricerca">Pulisci</button>
+      </div>
+      <div class="hint" id="ov-search-hint">Carico l'indice account…</div>
+      <div class="suggestions" id="ov-search-sug" role="listbox"></div>
+    </div>
+    <section class="card" id="ov-search-result-card" style="display:none">
+      <h2>Risultato ricerca <span class="pill" id="ov-search-result-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="ov-search-result"></div>
+      </div>
+    </section>
     <div class="kpis">
       <div class="kpi total"><div class="label">Spending totale ieri</div><div class="value" id="ov-spend">–</div><div class="sub">Tutti gli account collegati</div></div>
       <div class="kpi"><div class="label">Account attivi ieri</div><div class="value" id="ov-acc">–</div><div class="sub">con spesa &gt; 0</div></div>
@@ -705,7 +774,644 @@
     p_html += `</tbody></table>`;
     document.getElementById("ov-projects").innerHTML = p_html;
     document.getElementById("ov-projects-pill").textContent = (ov.projects || []).length + " progetti";
+
+    // Rebuild search index ogni volta che cambiano i dati Overview
+    rebuildSearchIndex(d);
   }
+
+  // ============================ SEARCH + SINGLE-CLIENT CARD ============================
+  // Indice unificato dei "clienti/account" cercabili — un entry per nome univoco.
+  // Sorgenti, in ordine di priorità (vince la prima per dati ricchi tipo rational/budget):
+  //   1. AGHC cards  → progetto "AGHC"        (Meta + opt. TikTok)
+  //   2. BF cards    → progetto "BeeFamily"   (Meta + Google raggruppati)
+  //   3. BF entries  → progetto "BeeFamily"   (account singoli non-card)
+  //   4. CEA entries → progetto "CEA"
+  //   5. Medtech     → progetto "Med & Tech"
+  //   6. Spending zero/high + other_roster → progetto "Altri" (solo nome+spend+link)
+  let SEARCH_INDEX = [];
+  let SUG_FOCUS = -1;
+  const SNAP_CACHE = {};        // { "YYYY-MM-DD": snapJson | null | Promise }
+  let LAST_15D_DATES = null;    // array di 15 date ASC (più recente per ultimo)
+
+  function projectKey(p) {
+    if (p === "AGHC") return "aghc";
+    if (p === "BeeFamily") return "beefamily";
+    if (p === "Med & Tech") return "medtech";
+    if (p === "CEA") return "cea";
+    return "altri";
+  }
+  function normalize(s) { return String(s == null ? "" : s).toLowerCase().replace(/\s+/g, " ").trim(); }
+
+  function rebuildSearchIndex(d) {
+    const byName = new Map();
+    function add(entry) {
+      const key = normalize(entry.name);
+      if (!key) return;
+      if (!byName.has(key)) {
+        byName.set(key, entry);
+      } else {
+        // Merge — completa i campi mancanti del primo (priorità più alta)
+        const prev = byName.get(key);
+        for (const k of Object.keys(entry)) {
+          if (prev[k] == null && entry[k] != null) prev[k] = entry[k];
+          if (k === "ad_urls") {
+            prev.ad_urls = Object.assign({}, entry.ad_urls || {}, prev.ad_urls || {});
+            // se prev mancava una piattaforma, copia
+            for (const pf of ["Meta","Google","TikTok"]) {
+              if (!prev.ad_urls[pf] && (entry.ad_urls || {})[pf]) prev.ad_urls[pf] = entry.ad_urls[pf];
+            }
+          }
+          if (k === "search_terms") prev.search_terms = Array.from(new Set((prev.search_terms||[]).concat(entry.search_terms||[])));
+        }
+      }
+    }
+
+    // 1) AGHC
+    for (const c of (d.aghc && d.aghc.cards) || []) {
+      const adUrls = {};
+      if (c.ad_url_meta)   adUrls.Meta = c.ad_url_meta;
+      if (c.ad_url_tiktok) adUrls.TikTok = c.ad_url_tiktok;
+      add({
+        id: "aghc-" + c.id,
+        name: c.name,
+        project: "AGHC",
+        spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days || 15,
+        contatti_y: c.contatti_y != null ? c.contatti_y : null,
+        trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+        status: c.status, rational: c.rational,
+        budget: c.budget, series_spend: c.series,
+        ad_urls: adUrls,
+        search_terms: [c.name, c.id]
+      });
+    }
+
+    // 2) BeeFamily cards
+    for (const c of (d.beefamily && d.beefamily.cards) || []) {
+      const adUrls = {};
+      if (c.ad_url_meta)   adUrls.Meta = c.ad_url_meta;
+      if (c.ad_url_google) adUrls.Google = c.ad_url_google;
+      const campNames = [].concat(
+        (c.meta_campaigns || []).map(x => x.name),
+        (c.google_campaigns || []).map(x => x.name)
+      ).filter(Boolean);
+      add({
+        id: "bf-" + c.id,
+        name: c.name,
+        project: "BeeFamily",
+        spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days || 15,
+        contatti_y: null, // BF card non lo espone in aggregato — lo recuperiamo dalle entries sotto
+        trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+        status: c.status, rational: c.rational,
+        ad_urls: adUrls,
+        search_terms: [c.name, c.id].concat(campNames)
+      });
+    }
+    // 2b) BF entries — somma contatti_y per nome di card (così il numero "lead ieri" è preciso)
+    const bfContattiByName = new Map();
+    const bfPrev7ContattiByName = new Map();
+    for (const e of (d.beefamily && d.beefamily.entries) || []) {
+      const k = normalize(e.name);
+      bfContattiByName.set(k, (bfContattiByName.get(k) || 0) + (Number(e.contatti_y) || 0));
+      bfPrev7ContattiByName.set(k, (bfPrev7ContattiByName.get(k) || 0) + (Number(e.prev7_contatti) || 0));
+    }
+    for (const [k, v] of bfContattiByName) {
+      if (byName.has(k)) {
+        byName.get(k).contatti_y = v;
+        byName.get(k).prev7_contatti = bfPrev7ContattiByName.get(k) || 0;
+      }
+    }
+    // 2c) BF entries non-card — ogni account separato (per ricerca per nome account)
+    for (const e of (d.beefamily && d.beefamily.entries) || []) {
+      const adUrls = {};
+      if (e.source && e.ad_url) adUrls[e.source] = e.ad_url;
+      add({
+        id: "bf-e-" + normalize(e.name) + "-" + (e.source || "x"),
+        name: e.name,
+        project: "BeeFamily",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y, prev7_contatti: e.prev7_contatti,
+        status: e.status, ad_urls: adUrls,
+        search_terms: [e.name, e.source]
+      });
+    }
+
+    // 3) Med & Tech entries
+    for (const e of (d.medtech && d.medtech.entries) || []) {
+      const adUrls = {};
+      if (e.ad_url) adUrls.Meta = e.ad_url;
+      add({
+        id: "mt-" + normalize(e.name),
+        name: e.name,
+        project: "Med & Tech",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
+        prev7_contatti: e.prev7_contatti != null ? e.prev7_contatti : e.prev7_lead,
+        status: e.status, rational: null,
+        ad_urls: adUrls,
+        cpl_y: e.cpl_y, performance_eval: e.performance_eval,
+        search_terms: [e.name, e.source]
+      });
+    }
+
+    // 4) CEA entries
+    for (const e of (d.cea && d.cea.entries) || []) {
+      const adUrls = {};
+      if (e.ad_url) adUrls.Meta = e.ad_url;
+      add({
+        id: "cea-" + normalize(e.name),
+        name: e.name,
+        project: "CEA",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
+        prev7_contatti: e.prev7_contatti != null ? e.prev7_contatti : e.prev7_lead,
+        status: e.status, rational: null,
+        ad_urls: adUrls,
+        cpl_y: e.cpl_y, performance_eval: e.performance_eval,
+        search_terms: [e.name, e.source]
+      });
+    }
+
+    // 5) Spending alerts (zero + high) → arricchiscono le card esistenti con alert_spesa
+    function attachSpendAlert(arr, kind) {
+      for (const r of (arr || [])) {
+        const k = normalize(r.account_name);
+        const adUrls = {};
+        if (r.platform && r.ad_url) adUrls[r.platform] = r.ad_url;
+        if (byName.has(k)) {
+          const item = byName.get(k);
+          item.alert_spesa = item.alert_spesa || { kind, reason: spendAlertReason(r, kind) };
+          item.ad_urls = Object.assign({}, item.ad_urls || {}, adUrls);
+        } else {
+          // Account "Altri" — non in BF/AGHC/CEA/MT
+          add({
+            id: "sp-" + (r.account_id || normalize(r.account_name)),
+            name: r.account_name,
+            project: "Altri",
+            spend_y: r.target, spend_window: null, window_days: 15,
+            ad_urls: adUrls,
+            alert_spesa: { kind, reason: spendAlertReason(r, kind) },
+            search_terms: [r.account_name, r.account_id, r.platform]
+          });
+        }
+      }
+    }
+    attachSpendAlert((d.spending && d.spending.zero) || [], "red");
+    attachSpendAlert((d.spending && d.spending.high) || [], "yellow");
+
+    // 6) Other roster (account che non rientrano in alcun progetto ma sono collegati)
+    for (const a of (d.other_roster && d.other_roster.accounts) || []) {
+      const adUrls = {};
+      if (a.ad_url) adUrls.Meta = a.ad_url; // other_roster contiene Meta nel snapshot attuale
+      add({
+        id: "or-" + (a.account_id || normalize(a.account_name)),
+        name: a.account_name,
+        project: "Altri",
+        spend_y: a.spend_y, spend_window: a.spend_window_15d, window_days: 15,
+        ad_urls: adUrls,
+        search_terms: [a.account_name, a.account_id]
+      });
+    }
+
+    SEARCH_INDEX = Array.from(byName.values()).sort((a,b) => normalize(a.name).localeCompare(normalize(b.name)));
+    const hint = document.getElementById("ov-search-hint");
+    if (hint) hint.textContent = SEARCH_INDEX.length + " account/clienti indicizzati · cerca per nome, ID o nome campagna";
+  }
+
+  function spendAlertReason(r, kind) {
+    if (kind === "red") {
+      const tag = "Spesa ieri 0 € · media 7gg " + fmtEUR(r.mean7);
+      return tag;
+    }
+    // yellow
+    const trigs = (r.triggers || []).join(", ") || "fuori soglia";
+    return "Spesa ieri " + fmtEUR(r.target) + " (media 7gg " + fmtEUR(r.mean7) + ", Δ " + fmtPct(r.delta) + ") · " + trigs;
+  }
+
+  function scoreMatch(item, q) {
+    const n = normalize(item.name);
+    if (n === q) return 100;
+    if (n.startsWith(q)) return 80;
+    if (n.includes(q)) return 60;
+    for (const t of (item.search_terms || [])) {
+      const nt = normalize(t);
+      if (!nt) continue;
+      if (nt === q) return 50;
+      if (nt.startsWith(q)) return 40;
+      if (nt.includes(q)) return 25;
+    }
+    return 0;
+  }
+
+  function searchQuery(q) {
+    q = normalize(q);
+    if (!q || q.length < 1) return [];
+    const scored = SEARCH_INDEX.map(it => ({ it, s: scoreMatch(it, q) }))
+      .filter(x => x.s > 0)
+      .sort((a,b) => b.s - a.s || normalize(a.it.name).localeCompare(normalize(b.it.name)));
+    return scored.slice(0, 12).map(x => x.it);
+  }
+
+  function renderSuggestions(items) {
+    const root = document.getElementById("ov-search-sug");
+    if (!root) return;
+    SUG_FOCUS = -1;
+    if (items.length === 0) {
+      root.innerHTML = `<div class="sug-empty">Nessun account trovato</div>`;
+      root.classList.add("show");
+      return;
+    }
+    let html = "";
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const pk = projectKey(it.project);
+      const platforms = Object.keys(it.ad_urls || {});
+      const platformIcons = platforms.length
+        ? `<span class="sug-platforms">${platforms.map(p => platformLogo(p)).join("")}</span>`
+        : "";
+      html += `<div class="sug-item" data-idx="${i}" data-id="${escapeHtml(it.id)}" role="option">
+        <span class="sug-name">${escapeHtml(it.name)}</span>
+        ${platformIcons}
+        <span class="sug-proj ${pk}">${escapeHtml(it.project)}</span>
+      </div>`;
+    }
+    root.innerHTML = html;
+    root.classList.add("show");
+    root.querySelectorAll(".sug-item").forEach(el => {
+      el.addEventListener("mousedown", (e) => { e.preventDefault(); selectById(el.getAttribute("data-id")); });
+    });
+  }
+  function hideSuggestions() {
+    const root = document.getElementById("ov-search-sug");
+    if (root) root.classList.remove("show");
+    SUG_FOCUS = -1;
+  }
+  function selectById(id) {
+    const item = SEARCH_INDEX.find(x => x.id === id);
+    if (!item) return;
+    hideSuggestions();
+    const input = document.getElementById("ov-search-input");
+    if (input) input.value = item.name;
+    document.getElementById("ov-search-clear").classList.remove("hidden");
+    renderSingleCard(item);
+  }
+
+  // Calcola la serie 15gg per il cliente partendo dai snapshot (lazy).
+  function ensureSnapshotDates() {
+    if (LAST_15D_DATES) return Promise.resolve(LAST_15D_DATES);
+    return fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, 15).reverse(); // ASC
+      LAST_15D_DATES = dates;
+      return dates;
+    });
+  }
+  function loadSnapshot(date) {
+    if (SNAP_CACHE[date] !== undefined) return Promise.resolve(SNAP_CACHE[date]);
+    const p = fetchJson("snapshots/" + date + ".json").then(j => { SNAP_CACHE[date] = j; return j; }).catch(() => { SNAP_CACHE[date] = null; return null; });
+    SNAP_CACHE[date] = p;
+    return p;
+  }
+
+  // Per uno snapshot, estrae { spend, leads } per il cliente. Cerca per nome (normalizzato)
+  // in: aghc.cards → BF cards → BF entries → CEA entries → Medtech entries → other_roster
+  function extractDailyForClient(snap, clientName) {
+    if (!snap) return { spend: null, leads: null };
+    const key = normalize(clientName);
+    let spend = null, leads = null;
+    function tryAdd(s, l) {
+      if (s != null) spend = (spend || 0) + (Number(s) || 0);
+      if (l != null) leads = (leads || 0) + (Number(l) || 0);
+    }
+    for (const c of (snap.aghc && snap.aghc.cards) || []) {
+      if (normalize(c.name) === key) { tryAdd(c.spend_y, c.contatti_y); break; }
+    }
+    if (spend == null) {
+      for (const c of (snap.beefamily && snap.beefamily.cards) || []) {
+        if (normalize(c.name) === key) { tryAdd(c.spend_y, null); break; }
+      }
+      // Somma contatti per la BF dalle entries (lead non sono sulla card)
+      let bfLead = null;
+      for (const e of (snap.beefamily && snap.beefamily.entries) || []) {
+        if (normalize(e.name) === key) {
+          if (bfLead == null) bfLead = 0;
+          bfLead += Number(e.contatti_y) || 0;
+          if (spend == null) tryAdd(e.spend_y, null);
+        }
+      }
+      if (bfLead != null && leads == null) leads = bfLead;
+    }
+    if (spend == null) {
+      for (const e of (snap.cea && snap.cea.entries) || []) {
+        if (normalize(e.name) === key) { tryAdd(e.spend_y, e.contatti_y != null ? e.contatti_y : e.lead_y); }
+      }
+    }
+    if (spend == null) {
+      for (const e of (snap.medtech && snap.medtech.entries) || []) {
+        if (normalize(e.name) === key) { tryAdd(e.spend_y, e.contatti_y != null ? e.contatti_y : e.lead_y); }
+      }
+    }
+    if (spend == null) {
+      for (const a of (snap.other_roster && snap.other_roster.accounts) || []) {
+        if (normalize(a.account_name) === key) { tryAdd(a.spend_y, null); break; }
+      }
+    }
+    return { spend, leads };
+  }
+
+  function loadDailySeries15d(clientName) {
+    return ensureSnapshotDates().then(dates =>
+      Promise.all(dates.map(d => loadSnapshot(d).then(s => ({ date: d, snap: s }))))
+        .then(rows => rows.map(r => Object.assign({ date: r.date }, extractDailyForClient(r.snap, clientName))))
+    );
+  }
+
+  // Mini-chart spesa+lead. Riusa pattern del chart overview ma più compatto.
+  function drawMiniChart(root, series) {
+    const valid = series.filter(p => p.spend != null);
+    if (valid.length === 0) { root.innerHTML = `<div class="mc-loading">Nessun dato giornaliero negli snapshot</div>`; return; }
+    const W = 640, H = 160;
+    const padL = 44, padR = 44, padT = 8, padB = 24;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = valid.length;
+    const spends = valid.map(p => p.spend);
+    const leads  = valid.map(p => p.leads != null ? p.leads : 0);
+    const hasLeads = valid.some(p => p.leads != null && p.leads > 0);
+    const spendMax = Math.max(...spends) * 1.15 || 1;
+    const leadMax  = Math.max(...leads, 1) * 1.15;
+    const xAt = i => padL + (n <= 1 ? innerW/2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax)  * innerH;
+
+    let grid = "";
+    const steps = 3;
+    for (let i = 0; i <= steps; i++) {
+      const y = padT + (innerH * i) / steps;
+      grid += `<line class="grid-line" x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}"/>`;
+    }
+    // x labels: prima, mezzo, ultima
+    const xLabels = [];
+    const labelIdx = n <= 1 ? [0] : (n <= 5 ? valid.map((_,i)=>i) : [0, Math.floor((n-1)/2), n - 1]);
+    for (const i of labelIdx) {
+      xLabels.push(`<text class="x-label" x="${xAt(i)}" y="${H - padB + 14}" text-anchor="middle">${escapeHtml(shortDate(valid[i].date))}</text>`);
+    }
+    const pathSpend = spends.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = hasLeads ? leads.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + yLeads(v)).join(" ") : "";
+    let dots = "";
+    for (let i = 0; i < n; i++) {
+      const xs = xAt(i);
+      dots += `<circle class="dot-spend" cx="${xs}" cy="${ySpend(spends[i])}" r="2.5"/>`;
+      if (hasLeads) dots += `<circle class="dot-leads" cx="${xs}" cy="${yLeads(leads[i])}" r="2.5"/>`;
+    }
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Serie giornaliera spesa e lead">
+      ${grid}
+      <line class="ax-line" x1="${padL}" x2="${W - padR}" y1="${padT + innerH}" y2="${padT + innerH}"/>
+      <path class="line-spend" d="${pathSpend}"/>
+      ${pathLeads ? `<path class="line-leads" d="${pathLeads}"/>` : ""}
+      ${dots}
+      ${xLabels.join("")}
+    </svg>`;
+    root.innerHTML = svg;
+  }
+
+  function stabilityFromSeries(series) {
+    const vals = series.map(p => p.spend).filter(v => v != null);
+    if (vals.length < 4) return { cls: "unknown", label: "Stabilità n/d", cv: null };
+    const mean = vals.reduce((a,b)=>a+b,0) / vals.length;
+    if (mean <= 0) return { cls: "unknown", label: "Stabilità n/d", cv: null };
+    const variance = vals.reduce((a,b)=>a + (b-mean)*(b-mean), 0) / vals.length;
+    const cv = Math.sqrt(variance) / mean;
+    let cls, label;
+    if (cv < 0.15) { cls = "stable"; label = "Stabile"; }
+    else if (cv < 0.35) { cls = "medium"; label = "Volatile"; }
+    else { cls = "volatile"; label = "Molto volatile"; }
+    return { cls, label: label + " (CV " + (cv*100).toFixed(0) + "%)", cv };
+  }
+
+  function leadAvg7d(series) {
+    // Ultimi 7 giorni con dato lead
+    const lastN = series.slice(-7);
+    const withLead = lastN.filter(p => p.leads != null);
+    if (withLead.length === 0) return null;
+    const sum = withLead.reduce((a,b) => a + (b.leads || 0), 0);
+    return sum / withLead.length;
+  }
+
+  function renderSingleCard(item) {
+    const card = document.getElementById("ov-search-result-card");
+    const root = document.getElementById("ov-search-result");
+    const pill = document.getElementById("ov-search-result-pill");
+    if (!card || !root) return;
+    card.style.display = "";
+    const pk = projectKey(item.project);
+    const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
+    const statusColor = (item.status && item.status.color) || "gray";
+    pill.textContent = item.project + " · " + item.name;
+
+    // KPI row obbligatorio: spesa 15gg + spesa ieri
+    const kpiRow = `
+      <div class="kpi-row">
+        <div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>
+        <div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>
+      </div>`;
+
+    // Header con badge progetto + stabilità (placeholder; aggiornato dopo loadSeries)
+    const header = `
+      <div class="header-row">
+        <span class="proj-badge ${pk}">${escapeHtml(item.project)}</span>
+        <div class="name">${escapeHtml(item.name)}</div>
+        <div class="stability unknown" id="oc-stability"><span>⏳</span><span>Calcolo stabilità…</span></div>
+      </div>`;
+
+    // Alert spesa
+    let alertBlock = "";
+    if (item.alert_spesa) {
+      const k = item.alert_spesa.kind;
+      const icon = k === "red" ? "🔴" : "🟡";
+      const title = k === "red" ? "Spesa ZERO anomala" : "Spesa sopra soglia";
+      alertBlock = `<div class="alert-banner ${k}"><div>${icon}</div><div><b>${title}</b> — ${escapeHtml(item.alert_spesa.reason)}</div></div>`;
+    }
+
+    // Trend (BF + AGHC)
+    let trendBlock = "";
+    if (item.trend_arrow || item.trend_label) {
+      trendBlock = `<div class="trend">
+        <span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span>
+        <span>${escapeHtml(item.trend_label || "")}</span>
+        ${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}
+      </div>`;
+    }
+
+    // Lead row (placeholder — aggiornato dopo loadSeries; ieri lo abbiamo già)
+    const leadIeri = item.contatti_y != null ? item.contatti_y.toLocaleString("it-IT") : "—";
+    const leadRow = `
+      <div class="lead-row">
+        <div class="lead-item"><div class="lbl">Lead generati ieri</div><div class="val" id="oc-lead-y">${escapeHtml(leadIeri)}</div></div>
+        <div class="lead-item"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">⏳</div></div>
+      </div>`;
+
+    // Budget (solo se presente — AGHC)
+    let budgetBlock = "";
+    if (item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) {
+      const b = item.budget;
+      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
+      const residuo = (b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null;
+      const pctVal = b.budget_pct;
+      let barFillCls = "";
+      let barWidth = 0;
+      if (pctVal != null) {
+        barWidth = Math.min(100, pctVal);
+        if (pctVal >= 95) barFillCls = "danger";
+        else if (pctVal >= 80) barFillCls = "warn";
+      }
+      budgetBlock = `
+        <div class="budget">
+          <div class="row">
+            <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
+            <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
+          </div>
+          <div class="row" style="margin-top:4px">
+            <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
+            ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
+          </div>
+          ${pctVal != null ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div>` : ''}
+        </div>`;
+    }
+
+    // Mini-chart 15gg
+    const chartBlock = `
+      <div class="mini-chart-wrap">
+        <div class="mc-title"><span>Spesa &amp; Lead giornalieri (15gg)</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span></div>
+        <div class="chart-wrap" id="oc-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      </div>`;
+
+    // Rational (BF + AGHC)
+    const rationalBlock = item.rational ? `<div class="rational">${item.rational}</div>` : "";
+
+    // Performance eval (Med&Tech / CEA)
+    const perfBlock = item.performance_eval
+      ? `<div class="rational"><span class="rat-label">Performance</span>${escapeHtml(item.performance_eval)}</div>` : "";
+
+    // Footer con status + link account
+    const ad = item.ad_urls || {};
+    const links = [
+      ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
+      ad.Google ? openAccountBtn(ad.Google, "Google") : "",
+      ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
+    ].join("");
+    const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
+    const footer = `<div class="footer">${statusPill}${links}</div>`;
+
+    root.innerHTML = `<div class="aghc-card single-card ${statusColor}">
+      ${header}
+      ${alertBlock}
+      ${kpiRow}
+      ${leadRow}
+      ${trendBlock}
+      ${budgetBlock}
+      ${chartBlock}
+      ${rationalBlock}
+      ${perfBlock}
+      ${footer}
+    </div>`;
+
+    // Carica la serie giornaliera e aggiorna chart + stabilità + lead medi 7gg
+    loadDailySeries15d(item.name).then(series => {
+      const chartRoot = document.getElementById("oc-chart");
+      if (chartRoot) drawMiniChart(chartRoot, series);
+      const stab = stabilityFromSeries(series);
+      const stabEl = document.getElementById("oc-stability");
+      if (stabEl) {
+        stabEl.className = "stability " + stab.cls;
+        const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : stab.cls === "volatile" ? "!" : "·";
+        stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+      }
+      const leadAvg = leadAvg7d(series);
+      const leadAvgEl = document.getElementById("oc-lead-avg7");
+      if (leadAvgEl) leadAvgEl.textContent = leadAvg == null ? "—" : (Math.round(leadAvg * 10) / 10).toLocaleString("it-IT");
+    }).catch(err => {
+      console.warn("Daily series load failed:", err);
+      const chartRoot = document.getElementById("oc-chart");
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie (${escapeHtml(err.message)})</div>`;
+      const stabEl = document.getElementById("oc-stability");
+      if (stabEl) stabEl.innerHTML = `<span>·</span><span>Stabilità n/d</span>`;
+    });
+
+    // Scroll: porta la card in vista
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function clearSearchResult() {
+    const card = document.getElementById("ov-search-result-card");
+    if (card) card.style.display = "none";
+    const input = document.getElementById("ov-search-input");
+    if (input) input.value = "";
+    document.getElementById("ov-search-clear").classList.add("hidden");
+    hideSuggestions();
+  }
+
+  // Wire up: input, keyboard nav, click-outside, clear, deep-link via #q=…
+  function initSearchUI() {
+    const input = document.getElementById("ov-search-input");
+    const clearBtn = document.getElementById("ov-search-clear");
+    const sugRoot = document.getElementById("ov-search-sug");
+    if (!input) return;
+    input.addEventListener("input", () => {
+      const q = input.value;
+      clearBtn.classList.toggle("hidden", !q);
+      if (!q || q.length < 1) { hideSuggestions(); return; }
+      renderSuggestions(searchQuery(q));
+    });
+    input.addEventListener("focus", () => {
+      const q = input.value;
+      if (q && q.length >= 1) renderSuggestions(searchQuery(q));
+    });
+    input.addEventListener("keydown", (e) => {
+      const items = sugRoot.querySelectorAll(".sug-item");
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (items.length === 0) { renderSuggestions(searchQuery(input.value)); return; }
+        SUG_FOCUS = Math.min(items.length - 1, SUG_FOCUS + 1);
+        items.forEach((el, i) => el.classList.toggle("kbd-focus", i === SUG_FOCUS));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        SUG_FOCUS = Math.max(0, SUG_FOCUS - 1);
+        items.forEach((el, i) => el.classList.toggle("kbd-focus", i === SUG_FOCUS));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        let target = SUG_FOCUS >= 0 ? items[SUG_FOCUS] : items[0];
+        if (target) selectById(target.getAttribute("data-id"));
+        else {
+          // Match esatto/parziale diretto
+          const matches = searchQuery(input.value);
+          if (matches.length) selectById(matches[0].id);
+        }
+      } else if (e.key === "Escape") {
+        hideSuggestions();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".ov-search")) hideSuggestions();
+    });
+    clearBtn.addEventListener("click", clearSearchResult);
+
+    // Deep link: #q=NOME
+    const hashMatch = (location.hash || "").match(/[#&]q=([^&]+)/);
+    if (hashMatch) {
+      const q = decodeURIComponent(hashMatch[1]);
+      // attendere il primo applyData (SEARCH_INDEX pronto)
+      const trySelect = () => {
+        if (SEARCH_INDEX.length === 0) { setTimeout(trySelect, 300); return; }
+        input.value = q;
+        clearBtn.classList.remove("hidden");
+        const matches = searchQuery(q);
+        if (matches.length) {
+          activateTab("overview");
+          selectById(matches[0].id);
+        }
+      };
+      trySelect();
+    }
+  }
+  initSearchUI();
 
   function renderSpending(d) {
     if (!d) return;
