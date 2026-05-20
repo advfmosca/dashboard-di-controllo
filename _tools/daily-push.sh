@@ -78,9 +78,11 @@ fi
 # Step 2b — applica branding + search + filtri semafori al repo med-tech-daily-check
 #           (in background, non blocca il push principale se fallisce)
 # ──────────────────────────────────────────────────────────────────────────────
-if [ -x "_tools/apply-medtech-patch.sh" ]; then
+if [ -f "_tools/apply-medtech-patch.sh" ]; then
   echo "→ Applico branding/search/filtri al repo med-tech-daily-check…"
-  bash _tools/apply-medtech-patch.sh 2>&1 | tail -20 || echo "  (apply-medtech-patch.sh fallito — non blocca il push)"
+  bash _tools/apply-medtech-patch.sh 2>&1 | tail -25 || echo "  (apply-medtech-patch.sh fallito — non blocca il push principale)"
+else
+  echo "  (apply-medtech-patch.sh non trovato — skip)"
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────
