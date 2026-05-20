@@ -559,6 +559,11 @@
       <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
       <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
     </div>
+    <section class="card"><h2>Card per cliente <span class="pill" id="mt-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="mt-cards"></div>
+      </div>
+    </section>
     <section class="card"><h2>Daily check campagne <span class="pill" id="mt-alerts-pill">–</span></h2><div id="mt-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
       <div class="body">
@@ -584,6 +589,11 @@
       <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
       <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
     </div>
+    <section class="card"><h2>Card per cliente <span class="pill" id="cea-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="cea-cards"></div>
+      </div>
+    </section>
     <section class="card"><h2>Daily check campagne <span class="pill" id="cea-alerts-pill">–</span></h2><div id="cea-alerts"></div></section>
     <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
       <div class="body">
@@ -934,9 +944,10 @@
     for (const e of (d.medtech && d.medtech.entries) || []) {
       const adUrls = {};
       if (e.ad_url) adUrls.Meta = e.ad_url;
+      const clientShort = extractMTCEAClient(e.name);
       add({
         id: "mt-" + normalize(e.name),
-        name: e.name,
+        name: clientShort, // espongo SOLO il nome cliente (estratto) in SEARCH_INDEX
         project: "Med & Tech",
         spend_y: e.spend_y, spend_window: null, window_days: 15,
         contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
@@ -944,7 +955,8 @@
         status: e.status, rational: null,
         ad_urls: adUrls,
         cpl_y: e.cpl_y, performance_eval: e.performance_eval,
-        search_terms: [e.name, e.source]
+        _mtcea_entry: e,
+        search_terms: [e.name, e.source, clientShort]
       });
     }
 
@@ -952,9 +964,10 @@
     for (const e of (d.cea && d.cea.entries) || []) {
       const adUrls = {};
       if (e.ad_url) adUrls.Meta = e.ad_url;
+      const clientShort = extractMTCEAClient(e.name);
       add({
         id: "cea-" + normalize(e.name),
-        name: e.name,
+        name: clientShort,
         project: "CEA",
         spend_y: e.spend_y, spend_window: null, window_days: 15,
         contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
@@ -962,7 +975,8 @@
         status: e.status, rational: null,
         ad_urls: adUrls,
         cpl_y: e.cpl_y, performance_eval: e.performance_eval,
-        search_terms: [e.name, e.source]
+        _mtcea_entry: e,
+        search_terms: [e.name, e.source, clientShort]
       });
     }
 
@@ -1157,10 +1171,13 @@
       }
     }
 
-    // 3) CEA / Med&Tech entries (hanno impressions, clicks, cpl_y, ctr, cpm)
+    // 3) CEA / Med&Tech entries (hanno impressions, clicks, cpl_y, ctr, cpm).
+    // Confrontiamo SIA sul nome campagna completo SIA sul cliente estratto (auto-estrazione
+    // basata su ' - '), perche' la SEARCH_INDEX espone il cliente estratto.
     if (!touched) {
       for (const e of (snap.cea && snap.cea.entries) || []) {
-        if (normalize(e.name) === key) {
+        const eClient = extractMTCEAClient(e.name);
+        if (normalize(e.name) === key || normalize(eClient) === key) {
           const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
           add(e.spend_y, l, e.impressions, e.clicks);
           touched = true;
@@ -1169,7 +1186,8 @@
     }
     if (!touched) {
       for (const e of (snap.medtech && snap.medtech.entries) || []) {
-        if (normalize(e.name) === key) {
+        const eClient = extractMTCEAClient(e.name);
+        if (normalize(e.name) === key || normalize(eClient) === key) {
           const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
           add(e.spend_y, l, e.impressions, e.clicks);
           touched = true;
@@ -1552,6 +1570,182 @@
   // Helper card BeeFamily — stessa filosofia di buildAGHCCardHTML/wireAGHCSeries
   // ma con riga KPI 15gg specifica BF (Budget/Contatti/CPL) e niente budget annuale.
   // ============================================================================
+  // ============================================================================
+  // Helper card MT/CEA — campagne corte (~14gg) con KPI Budget/Contatti/Costo per contatto.
+  // Una "entry" MT o CEA e' gia' una campagna 1:1 col cliente: estraiamo il nome cliente
+  // dal nome campagna (separatore ' - ', ultimo segmento). Stessa filosofia BF: helper
+  // condivisa, idPrefix univoco, niente budget annuale, rational semplificato senza
+  // "prossima mossa" interna (P3 e' un monitoraggio continuativo).
+  // ============================================================================
+  function extractMTCEAClient(campaignName) {
+    if (!campaignName) return "";
+    const parts = String(campaignName).split(' - ').map(p => p.trim()).filter(Boolean);
+    return parts.length > 1 ? parts[parts.length - 1] : campaignName;
+  }
+  function _fmtIntIT(n) {
+    if (n == null) return "—";
+    return Math.round(Number(n)).toLocaleString("it-IT");
+  }
+  function buildMTCEARational(entry, clientName, projectLabel, series7d) {
+    // series7d e' opzionale (verra' popolato async). Se assente uso solo i dati di ieri.
+    const win = (series7d || []).filter(p => p.spend != null);
+    const winSpend = win.reduce((a, p) => a + (Number(p.spend) || 0), 0);
+    const winLeads = win.reduce((a, p) => a + (Number(p.leads) || 0), 0);
+    const winCpl = (winLeads > 0) ? (winSpend / winLeads) : null;
+    const daysActive = win.filter(p => (p.spend || 0) > 0).length;
+    const avgDaily = winSpend / Math.max(daysActive, 1);
+    const cn = clientName;
+
+    // P1 — stato campagna in linguaggio non tecnico
+    let p1;
+    if (daysActive === 0) {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} non risulta ancora in erogazione: nessun consumo registrato nei giorni monitorati.`;
+    } else if (daysActive <= 3) {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in fase iniziale di erogazione: ${daysActive} ${daysActive === 1 ? 'giorno' : 'giorni'} attivi negli ultimi 7, con un investimento di ${fmtEUR(winSpend)} e un ritmo medio di ${fmtEUR(avgDaily)} al giorno. I primi giorni sono fisiologicamente dedicati all'apprendimento del sistema sul pubblico.`;
+    } else {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in piena erogazione: ${daysActive} giorni attivi nell'ultima settimana, con un investimento di ${fmtEUR(winSpend)} distribuito a un ritmo medio di ${fmtEUR(avgDaily)} al giorno.`;
+    }
+
+    // P2 — risultati e lettura efficienza
+    let p2;
+    if (winLeads === 0 && winSpend > 0) {
+      p2 = `Sul fronte risultati la campagna non ha ancora generato richieste qualificate. Per campagne corte come questa, è normale che i primi contatti arrivino dal terzo-quarto giorno di erogazione: il sistema sta ancora completando la fase di apprendimento sul pubblico più reattivo.`;
+    } else if (winLeads > 0 && winCpl != null) {
+      const efficiency = winCpl < 8 ? "molto contenuto, in zona ottimale per il settore" :
+                         winCpl < 18 ? "in linea con il benchmark del settore" :
+                         winCpl < 35 ? "leggermente sopra il benchmark di riferimento" :
+                         "sopra il benchmark, da consolidare nei prossimi giorni";
+      p2 = `Sul fronte risultati la campagna ha raccolto <strong>${_fmtIntIT(winLeads)} ${winLeads === 1 ? 'contatto' : 'contatti'} qualificati</strong> a un costo medio di <strong>${fmtEUR(winCpl)} a contatto</strong> — un valore ${efficiency}.`;
+    } else {
+      p2 = `Sul fronte risultati la campagna è in fase di start-up: i primi contatti diretti sono attesi nei prossimi giorni di erogazione.`;
+    }
+
+    // P3 — monitoraggio (non azione interna)
+    const p3 = `Nei prossimi giorni l'attenzione si concentra sull'ottimizzazione del costo per contatto e sul mantenimento della qualità delle richieste in arrivo. Il dato si stabilizza tipicamente dopo i primi 4-5 giorni di erogazione: continueremo a monitorare la performance giornaliera per intervenire tempestivamente se necessario.`;
+
+    return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
+  }
+
+  function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
+    const clientName = extractMTCEAClient(entry.name);
+    const statusColor = (entry.status && entry.status.color) || "gray";
+    const badgeCls = projectLabel === "Med & Tech" ? "medtech" : "cea";
+    const badgeLbl = projectLabel === "Med & Tech" ? "MED & TECH" : "CEA";
+    const header = `<div class="header-row">
+      <span class="proj-badge ${badgeCls}">${badgeLbl}</span>
+      <div class="name">${escapeHtml(clientName)}</div>
+    </div>`;
+    // Riga 3 KPI 7gg cliente-friendly (popolata async da loadDailySeries15d).
+    // Per il primo render usiamo placeholders: verranno aggiornati da wireMTCEASeries.
+    const vRow = `<div class="aghc-vanity-row bf-3col" id="${idPrefix}-vrow">
+      <div class="av-item"><div class="av-lbl">Budget 7gg</div><div class="av-val" id="${idPrefix}-v-spend">—</div></div>
+      <div class="av-item"><div class="av-lbl">Contatti 7gg</div><div class="av-val" id="${idPrefix}-v-leads">—</div></div>
+      <div class="av-item"><div class="av-lbl">Costo per contatto 7gg</div><div class="av-val" id="${idPrefix}-v-cpl">—</div></div>
+    </div>`;
+    const chartBlock = `<div class="mini-chart-wrap">
+      <div class="mc-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Contatti</span></span></div>
+      <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
+        <button type="button" class="nav-btn" id="${idPrefix}-prev" title="Giorno precedente">←</button>
+        <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
+        <button type="button" class="nav-btn" id="${idPrefix}-next" title="Giorno successivo">→</button>
+      </div>
+      <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
+    </div>`;
+    // Rational placeholder: verra' popolato da wireMTCEASeries con series7d aggregati.
+    const rationalBlock = `<div class="rational" id="${idPrefix}-rat"><span class="muted small">Calcolo dell'analisi in corso…</span></div>`;
+    const statusPill = entry.status ? `<span class="status-pill ${statusColor}">${escapeHtml(entry.status.label || "—")}</span>` : "";
+    const adLink = entry.ad_url ? openAccountBtn(entry.ad_url, "Meta") : "";
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(clientName)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const footer = `<div class="footer">${statusPill}${adLink}${previewBtn}</div>`;
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${footer}</div>`;
+  }
+
+  function wireMTCEASeries(entry, idPrefix, projectLabel, attachKeyboardOn) {
+    const clientName = extractMTCEAClient(entry.name);
+    loadDailySeries15d(clientName).then(fullSeries => {
+      // Per le campagne corte usiamo solo gli ultimi 7gg del chart (gia' coperto da drawMiniChart).
+      const series = fullSeries.slice(-7);
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
+      const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
+      const labelEl   = document.getElementById(`${idPrefix}-day-label`);
+      const prevBtn   = document.getElementById(`${idPrefix}-prev`);
+      const nextBtn   = document.getElementById(`${idPrefix}-next`);
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+      const hasAnySpend = series.some(p => p.spend != null);
+
+      // Aggiorno i 3 KPI 7gg
+      const winSpend = series.reduce((a, p) => a + (Number(p.spend) || 0), 0);
+      const winLeads = series.reduce((a, p) => a + (Number(p.leads) || 0), 0);
+      const winCpl = winLeads > 0 ? winSpend / winLeads : null;
+      const elS = document.getElementById(`${idPrefix}-v-spend`);
+      const elL = document.getElementById(`${idPrefix}-v-leads`);
+      const elC = document.getElementById(`${idPrefix}-v-cpl`);
+      if (elS) elS.textContent = winSpend > 0 ? fmtEURcompact(winSpend) : "—";
+      if (elL) elL.textContent = winLeads > 0 ? _fmtIntIT(winLeads) : "0";
+      if (elC) elC.textContent = winCpl != null ? fmtEUR(winCpl) : "—";
+
+      // Rational
+      const ratRoot = document.getElementById(`${idPrefix}-rat`);
+      if (ratRoot) ratRoot.innerHTML = buildMTCEARational(entry, clientName, projectLabel, series);
+
+      // Chart + day nav
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = "";
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+        return;
+      }
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = "";
+        if (kpiRoot) kpiRoot.style.display = "";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot) renderDayPanel(kpiRoot, series, selIdx, 'bf'); // stesso kind BF (Budget/Contatti/CPL)
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+      if (attachKeyboardOn) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        if (attachKeyboardOn._keyHandler) attachKeyboardOn.removeEventListener("keydown", attachKeyboardOn._keyHandler);
+        attachKeyboardOn._keyHandler = keyHandler;
+        attachKeyboardOn.tabIndex = 0;
+        attachKeyboardOn.addEventListener("keydown", keyHandler);
+      }
+    }).catch(err => {
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie</div>`;
+      const ratRoot = document.getElementById(`${idPrefix}-rat`);
+      if (ratRoot) ratRoot.innerHTML = `<span class="muted small">Analisi non disponibile.</span>`;
+    });
+  }
+
+  function normalizeMTCEAItem(entry, projectLabel) {
+    return {
+      name: extractMTCEAClient(entry.name),
+      raw_name: entry.name,
+      project: projectLabel,
+      spend_y: entry.spend_y, lead_y: entry.lead_y, contatti_y: entry.contatti_y,
+      cpl_y: entry.cpl_y, cpl_mean_3d: entry.cpl_mean_3d,
+      status: entry.status, ad_url: entry.ad_url,
+      cpl_narrative: entry.cpl_narrative, performance_eval: entry.performance_eval,
+    };
+  }
+
   function buildBFCardHTML(item, idPrefix) {
     const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
     const statusColor = (item.status && item.status.color) || "gray";
@@ -1597,7 +1791,6 @@
     const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
-      ${kpiRow}
       ${bfVanityRow}
       ${trendBlock}
       ${chartBlock}
@@ -1763,7 +1956,6 @@
     const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
       ${header}
-      ${kpiRow}
       ${aghcVanityRow}
       ${trendBlock}
       ${budgetBlock}
@@ -1877,6 +2069,18 @@
     if (item.project === "BeeFamily") {
       root.innerHTML = buildBFCardHTML(item, "oc");
       wireBFSeries(item, "oc", card);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    // Med & Tech / CEA: campagne corte (~14gg), KPI Budget/Contatti/Costo per contatto.
+    if (item.project === "Med & Tech" || item.project === "CEA") {
+      // Per la search da Overview l'`item` arriva gia' normalizzato. Per costruire la card
+      // riuso lo schema "entry" originale (presente in item._mtcea_entry se passato dalla feed,
+      // altrimenti uso direttamente item che ha gia' i campi cpl_narrative/performance_eval).
+      const entry = item._mtcea_entry || item;
+      root.innerHTML = buildMTCEACardHTML(entry, "oc", item.project);
+      wireMTCEASeries(entry, "oc", item.project, card);
       card.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
@@ -2426,6 +2630,24 @@
     document.getElementById("mt-k-nero").textContent = kpi.nero != null ? kpi.nero : "–";
 
     const allEntries = proj.entries || [];
+
+    // === Sezione "Card per cliente" (Livello 1 — vista interna)
+    const cardsRoot = document.getElementById("mt-cards");
+    const cardsPill = document.getElementById("mt-cards-pill");
+    if (cardsRoot) {
+      if (allEntries.length === 0) {
+        cardsRoot.innerHTML = `<div class="empty">Nessuna campagna Med &amp; Tech attiva</div>`;
+        if (cardsPill) cardsPill.textContent = "0 card";
+      } else {
+        const itemsMT = allEntries.map(e => ({ e, idPrefix: `mt-card-${normalize(extractMTCEAClient(e.name))}` }));
+        if (cardsPill) cardsPill.textContent = itemsMT.length + " card";
+        let chtml = "";
+        for (const { e, idPrefix } of itemsMT) chtml += buildMTCEACardHTML(e, idPrefix, "Med & Tech");
+        cardsRoot.innerHTML = chtml;
+        for (const { e, idPrefix } of itemsMT) wireMTCEASeries(e, idPrefix, "Med & Tech", null);
+      }
+    }
+
     const filter = SEM_FILTER.mt;
     const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
     const alertsPill = document.getElementById("mt-alerts-pill");
@@ -2490,6 +2712,24 @@
     document.getElementById("cea-k-nero").textContent   = kpi.nero   != null ? kpi.nero   : "–";
 
     const allEntries = proj.entries || [];
+
+    // === Sezione "Card per cliente" (Livello 1 — vista interna)
+    const cardsRootCEA = document.getElementById("cea-cards");
+    const cardsPillCEA = document.getElementById("cea-cards-pill");
+    if (cardsRootCEA) {
+      if (allEntries.length === 0) {
+        cardsRootCEA.innerHTML = `<div class="empty">Nessuna campagna CEA attiva</div>`;
+        if (cardsPillCEA) cardsPillCEA.textContent = "0 card";
+      } else {
+        const itemsCEA = allEntries.map(e => ({ e, idPrefix: `cea-card-${normalize(extractMTCEAClient(e.name))}` }));
+        if (cardsPillCEA) cardsPillCEA.textContent = itemsCEA.length + " card";
+        let chtml = "";
+        for (const { e, idPrefix } of itemsCEA) chtml += buildMTCEACardHTML(e, idPrefix, "CEA");
+        cardsRootCEA.innerHTML = chtml;
+        for (const { e, idPrefix } of itemsCEA) wireMTCEASeries(e, idPrefix, "CEA", null);
+      }
+    }
+
     const filter = SEM_FILTER.cea;
     const entries = filter ? allEntries.filter(e => (e.status && e.status.color) === filter) : allEntries;
     const alertsPill = document.getElementById("cea-alerts-pill");
