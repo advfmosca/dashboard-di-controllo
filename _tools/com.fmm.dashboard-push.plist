@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.fmm.dashboard-push</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/francescomariamosca/Desktop/Dashboard di Controllo/_tools/daily-push.sh</string>
+    </array>
+
+    <!-- Ogni giorno alle 09:00 — dopo la build_data delle 08:30 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- Log standard output + errori -->
+    <key>StandardOutPath</key>
+    <string>/tmp/dashboard-push.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/dashboard-push.err</string>
+
+    <!-- Recupera anche se il Mac era spento all'orario -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
