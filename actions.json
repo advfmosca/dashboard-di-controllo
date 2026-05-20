@@ -1,29 +1,7 @@
 {
-  "generated_at": "2026-05-19T15:20:32.742058",
-  "reference_date": "2026-05-18",
+  "generated_at": "2026-05-20T04:38:33.681735",
+  "reference_date": "2026-05-19",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Cristallo NEW · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "798-656-6211",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=7986566211",
-      "details": "Spesa 140,51 € ieri vs media 7gg 94,68 € (+48,4%)",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 El Cid Torre Pedrera · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "343-383-9480",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=3433839480",
-      "details": "Spesa 90,57 € ieri vs media 7gg 59,17 € (+53,1%)",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
-    },
     {
       "type": "high_spending",
       "priority": "high",
@@ -31,20 +9,9 @@
       "platform": "Google",
       "account_id": "816-227-1235",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=8162271235",
-      "details": "Spesa 82,74 € ieri vs media 7gg 47,15 € (+75,5%)",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Mauritius · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "678-286-7092",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=6782867092",
-      "details": "Spesa 67,77 € ieri vs media 7gg 48,58 € (+39,5%)",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
+      "details": "Spesa 87,73 € ieri vs media 7gg 51,45 € (+70,5%)",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026"
     },
     {
       "type": "high_spending",
@@ -53,31 +20,61 @@
       "platform": "Google",
       "account_id": "344-188-9884",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=3441889884",
-      "details": "Spesa 60,21 € ieri vs media 7gg 12,58 € (+378,6%)",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
+      "details": "Spesa 60,34 € ieri vs media 7gg 21,18 € (+184,9%)",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026"
     },
     {
-      "type": "new_fermo",
+      "type": "high_spending",
       "priority": "high",
-      "title": "⚫ Hoy Hotels · nuovo account fermo",
+      "title": "🔴 Hotel Olimpic New · spesa anomala alta",
       "platform": "Google",
-      "account_id": "690-064-1891",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=6900641891",
-      "details": "Spending 0 ieri, media 7gg precedente 34,76 €. Da verificare.",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
+      "account_id": "881-991-7013",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=8819917013",
+      "details": "Spesa 53,28 € ieri vs media 7gg 40,45 € (+31,7%)",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026"
     },
     {
-      "type": "new_fermo",
+      "type": "spending_anomaly",
       "priority": "high",
-      "title": "⚫ PLAYAMAR SRLS · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "1079621732195044",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1079621732195044",
-      "details": "Spending 0 ieri, media 7gg precedente 7,89 €. Da verificare.",
-      "reference_date": "2026-05-18",
-      "reference_date_label": "18 mag 2026"
+      "title": "Alert spending — 19/05/2026",
+      "details": "3 zero + 15 high",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026",
+      "slack_target": "C0B2RE5KSHG",
+      "slack_template": ":rotating_light: *Check spending — 19/05/2026*\n*Top alert:*\n• :zap: Hoy Hotels (Google) — 0,00 € (storico 30,84 €) · _Causa da verificare_\n• :zap: PLAYAMAR SRLS (Meta) — 0,00 € (storico 4,81 €) · _Causa da verificare_\n• :zap: Adv Sardinia Family villas (Meta) — 0,00 € (storico 0,89 €) · _Causa da verificare_\n_+ 15 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-05-19|:link: Apri dashboard →>",
+      "skip_if_quiet": false
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "medium",
+      "title": "⚠️ Bee Family HOY VILLAGE — fermo persistente",
+      "source": "Google",
+      "client_name": "HOY VILLAGE",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=6900641891",
+      "details": "spend_y=0, prev7=215,91 €",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚠️ *Bee Family — HOY VILLAGE (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 215,91 €\n<https://ads.google.com/aw/campaigns?__c=6900641891|Apri account →>",
+      "skip_if_quiet": true,
+      "severity": "medium"
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "medium",
+      "title": "⚠️ Bee Family SARDINIA — fermo persistente",
+      "source": "Meta",
+      "client_name": "SARDINIA",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=608324351982441",
+      "details": "spend_y=0, prev7=6,23 €",
+      "reference_date": "2026-05-19",
+      "reference_date_label": "19 mag 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚠️ *Bee Family — SARDINIA (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 6,23 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=608324351982441|Apri account →>",
+      "skip_if_quiet": true,
+      "severity": "medium"
     }
   ]
 }
