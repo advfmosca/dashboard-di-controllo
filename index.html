@@ -549,6 +549,7 @@
       <div class="kpi"><div class="label">Spending 15gg</div><div class="value" id="ag-k-spend-w">–</div><div class="sub">finestra mobile</div></div>
       <div class="kpi"><div class="label">Alert</div><div class="value" id="ag-k-alerts">–</div><div class="sub">rosso + giallo</div></div>
     </div>
+    <section class="card"><h2>Alert da analizzare <span class="pill" id="ag-alerts-pill">–</span></h2><div id="ag-alerts"></div></section>
     <section class="card"><h2>Card per cliente <span class="pill" id="ag-cards-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px;">
         <div class="cards-grid" id="ag-cards"></div>
@@ -2371,6 +2372,38 @@
     const cards = proj.cards || [];
     const alerts = cards.filter(c => c.status && (c.status.color === "red" || c.status.color === "yellow"));
     document.getElementById("ag-k-alerts").textContent = alerts.length;
+
+    // Sezione "Alert da analizzare" (analoga a quella BeeFamily)
+    const alertsPillAg = document.getElementById("ag-alerts-pill");
+    if (alertsPillAg) alertsPillAg.textContent = alerts.length + " da analizzare";
+    const alertsRootAg = document.getElementById("ag-alerts");
+    if (alertsRootAg) {
+      if (alerts.length === 0) {
+        alertsRootAg.innerHTML = `<div class="empty">Nessun alert. Tutti i clienti AGHC in linea ✓</div>`;
+      } else {
+        let ahtml = "";
+        for (const a of alerts) {
+          const ico = a.status.color === "red" ? "🔴" : "🟡";
+          const platforms = [];
+          if (a.ad_url_meta)   platforms.push(platformLogo("Meta"));
+          if (a.ad_url_tiktok) platforms.push(platformLogo("TikTok"));
+          const platformLogos = platforms.join("");
+          const links = [
+            a.ad_url_meta   ? openAccountBtn(a.ad_url_meta,   "Meta")   : "",
+            a.ad_url_tiktok ? openAccountBtn(a.ad_url_tiktok, "TikTok") : "",
+          ].join("");
+          ahtml += `<div class="alert-row">
+            <div class="ico">${ico}</div>
+            <div class="body-row">
+              <div class="title">${platformLogos} ${escapeHtml(a.name)}</div>
+              <div class="desc">${escapeHtml(a.status.label || "—")} — ${escapeHtml(a.status.reason || "—")}</div>
+            </div>
+            <div class="row-actions">${links}</div>
+          </div>`;
+        }
+        alertsRootAg.innerHTML = ahtml;
+      }
+    }
 
     const root = document.getElementById("ag-cards");
     const pill = document.getElementById("ag-cards-pill");
