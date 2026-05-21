@@ -1,7 +1,255 @@
 {
-  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Chiave = nome cliente come estratto da extractMTCEAClient (es. 'STUDIO DOTT. RICCIARDI LUMINA' per MT, 'ADV Linea Più Casale' per CEA). Per ogni cliente, valorizza 'target' (zona geografica + raggio) e 'audience_size' (stima dal Business Manager). Le voci che iniziano per _ sono ignorate. Se un cliente manca, la card mostra 'Da configurare'.",
+  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Per ogni cliente, valorizza 'target' (es. 'Via Manzoni 12, Milano +8km') e 'audience_size' (stima dal Business Manager, es. '120K persone'). Lascia le stringhe vuote per i clienti che vuoi gestire dopo. Le voci che iniziano per _ sono ignorate.",
   "_example_template": {
     "target": "Via Manzoni 12, Milano +8km",
     "audience_size": "120K persone"
+  },
+  "ADV ARTESTETICA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV CENTRO ESTETICO AMBRA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Centro Estetico Eden": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Esthetique": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV FARMACIA CLEMENTE": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV LINEA PERFETTA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Linea Più Casale": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Maison Kuku": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV SANITAL ECO STORE": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Slim'Up": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Solelù": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ADV Visamour": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Account pubblicitario": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Andreea Francu Renzo Gestione": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Atelier Fiumara": {
+    "target": "",
+    "audience_size": ""
+  },
+  "B-ewolution by Beauty Way": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Baldan Group USA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Beauty Art": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Beauty Point Srl": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Black Queen Beauty Art": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Body Laser": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Brera13 Beauty": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Centro Benessere Polverino": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Centro Estetico Enrica": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Centro Mességué ADS 2025": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Centro estetico natura": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Charme estetica benessere": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DOTT. FABIO SCUDERI": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DOTT. LO GIUDICE": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DOTT.SSA DEL VESCOVO": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DOTT.SSA ROSALBA DI NATALE": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DOTT.SSA TIZIANA MASTROMARINO": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DR ZUFFADA E NARDI": {
+    "target": "",
+    "audience_size": ""
+  },
+  "DR. RICAPITO EZIO": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Dermal Center": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Donnauomo": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Dott.ssa Orsola Bruno AP": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ELYSIR CURNO": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Exthetyc": {
+    "target": "",
+    "audience_size": ""
+  },
+  "FARMACIA MAURO OPEN DAY DOTT.SSA MARCELLA OLIVETI": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Farmacia Di Gennaro": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Farmacia Martelletto": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Farmacia Padre Pio": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Fatima Nail Studio": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Fiori di loto": {
+    "target": "",
+    "audience_size": ""
+  },
+  "ITALIA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Laboratorio Estetico Catia": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Medicina Estetica": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Mercato Digital": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Mudra Centro Benessere": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Nicola Cossater Beauty": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Nuove Sensazioni": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Pietrabianca": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Riflesso Evolution": {
+    "target": "",
+    "audience_size": ""
+  },
+  "SALUS 2024": {
+    "target": "",
+    "audience_size": ""
+  },
+  "STUDIO DEL DOTT. MATTEO PARADISO": {
+    "target": "",
+    "audience_size": ""
+  },
+  "STUDIO DELLA DOTT. SSA BRUNA ARGENTI": {
+    "target": "",
+    "audience_size": ""
+  },
+  "STUDIO DOTT. RICCIARDI LUMINA": {
+    "target": "",
+    "audience_size": ""
+  },
+  "STUDIO DOTT.SSA FRANCESCA PES": {
+    "target": "",
+    "audience_size": ""
+  },
+  "SkinMedic Lecco new": {
+    "target": "",
+    "audience_size": ""
+  },
+  "Tyla Institute Estetica": {
+    "target": "",
+    "audience_size": ""
+  },
+  "aguaviva adv": {
+    "target": "",
+    "audience_size": ""
   }
 }
