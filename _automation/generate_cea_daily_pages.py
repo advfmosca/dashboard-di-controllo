@@ -149,6 +149,12 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
 .card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
 .card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-chart { margin: 12px 0 8px; padding: 8px 10px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
+.card-new .nc-chart svg { width: 100%; height: 84px; display: block; }
+.card-new .nc-chart-legend { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
+.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; }
+.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; }
+
 .card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
 .card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
 @media (min-width: 640px) { .card-new .nc-meta dl { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
@@ -268,10 +274,78 @@ STATE_LABEL = {
     "nero":   ("Spenta",       "⚫"),
 }
 
+def load_series_7gg(ref_date_iso):
+    """Carica i 7 snapshot precedenti (incluso ref_date) e costruisce
+    {entry_name: [{date, spend, lead}, ...]} cronologico ASC."""
+    from datetime import timedelta
+    ref_dt = datetime.strptime(ref_date_iso, "%Y-%m-%d")
+    dates = [(ref_dt - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6, -1, -1)]
+    series_by_name = {}
+    for d in dates:
+        p = SNAP_DIR / f"{d}.json"
+        if not p.exists(): continue
+        try:
+            snap = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for e in (snap.get("cea", {}) or {}).get("entries", []) or []:
+            nm = e.get("name") or ""
+            if not nm: continue
+            series_by_name.setdefault(nm, []).append({
+                "date": d,
+                "spend": float(e.get("spend_y") or 0),
+                "lead": float(e.get("contatti_y") or e.get("lead_y") or 0),
+            })
+    return series_by_name
+
+def render_mini_chart(series, w=420, h=84):
+    """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0).
+    series = [{date, spend, lead}, ...] in ordine ASC."""
+    if not series: return ""
+    valid = [p for p in series if p.get("spend") is not None]
+    if not valid: return ""
+    n = len(valid)
+    padL, padR, padT, padB = 28, 28, 8, 18
+    iw = w - padL - padR
+    ih = h - padT - padB
+    spends = [p["spend"] for p in valid]
+    leads  = [p["lead"] or 0 for p in valid]
+    has_leads = any(l > 0 for l in leads)
+    smax = max(spends) * 1.15 or 1
+    lmax = (max(leads) * 1.15) if has_leads else 1
+    def x_at(i): return padL + (iw / 2 if n <= 1 else (i * iw) / (n - 1))
+    def y_s(v): return padT + ih - (v / smax) * ih
+    def y_l(v): return padT + ih - (v / lmax) * ih
+    # grid + path spend
+    grid = "".join(f'<line stroke="#ececef" stroke-dasharray="2,3" x1="{padL}" x2="{w-padR}" y1="{padT + ih*i/3:.1f}" y2="{padT + ih*i/3:.1f}"/>' for i in range(4))
+    psp = " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_s(v):.1f}" for i,v in enumerate(spends))
+    dots_s = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_s(spends[i]):.1f}" r="2.2" fill="#1c1c1e"/>' for i in range(n))
+    pld = ""
+    dots_l = ""
+    if has_leads:
+        pld = '<path fill="none" stroke="#0866FF" stroke-width="1.4" d="' + " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_l(leads[i]):.1f}" for i in range(n)) + '"/>'
+        dots_l = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_l(leads[i]):.1f}" r="2.2" fill="#0866FF"/>' for i in range(n))
+    # x labels (solo 1° e ultimo)
+    xl = (f'<text x="{x_at(0):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[0]["date"][-5:]}</text>'
+          f'<text x="{x_at(n-1):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[-1]["date"][-5:]}</text>')
+    legend = ('<span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span>'
+              + ('<span class="lg-s" style="margin-left:8px"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span>' if has_leads else ""))
+    return f"""<div class="nc-chart">
+  <div class="nc-chart-legend">{legend}</div>
+  <svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    {grid}
+    <path fill="none" stroke="#1c1c1e" stroke-width="1.4" d="{psp}"/>
+    {pld}
+    {dots_s}{dots_l}
+    {xl}
+  </svg>
+</div>"""
+
 def render_daily(date_iso, cea):
     kpi = cea.get("kpi", {})
     entries = cea.get("entries", [])
     title_date = fmt_date_long(date_iso)
+    series_by_name = load_series_7gg(date_iso)
     rosso = kpi.get("rosso", 0); giallo = kpi.get("giallo", 0)
     verde = kpi.get("verde", 0); nero   = kpi.get("nero", 0)
     total_camp = len(entries) if entries else (rosso + giallo + verde + nero)
@@ -364,6 +438,7 @@ def render_daily(date_iso, cea):
   <div class="nc-kpis">
     {''.join(kpis_inner)}
   </div>
+  {render_mini_chart(series_by_name.get(name, []))}
   {story_html}
   {action_html}
   {details_html}
