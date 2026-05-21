@@ -290,9 +290,9 @@ def transform(html, data):
         kpi_block = f"""
 <div class="kpis">
   <div class="kpi"><div class="label">Campagne attive</div><div class="value">{n_camp}</div></div>
-  <div class="kpi total"><div class="label">Lead OGGI</div><div class="value">{lead_oggi}</div></div>
-  <div class="kpi"><div class="label">Lead IERI (stesso orario)</div><div class="value">{lead_ieri}</div></div>
-  <div class="kpi"><div class="label">Δ Lead</div><div class="value">{lead_oggi - lead_ieri:+d}</div></div>
+  <div class="kpi total"><div class="label">Contatti oggi</div><div class="value">{lead_oggi}</div></div>
+  <div class="kpi"><div class="label">Contatti ieri (stesso orario)</div><div class="value">{lead_ieri}</div></div>
+  <div class="kpi"><div class="label">Δ contatti</div><div class="value">{lead_oggi - lead_ieri:+d}</div></div>
 </div>
 <div class="smart-summary" id="sem-grid">
   <div class="ss-hero">
@@ -403,21 +403,21 @@ def transform(html, data):
         path_text = re.sub(r"<[^>]+>", "", path)
         path_text = re.sub(r"^\s*Cosa faremo per migliorare le performance:\s*", "", path_text).strip()
 
-        # Costruisci KPI cells: lead oggi (highlight), CPL ieri, Media lead/gg, Trend cpl mancante → media
+        # Costruisci KPI cells: contatti oggi (highlight), Costo per contatto, Media contatti/gg, Costo medio
         kpis = []
         if lead_oggi is not None:
             sub = f"stesso ieri: {lead_ieri}" if lead_ieri is not None else ""
-            kpis.append(f'<div class="nc-kpi highlight"><div class="lbl">Lead oggi {ora}</div><div class="val">{lead_oggi}</div><div class="delta">{sub}</div></div>')
+            kpis.append(f'<div class="nc-kpi highlight"><div class="lbl">Contatti oggi</div><div class="val">{lead_oggi}</div><div class="delta">{sub}</div></div>')
         if cpl_val is not None:
             delta_html = ""
             if delta_str:
                 cls = "up" if delta_str.startswith("+") else "down"
                 delta_html = f'<div class="delta {cls}">{delta_str}% vs media</div>'
-            kpis.append(f'<div class="nc-kpi"><div class="lbl">CPL ieri</div><div class="val">{cpl_val}&nbsp;€</div>{delta_html}</div>')
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">{cpl_val}&nbsp;€</div>{delta_html}</div>')
         if trend_lead is not None:
-            kpis.append(f'<div class="nc-kpi"><div class="lbl">Media lead/gg</div><div class="val">{trend_lead}</div><div class="delta">ultimi 3gg</div></div>')
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">Contatti media/gg</div><div class="val">{trend_lead}</div><div class="delta">ultimi 3gg</div></div>')
         if media_cpl is not None:
-            kpis.append(f'<div class="nc-kpi"><div class="lbl">Media CPL</div><div class="val">{media_cpl}&nbsp;€</div></div>')
+            kpis.append(f'<div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">{media_cpl}&nbsp;€</div></div>')
 
         # "Cosa è successo" = il testo del reading senza il pezzo "Ieri CPL..." già nei KPI
         story_html = ""
@@ -554,6 +554,32 @@ def transform(html, data):
 """
         if "</body>" in html:
             html = html.replace("</body>", js_block + "\n</body>", 1)
+
+    # 9) PULIZIA TERMINI cliente-friendly su HTML statico (sostituzioni testuali finali).
+    # I testi della legenda colori, del titolo H1 e di alcune subtitle sono generati da
+    # run_daily_pipeline.py (repo separato). Li riscriviamo qui in modo idempotente.
+    text_replacements = [
+        # Titolo/sottotitoli
+        ("Med &amp; Tech — Daily Check",        "Med &amp; Tech — Andamento campagne"),
+        ("Med & Tech — Daily Check",            "Med & Tech — Andamento campagne"),
+        ("Med &amp; Tech — Archivio Daily Check",        "Med &amp; Tech — Archivio andamento campagne"),
+        ("Med & Tech — Archivio Daily Check",            "Med & Tech — Archivio andamento campagne"),
+        # Cutoff orario "15:59 Europe/Rome"  ->  rimosso
+        ('alle <b>15:59</b> ora Europe/Rome', "in giornata"),
+        ("alle 15:59 ora Europe/Rome",        "in giornata"),
+        ("ora Europe/Rome",                    ""),
+        # Legenda colori (etichette tecniche)
+        ("0 lead o CPL &gt; 50% media",        "0 contatti o costo per contatto &gt; 50% vs media"),
+        ("0 lead o CPL > 50% media",           "0 contatti o costo per contatto > 50% vs media"),
+        ("CPL fino a +50% vs media",           "Costo per contatto fino a +50% vs media"),
+        ("sotto o pari alla media 3gg",        "costo per contatto sotto o pari alla media 3 giorni"),
+        # Subtitle del periodo
+        ("soglia semaforica su media 3gg (campagne brevi)", "soglia semaforica calcolata sul costo per contatto medio 3 giorni (campagne brevi)"),
+        ("Snapshot giornalieri · semaforica su media 3gg",  "Snapshot giornalieri · semaforica calcolata sul costo medio per contatto 3 giorni"),
+    ]
+    for old, new in text_replacements:
+        if old in html:
+            html = html.replace(old, new)
 
     return html
 
