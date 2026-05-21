@@ -149,14 +149,24 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
 .card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
 .card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
-.card-new .nc-chart { margin: 12px 16px; padding: 10px 12px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
-.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
-.card-new .nc-chart-legend { font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; }
+.card-new .nc-chart-wrap { margin: 12px 16px; padding: 10px 12px; background: var(--bg-soft); border-radius: 10px; }
+.card-new .nc-chart-title { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+.card-new .nc-chart-legend { font-size: 10px; display: flex; gap: 8px; }
+.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0; }
 .card-new .nc-chart-legend .lg-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
-.card-new .nc-chart-legend .lg-hint { margin-left: auto; font-size: 10px; color: var(--text-dim); font-style: italic; }
-.card-new .nc-chart svg circle { cursor: pointer; transition: r .12s; }
-.card-new .nc-chart svg circle:hover { r: 5; }
+.card-new .nc-chart { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 6px; }
+.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
+.card-new .nc-chart .nc-loading { padding: 14px; text-align: center; color: var(--text-dim); font-size: 12px; }
+.card-new .nc-day-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
+.card-new .nc-nav-btn { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; font: inherit; font-size: 13px; cursor: pointer; color: var(--text); }
+.card-new .nc-nav-btn:hover { background: var(--bg-soft); }
+.card-new .nc-nav-btn:disabled { color: var(--text-dim); cursor: not-allowed; opacity: 0.5; }
+.card-new .nc-day-label { font-weight: 600; font-size: 12.5px; text-align: center; }
+.card-new .nc-day-label .small { display: block; font-weight: 500; font-size: 10.5px; color: var(--text-muted); margin-top: 1px; }
+.card-new .nc-day-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+.card-new .nc-day-kpis .dk-cell { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 7px 9px; text-align: center; }
+.card-new .nc-day-kpis .dk-lbl { font-size: 9.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.card-new .nc-day-kpis .dk-val { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
 
 .card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
 .card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
@@ -277,9 +287,10 @@ STATE_LABEL = {
     "nero":   ("Spenta",       "⚫"),
 }
 
-def load_series_7gg(ref_date_iso):
+def load_series_7gg(ref_date_iso, section="cea"):
     """Carica i 7 snapshot precedenti (incluso ref_date) e costruisce
-    {entry_name: [{date, spend, lead}, ...]} cronologico ASC."""
+    {entry_name: [{date, spend, lead}, ...]} cronologico ASC per la sezione
+    indicata (cea o medtech)."""
     from datetime import timedelta
     ref_dt = datetime.strptime(ref_date_iso, "%Y-%m-%d")
     dates = [(ref_dt - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6, -1, -1)]
@@ -291,7 +302,7 @@ def load_series_7gg(ref_date_iso):
             snap = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
             continue
-        for e in (snap.get("cea", {}) or {}).get("entries", []) or []:
+        for e in (snap.get(section, {}) or {}).get("entries", []) or []:
             nm = e.get("name") or ""
             if not nm: continue
             series_by_name.setdefault(nm, []).append({
@@ -301,10 +312,26 @@ def load_series_7gg(ref_date_iso):
             })
     return series_by_name
 
-def render_mini_chart(series, w=560, h=160):
-    """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0).
-    series = [{date, spend, lead}, ...] in ordine ASC.
-    Ogni punto ha un <title> SVG → tooltip su hover (data + spesa + contatti)."""
+def render_chart_placeholder(card_id):
+    """Placeholder che verrà popolato da JS embedded a fine pagina con chart
+    navigabile (linea spesa + linea contatti) + day-navigator + day-panel."""
+    return f"""<div class="nc-chart-wrap" data-chart-id="{card_id}">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-{card_id}"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-{card_id}" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-{card_id}">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-{card_id}" style="display:none"></div>
+</div>"""
+
+
+def render_mini_chart_LEGACY(series, w=560, h=160):
+    """LEGACY (non più usata: sostituita da chart navigabile JS embedded).
+    Mantenuta per safety. Verrà rimossa nel prossimo refactor."""
     if not series: return ""
     valid = [p for p in series if p.get("spend") is not None]
     if not valid: return ""
@@ -367,7 +394,10 @@ def render_daily(date_iso, cea):
     salute_pct = int(round(verde / total_camp * 100)) if total_camp > 0 else 0
 
     cards_html = []
+    series_by_id = {}  # card_id -> list of {date, spend, lead}
+    card_idx = 0
     for e in entries:
+        card_idx += 1
         col = e.get("status", {}).get("color", "gray")
         cls = COL2CLS.get(col, "nero")
         human_label, icon = STATE_LABEL.get(cls, ("—", "·"))
@@ -439,6 +469,9 @@ def render_daily(date_iso, cea):
   <div><dt>Grandezza pubblico</dt>{aud_html}</div>
 </dl></div>"""
 
+        card_id = f"c{card_idx}"
+        series_by_id[card_id] = series_by_name.get(name, [])
+
         cards_html.append(f"""
 <div class="card-new {cls}" data-name="{escape_html(name).lower()}" data-color="{cls}">
   <div class="nc-hero">
@@ -452,7 +485,7 @@ def render_daily(date_iso, cea):
   <div class="nc-kpis">
     {''.join(kpis_inner)}
   </div>
-  {render_mini_chart(series_by_name.get(name, []))}
+  {render_chart_placeholder(card_id)}
   {story_html}
   {action_html}
   {details_html}
@@ -461,6 +494,8 @@ def render_daily(date_iso, cea):
     if not cards_html:
         cards_html = ['<div class="reason">Nessuna campagna registrata in questo giorno.</div>']
 
+    # Serializza la mappa series_by_id per JS embedded (chart navigabile)
+    series_json = json.dumps(series_by_id, ensure_ascii=False, separators=(",", ":"))
     return f"""<!doctype html>
 <html lang="it">
 <head>
@@ -520,8 +555,144 @@ def render_daily(date_iso, cea):
   <div class="signature">© Francesco Maria Mosca 2026</div>
 </div>
 <script>
+const ALL_SERIES = {series_json};
+</script>
+<script>
 (function() {{
   "use strict";
+  // ============================================================
+  // Chart navigabile per ogni card: linea Spesa (nera) + Contatti (blu)
+  // + day-navigator (← →) + day-panel coi 3 KPI del giorno selezionato.
+  // ============================================================
+  function fmtEUR(n) {{
+    if (n == null || isNaN(n)) return "—";
+    return Number(n).toLocaleString("it-IT", {{ style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }});
+  }}
+  function fmtInt(n) {{
+    if (n == null || isNaN(n)) return "—";
+    return Math.round(Number(n)).toLocaleString("it-IT");
+  }}
+  function dayLabelIT(iso) {{
+    const m = String(iso || "").match(/^(\d{{4}})-(\d{{2}})-(\d{{2}})$/);
+    if (!m) return iso || "—";
+    const wd = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+    const mo = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+    const dt = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return wd[dt.getDay()] + " " + Number(m[3]) + " " + mo[dt.getMonth()];
+  }}
+  function shortDate(iso) {{
+    const m = String(iso || "").match(/^(\d{{4}})-(\d{{2}})-(\d{{2}})$/);
+    return m ? (m[3] + "/" + m[2]) : (iso || "");
+  }}
+  function drawChart(root, series, selectedIdx, onSelect) {{
+    const valid = [];
+    const validToOrig = [];
+    for (let i = 0; i < series.length; i++) {{
+      if (series[i].spend != null) {{ valid.push(series[i]); validToOrig.push(i); }}
+    }}
+    if (valid.length === 0) {{ root.innerHTML = '<div class="nc-loading">Nessun dato giornaliero disponibile</div>'; return; }}
+    const W = 640, H = 220;
+    const padL = 40, padR = 40, padT = 12, padB = 32;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = valid.length;
+    const spends = valid.map(p => p.spend);
+    const leads = valid.map(p => p.lead != null ? p.lead : 0);
+    const hasLeads = valid.some(p => p.lead != null && p.lead > 0);
+    const spendMax = Math.max(...spends) * 1.15 || 1;
+    const leadMax = Math.max(...leads, 1) * 1.15;
+    const xAt = i => padL + (n <= 1 ? innerW / 2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax) * innerH;
+    let grid = "";
+    for (let i = 0; i <= 3; i++) {{
+      const y = padT + (innerH * i) / 3;
+      grid += '<line stroke="#ececef" stroke-dasharray="2,3" x1="' + padL + '" x2="' + (W-padR) + '" y1="' + y + '" y2="' + y + '"/>';
+    }}
+    let xLabels = "";
+    for (let i = 0; i < n; i++) {{
+      xLabels += '<text x="' + xAt(i) + '" y="' + (H - padB + 14) + '" text-anchor="middle" font-size="10" fill="#6b6b70">' + shortDate(valid[i].date) + '</text>';
+    }}
+    const pathSpend = spends.map((v,i) => (i===0?"M":"L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = hasLeads ? leads.map((v,i) => (i===0?"M":"L") + xAt(i) + "," + yLeads(v)).join(" ") : "";
+    let selValidIdx = validToOrig.indexOf(selectedIdx);
+    if (selValidIdx < 0) selValidIdx = n - 1;
+    const selX = xAt(selValidIdx);
+    const dayMarker = '<line stroke="#8a8a90" stroke-dasharray="3,3" x1="' + selX + '" x2="' + selX + '" y1="' + padT + '" y2="' + (padT + innerH) + '"/>';
+    let dots = "", interact = "";
+    for (let i = 0; i < n; i++) {{
+      const xs = xAt(i);
+      const isSel = i === selValidIdx;
+      dots += '<circle cx="' + xs + '" cy="' + ySpend(spends[i]) + '" r="' + (isSel?5:3) + '" fill="#1c1c1e" stroke="#fff" stroke-width="' + (isSel?2:1) + '"/>';
+      if (hasLeads) dots += '<circle cx="' + xs + '" cy="' + yLeads(leads[i]) + '" r="' + (isSel?5:3) + '" fill="#0866FF" stroke="#fff" stroke-width="' + (isSel?2:1) + '"/>';
+      interact += '<rect x="' + (xs - innerW/(n*2)) + '" y="' + padT + '" width="' + (innerW/n) + '" height="' + innerH + '" fill="transparent" style="cursor:pointer" data-orig-idx="' + validToOrig[i] + '"/>';
+    }}
+    const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Andamento spesa e contatti 7 giorni">'
+      + grid
+      + '<line stroke="#d2d2d7" stroke-width="0.5" x1="' + padL + '" x2="' + (W-padR) + '" y1="' + (padT+innerH) + '" y2="' + (padT+innerH) + '"/>'
+      + dayMarker
+      + '<path fill="none" stroke="#1c1c1e" stroke-width="1.6" d="' + pathSpend + '"/>'
+      + (pathLeads ? '<path fill="none" stroke="#0866FF" stroke-width="1.6" d="' + pathLeads + '"/>' : "")
+      + dots + xLabels + interact
+      + '</svg>';
+    root.innerHTML = svg;
+    if (onSelect) {{
+      root.querySelectorAll("rect[data-orig-idx]").forEach(el => {{
+        el.addEventListener("click", () => {{
+          const i = Number(el.getAttribute("data-orig-idx"));
+          if (!isNaN(i)) onSelect(i);
+        }});
+      }});
+    }}
+  }}
+  function renderDayPanel(panelRoot, p) {{
+    if (!panelRoot) return;
+    const cells = [];
+    const cell = (lbl, val) => '<div class="dk-cell"><div class="dk-lbl">' + lbl + '</div><div class="dk-val">' + val + '</div></div>';
+    if (p && p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
+    if (p && p.lead != null) cells.push(cell("Contatti", fmtInt(p.lead)));
+    if (p && p.lead > 0 && p.spend != null) cells.push(cell("Costo per contatto", fmtEUR(p.spend / p.lead)));
+    panelRoot.innerHTML = cells.length ? cells.join("") : '<div class="nc-loading">Nessun KPI disponibile</div>';
+  }}
+  function wireCard(cardId) {{
+    const series = ALL_SERIES[cardId] || [];
+    const chartRoot = document.getElementById("chart-" + cardId);
+    const navRoot   = document.getElementById("daynav-" + cardId);
+    const kpiRoot   = document.getElementById("daykpi-" + cardId);
+    const labelEl   = document.getElementById("daylbl-" + cardId);
+    if (!chartRoot) return;
+    let selIdx = -1;
+    for (let i = series.length - 1; i >= 0; i--) {{
+      if (series[i].spend != null) {{ selIdx = i; break; }}
+    }}
+    if (selIdx < 0) selIdx = series.length - 1;
+    const hasAnySpend = series.some(p => p.spend != null);
+    if (!hasAnySpend) {{
+      chartRoot.innerHTML = '<div class="nc-loading">Nessun dato giornaliero disponibile</div>';
+      return;
+    }}
+    function update() {{
+      drawChart(chartRoot, series, selIdx, (newIdx) => {{ selIdx = newIdx; update(); }});
+      if (navRoot) navRoot.style.display = "";
+      if (kpiRoot) kpiRoot.style.display = "";
+      if (labelEl) {{
+        const d = series[selIdx] && series[selIdx].date;
+        labelEl.innerHTML = dayLabelIT(d) + '<span class="small">' + (d || "") + '</span>';
+      }}
+      if (kpiRoot) renderDayPanel(kpiRoot, series[selIdx]);
+      const prev = document.querySelector('#daynav-' + cardId + ' [data-action="prev"]');
+      const next = document.querySelector('#daynav-' + cardId + ' [data-action="next"]');
+      if (prev) prev.disabled = selIdx <= 0;
+      if (next) next.disabled = selIdx >= series.length - 1;
+    }}
+    update();
+    const prevBtn = document.querySelector('#daynav-' + cardId + ' [data-action="prev"]');
+    const nextBtn = document.querySelector('#daynav-' + cardId + ' [data-action="next"]');
+    if (prevBtn) prevBtn.addEventListener("click", () => {{ if (selIdx > 0) {{ selIdx--; update(); }} }});
+    if (nextBtn) nextBtn.addEventListener("click", () => {{ if (selIdx < series.length - 1) {{ selIdx++; update(); }} }});
+  }}
+  // Wire tutte le card al ready
+  Object.keys(ALL_SERIES).forEach(wireCard);
+
   const SEM_FILTERS = new Set();
   let SEARCH_Q = "";
   const searchInput = document.getElementById("search-input");

@@ -140,14 +140,24 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new .client-btn { margin-left: auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid #d2d2d7; color: var(--text); text-decoration: none; transition: background .12s; }
 .card-new .client-btn:hover { background: var(--bg-soft); }
 
-.card-new .nc-chart { margin: 0 16px 14px; padding: 10px 12px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
-.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
-.card-new .nc-chart-legend { font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; }
+.card-new .nc-chart-wrap { margin: 12px 16px; padding: 10px 12px; background: var(--bg-soft); border-radius: 10px; }
+.card-new .nc-chart-title { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+.card-new .nc-chart-legend { font-size: 10px; display: flex; gap: 8px; }
+.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0; }
 .card-new .nc-chart-legend .lg-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
-.card-new .nc-chart-legend .lg-hint { margin-left: auto; font-size: 10px; color: var(--text-dim); font-style: italic; }
-.card-new .nc-chart svg circle { cursor: pointer; transition: r .12s; }
-.card-new .nc-chart svg circle:hover { r: 5; }
+.card-new .nc-chart { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 6px; }
+.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
+.card-new .nc-chart .nc-loading { padding: 14px; text-align: center; color: var(--text-dim); font-size: 12px; }
+.card-new .nc-day-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
+.card-new .nc-nav-btn { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; font: inherit; font-size: 13px; cursor: pointer; color: var(--text); }
+.card-new .nc-nav-btn:hover { background: var(--bg-soft); }
+.card-new .nc-nav-btn:disabled { color: var(--text-dim); cursor: not-allowed; opacity: 0.5; }
+.card-new .nc-day-label { font-weight: 600; font-size: 12.5px; text-align: center; }
+.card-new .nc-day-label .small { display: block; font-weight: 500; font-size: 10.5px; color: var(--text-muted); margin-top: 1px; }
+.card-new .nc-day-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+.card-new .nc-day-kpis .dk-cell { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 7px 9px; text-align: center; }
+.card-new .nc-day-kpis .dk-lbl { font-size: 9.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.card-new .nc-day-kpis .dk-val { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
 .card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
 .card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
 .card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -263,6 +273,30 @@ def load_mt_series_7gg(ref_date_iso):
     return series_by_name
 
 
+def _register_card_series(counter, store, series):
+    """Helper closure-like: registra la series per la prossima card_id e la ritorna."""
+    counter["n"] += 1
+    cid = f"c{counter['n']}"
+    store[cid] = series
+    return cid
+
+
+def render_chart_placeholder_mt(card_id):
+    """Placeholder navigabile MT (popolato da JS embedded a fine pagina)."""
+    return f"""<div class="nc-chart-wrap" data-chart-id="{card_id}">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-{card_id}"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-{card_id}" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-{card_id}">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-{card_id}" style="display:none"></div>
+</div>"""
+
+
 def render_mini_chart(series, w=560, h=160):
     """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0).
     Ogni dot ha tooltip <title> con data, spesa, contatti."""
@@ -336,6 +370,9 @@ def get_data_for(html_path: Path):
 def transform(html, data, date_iso=None):
     # Carica series 7gg per il giorno corrente (se conosciuto); chiave = nome campagna originale.
     _mt_series = load_mt_series_7gg(date_iso) if date_iso else {}
+    # Accumula series per card_id (popolata da _convert_medtech_card) per iniezione JS finale.
+    _series_by_id = {}
+    _card_counter = {"n": 0}
     # 1) Rimuovi prima il vecchio logo wrap (se ancora presente)
     html = re.sub(r'<div class="med-logo-wrap">[\s\S]*?</div>\s*', "", html, flags=re.IGNORECASE)
 
@@ -560,7 +597,7 @@ def transform(html, data, date_iso=None):
   <div class="nc-kpis">
     {"".join(kpis)}
   </div>
-  {render_mini_chart(_mt_series.get(name, []))}
+  {render_chart_placeholder_mt(_register_card_series(_card_counter, _series_by_id, _mt_series.get(name, [])))}
   {story_html}
   {action_html}
   {details_html}
@@ -666,6 +703,29 @@ def transform(html, data, date_iso=None):
 """
         if "</body>" in html:
             html = html.replace("</body>", js_block + "\n</body>", 1)
+
+    # 8b) Iniezione chart navigabile (JS + ALL_SERIES) prima di </body>, dopo che le card
+    # MT sono state ricostruite e _series_by_id e' stato popolato.
+    if _series_by_id and "</body>" in html and "ALL_SERIES_MTCEA" not in html:
+        import json as _json
+        all_series_json = _json.dumps(_series_by_id, ensure_ascii=False, separators=(",", ":"))
+        nav_script = (
+            "\n<script>\n"
+            "const ALL_SERIES_MTCEA = " + all_series_json + ";\n"
+            "</script>\n"
+            '<script>/* MTCEA_NAV_CHART_INJECTED */\n'
+            '(function(){"use strict";\n'
+            'function fmtEUR(n){if(n==null||isNaN(n))return"—";return Number(n).toLocaleString("it-IT",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2});}\n'
+            'function fmtInt(n){if(n==null||isNaN(n))return"—";return Math.round(Number(n)).toLocaleString("it-IT");}\n'
+            'function dayLabelIT(iso){var m=String(iso||"").match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);if(!m)return iso||"—";var wd=["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];var mo=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];var dt=new Date(+m[1],+m[2]-1,+m[3]);return wd[dt.getDay()]+" "+(+m[3])+" "+mo[dt.getMonth()];}\n'
+            'function shortDate(iso){var m=String(iso||"").match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);return m?(m[3]+"/"+m[2]):(iso||"");}\n'
+            'function drawChart(root,series,selectedIdx,onSelect){var valid=[],validToOrig=[];for(var i=0;i<series.length;i++){if(series[i].spend!=null){valid.push(series[i]);validToOrig.push(i);}}if(valid.length===0){root.innerHTML="<div class=\\"nc-loading\\">Nessun dato giornaliero disponibile</div>";return;}var W=640,H=220,padL=40,padR=40,padT=12,padB=32;var iw=W-padL-padR,ih=H-padT-padB,n=valid.length;var spends=valid.map(function(p){return p.spend;});var leads=valid.map(function(p){return p.lead!=null?p.lead:0;});var hasLeads=valid.some(function(p){return p.lead!=null&&p.lead>0;});var smax=Math.max.apply(null,spends)*1.15||1;var lmax=Math.max.apply(null,leads.concat([1]))*1.15;var xAt=function(i){return padL+(n<=1?iw/2:(i*iw)/(n-1));};var yS=function(v){return padT+ih-(v/smax)*ih;};var yL=function(v){return padT+ih-(v/lmax)*ih;};var grid="";for(var g=0;g<=3;g++){var y=padT+(ih*g)/3;grid+="<line stroke=\\"#ececef\\" stroke-dasharray=\\"2,3\\" x1=\\""+padL+"\\" x2=\\""+(W-padR)+"\\" y1=\\""+y+"\\" y2=\\""+y+"\\"/>";}var xlab="";for(var i=0;i<n;i++){xlab+="<text x=\\""+xAt(i)+"\\" y=\\""+(H-padB+14)+"\\" text-anchor=\\"middle\\" font-size=\\"10\\" fill=\\"#6b6b70\\">"+shortDate(valid[i].date)+"</text>";}var pSp=spends.map(function(v,i){return(i===0?"M":"L")+xAt(i)+","+yS(v);}).join(" ");var pLd=hasLeads?leads.map(function(v,i){return(i===0?"M":"L")+xAt(i)+","+yL(v);}).join(" "):"";var sv=validToOrig.indexOf(selectedIdx);if(sv<0)sv=n-1;var selX=xAt(sv);var dm="<line stroke=\\"#8a8a90\\" stroke-dasharray=\\"3,3\\" x1=\\""+selX+"\\" x2=\\""+selX+"\\" y1=\\""+padT+"\\" y2=\\""+(padT+ih)+"\\"/>";var dots="",hit="";for(var i=0;i<n;i++){var xs=xAt(i),is=i===sv;dots+="<circle cx=\\""+xs+"\\" cy=\\""+yS(spends[i])+"\\" r=\\""+(is?5:3)+"\\" fill=\\"#1c1c1e\\" stroke=\\"#fff\\" stroke-width=\\""+(is?2:1)+"\\"/>";if(hasLeads)dots+="<circle cx=\\""+xs+"\\" cy=\\""+yL(leads[i])+"\\" r=\\""+(is?5:3)+"\\" fill=\\"#0866FF\\" stroke=\\"#fff\\" stroke-width=\\""+(is?2:1)+"\\"/>";hit+="<rect x=\\""+(xs-iw/(n*2))+"\\" y=\\""+padT+"\\" width=\\""+(iw/n)+"\\" height=\\""+ih+"\\" fill=\\"transparent\\" style=\\"cursor:pointer\\" data-orig-idx=\\""+validToOrig[i]+"\\"/>";}var svg="<svg viewBox=\\"0 0 "+W+" "+H+"\\" xmlns=\\"http://www.w3.org/2000/svg\\" preserveAspectRatio=\\"xMidYMid meet\\">"+grid+"<line stroke=\\"#d2d2d7\\" stroke-width=\\"0.5\\" x1=\\""+padL+"\\" x2=\\""+(W-padR)+"\\" y1=\\""+(padT+ih)+"\\" y2=\\""+(padT+ih)+"\\"/>"+dm+"<path fill=\\"none\\" stroke=\\"#1c1c1e\\" stroke-width=\\"1.6\\" d=\\""+pSp+"\\"/>"+(pLd?"<path fill=\\"none\\" stroke=\\"#0866FF\\" stroke-width=\\"1.6\\" d=\\""+pLd+"\\"/>":"")+dots+xlab+hit+"</svg>";root.innerHTML=svg;if(onSelect){root.querySelectorAll("rect[data-orig-idx]").forEach(function(el){el.addEventListener("click",function(){var i=Number(el.getAttribute("data-orig-idx"));if(!isNaN(i))onSelect(i);});});}}\n'
+            'function renderDay(root,p){if(!root)return;var c=[];function cell(l,v){return "<div class=\\"dk-cell\\"><div class=\\"dk-lbl\\">"+l+"</div><div class=\\"dk-val\\">"+v+"</div></div>";}if(p&&p.spend!=null)c.push(cell("Budget",fmtEUR(p.spend)));if(p&&p.lead!=null)c.push(cell("Contatti",fmtInt(p.lead)));if(p&&p.lead>0&&p.spend!=null)c.push(cell("Costo per contatto",fmtEUR(p.spend/p.lead)));root.innerHTML=c.length?c.join(""):"<div class=\\"nc-loading\\">Nessun KPI disponibile</div>";}\n'
+            'function wire(id){var s=ALL_SERIES_MTCEA[id]||[],cr=document.getElementById("chart-"+id);if(!cr)return;var nr=document.getElementById("daynav-"+id),kr=document.getElementById("daykpi-"+id),lr=document.getElementById("daylbl-"+id);var si=-1;for(var i=s.length-1;i>=0;i--){if(s[i].spend!=null){si=i;break;}}if(si<0)si=s.length-1;if(!s.some(function(p){return p.spend!=null;})){cr.innerHTML="<div class=\\"nc-loading\\">Nessun dato giornaliero disponibile</div>";return;}function up(){drawChart(cr,s,si,function(ni){si=ni;up();});if(nr)nr.style.display="";if(kr)kr.style.display="";if(lr){var d=s[si]&&s[si].date;lr.innerHTML=dayLabelIT(d)+"<span class=\\"small\\">"+(d||"")+"</span>";}if(kr)renderDay(kr,s[si]);var pb=document.querySelector("#daynav-"+id+" [data-action=prev]"),nb=document.querySelector("#daynav-"+id+" [data-action=next]");if(pb)pb.disabled=si<=0;if(nb)nb.disabled=si>=s.length-1;}up();var pb=document.querySelector("#daynav-"+id+" [data-action=prev]"),nb=document.querySelector("#daynav-"+id+" [data-action=next]");if(pb)pb.addEventListener("click",function(){if(si>0){si--;up();}});if(nb)nb.addEventListener("click",function(){if(si<s.length-1){si++;up();}});}\n'
+            'Object.keys(ALL_SERIES_MTCEA).forEach(wire);\n'
+            '})();\n</script>\n'
+        )
+        html = html.replace("</body>", nav_script + "</body>", 1)
 
     # 9) PULIZIA TERMINI cliente-friendly su HTML statico (sostituzioni testuali finali).
     # I testi della legenda colori, del titolo H1 e di alcune subtitle sono generati da
