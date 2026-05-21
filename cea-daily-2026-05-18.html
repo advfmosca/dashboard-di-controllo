@@ -110,7 +110,16 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
 .card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
 .card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+.card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 640px) { .card-new .nc-meta dl { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+.card-new .nc-meta dt { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 2px; }
+.card-new .nc-meta dd { margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text); }
+.card-new .nc-meta dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+
 .card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .client-btn { margin-left: auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid #d2d2d7; color: var(--text); text-decoration: none; transition: background .12s; }
+.card-new .client-btn:hover { background: var(--bg-soft); }
 .card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
 .card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
 .card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
@@ -196,7 +205,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="brand-header">
     <h1>CEA — Andamento campagne</h1>
     <p class="subtitle">Snapshot del Lunedì 18 Maggio 2026 · 46 clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
-    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>07:58</b> del 21/05/2026</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>08:04</b> del 21/05/2026</p>
   </div>
 
   <div class="kpis">
@@ -239,9 +248,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Linea%20Pi%C3%B9%20Casale&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Linea Più Casale</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Linea Più Casale</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 46,65 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">46,65 €</div></div>
   </div>
@@ -253,9 +268,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Dott.ssa%20Orsola%20Bruno%20AP&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Dott.ssa Orsola Bruno AP</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Dott.ssa Orsola Bruno AP</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 46,64 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">46,64 €</div></div>
   </div>
@@ -267,9 +288,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20SANITAL%20ECO%20STORE&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV SANITAL ECO STORE</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV SANITAL ECO STORE</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 31,16 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,16 €</div></div>
   </div>
@@ -281,9 +308,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Baldan%20Intelligence&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Baldan Intelligence</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Baldan Intelligence</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 30,07 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">30,07 €</div></div>
   </div>
@@ -295,9 +328,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Beauty%20Point%20Srl&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Beauty Point Srl</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Beauty Point Srl</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 26,25 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,25 €</div></div>
   </div>
@@ -309,9 +348,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Charme%20estetica%20benessere&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Charme estetica benessere</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 24,88 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">24,88 €</div></div>
   </div>
@@ -323,9 +368,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20ARTESTETICA&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV ARTESTETICA</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV ARTESTETICA</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 19,99 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,99 €</div></div>
   </div>
@@ -337,9 +388,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Atelier%20Fiumara&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Atelier Fiumara</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 18,75 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,75 €</div></div>
   </div>
@@ -351,9 +408,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Nicola%20Cossater%20Beauty&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Nicola Cossater Beauty</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Nicola Cossater Beauty</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 15,70 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">15,70 €</div></div>
   </div>
@@ -365,9 +428,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20estetico%20natura&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Centro estetico natura</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Centro estetico natura</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 13,72 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">13,72 €</div></div>
   </div>
@@ -379,9 +448,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Donnauomo&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Donnauomo</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Donnauomo</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 11,53 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">11,53 €</div></div>
   </div>
@@ -393,9 +468,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20Benessere%20Polverino&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Centro Benessere Polverino</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,73 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,73 €</div></div>
   </div>
@@ -407,9 +488,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Centro%20Estetico%20Eden&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Centro Estetico Eden</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Centro Estetico Eden</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 8,07 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,07 €</div></div>
   </div>
@@ -421,9 +508,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20CENTRO%20ESTETICO%20AMBRA&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV CENTRO ESTETICO AMBRA</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV CENTRO ESTETICO AMBRA</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 6,13 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">6,13 €</div></div>
   </div>
@@ -435,9 +528,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Fiori%20di%20loto&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Fiori di loto</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Fiori di loto</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 5,46 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">5,46 €</div></div>
   </div>
@@ -449,9 +548,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Beauty%20Art&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Beauty Art</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Beauty Art</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 5,00 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">5,00 €</div></div>
   </div>
@@ -463,9 +568,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Slim%27Up&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Slim&#39;Up</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Slim&#39;Up</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 3,19 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">3,19 €</div></div>
   </div>
@@ -477,9 +588,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Baldan%20Group%20USA&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Baldan Group USA</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Baldan Group USA</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">19</div><div class="delta">su 1.317,63 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">69,35 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">1.317,63 €</div></div>
   </div>
@@ -491,9 +608,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=ITALIA&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">L&#39;estetica che ti cambia la vita - ITALIA</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>L&#39;estetica che ti cambia la vita</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 100,59 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">50,29 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">100,59 €</div></div>
   </div>
@@ -505,9 +628,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Exthetyc&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Exthetyc</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Exthetyc</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 55,35 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">55,35 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">55,35 €</div></div>
   </div>
@@ -519,9 +648,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Tyla%20Institute%20Estetica&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Tyla Institute Estetica</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Tyla Institute Estetica</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 39,33 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">19,66 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">39,33 €</div></div>
   </div>
@@ -533,9 +668,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Brera13%20Beauty&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Brera13 Beauty</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 33,92 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,96 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">33,92 €</div></div>
   </div>
@@ -547,9 +688,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Visamour&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Visamour</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Visamour</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 31,22 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">15,61 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,22 €</div></div>
   </div>
@@ -561,9 +708,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Martelletto&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Farmacia Martelletto</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 30,27 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">30,27 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">30,27 €</div></div>
   </div>
@@ -575,9 +728,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Oasi%20di%20Nadia&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Oasi di Nadia</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 27,19 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">13,60 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,19 €</div></div>
   </div>
@@ -589,9 +748,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Dermal%20Center&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Dermal Center</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 26,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,96 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,89 €</div></div>
   </div>
@@ -603,9 +768,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20LINEA%20PERFETTA&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV LINEA PERFETTA</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV LINEA PERFETTA</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 24,28 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">24,28 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">24,28 €</div></div>
   </div>
@@ -617,9 +788,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Black%20Queen%20Beauty%20Art&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Black Queen Beauty Art</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Black Queen Beauty Art</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 23,81 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">23,81 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,81 €</div></div>
   </div>
@@ -631,9 +808,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Medicina%20Estetica&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Leuce - Medicina Estetica</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Leuce</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 23,73 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">23,73 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,73 €</div></div>
   </div>
@@ -645,9 +828,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Mudra%20Centro%20Benessere&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Mudra Centro Benessere</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 23,64 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">23,64 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,64 €</div></div>
   </div>
@@ -659,9 +848,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Padre%20Pio&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Farmacia Padre Pio</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Farmacia Padre Pio</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 23,54 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">11,77 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,54 €</div></div>
   </div>
@@ -673,9 +868,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=B-ewolution%20by%20Beauty%20Way&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">B-ewolution by Beauty Way</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>B-ewolution by Beauty Way</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 21,98 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,99 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,98 €</div></div>
   </div>
@@ -687,9 +888,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Gagliardelli&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Farmacia Gagliardelli</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Farmacia Gagliardelli</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 21,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,79 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,58 €</div></div>
   </div>
@@ -701,9 +908,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Di%20Gennaro&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Farmacia Di Gennaro</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Farmacia Di Gennaro</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">4</div><div class="delta">su 20,65 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">5,16 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,65 €</div></div>
   </div>
@@ -715,9 +928,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=SkinMedic%20Lecco%20new&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">SkinMedic Lecco new</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>SkinMedic Lecco new</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 20,59 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,86 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,59 €</div></div>
   </div>
@@ -729,9 +948,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Maison%20Kuku&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Maison Kuku</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Maison Kuku</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 20,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">20,58 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,58 €</div></div>
   </div>
@@ -743,9 +968,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=SALUS%202024&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">SALUS 2024</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>SALUS 2024</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 19,09 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,36 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,09 €</div></div>
   </div>
@@ -757,9 +988,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Solel%C3%B9&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV Solelù</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Solelù</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 18,05 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">18,05 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,05 €</div></div>
   </div>
@@ -771,9 +1008,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Laboratorio%20Estetico%20Catia&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Laboratorio Estetico Catia</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Laboratorio Estetico Catia</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 17,86 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">17,86 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,86 €</div></div>
   </div>
@@ -785,9 +1028,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20Estetico%20Enrica&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Centro Estetico Enrica</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Centro Estetico Enrica</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 17,71 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">5,90 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,71 €</div></div>
   </div>
@@ -799,9 +1048,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Body%20Laser&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Body Laser</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">4</div><div class="delta">su 17,09 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,27 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,09 €</div></div>
   </div>
@@ -813,9 +1068,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Riflesso%20Evolution&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Riflesso Evolution</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Riflesso Evolution</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 16,71 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,71 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,71 €</div></div>
   </div>
@@ -827,9 +1088,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Nuove%20Sensazioni&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Nuove Sensazioni</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Nuove Sensazioni</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 14,64 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">14,64 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,64 €</div></div>
   </div>
@@ -841,9 +1108,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Andreea%20Francu%20Renzo%20Gestione&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Andreea Francu Renzo Gestione</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Andreea Francu Renzo Gestione</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 14,51 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">14,51 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,51 €</div></div>
   </div>
@@ -855,9 +1128,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Pietrabianca&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">ADV - Pietrabianca</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 14,36 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,79 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,36 €</div></div>
   </div>
@@ -869,9 +1148,15 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Account%20pubblicitario&date=2026-05-18" target="_blank" rel="noopener">👁 Vista cliente</a>
     </div>
     <div class="nc-name">Eternity LB - Account pubblicitario</div>
   </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Eternity LB</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
+</dl></div>
   <div class="nc-kpis">
     <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 6,31 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">3,15 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">6,31 €</div></div>
   </div>

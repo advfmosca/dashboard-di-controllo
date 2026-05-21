@@ -1,0 +1,7 @@
+{
+  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Chiave = nome cliente come estratto da extractMTCEAClient (es. 'STUDIO DOTT. RICCIARDI LUMINA' per MT, 'ADV Linea Più Casale' per CEA). Per ogni cliente, valorizza 'target' (zona geografica + raggio) e 'audience_size' (stima dal Business Manager). Le voci che iniziano per _ sono ignorate. Se un cliente manca, la card mostra 'Da configurare'.",
+  "_example_template": {
+    "target": "Via Manzoni 12, Milano +8km",
+    "audience_size": "120K persone"
+  }
+}

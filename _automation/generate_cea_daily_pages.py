@@ -13,6 +13,7 @@ Output:
 import json
 import os
 import sys
+import urllib.parse
 from datetime import datetime
 from pathlib import Path
 
@@ -23,6 +24,17 @@ EXECUTION_DATE_LABEL = EXECUTION_DT.strftime("%d/%m/%Y")
 
 ROOT = Path(__file__).resolve().parent.parent  # /Dashboard di Controllo
 SNAP_DIR = ROOT / "snapshots"
+
+# Meta overrides opzionali: file JSON per popolare target geo + grandezza pubblico
+# per ogni cliente (chiave = nome cliente come estratto da extractMTCEAClient).
+# Esempio: { "STUDIO DOTT. RICCIARDI LUMINA": {"target": "Via Manzoni 12 +8km", "audience_size": "120K"} }
+META_OVERRIDES = {}
+_meta_path = ROOT / "mtcea_clients_meta.json"
+if _meta_path.exists():
+    try:
+        META_OVERRIDES = json.loads(_meta_path.read_text(encoding="utf-8"))
+    except Exception:
+        META_OVERRIDES = {}
 
 LOGO_CEA = None  # Loghi disabilitati su richiesta utente — header solo testo
 
@@ -137,7 +149,16 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
 .card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
 .card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+.card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 640px) { .card-new .nc-meta dl { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+.card-new .nc-meta dt { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 2px; }
+.card-new .nc-meta dd { margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text); }
+.card-new .nc-meta dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+
 .card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .client-btn { margin-left: auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid #d2d2d7; color: var(--text); text-decoration: none; transition: background .12s; }
+.card-new .client-btn:hover { background: var(--bg-soft); }
 .card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
 .card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
 .card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
@@ -306,14 +327,40 @@ def render_daily(date_iso, cea):
         if reason:
             details_html = f'<details><summary>Dettaglio tecnico</summary><div class="det-content">{escape_html(reason)}</div></details>'
 
+        # Bottone "Vista cliente" che apre la pagina pubblica cliente.html con il nome cliente
+        # estratto dal nome campagna. Si apre in nuova scheda.
+        name_parts = [p.strip() for p in name.split(" - ") if p.strip()]
+        client_short = name_parts[-1] if len(name_parts) > 1 else name
+        client_url = "cliente.html?name=" + urllib.parse.quote(client_short) + "&date=" + date_iso
+        client_btn = f'<a class="client-btn" href="{client_url}" target="_blank" rel="noopener">👁 Vista cliente</a>'
+
+        # Campagna attiva: per CEA il nome intero, per MT-style ('A - B - CLIENTE') la parte
+        # iniziale escluso l'ultimo segmento. Target + audience: opzionali da meta_overrides.
+        if len(name_parts) > 1:
+            campaign_active = " - ".join(name_parts[:-1])
+        else:
+            campaign_active = name
+        meta_overrides = META_OVERRIDES.get(client_short, {}) if META_OVERRIDES else {}
+        target_val = meta_overrides.get("target", "")
+        aud_val = meta_overrides.get("audience_size", "")
+        target_html = f'<dd>{escape_html(target_val)}</dd>' if target_val else '<dd class="placeholder">Da configurare</dd>'
+        aud_html = f'<dd>{escape_html(aud_val)}</dd>' if aud_val else '<dd class="placeholder">Da configurare</dd>'
+        meta_block = f"""<div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>{escape_html(campaign_active)}</dd></div>
+  <div><dt>Target</dt>{target_html}</div>
+  <div><dt>Grandezza pubblico</dt>{aud_html}</div>
+</dl></div>"""
+
         cards_html.append(f"""
 <div class="card-new {cls}" data-name="{escape_html(name).lower()}" data-color="{cls}">
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">{icon}</span> {human_label}</span>
+      {client_btn}
     </div>
     <div class="nc-name">{escape_html(name)}</div>
   </div>
+  {meta_block}
   <div class="nc-kpis">
     {''.join(kpis_inner)}
   </div>

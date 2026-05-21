@@ -39,6 +39,14 @@
   header.h .sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
   header.h .date-tag { display: inline-block; font-size: 12px; color: #8a5a00; font-weight: 600; padding: 4px 12px; background: #fff7eb; border-radius: 999px; margin-top: 6px; }
 
+  /* Box meta sotto il titolo: campagna attiva + target geografico + grandezza pubblico */
+  .meta-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin: 14px 0 18px; }
+  .meta-box dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
+  @media (min-width: 640px) { .meta-box dl { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+  .meta-box dt { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+  .meta-box dd { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: var(--text); }
+  .meta-box dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+
   /* Card layout — coerente con la vista interna (nessuna riga colorata laterale) */
   .aghc-card {
     background: var(--bg-card); border: 1px solid var(--border);
@@ -153,6 +161,7 @@
     <div class="date-tag" id="hdr-date" style="display:none;"></div>
   </header>
 
+  <div id="meta-root"></div>
   <div id="card-root"></div>
   <div id="err-root"></div>
 
@@ -507,33 +516,51 @@ function _fmtIntIT(n) {
   return Math.round(Number(n)).toLocaleString("it-IT");
 }
 function buildMTCEARational(entry, clientName, projectLabel, series7d) {
+  // Rational stile AGHC/BF per la vista cliente: 3 paragrafi argomentati,
+  // tono discorsivo e professionale. La pagina la legge il cliente stesso,
+  // quindi NON menzioniamo il suo nome (no "La campagna di DOTT. X") ma
+  // parliamo dell'attività in modo diretto.
   const win = (series7d || []).filter(p => p.spend != null);
   const winSpend = win.reduce((a, p) => a + (Number(p.spend) || 0), 0);
   const winLeads = win.reduce((a, p) => a + (Number(p.leads) || 0), 0);
   const winCpl = (winLeads > 0) ? (winSpend / winLeads) : null;
   const daysActive = win.filter(p => (p.spend || 0) > 0).length;
   const avgDaily = winSpend / Math.max(daysActive, 1);
-  const cn = clientName;
-  let p1, p2;
+
+  // =====================================================================
+  // P1 — Contesto: stato dell'attività, ritmo, fase
+  // =====================================================================
+  let p1;
   if (daysActive === 0) {
-    p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} non risulta ancora in erogazione: nessun consumo registrato nei giorni monitorati.`;
+    p1 = `In questo periodo l'attività promozionale non risulta ancora in erogazione: nessun consumo di budget è stato registrato nei giorni monitorati. La campagna è in attesa di partire oppure è stata temporaneamente sospesa.`;
   } else if (daysActive <= 3) {
-    p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in fase iniziale di erogazione: ${daysActive} ${daysActive === 1 ? 'giorno' : 'giorni'} attivi negli ultimi 7, con un investimento di ${fmtEUR(winSpend)} e un ritmo medio di ${fmtEUR(avgDaily)} al giorno. I primi giorni sono fisiologicamente dedicati all'apprendimento del sistema sul pubblico.`;
+    p1 = `L'attività si trova nella sua fase iniziale di erogazione: nei giorni monitorati abbiamo registrato ${daysActive} ${daysActive === 1 ? 'giornata effettiva' : 'giornate effettive'} di attività, con un investimento complessivo di <strong>${fmtEUR(winSpend)}</strong> distribuito a un ritmo medio di <strong>${fmtEUR(avgDaily)} al giorno</strong>. I primi giorni di una campagna pubblicitaria sono fisiologicamente dedicati all'apprendimento: il sistema studia il pubblico, valuta la risposta alle creatività e calibra gradualmente la distribuzione.`;
   } else {
-    p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in piena erogazione: ${daysActive} giorni attivi nell'ultima settimana, con un investimento di ${fmtEUR(winSpend)} distribuito a un ritmo medio di ${fmtEUR(avgDaily)} al giorno.`;
+    p1 = `L'attività è in piena erogazione: nell'ultima settimana sono state coperte <strong>${daysActive} giornate effettive</strong>, per un investimento complessivo di <strong>${fmtEUR(winSpend)}</strong> distribuito a un ritmo medio di <strong>${fmtEUR(avgDaily)} al giorno</strong>. La cadenza è quella prevista dal piano media concordato e garantisce una presenza costante nelle aste pubblicitarie del segmento.`;
   }
+
+  // =====================================================================
+  // P2 — Lettura risultati: contatti, CPL, efficienza vs benchmark
+  // =====================================================================
+  let p2;
   if (winLeads === 0 && winSpend > 0) {
-    p2 = `Sul fronte risultati la campagna non ha ancora generato richieste qualificate. Per campagne corte come questa, è normale che i primi contatti arrivino dal terzo-quarto giorno di erogazione: il sistema sta ancora completando la fase di apprendimento sul pubblico più reattivo.`;
+    p2 = `Sul fronte conversioni, in questo arco temporale l'attività non ha ancora generato richieste qualificate. Per le campagne di breve durata come questa è normale che i primi contatti arrivino tra il terzo e il quarto giorno di erogazione, una volta superata la fase di apprendimento iniziale. Il sistema sta ancora calibrando creatività, segmenti di pubblico e momenti di esposizione: i prossimi giorni saranno determinanti per leggere il rendimento reale.`;
   } else if (winLeads > 0 && winCpl != null) {
-    const efficiency = winCpl < 8 ? "molto contenuto, in zona ottimale per il settore" :
-                       winCpl < 18 ? "in linea con il benchmark del settore" :
-                       winCpl < 35 ? "leggermente sopra il benchmark di riferimento" :
-                       "sopra il benchmark, da consolidare nei prossimi giorni";
-    p2 = `Sul fronte risultati la campagna ha raccolto <strong>${_fmtIntIT(winLeads)} ${winLeads === 1 ? 'contatto' : 'contatti'} qualificati</strong> a un costo medio di <strong>${fmtEUR(winCpl)} a contatto</strong> — un valore ${efficiency}.`;
+    const efficiency = winCpl < 8 ? "estremamente contenuto, in zona ottimale per il settore di riferimento" :
+                       winCpl < 18 ? "perfettamente in linea con il benchmark di settore" :
+                       winCpl < 35 ? "leggermente sopra il benchmark di riferimento, ma ancora dentro la tolleranza fisiologica delle campagne brevi" :
+                       "sopra il benchmark di riferimento e da consolidare nei prossimi giorni con un'azione mirata su creatività e segmentazione";
+    p2 = `Sul fronte risultati l'attività ha generato in questa finestra <strong>${_fmtIntIT(winLeads)} ${winLeads === 1 ? 'contatto qualificato' : 'contatti qualificati'}</strong>, a un costo medio di <strong>${fmtEUR(winCpl)} per contatto</strong>. Si tratta di un valore ${efficiency}, considerando che l'investimento medio quotidiano è stato di ${fmtEUR(avgDaily)}. Il numero di contatti raccolti fotografa il tasso di risposta del pubblico raggiunto alle creatività attualmente in distribuzione.`;
   } else {
-    p2 = `Sul fronte risultati la campagna è in fase di start-up: i primi contatti diretti sono attesi nei prossimi giorni di erogazione.`;
+    p2 = `Sul fronte risultati l'attività si trova in fase di avvio: i primi contatti diretti sono attesi nei prossimi giorni di erogazione, una volta consolidato l'apprendimento del sistema sul pubblico più reattivo.`;
   }
-  return `<p>${p1}</p><p>${p2}</p>`;
+
+  // =====================================================================
+  // P3 — Prospettiva: cosa sta avvenendo dietro le quinte, monitoraggio
+  // =====================================================================
+  const p3 = `Nei giorni a seguire l'attenzione resterà concentrata sull'ottimizzazione del costo per contatto e sul mantenimento della qualità delle richieste in arrivo. È utile ricordare che, nelle campagne pubblicitarie a durata limitata, il dato si stabilizza tipicamente dopo i primi quattro-cinque giorni di erogazione: prima di quel momento le oscillazioni quotidiane sono fisiologiche e non rappresentano un segnale di scarsa performance. Continuiamo a monitorare l'andamento quotidiano per intervenire tempestivamente — su creatività, segmentazione o offerta — qualora le metriche dovessero discostarsi dai parametri attesi.`;
+
+  return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
 }
 
 function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
@@ -759,6 +786,15 @@ function normalizeBFItem(c) {
   };
 }
 
+// Mapping opzionale {clientName: {target, audience_size}} per MT/CEA
+// Caricato in parallelo al data.json; fallback a oggetto vuoto se 404.
+let MTCEA_META = {};
+function loadMtCeaMeta() {
+  return fetchJson("mtcea_clients_meta.json")
+    .then(j => { MTCEA_META = j || {}; })
+    .catch(() => { MTCEA_META = {}; });
+}
+
 // ====================== MAIN =======================
 function showError(msg) {
   document.getElementById("err-root").innerHTML = `<div class="error">${escapeHtml(msg)}</div>`;
@@ -775,11 +811,12 @@ if (!clienteName) {
   document.getElementById("hdr-name").textContent = "Cliente non specificato";
   showError("Parametro 'name' mancante nella URL. Esempio: cliente.html?name=Lunetta");
 } else {
-  // Carica snapshot specifico se date, altrimenti data.json (più recente)
+  // Carico in parallelo: meta overrides (opzionale, ignoro errori 404) + data/snapshot del giorno.
+  const metaPromise = loadMtCeaMeta();
   const dataPromise = dateParam
     ? fetchJson("snapshots/" + dateParam + ".json")
     : fetchJson("data.json");
-  dataPromise.then(d => {
+  Promise.all([metaPromise, dataPromise]).then(([, d]) => {
     const refDate = d.reference_date || dateParam || "";
     if (refDate) {
       const dl = document.getElementById("hdr-date");
@@ -836,6 +873,30 @@ if (!clienteName) {
       // Med & Tech / CEA: mostra solo il nome cliente estratto, non il nome campagna completo
       const clientShort = extractMTCEAClient(found.name);
       document.getElementById("hdr-name").textContent = clientShort;
+
+      // Box meta sotto al titolo: campagna attiva (auto-estratta) + target + grandezza pubblico.
+      // Target e pubblico arrivano da un mapping manuale opzionale (mtcea_clients_meta.json
+      // se presente nei dati `d.mtcea_meta` o caricato a parte). Per ora placeholder se assente.
+      const parts = String(found.name).split(' - ').map(p => p.trim()).filter(Boolean);
+      // MT: "Open Day - Total Lift - <CLIENTE>" -> campagna = "Open Day - Total Lift"
+      // CEA: "ADV Linea Più Casale" -> campagna = intero nome
+      const campaignActive = (project === "Med & Tech" && parts.length > 1)
+        ? parts.slice(0, -1).join(' - ')
+        : found.name;
+      // Mapping opzionale: prima cerca in MTCEA_META (file mtcea_clients_meta.json caricato a parte),
+      // poi in d.mtcea_meta (se la pipeline server lo iniettasse in data.json).
+      const meta = (MTCEA_META && MTCEA_META[clientShort]) || (d.mtcea_meta && d.mtcea_meta[clientShort]) || {};
+      const target = meta.target || null;
+      const audSize = meta.audience_size || null;
+      const metaRoot = document.getElementById("meta-root");
+      if (metaRoot) {
+        metaRoot.innerHTML = `<div class="meta-box"><dl>
+          <div><dt>Campagna attiva</dt><dd>${escapeHtml(campaignActive)}</dd></div>
+          <div><dt>Target</dt><dd class="${target ? '' : 'placeholder'}">${target ? escapeHtml(target) : 'Da configurare'}</dd></div>
+          <div><dt>Grandezza pubblico</dt><dd class="${audSize ? '' : 'placeholder'}">${audSize ? escapeHtml(audSize) : 'Da configurare'}</dd></div>
+        </dl></div>`;
+      }
+
       root.innerHTML = buildMTCEACardHTML(found, idPrefix, project);
       wireMTCEASeries(found, idPrefix, project);
     }
