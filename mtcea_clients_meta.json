@@ -1,8 +1,9 @@
 {
-  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Per ogni cliente, valorizza 'target' (es. 'Via Manzoni 12, Milano +8km') e 'audience_size' (stima dal Business Manager, es. '120K persone'). Lascia le stringhe vuote per i clienti che vuoi gestire dopo. Le voci che iniziano per _ sono ignorate.",
+  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Per ogni cliente, valorizza 'target' (zona geografica + raggio), 'audience_size' (stima dal Business Manager) e 'ad_url' (link diretto Meta Ads Manager dell'account del cliente, formato 'https://business.facebook.com/adsmanager/manage/campaigns?act=NNN'). Lascia le stringhe vuote per i clienti che vuoi gestire dopo. Le voci che iniziano per _ sono ignorate.",
   "_example_template": {
     "target": "Via Manzoni 12, Milano +8km",
-    "audience_size": "120K persone"
+    "audience_size": "120K persone",
+    "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=123456789012345"
   },
   "ADV ARTESTETICA": {
     "target": "",

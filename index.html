@@ -647,6 +647,15 @@
   // Module-scope cache of last loaded data (per filtri client-side)
   let LAST_DATA = null;
 
+  // Mapping opzionale clienti MT/CEA (target/audience_size/ad_url).
+  // Caricato al boot da mtcea_clients_meta.json; fallback a {} se 404.
+  let MTCEA_META = {};
+  function loadMtCeaMeta() {
+    return fetchJson("mtcea_clients_meta.json")
+      .then(j => { MTCEA_META = j || {}; })
+      .catch(() => { MTCEA_META = {}; });
+  }
+
   // Filtro semaforico per CEA + Med & Tech (null = mostra tutte; "red"/"yellow"/"green"/"black" = solo quel colore)
   const SEM_FILTER = { mt: null, cea: null };
 
@@ -1653,7 +1662,12 @@
     // Rational placeholder: verra' popolato da wireMTCEASeries con series7d aggregati.
     const rationalBlock = `<div class="rational" id="${idPrefix}-rat"><span class="muted small">Calcolo dell'analisi in corso…</span></div>`;
     const statusPill = entry.status ? `<span class="status-pill ${statusColor}">${escapeHtml(entry.status.label || "—")}</span>` : "";
-    const adLink = entry.ad_url ? openAccountBtn(entry.ad_url, "Meta") : "";
+    // Cerca ad_url: prima nel mapping opzionale MTCEA_META (override manuale per
+    // CEA dove l'account meta_id non e' nel CSV), poi fallback su entry.ad_url
+    // (popolato server-side per MT).
+    const metaOverride = (typeof MTCEA_META === "object" && MTCEA_META && MTCEA_META[clientName]) || {};
+    const effectiveAdUrl = metaOverride.ad_url || entry.ad_url || "";
+    const adLink = effectiveAdUrl ? openAccountBtn(effectiveAdUrl, "Meta") : "";
     const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(clientName)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
     const footer = `<div class="footer">${statusPill}${adLink}${previewBtn}</div>`;
     return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${footer}</div>`;
@@ -2965,6 +2979,7 @@
   loadMedtechReports();
   loadCEAReports();
   loadOverviewChart();
+  loadMtCeaMeta();
   fetchJson("snapshots/index.json").then(idx => {
     const dates = (idx.dates || []).slice(0, 90);
     if (dates.length === 0) throw new Error("nessuno snapshot");
