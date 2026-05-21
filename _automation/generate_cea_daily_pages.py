@@ -149,11 +149,14 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
 .card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
 .card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
-.card-new .nc-chart { margin: 12px 0 8px; padding: 8px 10px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
-.card-new .nc-chart svg { width: 100%; height: 84px; display: block; }
-.card-new .nc-chart-legend { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
+.card-new .nc-chart { margin: 12px 16px; padding: 10px 12px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
+.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
+.card-new .nc-chart-legend { font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; }
-.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; }
+.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
+.card-new .nc-chart-legend .lg-hint { margin-left: auto; font-size: 10px; color: var(--text-dim); font-style: italic; }
+.card-new .nc-chart svg circle { cursor: pointer; transition: r .12s; }
+.card-new .nc-chart svg circle:hover { r: 5; }
 
 .card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
 .card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
@@ -298,14 +301,15 @@ def load_series_7gg(ref_date_iso):
             })
     return series_by_name
 
-def render_mini_chart(series, w=420, h=84):
+def render_mini_chart(series, w=560, h=160):
     """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0).
-    series = [{date, spend, lead}, ...] in ordine ASC."""
+    series = [{date, spend, lead}, ...] in ordine ASC.
+    Ogni punto ha un <title> SVG → tooltip su hover (data + spesa + contatti)."""
     if not series: return ""
     valid = [p for p in series if p.get("spend") is not None]
     if not valid: return ""
     n = len(valid)
-    padL, padR, padT, padB = 28, 28, 8, 18
+    padL, padR, padT, padB = 36, 36, 12, 26
     iw = w - padL - padR
     ih = h - padT - padB
     spends = [p["spend"] for p in valid]
@@ -316,25 +320,35 @@ def render_mini_chart(series, w=420, h=84):
     def x_at(i): return padL + (iw / 2 if n <= 1 else (i * iw) / (n - 1))
     def y_s(v): return padT + ih - (v / smax) * ih
     def y_l(v): return padT + ih - (v / lmax) * ih
-    # grid + path spend
+    def fmt_e(v): return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " €"
     grid = "".join(f'<line stroke="#ececef" stroke-dasharray="2,3" x1="{padL}" x2="{w-padR}" y1="{padT + ih*i/3:.1f}" y2="{padT + ih*i/3:.1f}"/>' for i in range(4))
     psp = " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_s(v):.1f}" for i,v in enumerate(spends))
-    dots_s = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_s(spends[i]):.1f}" r="2.2" fill="#1c1c1e"/>' for i in range(n))
+    # Dot Spesa con <title> tooltip (data + spesa + contatti)
+    dots_s = ""
+    for i in range(n):
+        d_short = valid[i]["date"][-5:]
+        tip = f"{d_short} · Spesa {fmt_e(spends[i])}"
+        if has_leads: tip += f" · Contatti {int(leads[i])}"
+        dots_s += f'<circle cx="{x_at(i):.1f}" cy="{y_s(spends[i]):.1f}" r="3" fill="#1c1c1e" stroke="#fff" stroke-width="1"><title>{tip}</title></circle>'
     pld = ""
     dots_l = ""
     if has_leads:
-        pld = '<path fill="none" stroke="#0866FF" stroke-width="1.4" d="' + " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_l(leads[i]):.1f}" for i in range(n)) + '"/>'
-        dots_l = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_l(leads[i]):.1f}" r="2.2" fill="#0866FF"/>' for i in range(n))
-    # x labels (solo 1° e ultimo)
-    xl = (f'<text x="{x_at(0):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[0]["date"][-5:]}</text>'
-          f'<text x="{x_at(n-1):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[-1]["date"][-5:]}</text>')
+        pld = '<path fill="none" stroke="#0866FF" stroke-width="1.6" d="' + " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_l(leads[i]):.1f}" for i in range(n)) + '"/>'
+        for i in range(n):
+            d_short = valid[i]["date"][-5:]
+            tip = f"{d_short} · Contatti {int(leads[i])} · Spesa {fmt_e(spends[i])}"
+            dots_l += f'<circle cx="{x_at(i):.1f}" cy="{y_l(leads[i]):.1f}" r="3" fill="#0866FF" stroke="#fff" stroke-width="1"><title>{tip}</title></circle>'
+    # X labels: una etichetta per ogni giorno (7 punti ci stanno)
+    xl = "".join(f'<text x="{x_at(i):.1f}" y="{h - padB + 14}" text-anchor="middle" font-size="10" fill="#6b6b70">{valid[i]["date"][-5:]}</text>' for i in range(n))
     legend = ('<span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span>'
-              + ('<span class="lg-s" style="margin-left:8px"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span>' if has_leads else ""))
+              + ('<span class="lg-s" style="margin-left:8px"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span>' if has_leads else "")
+              + '<span class="lg-hint">Passa il mouse sui punti per il dettaglio del giorno</span>')
     return f"""<div class="nc-chart">
   <div class="nc-chart-legend">{legend}</div>
-  <svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Andamento spesa e contatti 7 giorni">
     {grid}
-    <path fill="none" stroke="#1c1c1e" stroke-width="1.4" d="{psp}"/>
+    <line stroke="#d2d2d7" stroke-width="0.5" x1="{padL}" x2="{w-padR}" y1="{padT + ih:.1f}" y2="{padT + ih:.1f}"/>
+    <path fill="none" stroke="#1c1c1e" stroke-width="1.6" d="{psp}"/>
     {pld}
     {dots_s}{dots_l}
     {xl}

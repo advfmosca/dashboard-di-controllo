@@ -137,11 +137,17 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new .nc-since { font-size: 11px; color: var(--text-muted); margin-left: auto; }
 .card-new .nc-name { font-size: 15px; font-weight: 700; line-height: 1.25; margin: 0; word-break: break-word; }
 .card-new .nc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; padding: 0 16px 14px; }
-.card-new .nc-chart { margin: 0 16px 12px; padding: 8px 10px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
-.card-new .nc-chart svg { width: 100%; height: 84px; display: block; }
-.card-new .nc-chart-legend { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; display: flex; gap: 6px; align-items: center; }
+.card-new .client-btn { margin-left: auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid #d2d2d7; color: var(--text); text-decoration: none; transition: background .12s; }
+.card-new .client-btn:hover { background: var(--bg-soft); }
+
+.card-new .nc-chart { margin: 0 16px 14px; padding: 10px 12px; background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; }
+.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
+.card-new .nc-chart-legend { font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; }
-.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; }
+.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
+.card-new .nc-chart-legend .lg-hint { margin-left: auto; font-size: 10px; color: var(--text-dim); font-style: italic; }
+.card-new .nc-chart svg circle { cursor: pointer; transition: r .12s; }
+.card-new .nc-chart svg circle:hover { r: 5; }
 .card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
 .card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
 .card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -257,15 +263,16 @@ def load_mt_series_7gg(ref_date_iso):
     return series_by_name
 
 
-def render_mini_chart(series, w=420, h=84):
-    """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0)."""
+def render_mini_chart(series, w=560, h=160):
+    """Mini SVG inline 7gg: linea nera = spesa, linea blu = contatti (se >0).
+    Ogni dot ha tooltip <title> con data, spesa, contatti."""
     if not series:
         return ""
     valid = [p for p in series if p.get("spend") is not None]
     if not valid:
         return ""
     n = len(valid)
-    padL, padR, padT, padB = 28, 28, 8, 18
+    padL, padR, padT, padB = 36, 36, 12, 26
     iw = w - padL - padR
     ih = h - padT - padB
     spends = [p["spend"] for p in valid]
@@ -276,23 +283,33 @@ def render_mini_chart(series, w=420, h=84):
     def x_at(i): return padL + (iw / 2 if n <= 1 else (i * iw) / (n - 1))
     def y_s(v): return padT + ih - (v / smax) * ih
     def y_l(v): return padT + ih - (v / lmax) * ih
+    def fmt_e(v): return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " €"
     grid = "".join(f'<line stroke="#ececef" stroke-dasharray="2,3" x1="{padL}" x2="{w-padR}" y1="{padT + ih*i/3:.1f}" y2="{padT + ih*i/3:.1f}"/>' for i in range(4))
     psp = " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_s(v):.1f}" for i, v in enumerate(spends))
-    dots_s = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_s(spends[i]):.1f}" r="2.2" fill="#1c1c1e"/>' for i in range(n))
+    dots_s = ""
+    for i in range(n):
+        d_short = valid[i]["date"][-5:]
+        tip = f"{d_short} · Spesa {fmt_e(spends[i])}"
+        if has_leads: tip += f" · Contatti {int(leads[i])}"
+        dots_s += f'<circle cx="{x_at(i):.1f}" cy="{y_s(spends[i]):.1f}" r="3" fill="#1c1c1e" stroke="#fff" stroke-width="1"><title>{tip}</title></circle>'
     pld = ""
     dots_l = ""
     if has_leads:
-        pld = '<path fill="none" stroke="#0866FF" stroke-width="1.4" d="' + " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_l(leads[i]):.1f}" for i in range(n)) + '"/>'
-        dots_l = "".join(f'<circle cx="{x_at(i):.1f}" cy="{y_l(leads[i]):.1f}" r="2.2" fill="#0866FF"/>' for i in range(n))
-    xl = (f'<text x="{x_at(0):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[0]["date"][-5:]}</text>'
-          f'<text x="{x_at(n-1):.1f}" y="{h - padB + 12}" text-anchor="middle" font-size="9" fill="#8a8a90">{valid[-1]["date"][-5:]}</text>')
+        pld = '<path fill="none" stroke="#0866FF" stroke-width="1.6" d="' + " ".join(("M" if i==0 else "L") + f"{x_at(i):.1f},{y_l(leads[i]):.1f}" for i in range(n)) + '"/>'
+        for i in range(n):
+            d_short = valid[i]["date"][-5:]
+            tip = f"{d_short} · Contatti {int(leads[i])} · Spesa {fmt_e(spends[i])}"
+            dots_l += f'<circle cx="{x_at(i):.1f}" cy="{y_l(leads[i]):.1f}" r="3" fill="#0866FF" stroke="#fff" stroke-width="1"><title>{tip}</title></circle>'
+    xl = "".join(f'<text x="{x_at(i):.1f}" y="{h - padB + 14}" text-anchor="middle" font-size="10" fill="#6b6b70">{valid[i]["date"][-5:]}</text>' for i in range(n))
     legend = ('<span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span>'
-              + ('<span class="lg-s" style="margin-left:8px"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span>' if has_leads else ""))
+              + ('<span class="lg-s" style="margin-left:8px"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span>' if has_leads else "")
+              + '<span class="lg-hint">Passa il mouse sui punti per il dettaglio del giorno</span>')
     return f"""<div class="nc-chart">
   <div class="nc-chart-legend">{legend}</div>
-  <svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <svg viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Andamento spesa e contatti 7 giorni">
     {grid}
-    <path fill="none" stroke="#1c1c1e" stroke-width="1.4" d="{psp}"/>
+    <line stroke="#d2d2d7" stroke-width="0.5" x1="{padL}" x2="{w-padR}" y1="{padT + ih:.1f}" y2="{padT + ih:.1f}"/>
+    <path fill="none" stroke="#1c1c1e" stroke-width="1.6" d="{psp}"/>
     {pld}
     {dots_s}{dots_l}
     {xl}
@@ -522,11 +539,21 @@ def transform(html, data, date_iso=None):
         if details_inner:
             details_html = f'<details><summary>Dettaglio tecnico</summary><div class="det-content">{" · ".join(details_inner)}</div></details>'
 
+        # Bottone "Vista cliente": cliente_short estratto dal nome campagna
+        import urllib.parse as _up
+        name_parts = [p.strip() for p in name.split(" - ") if p.strip()]
+        client_short = name_parts[-1] if len(name_parts) > 1 else name
+        client_view_url = f"https://advfmosca.github.io/dashboard-di-controllo/cliente.html?name={_up.quote(client_short)}"
+        if date_iso:
+            client_view_url += f"&date={date_iso}"
+        client_btn = f'<a class="client-btn" href="{client_view_url}" target="_blank" rel="noopener">👁 Vista cliente</a>'
+
         return f'''<div class="card-new {color}" data-name="{name_lower}" data-color="{color}">
   <div class="nc-hero">
     <div class="nc-status-row">
       <span class="nc-status"><span class="ico">{icon}</span> {human_label}</span>
       {f'<span class="nc-since">{since_str}</span>' if since_str else ''}
+      {client_btn}
     </div>
     <div class="nc-name">{name}</div>
   </div>
