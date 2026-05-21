@@ -172,18 +172,18 @@ def semaphore(spesa, lead, cpl, mean7, days_history):
     cold = days_history < 3
     if cold:
         if lead == 0:
-            return ("rosso", f"Spesi {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, copy, audience e form (giorno {days_history+1}/3 cold start).")
-        return ("verde", f"Lead acquisiti in cold start (giorno {days_history+1}/3). In attesa di consolidare storico per attivare confronto media 3gg.")
+            return ("rosso", f"Investiti {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno {days_history+1}/3 di apprendimento).")
+        return ("verde", f"Primi contatti raccolti in fase di apprendimento (giorno {days_history+1}/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.")
     if lead == 0:
-        return ("rosso", f"Spesi {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, copy, audience e funzionamento del form.")
+        return ("rosso", f"Investiti {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, messaggio, pubblico e funzionamento del modulo.")
     if mean7 is None or mean7 == 0:
-        return ("verde", "Primi lead dopo periodo senza conversioni: monitorare consolidamento nei prossimi giorni.")
+        return ("verde", "Primi contatti dopo un periodo senza richieste: monitorare consolidamento nei prossimi giorni.")
     delta_pct = (cpl - mean7) / mean7 * 100
     if cpl <= mean7:
-        return ("verde", f"CPL ieri {fmt_eur(cpl)} in linea o sotto media 3gg ({fmt_eur(mean7)}). Valutare scaling se il volume è basso.")
+        return ("verde", f"Costo per contatto ieri {fmt_eur(cpl)}, in linea o sotto la media degli ultimi 3 giorni ({fmt_eur(mean7)}). Valutare un aumento del budget se il volume è basso.")
     if delta_pct <= 50:
-        return ("giallo", f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean7)} (+{delta_pct:.1f}%, sotto la soglia +50%)")
-    return ("rosso", f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean7)} (+{delta_pct:.1f}%, oltre la soglia +50%)")
+        return ("giallo", f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean7)} (+{delta_pct:.1f}%, sotto la soglia +50%).")
+    return ("rosso", f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean7)} (+{delta_pct:.1f}%, oltre la soglia +50%).")
 
 # -------- 3gg lookback (campagne corte) using local csv-daily-snapshots data.json --------
 def load_history_csv_snapshots():
@@ -210,27 +210,27 @@ def mean_cpl(history, section, key_field, key_value, current_date):
 
 # -------- narrative + performance evaluation --------
 def cpl_narrative(cpl, mean3, days_history, lead, spesa, color_it):
-    """Genera frase argomentata sul trend CPL: contesto + valutazione + cosa significa."""
+    """Genera frase argomentata sul trend del costo per contatto: contesto + valutazione + cosa significa."""
     if spesa == 0:
-        return "Campagna ferma in giornata: nessuna pressione sulle aste e nessun apprendimento aggiornato. Da capire se è una pausa voluta o un blocco tecnico."
+        return "Campagna ferma in giornata: nessuna distribuzione attiva e nessun aggiornamento dell'apprendimento. Da chiarire se è una pausa voluta o un blocco tecnico."
     if days_history < 3:
         if lead == 0:
-            return f"Cold start (giorno {days_history+1}/3): {fmt_eur(spesa)} spesi senza lead. Normale se la campagna è appena partita, ma se anche oggi non porta contatti serve un audit veloce di form/audience."
+            return f"Fase di apprendimento (giorno {days_history+1}/3): {fmt_eur(spesa)} investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico."
         if cpl is None:
-            return f"Cold start (giorno {days_history+1}/3): {lead} lead raccolti, ancora poca storia per giudicare il CPL. Servono altri giorni per attivare il confronto."
-        return f"Cold start (giorno {days_history+1}/3): primo CPL utile a {fmt_eur(cpl)}. Riserviamoci di valutarlo davvero quando arrivano almeno 3 giorni di storia."
+            return f"Fase di apprendimento (giorno {days_history+1}/3): {lead} contatti raccolti, ancora poca storia per giudicare il costo per contatto. Servono altri giorni per attivare il confronto."
+        return f"Fase di apprendimento (giorno {days_history+1}/3): primo costo per contatto utile a {fmt_eur(cpl)}. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico."
     if lead == 0:
-        return f"{fmt_eur(spesa)} bruciati ieri con zero contatti tracciati. Il problema può essere in 3 punti: tracking (pixel/CAPI), form (caricamento o campi), oppure offerta non chiara. Audit in priorità."
+        return f"{fmt_eur(spesa)} investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria."
     if mean3 is None or mean3 == 0:
-        return f"Primi lead consolidati a CPL {fmt_eur(cpl)}. Storico ancora corto per il confronto: monitoriamo se nei prossimi 2 giorni il valore resta stabile."
+        return f"Primi contatti consolidati a un costo di {fmt_eur(cpl)} ciascuno. Lo storico è ancora corto per il confronto: monitoriamo se nei prossimi 2 giorni il valore resta stabile."
     delta = (cpl - mean3) / mean3 * 100
     if cpl <= mean3:
-        return f"CPL ieri {fmt_eur(cpl)}, sotto la media 3gg ({fmt_eur(mean3)}, {delta:+.0f}%). Apprendimento in consolidamento: c'è margine per uno scaling controllato del budget (+15–20%) senza far saltare l'efficienza."
+        return f"Costo per contatto ieri {fmt_eur(cpl)}, sotto la media degli ultimi 3 giorni ({fmt_eur(mean3)}, {delta:+.0f}%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza."
     if delta <= 25:
-        return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%): leggera salita, ancora ampiamente dentro la tolleranza. Da osservare oggi: se rimbalza sotto media è rumore, se cresce ancora si entra in zona gialla."
+        return f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean3)} (+{delta:.0f}%): leggera salita, ancora ampiamente nella tolleranza. Da osservare oggi: se rimbalza sotto media è rumore di breve periodo; se cresce ancora si entra in zona gialla."
     if delta <= 50:
-        return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%): trend in salita, vicino al limite +50%. È probabile saturazione creativa o asta più competitiva: rotazione creative entro 48h consigliata."
-    return f"CPL ieri {fmt_eur(cpl)} contro media 3gg {fmt_eur(mean3)} (+{delta:.0f}%, oltre +50%): fuori scala. La combinazione creative + audience + bidding non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + bid review."
+        return f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean3)} (+{delta:.0f}%): tendenza in salita, vicina al limite +50%. È probabile una saturazione delle creatività o un'asta più competitiva: rotazione creativa consigliata entro 48 ore."
+    return f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean3)} (+{delta:.0f}%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta."
 
 
 # Soglie performance Meta Lead Ads (settore estetica/medical leggermente diverso da retail)

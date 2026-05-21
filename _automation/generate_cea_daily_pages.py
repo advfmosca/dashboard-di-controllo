@@ -369,9 +369,9 @@ def render_daily(date_iso, cea):
   </div>
 
   <div class="legend">
-    <span><span class="dot dot-verde"></span><b>In linea</b> — sotto o pari alla media 3gg</span>
-    <span><span class="dot dot-giallo"></span><b>Da monitorare</b> — CPL fino a +50% vs media</span>
-    <span><span class="dot dot-rosso"></span><b>Da rivedere</b> — 0 lead o CPL &gt; +50% media</span>
+    <span><span class="dot dot-verde"></span><b>In linea</b> — costo per contatto sotto o pari alla media 3gg</span>
+    <span><span class="dot dot-giallo"></span><b>Da monitorare</b> — costo per contatto fino a +50% vs media</span>
+    <span><span class="dot dot-rosso"></span><b>Da rivedere</b> — 0 contatti o costo &gt; +50% vs media</span>
     <span><span class="dot dot-nero"></span><b>Spenta</b> — nessuna spesa</span>
     <span style="opacity:.7">· Clicca un riquadro in alto per filtrare</span>
   </div>
