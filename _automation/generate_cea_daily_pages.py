@@ -382,11 +382,13 @@ def render_mini_chart_LEGACY(series, w=560, h=160):
   </svg>
 </div>"""
 
-def render_daily(date_iso, cea):
+def render_daily(date_iso, cea, project="cea"):
+    """project: 'cea' o 'medtech'. Cambia titolo H1 + load_series source section."""
     kpi = cea.get("kpi", {})
     entries = cea.get("entries", [])
     title_date = fmt_date_long(date_iso)
-    series_by_name = load_series_7gg(date_iso)
+    series_by_name = load_series_7gg(date_iso, section=project)
+    project_label_h1 = "MED & TECH" if project == "medtech" else "CEA"
     rosso = kpi.get("rosso", 0); giallo = kpi.get("giallo", 0)
     verde = kpi.get("verde", 0); nero   = kpi.get("nero", 0)
     total_camp = len(entries) if entries else (rosso + giallo + verde + nero)
@@ -502,13 +504,13 @@ def render_daily(date_iso, cea):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1c1e">
-<title>CEA — Andamento campagne {date_iso}</title>
+<title>{project_label_h1} — Andamento campagne {date_iso}</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand-header">
-    <h1>CEA — Andamento campagne</h1>
+    <h1>{project_label_h1} — Andamento campagne</h1>
     <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
     <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>{EXECUTION_LABEL}</b> del {EXECUTION_DATE_LABEL}</p>
   </div>
@@ -756,12 +758,15 @@ const ALL_SERIES = {series_json};
 </html>
 """
 
-def render_index(items):
-    """items: list of {date_iso, kpi} ordinate desc per data"""
+def render_index(items, project="cea"):
+    """items: list of {date_iso, kpi} ordinate desc per data.
+    project: 'cea' o 'medtech' → cambia titolo + prefix link."""
+    file_prefix = "med-tech-daily" if project == "medtech" else "cea-daily"
+    title = "MED & TECH — Archivio andamento campagne" if project == "medtech" else "CEA — Archivio andamento campagne"
     items_html = []
     for it in items:
         k = it["kpi"]
-        items_html.append(f"""    <a class="report-item" href="cea-daily-{it['date']}.html">
+        items_html.append(f"""    <a class="report-item" href="{file_prefix}-{it['date']}.html">
       <span class="day-name">{fmt_date_long(it['date'])}</span>
       <span class="day-counts">
         <span class="c-rosso">{k.get('rosso',0)}R</span> ·
@@ -776,13 +781,13 @@ def render_index(items):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CEA — Archivio andamento campagne</title>
+<title>{title}</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
   <div class="brand-header">
-    <h1>CEA — Archivio andamento campagne</h1>
+    <h1>{title}</h1>
     <p class="subtitle">Snapshot giornalieri · semaforica calcolata sul costo medio per contatto 3gg</p>
   </div>
   <div class="section-label">Report disponibili</div>
@@ -796,9 +801,38 @@ def render_index(items):
 """
 
 def main():
-    dates = sys.argv[1:]
+    # Parsing argv: supporta --project cea|medtech (default cea) e --output-dir <PATH>
+    # (default = ROOT). Le date residue sono gli ISO-date da generare.
+    args = list(sys.argv[1:])
+    project = "cea"
+    out_dir = ROOT
+    dates = []
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a == "--project" and i + 1 < len(args):
+            project = args[i + 1].lower()
+            i += 2
+        elif a.startswith("--project="):
+            project = a.split("=", 1)[1].lower()
+            i += 1
+        elif a == "--output-dir" and i + 1 < len(args):
+            out_dir = Path(args[i + 1])
+            i += 2
+        elif a.startswith("--output-dir="):
+            out_dir = Path(a.split("=", 1)[1])
+            i += 1
+        else:
+            dates.append(a)
+            i += 1
+    if project not in ("cea", "medtech"):
+        print(f"⚠ project='{project}' non valido. Uso 'cea'.")
+        project = "cea"
+    file_prefix = "med-tech-daily" if project == "medtech" else "cea-daily"
+    archive_name = "med-tech-daily-check.html" if project == "medtech" else "cea-daily-check.html"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
     if not dates:
-        # Auto: tutti gli snapshot che hanno cea entries
         idx = json.load(open(SNAP_DIR / "index.json"))
         dates = [d for d in idx.get("dates", [])]
     items = []
@@ -808,22 +842,21 @@ def main():
             print(f"  [skip] {dt}: snapshot non trovato")
             continue
         snap = json.load(open(snap_file))
-        cea = snap.get("cea")
-        if not cea or not cea.get("entries"):
-            print(f"  [skip] {dt}: cea vuoto")
+        section_data = snap.get(project)
+        if not section_data or not section_data.get("entries"):
+            print(f"  [skip] {dt}: {project} vuoto")
             continue
-        # Genera pagina daily
-        html = render_daily(dt, cea)
-        out_file = ROOT / f"cea-daily-{dt}.html"
+        html = render_daily(dt, section_data, project=project)
+        out_file = out_dir / f"{file_prefix}-{dt}.html"
         out_file.write_text(html, encoding="utf-8")
-        print(f"  [ok]   {out_file.name}  ({len(cea['entries'])} card, R{cea['kpi'].get('rosso',0)}/G{cea['kpi'].get('giallo',0)}/V{cea['kpi'].get('verde',0)}/N{cea['kpi'].get('nero',0)})")
-        items.append({"date": dt, "kpi": cea["kpi"]})
+        kpi = section_data.get("kpi", {})
+        print(f"  [ok]   {out_file.name}  ({len(section_data['entries'])} card, R{kpi.get('rosso',0)}/G{kpi.get('giallo',0)}/V{kpi.get('verde',0)}/N{kpi.get('nero',0)})")
+        items.append({"date": dt, "kpi": kpi})
 
-    # Sort desc + render archivio
     items.sort(key=lambda x: x["date"], reverse=True)
-    archive = render_index(items)
-    (ROOT / "cea-daily-check.html").write_text(archive, encoding="utf-8")
-    print(f"\nArchivio: cea-daily-check.html ({len(items)} report)")
+    archive = render_index(items, project=project)
+    (out_dir / archive_name).write_text(archive, encoding="utf-8")
+    print(f"\nArchivio: {archive_name} ({len(items)} report) in {out_dir}")
 
 
 if __name__ == "__main__":
