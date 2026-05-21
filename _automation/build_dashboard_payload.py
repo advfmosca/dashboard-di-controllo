@@ -79,7 +79,10 @@ def parse_window(adset):
 # -------- parse CSVs --------
 def parse_cea_csv():
     # Schema: 0=Cliente; 1=Spesa; 2=Lead; 3=CPL; 4=CPM; 5=CTR; 9=Nome Campagna;
-    #         10=Nome Adset; 11=Data; 12=CPC; 13=Impressioni; 14=Click
+    #         10=Nome Adset; 11=Data; 12=CPC; 13=Impressioni; 14=Click; 15=Account ID (opzionale);
+    #         16=Target geo (opzionale); 17=Audience size (opzionale).
+    # La colonna 15 è stata aggiunta al CSV di Alfredo per popolare il bottone Meta nelle card CEA.
+    # Se la colonna manca (CSV vecchio o non valorizzato), entry.ad_url resta vuoto e il bottone non appare.
     rows = []
     with open(WORK / f"cea_{DATA_REPORT}.csv", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter=";")
@@ -88,19 +91,35 @@ def parse_cea_csv():
             if not row or len(row) < 14: continue
             cliente = row[0].strip()
             if not cliente: continue
+            acc_id = (row[15].strip() if len(row) > 15 else "").replace("act_", "").strip()
+            target_geo = row[16].strip() if len(row) > 16 else ""
+            audience_size = row[17].strip() if len(row) > 17 else ""
+            campagna = (row[9].strip() if len(row) > 9 else "") or ""
             rows.append({
                 "cliente": cliente,
+                "campagna": campagna,
                 "spesa": to_float(row[1]),
                 "lead":  to_int(row[2]),
                 "cpm":   to_float(row[4]),
                 "ctr":   to_float(row[5]),
                 "impr":  to_int(row[13]) if len(row) > 13 else 0,
                 "click": to_int(row[14]) if len(row) > 14 else 0,
+                "account_id": acc_id,
+                "target_geo": target_geo,
+                "audience_size": audience_size,
             })
-    # Aggregate per cliente: CPM e CTR vanno pesati per impressioni
+    # Aggregate per cliente: CPM e CTR vanno pesati per impressioni.
+    # In più aggreghiamo le righe per (cliente, campagna) così possiamo esporre la
+    # lista delle CAMPAGNE ATTIVE per la vista cliente — una card per campagna.
+    # Più adset sotto la stessa campagna vengono sommati: spesa/lead/impr/click sommati,
+    # adset_count incrementato.
     agg = defaultdict(lambda: {"spesa": 0.0, "lead": 0, "adset_count": 0,
                                "impr": 0, "click": 0,
-                               "cpm_sum": 0.0, "ctr_sum": 0.0})  # _sum sono numeratori pesati
+                               "cpm_sum": 0.0, "ctr_sum": 0.0,
+                               "account_id": "", "target_geo": "", "audience_size": "",
+                               "campagne": defaultdict(lambda: {"spesa": 0.0, "lead": 0,
+                                                                "impr": 0, "click": 0,
+                                                                "adset_count": 0})})
     for r in rows:
         a = agg[r["cliente"]]
         a["spesa"] += r["spesa"]
@@ -111,11 +130,44 @@ def parse_cea_csv():
         a["cpm_sum"] += r["cpm"] * r["impr"]
         a["ctr_sum"] += r["ctr"] * r["impr"]
         a["adset_count"] += 1
+        # Account ID + target_geo + audience_size: primo non-vuoto (statici per cliente)
+        if r.get("account_id") and not a["account_id"]:
+            a["account_id"] = r["account_id"]
+        if r.get("target_geo") and not a["target_geo"]:
+            a["target_geo"] = r["target_geo"]
+        if r.get("audience_size") and not a["audience_size"]:
+            a["audience_size"] = r["audience_size"]
+        # Breakdown per campagna Meta
+        camp_key = r["campagna"] or "(campagna senza nome)"
+        c = a["campagne"][camp_key]
+        c["spesa"] += r["spesa"]
+        c["lead"]  += r["lead"]
+        c["impr"]  += r["impr"]
+        c["click"] += r["click"]
+        c["adset_count"] += 1
     out = []
     for cli, v in agg.items():
         cpl = (v["spesa"] / v["lead"]) if v["lead"] > 0 else None
         cpm = (v["cpm_sum"] / v["impr"]) if v["impr"] > 0 else None
         ctr = (v["ctr_sum"] / v["impr"]) if v["impr"] > 0 else None
+        ad_url = (f"https://business.facebook.com/adsmanager/manage/campaigns?act={v['account_id']}"
+                  if v["account_id"] else "")
+        # Costruisci lista campagne attive, ordinata per spesa desc.
+        # Una campagna è considerata "attiva" se ha avuto spesa > 0 nella giornata.
+        campaigns_list = []
+        for camp_name, cstat in v["campagne"].items():
+            c_cpl = (cstat["spesa"] / cstat["lead"]) if cstat["lead"] > 0 else None
+            campaigns_list.append({
+                "name":         camp_name,
+                "spend":        round(cstat["spesa"], 2),
+                "lead":         cstat["lead"],
+                "cpl":          round(c_cpl, 2) if c_cpl is not None else None,
+                "impressions":  cstat["impr"],
+                "clicks":       cstat["click"],
+                "adset_count":  cstat["adset_count"],
+                "active":       cstat["spesa"] > 0,
+            })
+        campaigns_list.sort(key=lambda c: -c["spend"])
         out.append({
             "cliente": cli,
             "spesa":   round(v["spesa"], 2),
@@ -126,6 +178,11 @@ def parse_cea_csv():
             "impr":    v["impr"],
             "click":   v["click"],
             "adset_count": v["adset_count"],
+            "account_id": v["account_id"],
+            "ad_url": ad_url,
+            "target_geo": v["target_geo"],
+            "audience_size": v["audience_size"],
+            "campaigns": campaigns_list,
         })
     out.sort(key=lambda x: -x["spesa"])
     return out
@@ -334,7 +391,12 @@ def build_cea_payload(items, history, date_str):
             "status": entry_status(sem, reason),
             "cpl_narrative": narrative,
             "performance_eval": perf_eval,
-            "ad_url": "",
+            "ad_url": it.get("ad_url") or "",
+            "target_geo": it.get("target_geo") or "",
+            "audience_size": it.get("audience_size") or "",
+            # Breakdown per campagna Meta (usato dalla vista cliente per il blocco
+            # "Campagne attive" con Target + Grandezza Pubblico per campagna).
+            "campaigns": it.get("campaigns") or [],
         })
     # sort: red > yellow > gray > green
     order = {"red": 0, "yellow": 1, "gray": 2, "green": 3}
@@ -391,6 +453,17 @@ def build_medtech_payload(items, history, date_str):
             "cpl_narrative": narrative,
             "performance_eval": perf_eval,
             "ad_url": f"https://business.facebook.com/adsmanager/manage/campaigns?act={MEDTECH_META_ACCOUNT}",
+            # Per MedTech ogni entry è già una campagna singola: lista con un solo elemento
+            # così la vista cliente usa il blocco "Campagne attive" in modo uniforme con CEA/BF/AGHC.
+            "campaigns": [{
+                "name":        it["campagna"],
+                "spend":       it["spesa"],
+                "lead":        it["lead"],
+                "cpl":         it["cpl"],
+                "impressions": it.get("impr"),
+                "clicks":      it.get("click"),
+                "active":      it["spesa"] > 0,
+            }],
         })
     order = {"red": 0, "yellow": 1, "gray": 2, "green": 3}
     entries.sort(key=lambda e: (order.get(e["status"]["color"], 9), -e["spend_y"]))

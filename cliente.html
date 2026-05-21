@@ -47,6 +47,26 @@
   .meta-box dd { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: var(--text); }
   .meta-box dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
 
+  /* Campagne attive multi-campagna */
+  .campaigns-section { margin: 14px 0 18px; }
+  .campaigns-section .cs-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 8px; }
+  .campaign-card { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .campaign-card:last-child { margin-bottom: 0; }
+  .campaign-card .cc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .campaign-card .cc-platform { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; }
+  .campaign-card .cc-platform.meta { background: #dbeafe; color: #0866FF; }
+  .campaign-card .cc-platform.google { background: #fff7d6; color: #8a6a00; }
+  .campaign-card .cc-platform.tiktok { background: #111; color: #fff; }
+  .campaign-card .cc-name { font-weight: 700; font-size: 14px; color: var(--text); line-height: 1.3; flex: 1; min-width: 0; word-break: break-word; }
+  .campaign-card .cc-meta { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  @media (min-width: 560px) { .campaign-card .cc-meta { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+  .campaign-card .cc-meta dt { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin: 0; }
+  .campaign-card .cc-meta dd { margin: 2px 0 0; font-size: 13px; font-weight: 600; color: var(--text); }
+  .campaign-card .cc-meta dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+  .campaign-card .cc-kpi-row { display: flex; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-soft); flex-wrap: wrap; }
+  .campaign-card .cc-kpi { font-size: 11.5px; color: var(--text-muted); display: inline-flex; gap: 4px; align-items: baseline; }
+  .campaign-card .cc-kpi strong { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+
   /* Card layout — coerente con la vista interna (nessuna riga colorata laterale) */
   .aghc-card {
     background: var(--bg-card); border: 1px solid var(--border);
@@ -786,13 +806,103 @@ function normalizeBFItem(c) {
   };
 }
 
-// Mapping opzionale {clientName: {target, audience_size}} per MT/CEA
+// Mapping opzionale {clientName: {target, audience_size, campaigns: {name: {target, audience_size}}}} per MT/CEA
 // Caricato in parallelo al data.json; fallback a oggetto vuoto se 404.
 let MTCEA_META = {};
 function loadMtCeaMeta() {
   return fetchJson("mtcea_clients_meta.json")
     .then(j => { MTCEA_META = j || {}; })
     .catch(() => { MTCEA_META = {}; });
+}
+
+// Override nomi ufficiali AGHC/BeeFamily (vista cliente): { aghc: {INTERNAL: "Official"}, beefamily: {...} }
+let DISPLAY_NAMES = { aghc: {}, beefamily: {} };
+function loadDisplayNames() {
+  return fetchJson("client_display_names.json")
+    .then(j => { DISPLAY_NAMES = { aghc: j.aghc || {}, beefamily: j.beefamily || {} }; })
+    .catch(() => { DISPLAY_NAMES = { aghc: {}, beefamily: {} }; });
+}
+function officialName(internalName, project) {
+  if (!internalName) return internalName;
+  if (project === "AGHC") {
+    return DISPLAY_NAMES.aghc[internalName] || internalName;
+  }
+  if (project === "BeeFamily") {
+    return DISPLAY_NAMES.beefamily[internalName] || internalName;
+  }
+  return internalName;
+}
+
+// Risolve target + grandezza pubblico per una singola campagna, con fallback al livello cliente.
+// Sorgenti, in ordine:
+//   1. campaign.target / campaign.audience_size (se presenti direttamente sull'oggetto)
+//   2. MTCEA_META[clientName].campaigns[campaignName].{target, audience_size}
+//   3. MTCEA_META[clientName].{target, audience_size}  (default a livello cliente)
+//   4. clientLevelTarget / clientLevelAudienceSize (es. da entry.target_geo da CSV Alfredo)
+function resolveCampaignMeta(campaign, clientName, clientLevelTarget, clientLevelAudienceSize) {
+  const cMeta = (MTCEA_META[clientName] || {});
+  const perCamp = (cMeta.campaigns && campaign && campaign.name) ? (cMeta.campaigns[campaign.name] || {}) : {};
+  const target = (campaign && campaign.target) || perCamp.target || cMeta.target || clientLevelTarget || null;
+  const audSize = (campaign && campaign.audience_size) || perCamp.audience_size || cMeta.audience_size || clientLevelAudienceSize || null;
+  return { target, audience_size: audSize };
+}
+
+// Renderizza il blocco "Campagne attive" con UNA card per campagna.
+// `campaigns` = array di {name, spend, lead, cpl, active, platform?}
+// `clientName` serve per il lookup nel mapping mtcea_clients_meta.json.
+// `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. CSV Alfredo target_geo).
+function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, clientLevelAudienceSize) {
+  if (!campaigns || campaigns.length === 0) return "";
+  const cardsHtml = campaigns.map(c => {
+    const meta = resolveCampaignMeta(c, clientName, clientLevelTarget, clientLevelAudienceSize);
+    const plat = c.platform || "Meta";
+    const platCls = plat.toLowerCase();
+    const kpiBits = [];
+    if (c.spend != null) kpiBits.push(`<span class="cc-kpi">Spesa <strong>${fmtEURcompact(c.spend)}</strong></span>`);
+    if (c.lead != null)  kpiBits.push(`<span class="cc-kpi">Contatti <strong>${Math.round(c.lead).toLocaleString("it-IT")}</strong></span>`);
+    if (c.cpl  != null)  kpiBits.push(`<span class="cc-kpi">CPL <strong>${fmtEUR(c.cpl)}</strong></span>`);
+    const kpiRow = kpiBits.length ? `<div class="cc-kpi-row">${kpiBits.join("")}</div>` : "";
+    return `<div class="campaign-card">
+      <div class="cc-head">
+        <span class="cc-platform ${platCls}">${escapeHtml(plat)}</span>
+        <div class="cc-name">${escapeHtml(c.name || "—")}</div>
+      </div>
+      <dl class="cc-meta">
+        <div><dt>Target</dt><dd class="${meta.target ? '' : 'placeholder'}">${meta.target ? escapeHtml(meta.target) : 'Da configurare'}</dd></div>
+        <div><dt>Grandezza pubblico</dt><dd class="${meta.audience_size ? '' : 'placeholder'}">${meta.audience_size ? escapeHtml(meta.audience_size) : 'Da configurare'}</dd></div>
+      </dl>
+      ${kpiRow}
+    </div>`;
+  }).join("");
+  const headerLbl = campaigns.length === 1 ? "Campagna attiva" : `Campagne attive (${campaigns.length})`;
+  return `<section class="campaigns-section">
+    <h2 class="cs-title">${headerLbl}</h2>
+    ${cardsHtml}
+  </section>`;
+}
+
+// Estrae lista unificata di campagne attive da un'entry (qualunque progetto), normalizzando i campi.
+// Per ogni progetto può avere strutture diverse:
+//   - BeeFamily: meta_campaigns[] + google_campaigns[]
+//   - AGHC: meta_campaigns[] + tiktok_campaigns[]  (popolati da build_data.py)
+//   - CEA / MedTech: campaigns[]  (popolati da _automation/build_dashboard_payload.py)
+// Restituisce [] se non ci sono campagne note (caller usa fallback singolo).
+function extractCampaignsFromEntry(entry, project) {
+  if (!entry) return [];
+  const out = [];
+  const pushAll = (arr, platform) => {
+    for (const c of (arr || [])) {
+      if (c && c.name) out.push(Object.assign({}, c, { platform }));
+    }
+  };
+  pushAll(entry.meta_campaigns,   "Meta");
+  pushAll(entry.google_campaigns, "Google");
+  pushAll(entry.tiktok_campaigns, "TikTok");
+  if (entry.campaigns && Array.isArray(entry.campaigns)) {
+    // Campagne CEA/MedTech: platform default Meta (Alfredo's CSV è solo Meta)
+    pushAll(entry.campaigns, "Meta");
+  }
+  return out;
 }
 
 // ====================== MAIN =======================
@@ -811,12 +921,13 @@ if (!clienteName) {
   document.getElementById("hdr-name").textContent = "Cliente non specificato";
   showError("Parametro 'name' mancante nella URL. Esempio: cliente.html?name=Lunetta");
 } else {
-  // Carico in parallelo: meta overrides (opzionale, ignoro errori 404) + data/snapshot del giorno.
+  // Carico in parallelo: meta overrides + display names override + data/snapshot del giorno.
   const metaPromise = loadMtCeaMeta();
+  const namesPromise = loadDisplayNames();
   const dataPromise = dateParam
     ? fetchJson("snapshots/" + dateParam + ".json")
     : fetchJson("data.json");
-  Promise.all([metaPromise, dataPromise]).then(([, d]) => {
+  Promise.all([metaPromise, namesPromise, dataPromise]).then(([, , d]) => {
     const refDate = d.reference_date || dateParam || "";
     if (refDate) {
       const dl = document.getElementById("hdr-date");
@@ -858,45 +969,55 @@ if (!clienteName) {
     }
 
     const root = document.getElementById("card-root");
+    const metaRoot = document.getElementById("meta-root");
     const idPrefix = "vc";
+
+    // Funzione comune: renderizza il blocco "Campagne attive" sopra alla card.
+    // Per AGHC/BeeFamily il nome usato nel mapping target/audience è quello UFFICIALE
+    // (è la stessa chiave che il marketing manager riconosce). Per CEA/MedTech è
+    // il nome cliente estratto.
+    function renderCampaignsBlock(entry, projectLabel, displayName) {
+      if (!metaRoot) return;
+      const campaigns = extractCampaignsFromEntry(entry, projectLabel);
+      // Fallback singolo: se nessuna campagna è esposta nei dati, costruiamo
+      // un'unica entry sintetica così la UI non resta vuota e la regressione
+      // "non esce nome campagna" viene mitigata anche su dataset vecchi.
+      let list = campaigns;
+      if (!list.length) {
+        const parts = String(entry.name || "").split(' - ').map(p => p.trim()).filter(Boolean);
+        const fallbackName = (projectLabel === "Med & Tech" && parts.length > 1)
+          ? parts.slice(0, -1).join(' - ')
+          : (entry.name || displayName || "—");
+        list = [{ name: fallbackName, platform: "Meta", spend: entry.spend_y, lead: entry.contatti_y != null ? entry.contatti_y : entry.lead_y, cpl: entry.cpl_y }];
+      }
+      const lookupKey = displayName || extractMTCEAClient(entry.name || "");
+      const clientTarget = entry.target_geo || null;
+      const clientAud    = entry.audience_size || null;
+      metaRoot.innerHTML = buildCampaignsSectionHTML(list, lookupKey, clientTarget, clientAud);
+    }
+
     if (project === "AGHC") {
-      document.getElementById("hdr-name").textContent = found.name;
+      const officialDisplayName = officialName(found.name, "AGHC");
+      document.getElementById("hdr-name").textContent = officialDisplayName;
+      renderCampaignsBlock(found, "AGHC", officialDisplayName);
       const item = normalizeAGHCItem(found);
+      item.name = officialDisplayName;
       root.innerHTML = buildAGHCCardHTML(item, idPrefix);
-      wireSeries(item, idPrefix, 'aghc');
+      // wireSeries fa il match in snapshot per nome → passiamo il nome INTERNO originale.
+      wireSeries({ ...item, name: found.name }, idPrefix, 'aghc');
     } else if (project === "BeeFamily") {
-      document.getElementById("hdr-name").textContent = found.name;
+      const officialDisplayName = officialName(found.name, "BeeFamily");
+      document.getElementById("hdr-name").textContent = officialDisplayName;
+      renderCampaignsBlock(found, "BeeFamily", officialDisplayName);
       const item = normalizeBFItem(found);
+      item.name = officialDisplayName;
       root.innerHTML = buildBFCardHTML(item, idPrefix);
-      wireSeries(item, idPrefix, 'bf');
+      wireSeries({ ...item, name: found.name }, idPrefix, 'bf');
     } else {
-      // Med & Tech / CEA: mostra solo il nome cliente estratto, non il nome campagna completo
+      // Med & Tech / CEA
       const clientShort = extractMTCEAClient(found.name);
       document.getElementById("hdr-name").textContent = clientShort;
-
-      // Box meta sotto al titolo: campagna attiva (auto-estratta) + target + grandezza pubblico.
-      // Target e pubblico arrivano da un mapping manuale opzionale (mtcea_clients_meta.json
-      // se presente nei dati `d.mtcea_meta` o caricato a parte). Per ora placeholder se assente.
-      const parts = String(found.name).split(' - ').map(p => p.trim()).filter(Boolean);
-      // MT: "Open Day - Total Lift - <CLIENTE>" -> campagna = "Open Day - Total Lift"
-      // CEA: "ADV Linea Più Casale" -> campagna = intero nome
-      const campaignActive = (project === "Med & Tech" && parts.length > 1)
-        ? parts.slice(0, -1).join(' - ')
-        : found.name;
-      // Mapping opzionale: prima cerca in MTCEA_META (file mtcea_clients_meta.json caricato a parte),
-      // poi in d.mtcea_meta (se la pipeline server lo iniettasse in data.json).
-      const meta = (MTCEA_META && MTCEA_META[clientShort]) || (d.mtcea_meta && d.mtcea_meta[clientShort]) || {};
-      const target = meta.target || null;
-      const audSize = meta.audience_size || null;
-      const metaRoot = document.getElementById("meta-root");
-      if (metaRoot) {
-        metaRoot.innerHTML = `<div class="meta-box"><dl>
-          <div><dt>Campagna attiva</dt><dd>${escapeHtml(campaignActive)}</dd></div>
-          <div><dt>Target</dt><dd class="${target ? '' : 'placeholder'}">${target ? escapeHtml(target) : 'Da configurare'}</dd></div>
-          <div><dt>Grandezza pubblico</dt><dd class="${audSize ? '' : 'placeholder'}">${audSize ? escapeHtml(audSize) : 'Da configurare'}</dd></div>
-        </dl></div>`;
-      }
-
+      renderCampaignsBlock(found, project, clientShort);
       root.innerHTML = buildMTCEACardHTML(found, idPrefix, project);
       wireMTCEASeries(found, idPrefix, project);
     }

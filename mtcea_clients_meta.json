@@ -1,9 +1,19 @@
 {
-  "_README": "Mapping opzionale per la vista cliente Med & Tech / CEA. Per ogni cliente, valorizza 'target' (zona geografica + raggio), 'audience_size' (stima dal Business Manager) e 'ad_url' (link diretto Meta Ads Manager dell'account del cliente, formato 'https://business.facebook.com/adsmanager/manage/campaigns?act=NNN'). Lascia le stringhe vuote per i clienti che vuoi gestire dopo. Le voci che iniziano per _ sono ignorate.",
+  "_README": "Mapping opzionale per la vista cliente di tutti i progetti (CEA, Med & Tech, AGHC, BeeFamily). Per ogni cliente puoi valorizzare: (a) 'target' + 'audience_size' a livello cliente come default che si applica a TUTTE le sue campagne; (b) un oggetto 'campaigns' con override per singola campagna — chiave = nome esatto della campagna Meta/Google/TikTok come appare in data.json. Quando la vista cliente renderizza una campagna, cerca prima un match in `campaigns[nome]`, poi fallback al default cliente, poi al campo CSV `target_geo`/`audience_size` di Alfredo. Lascia le stringhe vuote per le voci che vuoi gestire dopo. Le voci che iniziano per _ sono ignorate. Per AGHC/BeeFamily la chiave cliente è il NOME UFFICIALE definito in client_display_names.json (es. 'Hotel Lunetta', non 'LUNETTA').",
   "_example_template": {
     "target": "Via Manzoni 12, Milano +8km",
     "audience_size": "120K persone",
-    "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=123456789012345"
+    "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=123456789012345",
+    "campaigns": {
+      "Nome Campagna Meta Esatto": {
+        "target": "Verona centro +12km",
+        "audience_size": "85K persone"
+      },
+      "Altra Campagna Estate 2026": {
+        "target": "Lago di Garda +25km",
+        "audience_size": "210K persone"
+      }
+    }
   },
   "ADV ARTESTETICA": {
     "target": "",

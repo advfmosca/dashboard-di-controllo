@@ -10,7 +10,7 @@ Legge i 4 dataset Windsor raw e scrive:
 Usage:
   python3 build_data.py --meta meta.json --google google.json \
     --tiktok tiktok.json --medtech medtech.json \
-    --workspace "/Users/francescomariamosca/Desktop/Dashboard di Controllo"
+    --workspace "/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo"
 """
 
 import json
@@ -800,6 +800,16 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
         aid = str(r.get("account_id"))
         ytd_by_account[aid] = ytd_by_account.get(aid, 0) + float(r.get("spend") or 0)
 
+    # Breakdown campagne attive sulla window 15gg (Meta + TikTok), usato dalla
+    # vista cliente per il blocco "Campagne attive" con Target + Grandezza Pubblico.
+    # Filtriamo i rows alla window prima di chiamare build_campaign_breakdown così
+    # le campagne fuori finestra non finiscono nella lista.
+    window_dates_set = {iso(yesterday - timedelta(days=i)) for i in range(window_days)}
+    windowed_meta_rows = [r for r in meta_rows  if r.get("date") in window_dates_set]
+    windowed_tt_rows   = [r for r in tiktok_rows if r.get("date") in window_dates_set]
+    aghc_meta_camps_by_aid = build_campaign_breakdown(windowed_meta_rows, is_meta_with_leads=True,  only_active=True)
+    aghc_tt_camps_by_aid   = build_campaign_breakdown(windowed_tt_rows,   is_meta_with_leads=False, only_active=True)
+
     # Indice vanity (account_id, date) → {impressions, reach, clicks, lpv, page_eng}
     # `reach` è opzionale: il fetch Meta del refresh-dashboard-data lo include solo dal 2026-05-20.
     # Per i record precedenti il campo sarà 0 e gli aggregati `reach_window`/`reach_y` resteranno 0.
@@ -993,6 +1003,15 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                 "ytd_spent": ytd_spent,
                 "budget_pct": round(budget_pct, 1) if budget_pct is not None else None,
             },
+            # Liste campagne attive sulla window (Meta + TikTok), usate dalla vista
+            # cliente per il blocco "Campagne attive" con Target + Grandezza Pubblico
+            # per singola campagna (target/audience da client_display_names.json o
+            # mtcea_clients_meta.json a livello campagna).
+            "meta_campaigns": aghc_meta_camps_by_aid.get(mid, []),
+            "tiktok_campaigns": [
+                c for tt_id in info["tiktok_ids"]
+                for c in aghc_tt_camps_by_aid.get(tt_id, [])
+            ],
         }
         cards.append(card)
 
