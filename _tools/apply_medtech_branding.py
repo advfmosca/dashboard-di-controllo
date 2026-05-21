@@ -822,6 +822,70 @@ def patch_pipeline_script(root: Path):
     return False
 
 
+_WEEKDAYS_IT = ["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"]
+_MONTHS_IT   = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]
+
+
+def _date_long_it(iso):
+    try:
+        dt = datetime.strptime(iso, "%Y-%m-%d")
+        return f"{_WEEKDAYS_IT[dt.weekday()]} {dt.day} {_MONTHS_IT[dt.month - 1]} {dt.year}"
+    except Exception:
+        return iso
+
+
+def rebuild_index_links(root: Path):
+    """Riscrive la lista 'Report disponibili' in index.html scannando i file
+    `med-tech-daily-YYYY-MM-DD.html` presenti nel root. Estrae i counts R/G/V/N
+    dalla pagina (smart-summary cells) e ordina desc per data.
+    Idempotente: se index.html non ha una sezione 'Report disponibili' o non
+    contiene anchor med-tech-daily, esce in silenzio.
+    """
+    idx_p = root / "index.html"
+    if not idx_p.exists():
+        return False
+    html = idx_p.read_text(encoding="utf-8")
+    if "med-tech-daily-" not in html:
+        return False
+
+    # Trova tutti i daily file presenti
+    daily_files = sorted(
+        [p.name for p in root.glob("med-tech-daily-*.html")
+         if re.match(r"med-tech-daily-\d{4}-\d{2}-\d{2}\.html$", p.name)],
+        reverse=True,
+    )
+    if not daily_files:
+        return False
+
+    # Costruisci la lista nuova
+    items = []
+    for fname in daily_files:
+        m = re.match(r"med-tech-daily-(\d{4}-\d{2}-\d{2})\.html$", fname)
+        if not m: continue
+        iso = m.group(1)
+        # Leggi counts dal file
+        try:
+            ftxt = (root / fname).read_text(encoding="utf-8")
+        except Exception:
+            ftxt = ""
+        def grab_count(cls):
+            mm = re.search(rf'<div class="ss-cell {cls}".*?<div class="val">(\d+)</div>', ftxt, re.DOTALL)
+            return mm.group(1) if mm else "0"
+        r = grab_count("rosso"); g = grab_count("giallo"); v = grab_count("verde"); n = grab_count("nero")
+        date_label = _date_long_it(iso)
+        items.append(f'<li><a href="{fname}">{date_label} {r}R · {g}G · {v}V · {n}N →</a></li>')
+
+    new_list = "\n".join(items)
+    # Sostituisce qualsiasi blocco <ul>...med-tech-daily...</ul> con la nuova lista.
+    pattern = re.compile(r"<ul[^>]*>\s*(?:<li>\s*<a[^>]+med-tech-daily-[^>]+>[^<]*</a>\s*</li>\s*)+</ul>", re.DOTALL)
+    new_html, n_sub = pattern.subn(f"<ul>\n{new_list}\n</ul>", html, count=1)
+    if n_sub == 0:
+        # fallback: sostituisce singoli <li> già presenti con la lista completa.
+        return False
+    idx_p.write_text(new_html, encoding="utf-8")
+    return True
+
+
 def main():
     root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
     if not (root / ".git").exists():
@@ -857,6 +921,13 @@ def main():
         changed += 1
     else:
         print(f"  [skip]    _scripts/run_daily_pipeline.py (già patchato o non trovato)")
+
+    # Rebuild lista 'Report disponibili' in index.html sulla base dei file presenti
+    if rebuild_index_links(root):
+        print(f"  [updated] index.html (lista report rigenerata da scanning files)")
+        changed += 1
+    else:
+        print(f"  [skip]    index.html (lista report non aggiornata)")
 
     print(f"\nFile aggiornati: {changed}")
 
