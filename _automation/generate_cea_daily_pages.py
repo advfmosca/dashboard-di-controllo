@@ -410,7 +410,7 @@ def render_daily(date_iso, cea, project="cea"):
     is_stale = bool(meta.get("stale"))
     stale_from = meta.get("stale_from") or meta.get("reference_date") or ""
     stale_from_label = fmt_date_long(stale_from) if stale_from else ""
-    stale_title_tag = " [DATI STALE]" if is_stale else ""
+    stale_title_tag = ""  # rimosso 2026-05-22 — il banner stale appare solo in overview master
     series_by_name = load_series_7gg(date_iso, section=project)
     project_label_h1 = "MED & TECH" if project == "medtech" else "CEA"
     rosso = kpi.get("rosso", 0); giallo = kpi.get("giallo", 0)
@@ -571,31 +571,17 @@ def render_daily(date_iso, cea, project="cea"):
         )
     else:
         stale_banner = ""
-    if is_stale:
-        stale_banner = (
-            '<div class="stale-banner" role="alert" style="'
-            'margin: 0 0 14px; padding: 14px 18px; '
-            'background: linear-gradient(135deg,#fff7e0 0%,#fff2c2 100%); '
-            'border: 1.5px solid #e0b020; border-left: 6px solid #d48800; '
-            'border-radius: 12px; color: #5a3c00; '
-            'font-size: 14px; line-height: 1.5; font-weight: 500;">'
-            '<div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">'
-            '⚠ Dati al ' + (stale_from_label or stale_from) + ' — non aggiornati al ' + title_date + '</div>'
-            '<div style="opacity:.92;">I numeri qui sotto sono dell\'ultimo giorno con dati validi. '
-            'La fonte automatica (mail <code style="background:#fff;padding:1px 5px;border-radius:4px;">'
-            'project@cea.management</code> → CSV su Drive) non ha pubblicato il file per il '
-            + title_date + '. Tornerà fresca al prossimo invio.</div>'
-            '</div>'
-        )
-    else:
-        stale_banner = ""
+    # Banner stale rimosso 2026-05-22 — la visibilità del flag stale è solo nell'overview
+    # della dashboard master (https://advfmosca.github.io/dashboard-di-controllo/#overview).
+    # Le pagine team daily mostrano i dati senza alcun banner anche se _meta.stale=true.
+    stale_banner = ""
     return f"""<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1c1e">
-<title>{project_label_h1} — Andamento campagne {date_iso}{stale_title_tag}</title>
+<title>{project_label_h1} — Andamento campagne {date_iso}</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>

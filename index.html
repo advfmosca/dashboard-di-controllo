@@ -442,6 +442,10 @@
   <div id="error-box"></div>
 
   <section class="tab-panel active" id="tab-overview">
+    <div id="ov-stale-banner" role="alert" style="display:none; margin: 0 0 14px; padding: 14px 18px; background: linear-gradient(135deg,#fff7e0 0%,#fff2c2 100%); border: 1.5px solid #e0b020; border-left: 6px solid #d48800; border-radius: 12px; color: #5a3c00; font-size: 14px; line-height: 1.5;">
+      <div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;" id="ov-stale-title">⚠ Sezioni CEA/MED&TECH STALE</div>
+      <div id="ov-stale-detail" style="opacity:.92;"></div>
+    </div>
     <div class="ov-search">
       <div class="search-row">
         <span class="search-ico">🔎</span>
@@ -812,6 +816,30 @@
   // ============================ RENDER ============================
   function renderOverview(d) {
     const ov = d.overview || {};
+
+    // Banner STALE — mostra solo se almeno una sezione CEA/MedTech ha _meta.stale=true.
+    // È visibile SOLO nell'overview (le pagine team daily non lo mostrano).
+    (function showStaleBanner() {
+      const stale = [];
+      const ceaMeta = (d.cea && d.cea._meta) || {};
+      const mtMeta  = (d.medtech && d.medtech._meta) || {};
+      if (ceaMeta.stale) stale.push({ name: "CEA", from: ceaMeta.stale_from || "?" });
+      if (mtMeta.stale)  stale.push({ name: "MED & TECH", from: mtMeta.stale_from || "?" });
+      const el = document.getElementById("ov-stale-banner");
+      if (!el) return;
+      if (stale.length === 0) {
+        el.style.display = "none";
+        return;
+      }
+      el.style.display = "";
+      const titleEl  = document.getElementById("ov-stale-title");
+      const detailEl = document.getElementById("ov-stale-detail");
+      const names = stale.map(s => s.name).join(" + ");
+      const from  = stale[0].from;
+      if (titleEl)  titleEl.textContent  = `⚠ ${names} — dati al ${from} (non aggiornati)`;
+      if (detailEl) detailEl.innerHTML   = `La mail automatica <code style="background:#fff;padding:1px 5px;border-radius:4px;">project@cea.management</code> con i CSV del giorno di riferimento non è arrivata. Le sezioni interessate stanno mostrando lo snapshot dell'ultimo giorno valido. Tornerà fresca al prossimo invio.`;
+    })();
+
     document.getElementById("ov-spend").textContent = fmtEUR(ov.total_spend);
     document.getElementById("ov-acc").textContent = ov.active_accounts != null ? ov.active_accounts : "–";
     document.getElementById("ov-acc-tot").textContent = ov.total_accounts != null ? ov.total_accounts : "–";
