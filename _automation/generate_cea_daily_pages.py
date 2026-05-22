@@ -1003,6 +1003,17 @@ def main():
     archive_path.write_text(archive, encoding="utf-8")
     print(f"\nArchivio: {archive_name} ({len(all_items)} report — di cui {len(items)} rigenerati ora) in {out_dir}")
 
+    # MIRROR su index.html per il repo med-tech-daily-check.
+    # GitHub Pages serve index.html alla root: la dashboard master fa fetch a
+    # https://advfmosca.github.io/med-tech-daily-check/ per parsare la lista
+    # report. Tenere allineati i 2 file evita che la lista visualizzata sia
+    # outdated rispetto all'archivio reale (regression vista 2026-05-22).
+    if project == "medtech":
+        index_path = out_dir / "index.html"
+        if index_path.exists():  # mirror solo se il file è già presente nel repo
+            index_path.write_text(archive, encoding="utf-8")
+            print(f"   Mirror: index.html aggiornato (homepage Pages) in {out_dir}")
+
 
 if __name__ == "__main__":
     main()
