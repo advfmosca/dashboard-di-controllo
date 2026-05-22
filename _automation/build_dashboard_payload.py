@@ -482,8 +482,8 @@ def freq_analysis(frequency, lead, reach, impressions):
         return ("giallo",
             f"Frequenza {f:.2f} (zona <b>{label}</b>): esposizione adeguata ma <b>0 lead</b> nonostante "
             f"il pubblico abbia visto l'annuncio in media {f:.1f} volte. Il problema non è la frequenza: "
-            f"verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> "
-            f"(numero campi, friction).")
+            f"verificare <b>audience</b> (qualità) e <b>angolazione dell'offerta</b> "
+            f"(timing, urgenza, ricettività del target in questa finestra) — il modulo Meta è già minimal e le domande sono essenziali, il punto di rottura non è lì.")
     if bucket in ("monitorare",):
         if lead_v > 0:
             return ("giallo",
@@ -605,7 +605,8 @@ def audience_narrative(lead_avg, ctr, freq, reach, audience_size_str, lead_y):
             text = (
                 f"CTR {ctr_v:.2f}% sopra la media (target ≥{_AUD_CTR_GOOD}%), frequenza {freq_v:.2f} sopra il sweet spot (1.5-2.5): "
                 f"il pubblico ha già visto l'annuncio più volte. <b>Preparare il refresh creative</b> nei prossimi 5-7 giorni per non perdere "
-                f"l'aggancio, in parallelo verificare il modulo lead (campi, friction mobile)."
+                f"l'aggancio, in parallelo rivedere l'angolazione dell'offerta (timing, stagionalità, leva di urgenza) — il modulo Meta è già minimal, "
+                f"se il pubblico apre ma non chiude è perché l'offerta in questa finestra non sta intercettando l'attenzione."
             )
         else:
             label = "Audience con potenziale di lead"
@@ -617,8 +618,11 @@ def audience_narrative(lead_avg, ctr, freq, reach, audience_size_str, lead_y):
             )
             text = (
                 f"CTR {ctr_v:.2f}% sopra la media (target ≥{_AUD_CTR_GOOD}%).{extra} "
-                f"Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) "
-                f"e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+                f"Aggancio e copertura ci sono, ma la conversione finale non scatta. Il modulo Meta è già minimal "
+                f"(domande essenziali, attrito quasi nullo): il punto di rottura sta nell'<b>offerta</b>, che probabilmente "
+                f"non è arrivata nel momento giusto o in questa finestra non sta godendo dell'attenzione necessaria dal target. "
+                f"Da rivedere l'angolazione (urgenza, prova sociale, leva stagionale) o ri-testare l'offerta in una finestra temporale diversa "
+                f"prima di mettere mano a creative o targeting."
             )
         return {
             "label": label,

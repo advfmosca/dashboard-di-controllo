@@ -579,8 +579,6 @@
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="mt-k-spend">–</div></div>
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
-      <!-- SEMAPHORE_V2 -->
-      <div class="kpi" title="Media leads/giorno per campagna attiva: total_lead / campagne_attive. Driver del nuovo semaforo (≥2 verde, 1-2 giallo, <1 rosso)."><div class="label">⌀ Lead/giorno per campagna</div><div class="value" id="mt-k-avglead">–</div><div class="sub">soglia VERDE ≥ 2</div></div>
     </div>
     <!-- Conteggi semafori cliccabili: filtrano le entries -->
     <div class="kpis sem-grid-filter" data-scope="mt" style="grid-template-columns: repeat(4, 1fr);">
@@ -610,8 +608,6 @@
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="cea-k-spend">–</div></div>
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="cea-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="cea-k-cpc">–</div></div>
-      <!-- SEMAPHORE_V2 -->
-      <div class="kpi" title="Media leads/giorno per campagna attiva: total_lead / campagne_attive. Driver del nuovo semaforo (≥2 verde, 1-2 giallo, <1 rosso)."><div class="label">⌀ Lead/giorno per campagna</div><div class="value" id="cea-k-avglead">–</div><div class="sub">soglia VERDE ≥ 2</div></div>
     </div>
     <!-- Conteggi semafori CEA cliccabili (filtrano le entries) -->
     <div class="kpis sem-grid-filter" data-scope="cea" style="grid-template-columns: repeat(4, 1fr);">
@@ -2703,10 +2699,6 @@
     document.getElementById("mt-k-spend").textContent = fmtEUR(kpi.total_spend);
     document.getElementById("mt-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
     document.getElementById("mt-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
-    // SEMAPHORE_V2: ⌀ Lead/giorno per campagna attiva
-    const _mtAvg = (kpi.actives && kpi.actives > 0 && kpi.total_lead != null) ? (kpi.total_lead / kpi.actives) : null;
-    const _mtAvgEl = document.getElementById("mt-k-avglead");
-    if (_mtAvgEl) _mtAvgEl.textContent = _mtAvg != null ? _mtAvg.toFixed(1).replace(".", ",") : "–";
     // Conteggi semaforici
     document.getElementById("mt-k-rosso").textContent = kpi.rosso != null ? kpi.rosso : "–";
     document.getElementById("mt-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
@@ -2743,7 +2735,7 @@
     const proj = d.cea;
     if (!proj || !Array.isArray(proj.entries) || proj.entries.length === 0) {
       // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto + hint
-      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-avglead","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
+      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
         const el = document.getElementById(id); if (el) el.textContent = "–";
       });
       const ap = document.getElementById("cea-alerts-pill");
@@ -2757,10 +2749,6 @@
     document.getElementById("cea-k-spend").textContent = fmtEUR(kpi.total_spend);
     document.getElementById("cea-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
     document.getElementById("cea-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
-    // SEMAPHORE_V2: ⌀ Lead/giorno per campagna attiva
-    const _ceaAvg = (kpi.actives && kpi.actives > 0 && kpi.total_lead != null) ? (kpi.total_lead / kpi.actives) : null;
-    const _ceaAvgEl = document.getElementById("cea-k-avglead");
-    if (_ceaAvgEl) _ceaAvgEl.textContent = _ceaAvg != null ? _ceaAvg.toFixed(1).replace(".", ",") : "–";
     document.getElementById("cea-k-rosso").textContent  = kpi.rosso  != null ? kpi.rosso  : "–";
     document.getElementById("cea-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
     document.getElementById("cea-k-verde").textContent  = kpi.verde  != null ? kpi.verde  : "–";
