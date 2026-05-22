@@ -12,6 +12,7 @@ Output:
 """
 import json
 import os
+import re
 import sys
 import urllib.parse
 from datetime import datetime
@@ -215,6 +216,18 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new details[open] summary::before { transform: rotate(90deg); }
 .card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
 .card-new details .det-content b { color: var(--text); }
+
+/* === Visualizzazioni & Frequenza (introdotte 2026-05-22) === */
+.card-new .nc-kpi .freq-pill { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; margin-top: 4px; text-transform: uppercase; }
+.card-new .nc-kpi .freq-pill.bassa     { background: #dbeafe; color: #1e3a8a; }
+.card-new .nc-kpi .freq-pill.ottimale  { background: #d1fadf; color: #14532d; }
+.card-new .nc-kpi .freq-pill.monitorare{ background: #ffedd5; color: #9a3412; }
+.card-new .nc-kpi .freq-pill.alta      { background: #fee2e2; color: #991b1b; }
+.card-new .nc-kpi .freq-pill.critica   { background: #1a1a1a; color: #fff; }
+.card-new .nc-freq { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-freq .nc-story.rosso  { color: #991b1b; }
+.card-new .nc-freq .nc-story.giallo { color: #9a3412; }
+.card-new .nc-freq .nc-story.verde  { color: #14532d; }
 
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
@@ -434,10 +447,39 @@ def render_daily(date_iso, cea, project="cea"):
                 f'<div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">{fmt_eur(cpl_m3)}</div></div>'
             )
 
+        # Visualizzazioni + Frequenza (introdotti 2026-05-22).
+        # Pill colorata per bucket; se reach mancante, mostra "—" ma resta la cella per coerenza layout.
+        impressions_v = e.get("impressions")
+        reach_v       = e.get("reach")
+        freq_v        = e.get("frequency")
+        freq_code     = e.get("freq_bucket") or ""
+        freq_label    = e.get("freq_bucket_label") or ""
+        vis_delta = f'<div class="delta">Reach {fmt_int(reach_v)}</div>' if reach_v else ''
+        kpis_inner.append(
+            f'<div class="nc-kpi"><div class="lbl">Visualizzazioni</div>'
+            f'<div class="val">{fmt_int(impressions_v) if impressions_v else "—"}</div>{vis_delta}</div>'
+        )
+        freq_pill_html = f'<span class="freq-pill {freq_code}">{escape_html(freq_label)}</span>' if freq_code else ''
+        kpis_inner.append(
+            f'<div class="nc-kpi"><div class="lbl">Frequenza</div>'
+            f'<div class="val">{(f"{freq_v:.2f}").replace(".", ",") if freq_v is not None else "—"}</div>'
+            f'{freq_pill_html}</div>'
+        )
+
         # Storia + azione: usiamo cpl_narrative per "cosa è successo" e performance_eval per "cosa faremo"
         story_html = ""
         if narrative:
             story_html = f'<div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">{escape_html(narrative)}</p></div>'
+        # NUOVA sezione: Analisi frequenza (tra "Cosa è successo" e "Cosa faremo")
+        freq_html = ""
+        freq_text  = e.get("freq_analysis") or ""
+        freq_color = e.get("freq_analysis_color") or ""
+        if freq_text:
+            # ATTENZIONE: freq_text contiene tag <b> intenzionali → NON escape-arlo
+            freq_html = (
+                f'<div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div>'
+                f'<p class="nc-story {freq_color}">{freq_text}</p></div>'
+            )
         action_html = ""
         if perf_eval:
             action_html = f'<div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> {escape_html(perf_eval)}</div></div>'
@@ -461,8 +503,9 @@ def render_daily(date_iso, cea, project="cea"):
         else:
             campaign_active = name
         meta_overrides = META_OVERRIDES.get(client_short, {}) if META_OVERRIDES else {}
-        target_val = meta_overrides.get("target", "")
-        aud_val = meta_overrides.get("audience_size", "")
+        # Priorità: dato dal CSV (entry.target_geo / audience_size); fallback su mapping manuale.
+        target_val = e.get("target_geo") or meta_overrides.get("target", "")
+        aud_val = e.get("audience_size") or meta_overrides.get("audience_size", "")
         target_html = f'<dd>{escape_html(target_val)}</dd>' if target_val else '<dd class="placeholder">Da configurare</dd>'
         aud_html = f'<dd>{escape_html(aud_val)}</dd>' if aud_val else '<dd class="placeholder">Da configurare</dd>'
         meta_block = f"""<div class="nc-meta"><dl>
@@ -489,6 +532,7 @@ def render_daily(date_iso, cea, project="cea"):
   </div>
   {render_chart_placeholder(card_id)}
   {story_html}
+  {freq_html}
   {action_html}
   {details_html}
 </div>""")
@@ -853,10 +897,73 @@ def main():
         print(f"  [ok]   {out_file.name}  ({len(section_data['entries'])} card, R{kpi.get('rosso',0)}/G{kpi.get('giallo',0)}/V{kpi.get('verde',0)}/N{kpi.get('nero',0)})")
         items.append({"date": dt, "kpi": kpi})
 
-    items.sort(key=lambda x: x["date"], reverse=True)
-    archive = render_index(items, project=project)
-    (out_dir / archive_name).write_text(archive, encoding="utf-8")
-    print(f"\nArchivio: {archive_name} ({len(items)} report) in {out_dir}")
+    # Archivio: scansiona TUTTI i file daily presenti in out_dir, non solo
+    # quelli appena generati. Evita di sovrascrivere l'archivio del repo
+    # con una lista parziale quando si rigenera un sottoinsieme di date
+    # (es. solo 19 e 20). Per i giorni non rigenerati ora, leggiamo i kpi
+    # direttamente dall'HTML esistente.
+    existing_files = sorted([
+        p for p in out_dir.glob(f"{file_prefix}-*.html")
+        if re.match(rf"{re.escape(file_prefix)}-\d{{4}}-\d{{2}}-\d{{2}}\.html$", p.name)
+    ])
+    items_by_date = {it["date"]: it for it in items}
+    for fp in existing_files:
+        m = re.match(rf"{re.escape(file_prefix)}-(\d{{4}}-\d{{2}}-\d{{2}})\.html$", fp.name)
+        if not m:
+            continue
+        dt = m.group(1)
+        if dt in items_by_date:
+            continue
+        # Estrai kpi dai counts dell'HTML esistente (smart-summary cells)
+        try:
+            ftxt = fp.read_text(encoding="utf-8")
+        except Exception:
+            ftxt = ""
+        def _grab(cls):
+            mm = re.search(rf'<div class="ss-cell {cls}".*?<div class="val">(\d+)</div>', ftxt, re.DOTALL)
+            return int(mm.group(1)) if mm else 0
+        items_by_date[dt] = {
+            "date": dt,
+            "kpi": {
+                "rosso": _grab("rosso"),
+                "giallo": _grab("giallo"),
+                "verde":  _grab("verde"),
+                "nero":   _grab("nero"),
+            },
+        }
+
+    all_items = list(items_by_date.values())
+    all_items.sort(key=lambda x: x["date"], reverse=True)
+    archive = render_index(all_items, project=project)
+
+    # Safeguard anti-regression: se esiste già un archivio con PIÙ voci di
+    # quello che stiamo per scrivere, c'è qualcosa che non va (out_dir non
+    # contiene tutti i daily file → l'archivio risulterebbe monco e
+    # sovrascriverebbe l'attuale, perdendo giorni). Abort con messaggio
+    # esplicito. Per forzare lo scrive comunque: env DASHBOARD_FORCE_ARCHIVE=1.
+    archive_path = out_dir / archive_name
+    if archive_path.exists() and not os.environ.get("DASHBOARD_FORCE_ARCHIVE"):
+        try:
+            existing_archive = archive_path.read_text(encoding="utf-8")
+            existing_dates = set(re.findall(
+                rf"{re.escape(file_prefix)}-(\d{{4}}-\d{{2}}-\d{{2}})\.html",
+                existing_archive,
+            ))
+        except Exception:
+            existing_dates = set()
+        new_dates = {it["date"] for it in all_items}
+        lost_dates = existing_dates - new_dates
+        if lost_dates:
+            print(
+                f"\n✗ ABORT: il nuovo archivio perderebbe {len(lost_dates)} "
+                f"giorni rispetto a quello esistente ({sorted(lost_dates)})."
+                f"\n  → out_dir={out_dir} non contiene tutti i file daily."
+                f"\n  → Per forzare comunque: DASHBOARD_FORCE_ARCHIVE=1",
+            )
+            return  # NON scrivo l'archivio monco
+
+    archive_path.write_text(archive, encoding="utf-8")
+    print(f"\nArchivio: {archive_name} ({len(all_items)} report — di cui {len(items)} rigenerati ora) in {out_dir}")
 
 
 if __name__ == "__main__":

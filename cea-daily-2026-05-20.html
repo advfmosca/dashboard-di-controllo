@@ -177,6 +177,18 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
 .card-new details .det-content b { color: var(--text); }
 
+/* === Visualizzazioni & Frequenza (introdotte 2026-05-22) === */
+.card-new .nc-kpi .freq-pill { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; margin-top: 4px; text-transform: uppercase; }
+.card-new .nc-kpi .freq-pill.bassa     { background: #dbeafe; color: #1e3a8a; }
+.card-new .nc-kpi .freq-pill.ottimale  { background: #d1fadf; color: #14532d; }
+.card-new .nc-kpi .freq-pill.monitorare{ background: #ffedd5; color: #9a3412; }
+.card-new .nc-kpi .freq-pill.alta      { background: #fee2e2; color: #991b1b; }
+.card-new .nc-kpi .freq-pill.critica   { background: #1a1a1a; color: #fff; }
+.card-new .nc-freq { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-freq .nc-story.rosso  { color: #991b1b; }
+.card-new .nc-freq .nc-story.giallo { color: #9a3412; }
+.card-new .nc-freq .nc-story.verde  { color: #14532d; }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .dot-rosso { background: var(--red); }
@@ -224,7 +236,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="brand-header">
     <h1>CEA — Andamento campagne</h1>
     <p class="subtitle">Snapshot del Mercoledì 20 Maggio 2026 · 45 clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
-    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>08:39</b> del 21/05/2026</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>08:20</b> del 22/05/2026</p>
   </div>
 
   <div class="kpis">
@@ -277,7 +289,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 50,35 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">50,35 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 50,35 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">50,35 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.223</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c1">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -292,6 +304,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c1" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 50,35 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 7.49% (ottimo) · CPM 11,92 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 50,35 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -309,7 +322,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 28,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">28,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">24,28 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 28,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">28,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">24,28 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.916</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c2">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -324,6 +337,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c2" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 28,37 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.46% (nella media) · CPM 14,81 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 28,37 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -341,7 +355,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 27,49 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,49 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">21,70 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 27,49 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,49 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">21,70 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.421</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c3">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -356,6 +370,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c3" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 27,49 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.01% (ottimo) · CPM 11,35 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 27,49 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -373,7 +388,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 27,19 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,19 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">24,51 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 27,19 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,19 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">24,51 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.297</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c4">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -388,6 +403,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c4" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 27,19 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.78% (buono) · CPM 11,84 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 27,19 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -405,7 +421,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 26,41 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,41 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">20,24 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 26,41 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,41 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">20,24 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">12.950</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c5">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -420,6 +436,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c5" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 26,41 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.64% (basso) · CPM 2,04 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 26,41 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -437,7 +454,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 25,10 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,10 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 25,10 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,10 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.214</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c6">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -452,6 +469,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c6" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 25,10 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.08% (ottimo) · CPM 11,34 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 25,10 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -469,7 +487,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 20,03 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,03 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,64 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 20,03 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,03 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,64 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.103</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c7">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -484,6 +502,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c7" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 20,03 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.97% (buono) · CPM 6,46 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 20,03 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -501,7 +520,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 19,65 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,65 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 19,65 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,65 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.468</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c8">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -516,6 +535,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c8" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 19,65 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.50% (buono) · CPM 7,96 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 19,65 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento).</div></details>
 </div>
@@ -533,7 +553,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 16,73 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,73 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">11,78 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 16,73 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,73 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">11,78 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.941</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c9">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -548,6 +568,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c9" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 16,73 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.26% (ottimo) · CPM 4,25 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 16,73 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -565,7 +586,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,89 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,89 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.859</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c10">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -580,6 +601,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c10" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 14,89 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.48% (nella media) · CPM 3,86 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 14,89 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -597,7 +619,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,63 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,63 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,51 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,63 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,63 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,51 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.881</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c11">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -612,6 +634,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c11" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 14,63 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.49% (nella media) · CPM 7,78 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 14,63 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -629,7 +652,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,40 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,40 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,40 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,40 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">5.066</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c12">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -644,6 +667,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c12" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): 14,40 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 7.32% (ottimo) · CPM 2,85 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 14,40 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 2/3 di apprendimento).</div></details>
 </div>
@@ -661,7 +685,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 10,49 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,49 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 10,49 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,49 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.525</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c13">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -676,6 +700,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c13" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 10,49 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.26% (ottimo) · CPM 6,88 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 10,49 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento).</div></details>
 </div>
@@ -693,7 +718,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,43 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,43 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,43 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,43 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.723</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c14">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -708,6 +733,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c14" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 9,43 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.33% (nella media) · CPM 5,47 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 9,43 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento).</div></details>
 </div>
@@ -725,7 +751,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,39 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,39 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,05 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,39 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,39 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,05 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.825</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c15">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -740,6 +766,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c15" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 9,39 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.37% (nella media) · CPM 5,15 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 9,39 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -757,7 +784,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 4,46 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">4,46 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 4,46 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">4,46 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.532</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c16">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -772,6 +799,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c16" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 4,46 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 5.81% (ottimo) · CPM 2,91 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 4,46 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -789,7 +817,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 3,24 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">3,24 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 3,24 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">3,24 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.439</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c17">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -804,6 +832,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c17" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 3,24 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.76% (basso) · CPM 2,25 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 3,24 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 3/3 di apprendimento).</div></details>
 </div>
@@ -821,7 +850,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 2,10 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">2,10 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 2,10 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">2,10 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">414</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c18">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -836,6 +865,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c18" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 2,10 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.90% (ottimo) · CPM 5,07 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Investiti 2,10 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento).</div></details>
 </div>
@@ -853,7 +883,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">15</div><div class="delta">su 1.186,27 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">79,08 €</div><div class="delta up">+10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">1.186,27 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">71,96 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">15</div><div class="delta">su 1.186,27 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">79,08 €</div><div class="delta up">+10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">1.186,27 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">71,96 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">6.695</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c19">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -868,6 +898,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c19" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 79,08 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 5.32% (ottimo) · CPM 177,19 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -885,7 +916,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">6</div><div class="delta">su 99,60 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,60 €</div><div class="delta down">-59% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">99,60 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">40,07 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">6</div><div class="delta">su 99,60 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,60 €</div><div class="delta down">-59% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">99,60 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">40,07 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">9.225</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c20">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -900,6 +931,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c20" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 16,60 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.72% (buono) · CPM 10,80 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -917,7 +949,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 36,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">12,30 €</div><div class="delta up">+106% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">36,89 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,96 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 36,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">12,30 €</div><div class="delta up">+106% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">36,89 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,96 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">8.019</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c21">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -932,6 +964,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c21" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 12,30 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.68% (buono) · CPM 4,60 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -949,7 +982,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 32,84 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,42 €</div><div class="delta up">+193% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">32,84 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,61 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 32,84 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">16,42 €</div><div class="delta up">+193% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">32,84 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,61 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">5.544</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c22">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -964,6 +997,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c22" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 16,42 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.28% (nella media) · CPM 5,92 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -981,7 +1015,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 31,29 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">31,29 €</div><div class="delta up">+134% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,29 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">13,39 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 31,29 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">31,29 €</div><div class="delta up">+134% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">31,29 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">13,39 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.003</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c23">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -996,6 +1030,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c23" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 31,29 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.79% (buono) · CPM 31,20 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1013,7 +1048,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 28,90 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">28,90 €</div><div class="delta down">-10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">28,90 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">31,96 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 28,90 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">28,90 €</div><div class="delta down">-10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">28,90 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">31,96 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">9.783</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c24">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1028,6 +1063,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c24" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 28,90 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.95% (buono) · CPM 2,95 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1045,7 +1081,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">4</div><div class="delta">su 27,91 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,98 €</div><div class="delta down">-52% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,91 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,50 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">4</div><div class="delta">su 27,91 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,98 €</div><div class="delta down">-52% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,91 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,50 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.956</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c25">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1060,6 +1096,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c25" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 6,98 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.15% (ottimo) · CPM 7,06 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1077,7 +1114,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 26,83 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">26,83 €</div><div class="delta up">+159% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,83 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,36 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 26,83 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">26,83 €</div><div class="delta up">+159% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,83 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,36 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.408</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c26">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1092,6 +1129,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c26" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 26,83 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.31% (ottimo) · CPM 6,09 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1109,7 +1147,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 26,08 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,69 €</div><div class="delta down">-23% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,08 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">11,27 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 26,08 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,69 €</div><div class="delta down">-23% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,08 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">11,27 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">994</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c27">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1124,6 +1162,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c27" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 8,69 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.92% (ottimo) · CPM 26,24 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1141,7 +1180,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 25,20 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">25,20 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,20 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 25,20 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">25,20 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,20 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.581</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c28">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1156,6 +1195,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c28" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 25,20 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.98% (buono) · CPM 9,76 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1173,7 +1213,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">8</div><div class="delta">su 23,60 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">2,95 €</div><div class="delta down">-64% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,60 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">8,14 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">8</div><div class="delta">su 23,60 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">2,95 €</div><div class="delta down">-64% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,60 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">8,14 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.178</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c29">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1188,6 +1228,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c29" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 2,95 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.20% (ottimo) · CPM 5,65 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1205,7 +1246,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 21,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">21,58 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,58 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 21,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">21,58 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,58 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.472</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c30">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1220,6 +1261,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c30" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 21,58 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.04% (ottimo) · CPM 14,66 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1237,7 +1279,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">7</div><div class="delta">su 21,38 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">3,05 €</div><div class="delta">In linea con media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,38 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">3,00 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">7</div><div class="delta">su 21,38 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">3,05 €</div><div class="delta">In linea con media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">21,38 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">3,00 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.664</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c31">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1252,6 +1294,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c31" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 3,05 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.37% (ottimo) · CPM 12,85 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1269,7 +1312,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 20,01 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,67 €</div><div class="delta down">-59% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,01 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">16,26 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 20,01 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,67 €</div><div class="delta down">-59% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,01 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">16,26 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.630</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c32">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1284,6 +1327,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c32" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 6,67 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.02% (ottimo) · CPM 12,28 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1301,7 +1345,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 19,90 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,95 €</div><div class="delta down">-46% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,90 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">18,32 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 19,90 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,95 €</div><div class="delta down">-46% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,90 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">18,32 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.192</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c33">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1316,6 +1360,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c33" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 9,95 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.84% (ottimo) · CPM 4,74 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1333,7 +1378,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 18,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,19 €</div><div class="delta up">+37% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">6,72 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 18,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,19 €</div><div class="delta up">+37% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">6,72 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.885</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c34">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1348,6 +1393,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c34" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 9,19 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.64% (buono) · CPM 9,75 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1365,7 +1411,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 18,05 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,03 €</div><div class="delta down">-42% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,05 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">15,61 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 18,05 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,03 €</div><div class="delta down">-42% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,05 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">15,61 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.403</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c35">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1380,6 +1426,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c35" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 9,03 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.94% (buono) · CPM 5,30 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1397,7 +1444,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 17,95 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">17,95 €</div><div class="delta up">+24% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,95 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,51 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 17,95 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">17,95 €</div><div class="delta up">+24% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,95 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">14,51 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.653</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c36">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1412,6 +1459,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c36" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 17,95 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.87% (nella media) · CPM 6,77 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1429,7 +1477,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 15,21 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">7,61 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">15,21 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 15,21 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">7,61 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">15,21 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.421</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c37">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1444,6 +1492,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c37" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 7,61 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.78% (ottimo) · CPM 4,45 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1461,7 +1510,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 13,92 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">13,92 €</div><div class="delta down">-17% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">13,92 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">16,71 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 13,92 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">13,92 €</div><div class="delta down">-17% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">13,92 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">16,71 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.514</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c38">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1476,6 +1525,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c38" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 13,92 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.26% (nella media) · CPM 9,20 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1493,7 +1543,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 12,54 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">12,54 €</div><div class="delta up">+190% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">12,54 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,32 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 12,54 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">12,54 €</div><div class="delta up">+190% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">12,54 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,32 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.883</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c39">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1508,6 +1558,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c39" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 12,54 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.05% (ottimo) · CPM 4,35 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1525,7 +1576,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 10,91 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,91 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,91 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 10,91 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,91 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,91 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">695</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c40">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1540,6 +1591,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c40" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 10,91 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.73% (buono) · CPM 15,70 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1557,7 +1609,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 10,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,37 €</div><div class="delta up">+113% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,86 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 10,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,37 €</div><div class="delta up">+113% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,86 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.295</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c41">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1572,6 +1624,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c41" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 10,37 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.31% (ottimo) · CPM 4,52 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1589,7 +1642,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 8,95 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,95 €</div><div class="delta up">+36% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,95 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">6,56 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 8,95 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,95 €</div><div class="delta up">+36% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,95 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">6,56 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.706</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c42">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1604,6 +1657,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c42" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 8,95 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.70% (ottimo) · CPM 5,25 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1621,7 +1675,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 8,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,29 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,58 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 8,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,29 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,58 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.475</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c43">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1636,6 +1690,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c43" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 4,29 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.31% (ottimo) · CPM 5,82 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1653,7 +1708,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 8,43 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,21 €</div><div class="delta up">+46% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,43 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">2,88 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 8,43 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,21 €</div><div class="delta up">+46% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,43 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">2,88 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.667</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c44">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1668,6 +1723,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c44" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 4,21 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.07% (ottimo) · CPM 3,16 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 2/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>
@@ -1685,7 +1741,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div><dt>Grandezza pubblico</dt><dd class="placeholder">Da configurare</dd></div>
 </dl></div>
   <div class="nc-kpis">
-    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 4,66 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,66 €</div><div class="delta up">+22% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">4,66 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">3,83 €</div></div>
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 4,66 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,66 €</div><div class="delta up">+22% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">4,66 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">3,83 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">585</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">—</div></div>
   </div>
   <div class="nc-chart-wrap" data-chart-id="c45">
   <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
@@ -1700,6 +1756,7 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
   <div class="nc-day-kpis" id="daykpi-c45" style="display:none"></div>
 </div>
   <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 4,66 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  
   <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.22% (ottimo) · CPM 7,97 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
   <details><summary>Dettaglio tecnico</summary><div class="det-content">Primi contatti raccolti in fase di apprendimento (giorno 3/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.</div></details>
 </div>

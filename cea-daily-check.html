@@ -176,6 +176,18 @@ h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px
 .card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
 .card-new details .det-content b { color: var(--text); }
 
+/* === Visualizzazioni & Frequenza (introdotte 2026-05-22) === */
+.card-new .nc-kpi .freq-pill { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; margin-top: 4px; text-transform: uppercase; }
+.card-new .nc-kpi .freq-pill.bassa     { background: #dbeafe; color: #1e3a8a; }
+.card-new .nc-kpi .freq-pill.ottimale  { background: #d1fadf; color: #14532d; }
+.card-new .nc-kpi .freq-pill.monitorare{ background: #ffedd5; color: #9a3412; }
+.card-new .nc-kpi .freq-pill.alta      { background: #fee2e2; color: #991b1b; }
+.card-new .nc-kpi .freq-pill.critica   { background: #1a1a1a; color: #fff; }
+.card-new .nc-freq { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-freq .nc-story.rosso  { color: #991b1b; }
+.card-new .nc-freq .nc-story.giallo { color: #9a3412; }
+.card-new .nc-freq .nc-story.verde  { color: #14532d; }
+
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
 .legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 .dot-rosso { background: var(--red); }

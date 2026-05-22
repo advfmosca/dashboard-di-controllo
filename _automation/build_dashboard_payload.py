@@ -67,6 +67,13 @@ def fmt_eur(v):
     if v is None: return "—"
     return (f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")) + " €"
 
+def fmt_int(v):
+    if v is None: return "—"
+    try:
+        return f"{int(v):,}".replace(",", ".")
+    except Exception:
+        return "—"
+
 def date_minus(d_iso, days):
     return (datetime.strptime(d_iso, "%Y-%m-%d") - timedelta(days=days)).strftime("%Y-%m-%d")
 
@@ -77,16 +84,29 @@ def parse_window(adset):
     return ""
 
 # -------- parse CSVs --------
+def _csv_header_index(header_row, *aliases):
+    """Ritorna l'indice della prima colonna nel cui nome (case-insensitive)
+    matcha uno degli `aliases`. None se nessuna colonna trovata.
+    Esempio: _csv_header_index(header, 'reach', 'copertura') → indice colonna reach."""
+    norm = [str(h or "").strip().lower() for h in header_row]
+    for alias in aliases:
+        key = alias.strip().lower()
+        if key in norm:
+            return norm.index(key)
+    return None
+
 def parse_cea_csv():
-    # Schema: 0=Cliente; 1=Spesa; 2=Lead; 3=CPL; 4=CPM; 5=CTR; 9=Nome Campagna;
-    #         10=Nome Adset; 11=Data; 12=CPC; 13=Impressioni; 14=Click; 15=Account ID (opzionale);
-    #         16=Target geo (opzionale); 17=Audience size (opzionale).
-    # La colonna 15 è stata aggiunta al CSV di Alfredo per popolare il bottone Meta nelle card CEA.
-    # Se la colonna manca (CSV vecchio o non valorizzato), entry.ad_url resta vuoto e il bottone non appare.
+    # Schema base: 0=Cliente; 1=Spesa; 2=Lead; 3=CPL; 4=CPM; 5=CTR; 9=Nome Campagna;
+    #              10=Nome Adset; 11=Data; 12=CPC; 13=Impressioni; 14=Click; 15=Account ID (opzionale);
+    #              16=Target geo (opzionale); 17=Audience size (opzionale).
+    # Opzionali (lookup case-insensitive sull'header): "Reach"/"Copertura" e "Frequency"/"Frequenza".
+    # Se le colonne non sono presenti, reach/frequency restano None e il dashboard mostra "—".
     rows = []
     with open(WORK / f"cea_{DATA_REPORT}.csv", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter=";")
-        next(reader)
+        header = next(reader)
+        idx_reach = _csv_header_index(header, "reach", "copertura")
+        idx_freq  = _csv_header_index(header, "frequency", "frequenza")
         for row in reader:
             if not row or len(row) < 14: continue
             cliente = row[0].strip()
@@ -95,6 +115,8 @@ def parse_cea_csv():
             target_geo = row[16].strip() if len(row) > 16 else ""
             audience_size = row[17].strip() if len(row) > 17 else ""
             campagna = (row[9].strip() if len(row) > 9 else "") or ""
+            reach_v = to_int(row[idx_reach]) if (idx_reach is not None and len(row) > idx_reach and row[idx_reach].strip()) else None
+            freq_v  = to_float(row[idx_freq])  if (idx_freq  is not None and len(row) > idx_freq  and row[idx_freq].strip())  else None
             rows.append({
                 "cliente": cliente,
                 "campagna": campagna,
@@ -104,6 +126,8 @@ def parse_cea_csv():
                 "ctr":   to_float(row[5]),
                 "impr":  to_int(row[13]) if len(row) > 13 else 0,
                 "click": to_int(row[14]) if len(row) > 14 else 0,
+                "reach": reach_v,
+                "frequency": freq_v,
                 "account_id": acc_id,
                 "target_geo": target_geo,
                 "audience_size": audience_size,
@@ -114,7 +138,8 @@ def parse_cea_csv():
     # Più adset sotto la stessa campagna vengono sommati: spesa/lead/impr/click sommati,
     # adset_count incrementato.
     agg = defaultdict(lambda: {"spesa": 0.0, "lead": 0, "adset_count": 0,
-                               "impr": 0, "click": 0,
+                               "impr": 0, "click": 0, "reach_sum": 0, "reach_count": 0,
+                               "freq_sum": 0.0, "freq_count": 0,
                                "cpm_sum": 0.0, "ctr_sum": 0.0,
                                "account_id": "", "target_geo": "", "audience_size": "",
                                "campagne": defaultdict(lambda: {"spesa": 0.0, "lead": 0,
@@ -130,6 +155,14 @@ def parse_cea_csv():
         a["cpm_sum"] += r["cpm"] * r["impr"]
         a["ctr_sum"] += r["ctr"] * r["impr"]
         a["adset_count"] += 1
+        # Reach + Frequency (best-effort: la reach tra adset può overlap, sommiamo come proxy;
+        # la frequency la prendiamo pesata sulle impressioni)
+        if r.get("reach") is not None:
+            a["reach_sum"] += r["reach"]
+            a["reach_count"] += 1
+        if r.get("frequency") is not None:
+            a["freq_sum"] += r["frequency"] * (r.get("impr") or 0)
+            a["freq_count"] += (r.get("impr") or 0)
         # Account ID + target_geo + audience_size: primo non-vuoto (statici per cliente)
         if r.get("account_id") and not a["account_id"]:
             a["account_id"] = r["account_id"]
@@ -150,6 +183,15 @@ def parse_cea_csv():
         cpl = (v["spesa"] / v["lead"]) if v["lead"] > 0 else None
         cpm = (v["cpm_sum"] / v["impr"]) if v["impr"] > 0 else None
         ctr = (v["ctr_sum"] / v["impr"]) if v["impr"] > 0 else None
+        # Reach aggregata (somma adset; underestimato vero overlap)
+        reach_v = v["reach_sum"] if v["reach_count"] > 0 else None
+        # Frequency: prima sceglie il campo CSV (pesato per impressioni), altrimenti deriva da imp/reach
+        if v["freq_count"] > 0:
+            freq_v = round(v["freq_sum"] / v["freq_count"], 2)
+        elif reach_v and reach_v > 0:
+            freq_v = round(v["impr"] / reach_v, 2)
+        else:
+            freq_v = None
         ad_url = (f"https://business.facebook.com/adsmanager/manage/campaigns?act={v['account_id']}"
                   if v["account_id"] else "")
         # Costruisci lista campagne attive, ordinata per spesa desc.
@@ -177,6 +219,8 @@ def parse_cea_csv():
             "ctr":     round(ctr, 2) if ctr is not None else None,
             "impr":    v["impr"],
             "click":   v["click"],
+            "reach":   reach_v,
+            "frequency": freq_v,
             "adset_count": v["adset_count"],
             "account_id": v["account_id"],
             "ad_url": ad_url,
@@ -189,10 +233,13 @@ def parse_cea_csv():
 
 def parse_medtech_csv():
     # Schema CSV: stesso del CEA. Campagna è singola entry (no aggregazione cliente).
+    # Opzionali: "Reach"/"Copertura" e "Frequency"/"Frequenza" — lookup case-insensitive sull'header.
     out = []
     with open(WORK / f"medtech_{DATA_REPORT}.csv", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter=";")
-        next(reader)
+        header = next(reader)
+        idx_reach = _csv_header_index(header, "reach", "copertura")
+        idx_freq  = _csv_header_index(header, "frequency", "frequenza")
         for row in reader:
             if not row or len(row) < 14: continue
             campagna = row[9].strip()
@@ -203,6 +250,11 @@ def parse_medtech_csv():
             ctr  = to_float(row[5])
             impr = to_int(row[13]) if len(row) > 13 else 0
             click = to_int(row[14]) if len(row) > 14 else 0
+            reach_v = to_int(row[idx_reach]) if (idx_reach is not None and len(row) > idx_reach and row[idx_reach].strip()) else None
+            freq_v  = to_float(row[idx_freq])  if (idx_freq  is not None and len(row) > idx_freq  and row[idx_freq].strip())  else None
+            # Se manca freq esplicita ma c'è reach, deriva: freq = impr / reach
+            if freq_v is None and reach_v and reach_v > 0:
+                freq_v = round(impr / reach_v, 2)
             m = re.search(r"-\s*(?:Total\s+(?:Lift|Sculpt))\s*-\s*(.+)$", campagna, re.IGNORECASE)
             studio = m.group(1).strip() if m else campagna
             cpl = spesa / lead if lead > 0 else None
@@ -218,6 +270,8 @@ def parse_medtech_csv():
                 "ctr": round(ctr, 2) if ctr else None,
                 "impr": impr,
                 "click": click,
+                "reach": reach_v,
+                "frequency": freq_v,
             })
     out.sort(key=lambda x: -x["spesa"])
     return out
@@ -351,6 +405,97 @@ def performance_eval(ctr, cpm, impr, lead):
     return f"{ctr_lbl} · {cpm_lbl}. {action}"
 
 
+# -------- frequency analysis (Meta lead-gen) --------
+# Scala basata su benchmark Meta lead-gen estetico/medical:
+#   ≤ 1.5     pubblico fresco — fase apprendimento
+#   1.6 – 2.5 sweet spot       — ottimale
+#   2.6 – 3.5 inizio saturazione — da monitorare
+#   3.6 – 5.0 saturazione concreta — alta
+#   > 5.0     fatigue conclamata — critica
+def freq_bucket(frequency):
+    """Ritorna (code, label) per la frequency. None → ('', '')."""
+    if frequency is None:
+        return ("", "")
+    f = float(frequency)
+    if f <= 1.5:
+        return ("bassa", "Bassa · pubblico fresco")
+    if f <= 2.5:
+        return ("ottimale", "Ottimale")
+    if f <= 3.5:
+        return ("monitorare", "Da monitorare")
+    if f <= 5.0:
+        return ("alta", "Alta · saturazione")
+    return ("critica", "Critica · fatigue")
+
+def freq_analysis(frequency, lead, reach, impressions):
+    """Narrative breve (1 paragrafo) per la sezione 'Analisi frequenza' (vista team).
+    Logica: incrocia bucket frequenza × lead. Ritorna (code_color, text).
+    code_color ∈ {'rosso','giallo','verde',''} per coerenza CSS con .nc-story.<code>."""
+    if frequency is None:
+        return ("", "")
+    bucket, label = freq_bucket(frequency)
+    f = float(frequency)
+    reach_str = f"Reach {fmt_int(reach)}" if reach else "—"
+    impr_str  = fmt_int(impressions) if impressions else "—"
+    lead_v = lead or 0
+    if bucket in ("bassa",):
+        if lead_v > 0:
+            return ("verde",
+                f"Frequenza {f:.2f} (zona <b>{label}</b>): le {reach_str.replace('Reach ', '')} persone raggiunte "
+                f"hanno visto l'annuncio in media {f:.1f} volte, ricevendo già richieste — combo virtuosa "
+                f"di pubblico fresco e conversione. <b>Ottimo per scaling</b>.")
+        return ("",
+            f"Frequenza {f:.2f} (zona <b>{label}</b>): il pubblico è ancora poco esposto al messaggio. "
+            f"È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di "
+            f"valutare la capacità di convertire.")
+    if bucket in ("ottimale",):
+        if lead_v > 0:
+            return ("verde",
+                f"Frequenza {f:.2f} (zona <b>{label}</b>): le persone raggiunte hanno visto l'annuncio in media "
+                f"{f:.1f} volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. "
+                f"<b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget "
+                f"prima di rischiare la saturazione.")
+        return ("giallo",
+            f"Frequenza {f:.2f} (zona <b>{label}</b>): esposizione adeguata ma <b>0 lead</b> nonostante "
+            f"il pubblico abbia visto l'annuncio in media {f:.1f} volte. Il problema non è la frequenza: "
+            f"verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> "
+            f"(numero campi, friction).")
+    if bucket in ("monitorare",):
+        if lead_v > 0:
+            return ("giallo",
+                f"Frequenza {f:.2f} (zona <b>{label}</b>): il pubblico è ancora ricettivo e converte "
+                f"({lead_v} {'contatto' if lead_v == 1 else 'contatti'}), ma siamo nella fascia in cui inizia la saturazione. "
+                f"Conviene <b>preparare il refresh creative</b> da introdurre nei prossimi 5-7 giorni per non "
+                f"perdere efficacia.")
+        return ("giallo",
+            f"Frequenza {f:.2f} (zona <b>{label}</b>): l'esposizione inizia a saturare e <b>nessun contatto</b> arriva. "
+            f"Front-end <b>al limite</b>: ruotare creative entro 48h e verificare offerta — siamo nella fascia che "
+            f"separa il sweet spot dalla fatigue.")
+    if bucket in ("alta",):
+        if lead_v > 0:
+            return ("giallo",
+                f"Frequenza {f:.2f} (zona <b>{label}</b>): saturazione concreta, ma il front-end <b>continua a "
+                f"convertire</b> ({lead_v} {'contatto' if lead_v == 1 else 'contatti'}). Significa che creative e offerta tengono, "
+                f"ma il pubblico è cotto: <b>ruotare creative entro 24-48h</b> o ampliare l'audience per spezzare "
+                f"la pressione sull'asta.")
+        return ("rosso",
+            f"Frequenza {f:.2f} (zona <b>{label}</b>): il pubblico è stato esposto in media {f:.1f} volte ma "
+            f"<b>nessun contatto</b> è arrivato. Combinazione tipica del <b>front-end NON adatto</b> — creative "
+            f"e/o offerta non agganciano l'audience nonostante l'esposizione massiccia. Azioni: (1) sospendere "
+            f"creative attuali, (2) sostituire con nuovo set basato su un benefit chiaro, (3) se persiste allargare "
+            f"il pubblico per spezzare la saturazione.")
+    # critica
+    if lead_v > 0:
+        return ("rosso",
+            f"Frequenza {f:.2f} (zona <b>{label}</b>): pubblico in <b>fatigue conclamata</b>. Anche se arrivano "
+            f"ancora {lead_v} {'contatto' if lead_v == 1 else 'contatti'}, la curva sta per crollare: <b>stop creative attuali</b> "
+            f"e rifresh completo + revisione targeting prima che il CPL esploda.")
+    return ("rosso",
+        f"Frequenza {f:.2f} (zona <b>{label}</b>): <b>fatigue conclamata</b> con <b>0 lead</b>. Il front-end ha "
+        f"esaurito la spinta su questo pubblico. Intervento immediato: pausa, rewrite completo del set creative, "
+        f"revisione targeting, ripartenza con budget contenuto.")
+
+
 # -------- entry builders --------
 def entry_status(color_it, reason):
     return {
@@ -372,6 +517,9 @@ def build_cea_payload(items, history, date_str):
         tot_lead += it["lead"]
         narrative = cpl_narrative(it["cpl"], mean7, days, it["lead"], it["spesa"], sem)
         perf_eval = performance_eval(it.get("ctr"), it.get("cpm"), it.get("impr"), it["lead"])
+        freq_v = it.get("frequency")
+        f_code, f_label = freq_bucket(freq_v)
+        f_color, f_text = freq_analysis(freq_v, it["lead"], it.get("reach"), it.get("impr"))
         entries.append({
             "name": it["cliente"],
             "source": "ACTIVE",
@@ -384,6 +532,12 @@ def build_cea_payload(items, history, date_str):
             "ctr": it.get("ctr"),
             "impressions": it.get("impr"),
             "clicks": it.get("click"),
+            "reach": it.get("reach"),
+            "frequency": freq_v,
+            "freq_bucket": f_code,
+            "freq_bucket_label": f_label,
+            "freq_analysis_color": f_color,
+            "freq_analysis": f_text,
             "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,
@@ -433,6 +587,9 @@ def build_medtech_payload(items, history, date_str):
         tot_lead += it["lead"]
         narrative = cpl_narrative(it["cpl"], mean7, days, it["lead"], it["spesa"], sem)
         perf_eval = performance_eval(it.get("ctr"), it.get("cpm"), it.get("impr"), it["lead"])
+        freq_v = it.get("frequency")
+        f_code, f_label = freq_bucket(freq_v)
+        f_color, f_text = freq_analysis(freq_v, it["lead"], it.get("reach"), it.get("impr"))
         entries.append({
             "name": it["campagna"],
             "source": "ACTIVE",
@@ -445,6 +602,12 @@ def build_medtech_payload(items, history, date_str):
             "ctr": it.get("ctr"),
             "impressions": it.get("impr"),
             "clicks": it.get("click"),
+            "reach": it.get("reach"),
+            "frequency": freq_v,
+            "freq_bucket": f_code,
+            "freq_bucket_label": f_label,
+            "freq_analysis_color": f_color,
+            "freq_analysis": f_text,
             "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,

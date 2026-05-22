@@ -113,6 +113,9 @@
   .aghc-card .aghc-vanity-row .av-val { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
   .aghc-card .aghc-vanity-row .av-val.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
   @media (max-width: 560px) { .aghc-card .aghc-vanity-row { grid-template-columns: repeat(3, 1fr); } }
+  /* Icona "i" per tooltip nelle av-lbl (Visualizzazioni + Frequenza — introdotte 2026-05-22) */
+  .aghc-card .aghc-vanity-row .av-lbl { display: flex; align-items: center; gap: 4px; }
+  .aghc-card .aghc-vanity-row .info-icon { display: inline-flex; align-items: center; justify-content: center; width: 12px; height: 12px; border-radius: 999px; background: var(--text-muted); color: #fff; font-size: 8.5px; font-weight: 700; cursor: help; flex-shrink: 0; }
 
   /* Mini chart */
   .mini-chart-wrap { background: var(--bg-soft); border-radius: 10px; padding: 10px 12px; }
@@ -576,11 +579,35 @@ function buildMTCEARational(entry, clientName, projectLabel, series7d) {
   }
 
   // =====================================================================
-  // P3 — Prospettiva: cosa sta avvenendo dietro le quinte, monitoraggio
+  // P3 — Visualizzazioni & Frequenza (introdotto 2026-05-22)
+  //      Inserito solo quando entry ha impressions/reach/frequency valorizzati.
+  //      Tono divulgativo: spiega cosa significano i due numeri al cliente.
+  // =====================================================================
+  let pFreq = "";
+  const impr = entry && entry.impressions;
+  const reach = entry && entry.reach;
+  const freq  = entry && entry.frequency;
+  if (impr != null && freq != null) {
+    const freqStr = Number(freq).toFixed(2).replace(".", ",");
+    const imprStr = _fmtIntIT(impr);
+    const reachTxt = reach ? `ed è arrivato a circa <strong>${_fmtIntIT(reach)} persone diverse</strong>` : "";
+    pFreq = `Sul fronte visibilità il messaggio è stato mostrato complessivamente <strong>${imprStr} volte</strong>${reachTxt ? " " + reachTxt : ""}. Questo significa che <strong>ogni persona, in media, ha visto la sponsorizzata ${freqStr} volte</strong>: ` +
+      (Number(freq) <= 1.5
+        ? `il pubblico è ancora largamente "fresco", il messaggio sta entrando in contatto per la prima volta con la maggior parte delle persone.`
+        : Number(freq) <= 2.5
+        ? `un livello di esposizione adeguato per fissare il ricordo del messaggio senza diventare invadente.`
+        : Number(freq) <= 3.5
+        ? `un livello di esposizione che stiamo monitorando con attenzione, perché oltre una certa quota di ripetizioni il messaggio inizia a perdere efficacia e diventa utile introdurre nuove creatività per mantenere fresca l'attenzione del pubblico.`
+        : `un livello di esposizione elevato: il pubblico ha visto più volte lo stesso messaggio e potrebbe iniziare a perdere reattività. Per questa ragione stiamo preparando il refresh delle creatività in modo da rinnovare l'attenzione del pubblico.`);
+  }
+
+  // =====================================================================
+  // P4 — Prospettiva: cosa sta avvenendo dietro le quinte, monitoraggio
   // =====================================================================
   const p3 = `Nei giorni a seguire l'attenzione resterà concentrata sull'ottimizzazione del costo per contatto e sul mantenimento della qualità delle richieste in arrivo. È utile ricordare che, nelle campagne pubblicitarie a durata limitata, il dato si stabilizza tipicamente dopo i primi quattro-cinque giorni di erogazione: prima di quel momento le oscillazioni quotidiane sono fisiologiche e non rappresentano un segnale di scarsa performance. Continuiamo a monitorare l'andamento quotidiano per intervenire tempestivamente — su creatività, segmentazione o offerta — qualora le metriche dovessero discostarsi dai parametri attesi.`;
 
-  return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
+  const pFreqHtml = pFreq ? `<p>${pFreq}</p>` : "";
+  return `<p>${p1}</p><p>${p2}</p>${pFreqHtml}<p>${p3}</p>`;
 }
 
 function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
@@ -592,10 +619,16 @@ function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
     <span class="proj-badge ${badgeCls}">${badgeLbl}</span>
     <div class="name">${escapeHtml(clientName)}</div>
   </div>`;
-  const vRow = `<div class="aghc-vanity-row bf-3col" id="${idPrefix}-vrow">
+  // Vanity row passata da 3 a 5 colonne (2026-05-22): aggiunte Visualizzazioni + Frequenza
+  // dell'ultimo giorno disponibile (entry.impressions / entry.frequency). Mostra "—" se assenti.
+  const _fmtIntCl = (n) => (n != null) ? Math.round(Number(n)).toLocaleString("it-IT") : "—";
+  const _fmtFreq  = (f) => (f != null) ? Number(f).toFixed(2).replace(".", ",") : "—";
+  const vRow = `<div class="aghc-vanity-row" id="${idPrefix}-vrow">
     <div class="av-item"><div class="av-lbl">Budget 7gg</div><div class="av-val" id="${idPrefix}-v-spend">—</div></div>
     <div class="av-item"><div class="av-lbl">Contatti generati 7gg</div><div class="av-val" id="${idPrefix}-v-leads">—</div></div>
     <div class="av-item"><div class="av-lbl">Costo per contatto 7gg</div><div class="av-val" id="${idPrefix}-v-cpl">—</div></div>
+    <div class="av-item"><div class="av-lbl">Visualizzazioni <span class="info-icon" title="Numero totale di volte in cui la sponsorizzata è stata mostrata. Una stessa persona può vederla più volte.">i</span></div><div class="av-val">${_fmtIntCl(entry.impressions)}</div></div>
+    <div class="av-item"><div class="av-lbl">Frequenza <span class="info-icon" title="Numero di volte che ogni cliente ha visto la sponsorizzata.">i</span></div><div class="av-val">${_fmtFreq(entry.frequency)}</div></div>
   </div>`;
   const chartBlock = `<div class="mini-chart-wrap">
     <div class="mc-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Contatti</span></span></div>
@@ -617,6 +650,10 @@ function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
       <dd>Il numero di richieste/lead raccolti nello stesso periodo attraverso le creatività attive.</dd>
       <dt>Costo per contatto 7gg</dt>
       <dd>L'investimento medio sostenuto per ottenere un singolo contatto qualificato. Più il valore è contenuto, più la campagna sta lavorando in modo efficiente sul pubblico.</dd>
+      <dt>Visualizzazioni</dt>
+      <dd>Numero totale di volte in cui la sponsorizzata è stata mostrata. Una stessa persona può vederla più volte: per questo il valore è normalmente più alto del numero di persone raggiunte.</dd>
+      <dt>Frequenza</dt>
+      <dd><strong>Numero di volte che ogni cliente ha visto la sponsorizzata.</strong> Quando il valore è basso, il messaggio sta raggiungendo pubblico fresco; quando sale sopra una certa soglia, il pubblico inizia a saturarsi e diventa utile introdurre nuove creatività per non perdere efficacia.</dd>
       <dt>Andamento spesa &amp; contatti (7gg)</dt>
       <dd>Il grafico riporta giorno per giorno la spesa (linea nera) e i contatti arrivati (linea blu). Cliccando un punto o usando le frecce è possibile visualizzare i dettagli del singolo giorno.</dd>
     </dl>
