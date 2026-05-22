@@ -1402,26 +1402,55 @@ def _build_other_roster(meta_rows, meta_map, exclude_ids, y_iso, window_days=15)
 
 def preserve_csv_sections(out, workspace):
     """Re-inietta in `out` le sezioni `cea`, `medtech` e overview.projects(CEA/Med&Tech)
-    scritte da dashboard-csv-update / build_dashboard_payload.py, scegliendo la
-    fonte FRESCA per la `reference_date` corrente.
+    scritte da dashboard-csv-update / build_dashboard_payload.py.
 
-    Sorgenti, in ordine di affidabilità decrescente:
-      1. snapshots/<reference_date>.json  → scritto SOLO dallo script di sync,
-         autoritativo per quel giorno specifico.
-      2. data.json                        → fallback, ma considerato valido solo
-         se _meta.reference_date (o reference_date top-level) coincide con
-         l'output corrente.
+    Strategia in due passaggi (modificata 2026-05-22 per non lasciare mai le card vuote):
 
-    Una sezione cea/medtech viene presa solo se "fresca" (= il marker
-    `_meta.reference_date` coincide con `out["reference_date"]`). Se nessuna
-    fonte è fresca, la sezione resta vuota — meglio vuoto che valori del giorno
-    sbagliato (regression osservata il 20/05/2026: rebuild Windsor + stash pop
-    in daily-push.sh sovrascrivevano cea/medtech con dati del giorno precedente).
+      PASS 1 — FRESH:
+        Cerca le sezioni cea/medtech in:
+          1) snapshots/<reference_date>.json   (autoritativo per il giorno specifico)
+          2) data.json                          (se _meta.reference_date coincide con out.reference_date)
+        Se trova una sezione "fresh" la usa così com'è.
+
+      PASS 2 — STALE FALLBACK (introdotto 2026-05-22):
+        Se al termine del PASS 1 una sezione è ancora vuota (= dashboard-csv-update
+        non è ancora girato per il giorno corrente — tipico tra 06:30 e 09:15),
+        scansiona snapshots/*.json in ordine cronologico decrescente e usa la
+        sezione più recente disponibile, marcandola con `_meta.stale = true` +
+        `_meta.stale_from = "<DATA>"`.
+        Risultato: tra 06:30 e 09:15 le card mostrano i dati del giorno precedente
+        (esplicitamente etichettati come stale) invece di apparire vuote.
+
+    Background regression evitate:
+      - 2026-05-20: rebuild Windsor + stash pop sovrascrivevano col giorno sbagliato →
+        fix b7d488d con `_meta.reference_date` rigoroso.
+      - 2026-05-22: dopo il fix b7d488d, ogni mattina alle 06:30 cea+medtech restavano
+        vuoti finché dashboard-csv-update (09:15) non arrivava → questo fallback
+        STALE copre quella finestra mantenendo coerenza temporale tramite il marker.
     """
     import os as _os
     ref_date = out.get("reference_date")
 
-    # Costruisci candidati in ordine di priorità
+    def _is_fresh(section, expected_ref, container_ref):
+        """Sezione fresca se _meta.reference_date == expected_ref.
+        Backward-compat: se manca _meta, accetta match su container.reference_date."""
+        if not isinstance(section, dict) or not expected_ref:
+            return False
+        meta_ref = (section.get("_meta") or {}).get("reference_date")
+        if meta_ref == expected_ref:
+            return True
+        if meta_ref is None and container_ref == expected_ref:
+            return True
+        return False
+
+    def _load_json(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return None
+
+    # ============ PASS 1 — FRESH (giorno corrente) ============
     candidates = []
     if ref_date:
         snap_path = _os.path.join(workspace, "snapshots", f"{ref_date}.json")
@@ -1431,31 +1460,13 @@ def preserve_csv_sections(out, workspace):
     if _os.path.exists(data_json):
         candidates.append(("data.json", data_json))
 
-    def _is_fresh(section, expected_ref, container_ref):
-        """Una sezione cea/medtech è fresca se il suo `_meta.reference_date`
-        coincide con `expected_ref`. Per backward-compat (file pre-fix che
-        non hanno _meta), accetta anche match sul `reference_date` top-level
-        del container."""
-        if not isinstance(section, dict) or not expected_ref:
-            return False
-        meta_ref = (section.get("_meta") or {}).get("reference_date")
-        if meta_ref == expected_ref:
-            return True
-        # Backward-compat fallback: nessun _meta, ma il container ha
-        # reference_date corretto e la sezione ha entries → trustabile.
-        if meta_ref is None and container_ref == expected_ref:
-            return True
-        return False
-
     cea_taken = False
     medtech_taken = False
     overview_src = None
 
     for label, path in candidates:
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                prev = json.load(f)
-        except Exception:
+        prev = _load_json(path)
+        if prev is None:
             continue
         prev_ref = prev.get("reference_date")
         if not cea_taken:
@@ -1472,6 +1483,46 @@ def preserve_csv_sections(out, workspace):
             overview_src = prev
         if cea_taken and medtech_taken and overview_src is not None:
             break
+
+    # ============ PASS 2 — STALE FALLBACK (giorno precedente più recente) ============
+    if not cea_taken or not medtech_taken:
+        snap_dir = _os.path.join(workspace, "snapshots")
+        snap_files = []
+        if _os.path.isdir(snap_dir):
+            for fname in _os.listdir(snap_dir):
+                # Solo file YYYY-MM-DD.json (esclude index.json)
+                if re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fname):
+                    iso = fname[:-5]  # rimuove .json
+                    if iso != ref_date:
+                        snap_files.append((iso, _os.path.join(snap_dir, fname)))
+            snap_files.sort(key=lambda x: x[0], reverse=True)
+
+        for iso_date, snap_path in snap_files:
+            if cea_taken and medtech_taken:
+                break
+            prev = _load_json(snap_path)
+            if prev is None:
+                continue
+            if not cea_taken:
+                cea_sec = prev.get("cea") or {}
+                if cea_sec.get("entries"):
+                    sec = dict(cea_sec)
+                    meta = dict(sec.get("_meta") or {})
+                    meta["stale"] = True
+                    meta["stale_from"] = iso_date
+                    sec["_meta"] = meta
+                    out["cea"] = sec
+                    cea_taken = True
+            if not medtech_taken:
+                mt_sec = prev.get("medtech") or {}
+                if mt_sec.get("entries"):
+                    sec = dict(mt_sec)
+                    meta = dict(sec.get("_meta") or {})
+                    meta["stale"] = True
+                    meta["stale_from"] = iso_date
+                    sec["_meta"] = meta
+                    out["medtech"] = sec
+                    medtech_taken = True
 
     # Aggiungi Med & Tech + CEA in overview.projects (dal source più affidabile)
     if overview_src is not None and "overview" in out and "projects" in out["overview"]:
