@@ -2761,7 +2761,10 @@
       .then(html => {
         const doc = new DOMParser().parseFromString(html, "text/html");
         // Each report is an <li><a href="med-tech-daily-YYYY-MM-DD.html">Domenica 17 Maggio 2026 7R · 4G · 3V · 0N →</a></li>
-        const anchors = Array.from(doc.querySelectorAll("li a[href*='med-tech-daily-']"));
+        // Compat: il template moderno usa <a class="report-item"> dentro un <div class="report-list">,
+        // mentre versioni storiche usavano <li><a>. Accettiamo entrambe le strutture.
+        const anchors = Array.from(doc.querySelectorAll("a[href*='med-tech-daily-']"))
+          .filter(a => /med-tech-daily-\d{4}-\d{2}-\d{2}\.html/.test(a.getAttribute('href') || ''));
         if (anchors.length === 0) throw new Error("Nessun report trovato nella pagina archivio");
         let listHtml = `<div class="report-list">`;
         for (const a of anchors) {
