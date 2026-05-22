@@ -537,6 +537,17 @@
       <div class="kpi"><div class="label">Alert</div><div class="value" id="ag-k-alerts">–</div><div class="sub">rosso + giallo</div></div>
     </div>
     <section class="card"><h2>Alert da analizzare <span class="pill" id="ag-alerts-pill">–</span></h2><div id="ag-alerts"></div></section>
+    <section class="card" id="ag-archive-card">
+      <h2>Archivio Report Mensili <span class="pill" id="ag-archive-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <select id="ag-archive-select" style="font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; min-width: 220px;">
+          <option value="">Caricamento…</option>
+        </select>
+        <a id="ag-archive-open" class="btn primary" target="_blank" rel="noopener" style="pointer-events:none; opacity:0.4;">Apri report →</a>
+        <a class="btn" href="https://advfmosca.github.io/report-aghc-monthly/" target="_blank" rel="noopener">Archivio completo ↗</a>
+        <span id="ag-archive-status" style="font-size:11px; color:var(--text-dim); margin-left:auto;"></span>
+      </div>
+    </section>
     <section class="card"><h2>Card per cliente <span class="pill" id="ag-cards-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px;">
         <div class="cards-grid" id="ag-cards"></div>
@@ -3011,6 +3022,67 @@
     });
   });
 })();
+
+  // ===== Archivio Report Mensili AGHC =====
+  // Fetcha la lista da report-aghc-monthly/_data/archive.json e popola dropdown
+  (function initAghcArchive() {
+    const ARCHIVE_URL = "https://advfmosca.github.io/report-aghc-monthly/_data/archive.json";
+    const sel = document.getElementById("ag-archive-select");
+    const openBtn = document.getElementById("ag-archive-open");
+    const pill = document.getElementById("ag-archive-pill");
+    const statusEl = document.getElementById("ag-archive-status");
+    if (!sel || !openBtn || !pill) return;
+
+    function setOpenEnabled(url) {
+      if (url) {
+        openBtn.setAttribute("href", url);
+        openBtn.style.pointerEvents = "auto";
+        openBtn.style.opacity = "1";
+      } else {
+        openBtn.removeAttribute("href");
+        openBtn.style.pointerEvents = "none";
+        openBtn.style.opacity = "0.4";
+      }
+    }
+
+    fetch(ARCHIVE_URL + "?t=" + Date.now(), { cache: "no-cache" })
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(data => {
+        const reports = (data && data.reports) || [];
+        pill.textContent = reports.length;
+        sel.innerHTML = "";
+        if (reports.length === 0) {
+          sel.innerHTML = "<option value=''>Nessun report ancora pubblicato</option>";
+          return;
+        }
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Seleziona un mese…";
+        sel.appendChild(placeholder);
+        reports.forEach(r => {
+          const opt = document.createElement("option");
+          opt.value = r.url;
+          opt.textContent = r.label;
+          sel.appendChild(opt);
+        });
+        // Pre-seleziona il più recente
+        if (reports[0]) {
+          sel.value = reports[0].url;
+          setOpenEnabled(reports[0].url);
+        }
+        if (statusEl && data.updated_at) {
+          const d = new Date(data.updated_at);
+          statusEl.textContent = "Aggiornato " + d.toLocaleDateString("it-IT", { day: "2-digit", month: "short", year: "numeric" });
+        }
+      })
+      .catch(err => {
+        pill.textContent = "err";
+        sel.innerHTML = "<option value=''>Archivio non raggiungibile</option>";
+        if (statusEl) statusEl.textContent = "⚠ " + (err.message || "errore fetch");
+      });
+
+    sel.addEventListener("change", () => setOpenEnabled(sel.value));
+  })();
 </script>
 </body>
 </html>
