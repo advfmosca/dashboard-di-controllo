@@ -851,10 +851,15 @@ function resolveCampaignMeta(campaign, clientName, clientLevelTarget, clientLeve
 // `campaigns` = array di {name, spend, lead, cpl, active, platform?}
 // `clientName` serve per il lookup nel mapping mtcea_clients_meta.json.
 // `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. CSV Alfredo target_geo).
-function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, clientLevelAudienceSize) {
+// `showTargetAudience` (default true): se false, omette il blocco Target/Pubblico
+//   (richiesto per BeeFamily dove non gestiamo target/pubblico geografico per campagna).
+function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, clientLevelAudienceSize, showTargetAudience) {
   if (!campaigns || campaigns.length === 0) return "";
+  if (showTargetAudience === undefined) showTargetAudience = true;
   const cardsHtml = campaigns.map(c => {
-    const meta = resolveCampaignMeta(c, clientName, clientLevelTarget, clientLevelAudienceSize);
+    const meta = showTargetAudience
+      ? resolveCampaignMeta(c, clientName, clientLevelTarget, clientLevelAudienceSize)
+      : { target: null, audience_size: null };
     const plat = c.platform || "Meta";
     const platCls = plat.toLowerCase();
     const kpiBits = [];
@@ -862,15 +867,16 @@ function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, cli
     if (c.lead != null)  kpiBits.push(`<span class="cc-kpi">Contatti <strong>${Math.round(c.lead).toLocaleString("it-IT")}</strong></span>`);
     if (c.cpl  != null)  kpiBits.push(`<span class="cc-kpi">CPL <strong>${fmtEUR(c.cpl)}</strong></span>`);
     const kpiRow = kpiBits.length ? `<div class="cc-kpi-row">${kpiBits.join("")}</div>` : "";
+    const targetBlock = showTargetAudience ? `<dl class="cc-meta">
+        <div><dt>Target</dt><dd class="${meta.target ? '' : 'placeholder'}">${meta.target ? escapeHtml(meta.target) : 'Da configurare'}</dd></div>
+        <div><dt>Grandezza pubblico</dt><dd class="${meta.audience_size ? '' : 'placeholder'}">${meta.audience_size ? escapeHtml(meta.audience_size) : 'Da configurare'}</dd></div>
+      </dl>` : "";
     return `<div class="campaign-card">
       <div class="cc-head">
         <span class="cc-platform ${platCls}">${escapeHtml(plat)}</span>
         <div class="cc-name">${escapeHtml(c.name || "—")}</div>
       </div>
-      <dl class="cc-meta">
-        <div><dt>Target</dt><dd class="${meta.target ? '' : 'placeholder'}">${meta.target ? escapeHtml(meta.target) : 'Da configurare'}</dd></div>
-        <div><dt>Grandezza pubblico</dt><dd class="${meta.audience_size ? '' : 'placeholder'}">${meta.audience_size ? escapeHtml(meta.audience_size) : 'Da configurare'}</dd></div>
-      </dl>
+      ${targetBlock}
       ${kpiRow}
     </div>`;
   }).join("");
@@ -976,7 +982,11 @@ if (!clienteName) {
     // Per AGHC/BeeFamily il nome usato nel mapping target/audience è quello UFFICIALE
     // (è la stessa chiave che il marketing manager riconosce). Per CEA/MedTech è
     // il nome cliente estratto.
-    function renderCampaignsBlock(entry, projectLabel, displayName) {
+    // `showTargetAudience` controlla se rendere il blocco Target/Pubblico:
+    //   - CEA / MedTech: true (target gestito per singola campagna)
+    //   - BeeFamily: false (non gestiamo target geografico per le campagne BF)
+    //   - AGHC: non chiamato affatto (vedi blocco AGHC sotto — sezione rimossa)
+    function renderCampaignsBlock(entry, projectLabel, displayName, showTargetAudience) {
       if (!metaRoot) return;
       const campaigns = extractCampaignsFromEntry(entry, projectLabel);
       // Fallback singolo: se nessuna campagna è esposta nei dati, costruiamo
@@ -993,31 +1003,36 @@ if (!clienteName) {
       const lookupKey = displayName || extractMTCEAClient(entry.name || "");
       const clientTarget = entry.target_geo || null;
       const clientAud    = entry.audience_size || null;
-      metaRoot.innerHTML = buildCampaignsSectionHTML(list, lookupKey, clientTarget, clientAud);
+      metaRoot.innerHTML = buildCampaignsSectionHTML(list, lookupKey, clientTarget, clientAud, showTargetAudience);
     }
 
     if (project === "AGHC") {
+      // AGHC non ha il blocco "Campagne attive" nella vista cliente:
+      // l'andamento delle campagne è già evidente dalla card KPI e dal mini-chart,
+      // e Target/Pubblico per AGHC non sono gestiti a livello di campagna.
       const officialDisplayName = officialName(found.name, "AGHC");
       document.getElementById("hdr-name").textContent = officialDisplayName;
-      renderCampaignsBlock(found, "AGHC", officialDisplayName);
+      if (metaRoot) metaRoot.innerHTML = "";
       const item = normalizeAGHCItem(found);
       item.name = officialDisplayName;
       root.innerHTML = buildAGHCCardHTML(item, idPrefix);
       // wireSeries fa il match in snapshot per nome → passiamo il nome INTERNO originale.
       wireSeries({ ...item, name: found.name }, idPrefix, 'aghc');
     } else if (project === "BeeFamily") {
+      // BeeFamily: nome campagna + KPI sì, Target/Pubblico no
+      // (non gestiamo target geografico a livello campagna per BF).
       const officialDisplayName = officialName(found.name, "BeeFamily");
       document.getElementById("hdr-name").textContent = officialDisplayName;
-      renderCampaignsBlock(found, "BeeFamily", officialDisplayName);
+      renderCampaignsBlock(found, "BeeFamily", officialDisplayName, /* showTargetAudience */ false);
       const item = normalizeBFItem(found);
       item.name = officialDisplayName;
       root.innerHTML = buildBFCardHTML(item, idPrefix);
       wireSeries({ ...item, name: found.name }, idPrefix, 'bf');
     } else {
-      // Med & Tech / CEA
+      // Med & Tech / CEA — blocco completo con Target + Pubblico per campagna
       const clientShort = extractMTCEAClient(found.name);
       document.getElementById("hdr-name").textContent = clientShort;
-      renderCampaignsBlock(found, project, clientShort);
+      renderCampaignsBlock(found, project, clientShort, /* showTargetAudience */ true);
       root.innerHTML = buildMTCEACardHTML(found, idPrefix, project);
       wireMTCEASeries(found, idPrefix, project);
     }
