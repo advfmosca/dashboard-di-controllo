@@ -396,10 +396,21 @@ def render_mini_chart_LEGACY(series, w=560, h=160):
 </div>"""
 
 def render_daily(date_iso, cea, project="cea"):
-    """project: 'cea' o 'medtech'. Cambia titolo H1 + load_series source section."""
+    """project: 'cea' o 'medtech'. Cambia titolo H1 + load_series source section.
+
+    Se cea._meta.stale=True, render produce un banner giallo evidente in cima alla
+    pagina con il messaggio "Dati al <stale_from> — CSV del <date_iso> non disponibile".
+    Introdotto 2026-05-22 per coprire i giorni in cui la mail automatica
+    project@cea.management non arriva.
+    """
     kpi = cea.get("kpi", {})
     entries = cea.get("entries", [])
     title_date = fmt_date_long(date_iso)
+    meta = cea.get("_meta") or {}
+    is_stale = bool(meta.get("stale"))
+    stale_from = meta.get("stale_from") or meta.get("reference_date") or ""
+    stale_from_label = fmt_date_long(stale_from) if stale_from else ""
+    stale_title_tag = " [DATI STALE]" if is_stale else ""
     series_by_name = load_series_7gg(date_iso, section=project)
     project_label_h1 = "MED & TECH" if project == "medtech" else "CEA"
     rosso = kpi.get("rosso", 0); giallo = kpi.get("giallo", 0)
@@ -542,17 +553,54 @@ def render_daily(date_iso, cea, project="cea"):
 
     # Serializza la mappa series_by_id per JS embedded (chart navigabile)
     series_json = json.dumps(series_by_id, ensure_ascii=False, separators=(",", ":"))
+    if is_stale:
+        stale_banner = (
+            '<div class="stale-banner" role="alert" style="'
+            'margin: 0 0 14px; padding: 14px 18px; '
+            'background: linear-gradient(135deg,#fff7e0 0%,#fff2c2 100%); '
+            'border: 1.5px solid #e0b020; border-left: 6px solid #d48800; '
+            'border-radius: 12px; color: #5a3c00; '
+            'font-size: 14px; line-height: 1.5; font-weight: 500;">'
+            '<div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">'
+            '⚠ Dati al ' + (stale_from_label or stale_from) + ' — non aggiornati al ' + title_date + '</div>'
+            '<div style="opacity:.92;">I numeri qui sotto sono dell\'ultimo giorno con dati validi. '
+            'La fonte automatica (mail <code style="background:#fff;padding:1px 5px;border-radius:4px;">'
+            'project@cea.management</code> → CSV su Drive) non ha pubblicato il file per il '
+            + title_date + '. Tornerà fresca al prossimo invio.</div>'
+            '</div>'
+        )
+    else:
+        stale_banner = ""
+    if is_stale:
+        stale_banner = (
+            '<div class="stale-banner" role="alert" style="'
+            'margin: 0 0 14px; padding: 14px 18px; '
+            'background: linear-gradient(135deg,#fff7e0 0%,#fff2c2 100%); '
+            'border: 1.5px solid #e0b020; border-left: 6px solid #d48800; '
+            'border-radius: 12px; color: #5a3c00; '
+            'font-size: 14px; line-height: 1.5; font-weight: 500;">'
+            '<div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">'
+            '⚠ Dati al ' + (stale_from_label or stale_from) + ' — non aggiornati al ' + title_date + '</div>'
+            '<div style="opacity:.92;">I numeri qui sotto sono dell\'ultimo giorno con dati validi. '
+            'La fonte automatica (mail <code style="background:#fff;padding:1px 5px;border-radius:4px;">'
+            'project@cea.management</code> → CSV su Drive) non ha pubblicato il file per il '
+            + title_date + '. Tornerà fresca al prossimo invio.</div>'
+            '</div>'
+        )
+    else:
+        stale_banner = ""
     return f"""<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1c1c1e">
-<title>{project_label_h1} — Andamento campagne {date_iso}</title>
+<title>{project_label_h1} — Andamento campagne {date_iso}{stale_title_tag}</title>
 <style>{CSS_BLOCK}</style>
 </head>
 <body>
 <div class="wrap">
+  {stale_banner}
   <div class="brand-header">
     <h1>{project_label_h1} — Andamento campagne</h1>
     <p class="subtitle">Snapshot del {title_date} · {len(entries)} clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
@@ -830,6 +878,7 @@ def render_index(items, project="cea"):
 </head>
 <body>
 <div class="wrap">
+  
   <div class="brand-header">
     <h1>{title}</h1>
     <p class="subtitle">Snapshot giornalieri · semaforica calcolata sul costo medio per contatto 3gg</p>
@@ -890,6 +939,9 @@ def main():
         if not section_data or not section_data.get("entries"):
             print(f"  [skip] {dt}: {project} vuoto")
             continue
+        if (section_data.get("_meta") or {}).get("stale"):
+            sf = (section_data.get("_meta") or {}).get("stale_from", "?")
+            print(f"  [stale] {dt}: rendering pagina con banner STALE (dati al {sf})")
         html = render_daily(dt, section_data, project=project)
         out_file = out_dir / f"{file_prefix}-{dt}.html"
         out_file.write_text(html, encoding="utf-8")

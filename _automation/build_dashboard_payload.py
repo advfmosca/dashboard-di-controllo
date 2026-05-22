@@ -681,8 +681,12 @@ def merge_into_dashboard(cea_payload, medtech_payload, date_str):
         "synced_at": iso_now,
         "source": "csv_alfredo",
     }
-    cea_payload["_meta"] = dict(csv_meta)
-    medtech_payload["_meta"] = dict(csv_meta)
+    # IMPORTANTE: preserva _meta se è già stato impostato a stale_fallback in main()
+    # (caso CSV mancante). Sovrascrive solo quando i payload arrivano dal parse CSV fresh.
+    if not (cea_payload.get("_meta") or {}).get("stale"):
+        cea_payload["_meta"] = dict(csv_meta)
+    if not (medtech_payload.get("_meta") or {}).get("stale"):
+        medtech_payload["_meta"] = dict(csv_meta)
 
     # data.json: aggiorna cea/medtech + overview.projects + generated_at
     data = json.load(open(DATA_JSON))
@@ -718,12 +722,94 @@ def merge_into_dashboard(cea_payload, medtech_payload, date_str):
     with open(INDEX_JSON, "w", encoding="utf-8") as f:
         json.dump(idx, f, ensure_ascii=False, indent=2)
 
+def _load_stale_section(project, requested_date):
+    """Carica la sezione `project` (cea|medtech) dallo snapshot più recente prima
+    di `requested_date` che ha entries non vuote. Ritorna (payload_dict, source_date)
+    oppure (None, None) se non trova niente di utile.
+
+    Marca _meta.stale=True, _meta.stale_from=<source_date>,
+    _meta.reference_date=<requested_date>, _meta.synced_at=<now>,
+    _meta.source="stale_fallback".
+
+    Introdotto 2026-05-22 per gestire i giorni in cui i CSV di Alfredo non arrivano.
+    """
+    snaps_dir = SNAP_FILE.parent
+    if not snaps_dir.exists():
+        return None, None
+    # Ordina snapshots/*.json per data discendente, salta requested_date e successivi
+    candidates = sorted(snaps_dir.glob("*.json"), reverse=True)
+    for snap_path in candidates:
+        m = re.match(r"(\d{4}-\d{2}-\d{2})\.json$", snap_path.name)
+        if not m:
+            continue
+        snap_date = m.group(1)
+        if snap_date >= requested_date:
+            continue  # serve uno snapshot ANTECEDENTE al giorno richiesto
+        try:
+            snap = json.load(open(snap_path, encoding="utf-8"))
+        except Exception:
+            continue
+        sec = snap.get(project) or {}
+        if not sec.get("entries"):
+            continue
+        # Trovato. Clono e taglio _meta + marker stale.
+        payload = json.loads(json.dumps(sec))  # deep copy
+        now = datetime.now()
+        payload["_meta"] = {
+            "reference_date": requested_date,
+            "synced_at": now.strftime("%Y-%m-%dT%H:%M:%S.%f"),
+            "source": "stale_fallback",
+            "stale": True,
+            "stale_from": snap_date,
+        }
+        return payload, snap_date
+    return None, None
+
+
 def main():
-    cea_items = parse_cea_csv()
-    medtech_items = parse_medtech_csv()
+    cea_csv  = WORK / f"cea_{DATA_REPORT}.csv"
+    mt_csv   = WORK / f"medtech_{DATA_REPORT}.csv"
+    cea_present = cea_csv.exists()
+    mt_present  = mt_csv.exists()
+
     history = load_history_csv_snapshots()
-    cea_payload = build_cea_payload(cea_items, history, DATA_REPORT)
-    medtech_payload = build_medtech_payload(medtech_items, history, DATA_REPORT)
+
+    # CEA: fresh se CSV presente, altrimenti stale fallback
+    if cea_present:
+        cea_items = parse_cea_csv()
+        cea_payload = build_cea_payload(cea_items, history, DATA_REPORT)
+    else:
+        cea_payload, sf = _load_stale_section("cea", DATA_REPORT)
+        if cea_payload is None:
+            print(f"⚠ CEA: nessun fallback stale disponibile per {DATA_REPORT}")
+            cea_payload = {"entries": [], "kpi": {}, "_meta": {
+                "reference_date": DATA_REPORT,
+                "synced_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"),
+                "source": "stale_fallback_empty",
+                "stale": True,
+                "stale_from": None,
+            }}
+        else:
+            print(f"⚠ CEA: CSV {DATA_REPORT} mancante → uso fallback STALE da {sf}")
+
+    # MEDTECH: idem
+    if mt_present:
+        medtech_items = parse_medtech_csv()
+        medtech_payload = build_medtech_payload(medtech_items, history, DATA_REPORT)
+    else:
+        medtech_payload, sf = _load_stale_section("medtech", DATA_REPORT)
+        if medtech_payload is None:
+            print(f"⚠ MEDTECH: nessun fallback stale disponibile per {DATA_REPORT}")
+            medtech_payload = {"entries": [], "kpi": {}, "_meta": {
+                "reference_date": DATA_REPORT,
+                "synced_at": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"),
+                "source": "stale_fallback_empty",
+                "stale": True,
+                "stale_from": None,
+            }}
+        else:
+            print(f"⚠ MEDTECH: CSV {DATA_REPORT} mancante → uso fallback STALE da {sf}")
+
 
     # Save preview for inspection
     (WORK / "cea_payload.json").write_text(json.dumps(cea_payload, ensure_ascii=False, indent=2))
