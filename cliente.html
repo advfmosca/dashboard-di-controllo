@@ -58,6 +58,7 @@
   .campaign-card .cc-platform.google { background: #fff7d6; color: #8a6a00; }
   .campaign-card .cc-platform.tiktok { background: #111; color: #fff; }
   .campaign-card .cc-name { font-weight: 700; font-size: 14px; color: var(--text); line-height: 1.3; flex: 1; min-width: 0; word-break: break-word; }
+  .campaign-card .cc-name.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
   .campaign-card .cc-meta { display: grid; grid-template-columns: 1fr; gap: 8px; }
   @media (min-width: 560px) { .campaign-card .cc-meta { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
   .campaign-card .cc-meta dt { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin: 0; }
@@ -908,10 +909,11 @@ function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, cli
         <div><dt>Target</dt><dd class="${meta.target ? '' : 'placeholder'}">${meta.target ? escapeHtml(meta.target) : 'Da configurare'}</dd></div>
         <div><dt>Grandezza pubblico</dt><dd class="${meta.audience_size ? '' : 'placeholder'}">${meta.audience_size ? escapeHtml(meta.audience_size) : 'Da configurare'}</dd></div>
       </dl>` : "";
+    const nameCls = c._placeholder ? "cc-name placeholder" : "cc-name";
     return `<div class="campaign-card">
       <div class="cc-head">
         <span class="cc-platform ${platCls}">${escapeHtml(plat)}</span>
-        <div class="cc-name">${escapeHtml(c.name || "—")}</div>
+        <div class="${nameCls}">${escapeHtml(c.name || "—")}</div>
       </div>
       ${targetBlock}
       ${kpiRow}
@@ -1026,16 +1028,38 @@ if (!clienteName) {
     function renderCampaignsBlock(entry, projectLabel, displayName, showTargetAudience) {
       if (!metaRoot) return;
       const campaigns = extractCampaignsFromEntry(entry, projectLabel);
-      // Fallback singolo: se nessuna campagna è esposta nei dati, costruiamo
-      // un'unica entry sintetica così la UI non resta vuota e la regressione
-      // "non esce nome campagna" viene mitigata anche su dataset vecchi.
       let list = campaigns;
       if (!list.length) {
+        // Med & Tech: il `entry.name` ha il pattern "Open Day - Total Lift - <CLIENTE>",
+        // quindi possiamo estrarre la parte "Open Day - Total Lift" come campagna anche
+        // senza il campo `campaigns[]`. Per CEA invece `entry.name` è solo il nome
+        // del cliente: NON va mai usato come nome campagna (era il bug originale).
         const parts = String(entry.name || "").split(' - ').map(p => p.trim()).filter(Boolean);
-        const fallbackName = (projectLabel === "Med & Tech" && parts.length > 1)
-          ? parts.slice(0, -1).join(' - ')
-          : (entry.name || displayName || "—");
-        list = [{ name: fallbackName, platform: "Meta", spend: entry.spend_y, lead: entry.contatti_y != null ? entry.contatti_y : entry.lead_y, cpl: entry.cpl_y }];
+        if (projectLabel === "Med & Tech" && parts.length > 1) {
+          list = [{
+            name: parts.slice(0, -1).join(' - '),
+            platform: "Meta",
+            spend: entry.spend_y,
+            lead:  entry.contatti_y != null ? entry.contatti_y : entry.lead_y,
+            cpl:   entry.cpl_y,
+          }];
+        } else if (projectLabel === "CEA" || projectLabel === "Med & Tech") {
+          // Placeholder onesto: il nome reale arriverà al prossimo sync CSV.
+          list = [{
+            name: "Nome campagna in aggiornamento — disponibile al prossimo sync",
+            platform: "Meta",
+            _placeholder: true,
+          }];
+        } else {
+          // BeeFamily / AGHC senza campaigns[]: usa il displayName ufficiale come fallback.
+          list = [{
+            name: displayName || entry.name || "—",
+            platform: "Meta",
+            spend: entry.spend_y,
+            lead:  entry.contatti_y != null ? entry.contatti_y : entry.lead_y,
+            cpl:   entry.cpl_y,
+          }];
+        }
       }
       const lookupKey = displayName || extractMTCEAClient(entry.name || "");
       const clientTarget = entry.target_geo || null;
