@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-05-22T10:58:44.477528",
+  "generated_at": "2026-05-22T16:17:52.703294",
   "generated_at_label": "22/05/2026 10:58",
   "reference_date": "2026-05-21",
   "reference_date_label": "21 mag 2026",
@@ -4418,9 +4418,9 @@
       "total_lead": 61,
       "cpc_y": 25.05,
       "cpl_y": 25.05,
-      "rosso": 20,
-      "giallo": 0,
-      "verde": 23,
+      "rosso": 17,
+      "giallo": 12,
+      "verde": 14,
       "nero": 0
     },
     "entries": [
@@ -4442,6 +4442,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.29 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 8.89% sopra la media (target ≥1.5%). Reach 2.106 su bacino dichiarato 11.3M (consumato il 0.02%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4449,9 +4456,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 44,26 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 44,26 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "44,26 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 8.89% (ottimo) · CPM 16,26 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=681826834009030",
         "target_geo": "IT",
@@ -4486,7 +4493,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 21.7,
         "cpm": 13.06,
         "ctr": 3.11,
         "impressions": 2537,
@@ -4497,6 +4504,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.14 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 3.11% sopra la media (target ≥1.5%). Reach 2.251 su bacino dichiarato 3.5M (consumato il 0.06%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4504,9 +4518,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 33,13 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.7 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 33,13 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "33,13 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 3.11% (ottimo) · CPM 13,06 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1027861569222386",
         "target_geo": "Rome+10km",
@@ -4555,23 +4569,30 @@
         ]
       },
       {
-        "name": "Exthetyc",
+        "name": "ADV - ELYSIR CURNO",
         "source": "ACTIVE",
-        "spend_y": 26.07,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
+        "spend_y": 27.72,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 27.72,
         "cpl_mean_3d": null,
-        "cpm": 3.31,
-        "ctr": 2.67,
-        "impressions": 7866,
-        "clicks": 210,
-        "reach": 6409,
-        "frequency": 1.23,
+        "cpm": 8.08,
+        "ctr": 1.22,
+        "impressions": 3429,
+        "clicks": 42,
+        "reach": 2312,
+        "frequency": 1.48,
         "freq_bucket": "bassa",
         "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "",
-        "freq_analysis": "Frequenza 1.23 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.48 (zona <b>Bassa · pubblico fresco</b>): le 2.312 persone raggiunte hanno visto l'annuncio in media 1.5 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 0.5,
+        "days_history": 2,
+        "audience_narrative": {
+          "label": "Audience tiepida",
+          "code": "giallo",
+          "text": "CTR 1.22% in fascia neutra (0.8-1.5%), frequenza 1.48, reach 2.312. <b>Audience tiepida</b>: segnali misti — né rifiuto netto né adesione chiara. Test A/B di una variante creative su angolazione diversa mantenendo budget e audience: se sblocca il CTR vuol dire che mancava il match copy/pubblico, altrimenti il problema è a valle."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4579,21 +4600,21 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 26,07 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 26,07 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 2.67% (ottimo) · CPM 3,31 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=220236715786238",
-        "target_geo": "37.1095,13.9372 +10km | 37.2546,13.8132 +18km | 37.3036,13.9862 +14km | 37.3699,14.1814 +13km | 37.3811,14.0419 +10km | 37.4923,14.0625 +14km | 37.5065,13.8881 +13km | 37.5487,14.0258 +10km | 37.5791,13.7504 +4km | 37.6225,13.8219 +4km | Agrigento+13km | Delia | Grotte+10km | Mazzarino+10km | Palma di Montechiaro+25km | Racalmuto+10km | Santa Caterina Villarmosa+10km",
-        "audience_size": "279K",
+        "cpl_narrative": "Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 27,72 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "performance_eval": "CTR 1.22% (nella media) · CPM 8,08 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=3433522690277613",
+        "target_geo": "45.6912,9.6074 +8km",
+        "audience_size": "116K",
         "campaigns": [
           {
-            "name": "Seduta Total Body a 68€",
-            "spend": 26.07,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 7866,
-            "clicks": 210,
+            "name": "Elysir di Elisabetta Mazzoleni  | Seduta viso antiage a 79€",
+            "spend": 27.72,
+            "lead": 1,
+            "cpl": 27.72,
+            "impressions": 3429,
+            "clicks": 42,
             "adset_count": 1,
             "active": true
           }
@@ -4617,6 +4638,13 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "giallo",
         "freq_analysis": "Frequenza 1.98 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 2.0 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> (numero campi, friction).",
+        "mean_leads_3d": 0.0,
+        "days_history": 2,
+        "audience_narrative": {
+          "label": "Audience tiepida",
+          "code": "giallo",
+          "text": "CTR 1.25% in fascia neutra (0.8-1.5%), frequenza 1.98, reach 1.895. <b>Audience tiepida</b>: segnali misti — né rifiuto netto né adesione chiara. Test A/B di una variante creative su angolazione diversa mantenendo budget e audience: se sblocca il CTR vuol dire che mancava il match copy/pubblico, altrimenti il problema è a valle."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4624,9 +4652,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 23,25 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 23,25 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 2/3): 23,25 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
         "performance_eval": "CTR 1.25% (nella media) · CPM 6,21 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=690779712157858",
         "target_geo": "45.9113,12.8578 +8km",
@@ -4651,7 +4679,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 14.64,
         "cpm": 6.32,
         "ctr": 1.37,
         "impressions": 3566,
@@ -4662,6 +4690,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.33 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience tiepida",
+          "code": "giallo",
+          "text": "CTR 1.37% in fascia neutra (0.8-1.5%), frequenza 1.33, reach 2.677. <b>Audience tiepida</b>: segnali misti — né rifiuto netto né adesione chiara. Test A/B di una variante creative su angolazione diversa mantenendo budget e audience: se sblocca il CTR vuol dire che mancava il match copy/pubblico, altrimenti il problema è a valle."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4669,9 +4704,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 22,54 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 22,54 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "22,54 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.37% (nella media) · CPM 6,32 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=207692951124201",
         "target_geo": "",
@@ -4696,7 +4731,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 24.51,
         "cpm": 11.1,
         "ctr": 1.92,
         "impressions": 1929,
@@ -4707,6 +4742,13 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "giallo",
         "freq_analysis": "Frequenza 1.51 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.5 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> (numero campi, friction).",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.280 · audience dichiarata 142K · frequenza 1.51. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4714,9 +4756,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 21,42 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 21,42 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "21,42 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.92% (buono) · CPM 11,10 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=986280836359010",
         "target_geo": "45.6058,8.8223 +6km",
@@ -4741,7 +4783,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 24.28,
         "cpm": 16.13,
         "ctr": 1.89,
         "impressions": 1322,
@@ -4752,6 +4794,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 909 · audience dichiarata 303K · frequenza 1.45. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4759,9 +4808,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 21,32 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 21,32 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "21,32 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.89% (buono) · CPM 16,13 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=488959414189930",
         "target_geo": "45.5922,8.8971 +10km | Gallarate",
@@ -4786,7 +4835,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 12.32,
         "cpm": 6.15,
         "ctr": 1.59,
         "impressions": 3147,
@@ -4797,6 +4846,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.25 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 1.59% sopra la media (target ≥1.5%). Reach 2.523 su bacino dichiarato 144K (consumato il 1.75%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4804,9 +4860,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 19,36 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.7 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 19,36 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "19,36 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.59% (buono) · CPM 6,15 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1286307052256151",
         "target_geo": "San Salvo+20km | Vasto+20km",
@@ -4825,103 +4881,13 @@
         ]
       },
       {
-        "name": "ADV SANITAL ECO STORE",
-        "source": "ACTIVE",
-        "spend_y": 19.06,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
-        "cpl_mean_3d": null,
-        "cpm": 10.52,
-        "ctr": 1.05,
-        "impressions": 1812,
-        "clicks": 19,
-        "reach": 1416,
-        "frequency": 1.28,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "",
-        "freq_analysis": "Frequenza 1.28 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "red",
-          "label": "ROSSO",
-          "reason": "Investiti 19,06 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 19,06 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 1.05% (nella media) · CPM 10,52 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=908733656268129",
-        "target_geo": "37.5081,15.0871 +7km",
-        "audience_size": "197K",
-        "campaigns": [
-          {
-            "name": "02/02 - FE corpo uomo/donna - COLD - ABO",
-            "spend": 19.06,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 1812,
-            "clicks": 19,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV - Atelier Fiumara",
-        "source": "ACTIVE",
-        "spend_y": 18.82,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
-        "cpl_mean_3d": null,
-        "cpm": 23.35,
-        "ctr": 2.11,
-        "impressions": 806,
-        "clicks": 17,
-        "reach": 581,
-        "frequency": 1.39,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "",
-        "freq_analysis": "Frequenza 1.39 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "red",
-          "label": "ROSSO",
-          "reason": "Investiti 18,82 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 18,82 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 2.11% (ottimo) · CPM 23,35 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=901837095714377",
-        "target_geo": "45.0603,7.6732 +7km",
-        "audience_size": "491K",
-        "campaigns": [
-          {
-            "name": "Prova tecnologia a 39€",
-            "spend": 18.82,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 806,
-            "clicks": 17,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "Andreea Francu Renzo Gestione",
         "source": "ACTIVE",
         "spend_y": 16.02,
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 16.23,
         "cpm": 7.0,
         "ctr": 0.66,
         "impressions": 2288,
@@ -4932,6 +4898,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.34 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience poco recettiva",
+          "code": "rosso",
+          "text": "CTR 0.66% sotto soglia di engagement (target ≥1.5%) con frequenza 1.34 ancora nella norma — il pubblico vede l'annuncio ma non lo trova rilevante. <b>Audience poco recettiva</b>: il problema non è il bacino né la pressione, è il messaggio. Refresh creative entro 48h con angolazione diversa (benefit chiaro in head, prova sociale o leva temporale), audience invariata."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4939,9 +4912,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 16,02 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 16,02 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "16,02 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 0.66% (basso) · CPM 7,00 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l'asset principale.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1555269588749320",
         "target_geo": "Falconara Marittima+80km",
@@ -4977,6 +4950,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.10 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 2,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 5.43% sopra la media (target ≥1.5%). Reach 2.784 su bacino dichiarato 40.5M (consumato il 0.01%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -4984,9 +4964,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 15,42 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 15,42 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 2/3): 15,42 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
         "performance_eval": "CTR 5.43% (ottimo) · CPM 5,02 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=593992380407869",
         "target_geo": "IT",
@@ -5011,7 +4991,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 15.32,
         "cpm": 7.37,
         "ctr": 1.61,
         "impressions": 1802,
@@ -5022,6 +5002,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.18 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 1.61% sopra la media (target ≥1.5%). Reach 1.530 su bacino dichiarato 1K (consumato il 153.00%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5029,9 +5016,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 13,27 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 13,27 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "13,27 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.61% (buono) · CPM 7,37 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=314160099308243",
         "target_geo": "Montebelluna+17km | Treviso+17km",
@@ -5077,6 +5064,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.36 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 2,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.148 · audience dichiarata 104K · frequenza 1.36. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5084,9 +5078,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 13,25 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 13,25 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 2/3): 13,25 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
         "performance_eval": "CTR 2.89% (ottimo) · CPM 8,50 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=754690366545720",
         "target_geo": "Vignola+20km",
@@ -5105,13 +5099,65 @@
         ]
       },
       {
+        "name": "ADV Slim'Up",
+        "source": "ACTIVE",
+        "spend_y": 10.17,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 10.17,
+        "cpl_mean_3d": 10.05,
+        "cpm": 5.47,
+        "ctr": 1.34,
+        "impressions": 1859,
+        "clicks": 25,
+        "reach": 1205,
+        "frequency": 1.54,
+        "freq_bucket": "ottimale",
+        "freq_bucket_label": "Ottimale",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.54 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 0.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.205 · audience dichiarata 125K · frequenza 1.54. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "red",
+          "label": "ROSSO",
+          "reason": "Media 0.7 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
+        },
+        "cpl_narrative": "Costo per contatto ieri 10,17 € contro media 3 giorni 10,05 € (+1%): leggera salita, ancora ampiamente nella tolleranza. Da osservare oggi: se rimbalza sotto media è rumore di breve periodo; se cresce ancora si entra in zona gialla.",
+        "performance_eval": "CTR 1.34% (nella media) · CPM 5,47 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=45078389",
+        "target_geo": "43.6720,13.2896 +17km",
+        "audience_size": "125K",
+        "campaigns": [
+          {
+            "name": "Laser | Cold | Modulo | Lead | ABO | 13/01/2026",
+            "spend": 10.17,
+            "lead": 1,
+            "cpl": 10.17,
+            "impressions": 1859,
+            "clicks": 25,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
         "name": "Centro estetico natura",
         "source": "ACTIVE",
         "spend_y": 9.7,
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 10.91,
         "cpm": 17.86,
         "ctr": 1.29,
         "impressions": 543,
@@ -5122,6 +5168,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 374 · audience dichiarata 423K · frequenza 1.45. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5129,9 +5182,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 9,70 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 9,70 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "9,70 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.29% (nella media) · CPM 17,86 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=2497776120437658",
         "target_geo": "Volpago del Montello+24km",
@@ -5144,96 +5197,6 @@
             "cpl": null,
             "impressions": 543,
             "clicks": 7,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Laboratorio Estetico Catia",
-        "source": "ACTIVE",
-        "spend_y": 9.68,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
-        "cpl_mean_3d": null,
-        "cpm": 3.57,
-        "ctr": 3.32,
-        "impressions": 2713,
-        "clicks": 90,
-        "reach": 2085,
-        "frequency": 1.3,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "",
-        "freq_analysis": "Frequenza 1.30 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "red",
-          "label": "ROSSO",
-          "reason": "Investiti 9,68 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 9,68 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 3.32% (ottimo) · CPM 3,57 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=338264162577736",
-        "target_geo": "Martano+20km",
-        "audience_size": "147K",
-        "campaigns": [
-          {
-            "name": "[SV] Laboratorio Estetico - Lead Gen",
-            "spend": 9.68,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 2713,
-            "clicks": 90,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV - Centro Benessere Polverino",
-        "source": "ACTIVE",
-        "spend_y": 8.91,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
-        "cpl_mean_3d": null,
-        "cpm": 4.8,
-        "ctr": 1.72,
-        "impressions": 1858,
-        "clicks": 32,
-        "reach": 1394,
-        "frequency": 1.33,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "",
-        "freq_analysis": "Frequenza 1.33 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "red",
-          "label": "ROSSO",
-          "reason": "Investiti 8,91 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 8,91 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 1.72% (buono) · CPM 4,80 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=3837861476462160",
-        "target_geo": "40.5021,17.2124 +15km",
-        "audience_size": "252K",
-        "campaigns": [
-          {
-            "name": "[SV] - Trattamento Infrabaldan + T-Shape",
-            "spend": 8.91,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 1858,
-            "clicks": 32,
             "adset_count": 1,
             "active": true
           }
@@ -5257,6 +5220,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.07 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience tiepida",
+          "code": "giallo",
+          "text": "CTR 1.46% in fascia neutra (0.8-1.5%), frequenza 1.07, reach 1.728. <b>Audience tiepida</b>: segnali misti — né rifiuto netto né adesione chiara. Test A/B di una variante creative su angolazione diversa mantenendo budget e audience: se sblocca il CTR vuol dire che mancava il match copy/pubblico, altrimenti il problema è a valle."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5264,9 +5234,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 7,25 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 7,25 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "7,25 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 1.46% (nella media) · CPM 3,92 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=10214448048458577",
         "target_geo": "Verona",
@@ -5302,6 +5272,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.34 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.472 · audience dichiarata 56K · frequenza 1.34. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5309,9 +5286,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 4,58 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 4,58 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "4,58 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 0.46% (basso) · CPM 2,35 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l'asset principale.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=197830081925096",
         "target_geo": "",
@@ -5367,6 +5344,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.04 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "rosso",
+          "text": "CTR 8.60% sopra la media (target ≥1.5%). Reach 2.495 su bacino dichiarato 341K (consumato il 0.73%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5374,9 +5358,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 3,14 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.0 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 3,14 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 3/3): 3,14 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
         "performance_eval": "CTR 8.60% (ottimo) · CPM 1,21 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=555285056185771",
         "target_geo": "Cervia+30km",
@@ -5395,13 +5379,647 @@
         ]
       },
       {
+        "name": "BaldanGroupUAE_Ad.Account",
+        "source": "ACTIVE",
+        "spend_y": 48.88,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 48.88,
+        "cpl_mean_3d": null,
+        "cpm": 172.11,
+        "ctr": 1.41,
+        "impressions": 284,
+        "clicks": 4,
+        "reach": 238,
+        "frequency": 1.19,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.19 (zona <b>Bassa · pubblico fresco</b>): le 238 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.0,
+        "days_history": 1,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 238 · audience dichiarata 333K · frequenza 1.19. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (1). A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 48,88 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "performance_eval": "CTR 1.41% (nella media) · CPM 172,11 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1594622364424756",
+        "target_geo": "Dubai+10km | Abu Dhabi+10km | Emirate of Sharjah",
+        "audience_size": "333K",
+        "campaigns": [
+          {
+            "name": "[5/9/2026] Promoting InfraBaldan Demo Request UAE",
+            "spend": 48.88,
+            "lead": 1,
+            "cpl": 48.88,
+            "impressions": 284,
+            "clicks": 4,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV - Brera13 Beauty",
+        "source": "ACTIVE",
+        "spend_y": 29.85,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 29.85,
+        "cpl_mean_3d": 19.35,
+        "cpm": 32.27,
+        "ctr": 1.73,
+        "impressions": 925,
+        "clicks": 16,
+        "reach": 716,
+        "frequency": 1.29,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.29 (zona <b>Bassa · pubblico fresco</b>): le 716 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 716 · audience dichiarata 490K · frequenza 1.29. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.7 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 29,85 € contro media 3 giorni 19,35 € (+54%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
+        "performance_eval": "CTR 1.73% (buono) · CPM 32,27 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1773292814069337",
+        "target_geo": "45.4809,9.1888 +3km",
+        "audience_size": "490K",
+        "campaigns": [
+          {
+            "name": "2 TRATTAMENTI CORPO A 97€",
+            "spend": 29.85,
+            "lead": 1,
+            "cpl": 29.85,
+            "impressions": 925,
+            "clicks": 16,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV - Farmacia Martelletto",
+        "source": "ACTIVE",
+        "spend_y": 27.38,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 27.38,
+        "cpl_mean_3d": 20.24,
+        "cpm": 2.56,
+        "ctr": 0.67,
+        "impressions": 10685,
+        "clicks": 71,
+        "reach": 8906,
+        "frequency": 1.26,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.26 (zona <b>Bassa · pubblico fresco</b>): le 8.906 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience poco recettiva",
+          "code": "rosso",
+          "text": "CTR 0.67% sotto soglia di engagement (target ≥1.5%) con frequenza 1.26 ancora nella norma — il pubblico vede l'annuncio ma non lo trova rilevante. <b>Audience poco recettiva</b>: il problema non è il bacino né la pressione, è il messaggio. Refresh creative entro 48h con angolazione diversa (benefit chiaro in head, prova sociale o leva temporale), audience invariata."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.3 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 27,38 € contro media 3 giorni 20,24 € (+35%): tendenza in salita, vicina al limite +50%. È probabile una saturazione delle creatività o un'asta più competitiva: rotazione creativa consigliata entro 48 ore.",
+        "performance_eval": "CTR 0.67% (basso) · CPM 2,56 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l'asset principale.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1143220330627204",
+        "target_geo": "45.3950,11.2711 +5km | 45.4218,11.1765 +11km | 45.5642,11.1145 +5km | 45.5655,11.1537 +5km",
+        "audience_size": "76K",
+        "campaigns": [
+          {
+            "name": "Trattamento Prova a 47€",
+            "spend": 22.79,
+            "lead": 1,
+            "cpl": 22.79,
+            "impressions": 3412,
+            "clicks": 58,
+            "adset_count": 1,
+            "active": true
+          },
+          {
+            "name": "Maggio 2026",
+            "spend": 4.59,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 7273,
+            "clicks": 13,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Exthetyc",
+        "source": "ACTIVE",
+        "spend_y": 26.07,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 30.94,
+        "cpm": 3.31,
+        "ctr": 2.67,
+        "impressions": 7866,
+        "clicks": 210,
+        "reach": 6409,
+        "frequency": 1.23,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "",
+        "freq_analysis": "Frequenza 1.23 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 1.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "giallo",
+          "text": "CTR 2.67% sopra la media (target ≥1.5%). Reach 6.409 su bacino dichiarato 279K (consumato il 2.30%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.3 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "26,07 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 2.67% (ottimo) · CPM 3,31 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=220236715786238",
+        "target_geo": "37.1095,13.9372 +10km | 37.2546,13.8132 +18km | 37.3036,13.9862 +14km | 37.3699,14.1814 +13km | 37.3811,14.0419 +10km | 37.4923,14.0625 +14km | 37.5065,13.8881 +13km | 37.5487,14.0258 +10km | 37.5791,13.7504 +4km | 37.6225,13.8219 +4km | Agrigento+13km | Delia | Grotte+10km | Mazzarino+10km | Palma di Montechiaro+25km | Racalmuto+10km | Santa Caterina Villarmosa+10km",
+        "audience_size": "279K",
+        "campaigns": [
+          {
+            "name": "Seduta Total Body a 68€",
+            "spend": 26.07,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 7866,
+            "clicks": 210,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Farmacia Padre Pio",
+        "source": "ACTIVE",
+        "spend_y": 25.43,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 25.43,
+        "cpl_mean_3d": 15.85,
+        "cpm": 5.92,
+        "ctr": 1.93,
+        "impressions": 4292,
+        "clicks": 83,
+        "reach": 2969,
+        "frequency": 1.45,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): le 2.969 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "giallo",
+          "text": "CTR 1.93% sopra la media (target ≥1.5%). Reach 2.969 su bacino dichiarato 635K (consumato il 0.47%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.7 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 25,43 € contro media 3 giorni 15,85 € (+60%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
+        "performance_eval": "CTR 1.93% (buono) · CPM 5,92 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1108761440619660",
+        "target_geo": "Foggia+20km",
+        "audience_size": "635K",
+        "campaigns": [
+          {
+            "name": "3 sedute corpo in 21 giorni a 297€",
+            "spend": 25.43,
+            "lead": 1,
+            "cpl": 25.43,
+            "impressions": 4292,
+            "clicks": 83,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV - Charme estetica benessere",
+        "source": "ACTIVE",
+        "spend_y": 23.1,
+        "lead_y": 2,
+        "contatti_y": 2,
+        "cpl_y": 11.55,
+        "cpl_mean_3d": 25.2,
+        "cpm": 10.2,
+        "ctr": 2.47,
+        "impressions": 2264,
+        "clicks": 56,
+        "reach": 1601,
+        "frequency": 1.41,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.41 (zona <b>Bassa · pubblico fresco</b>): le 1.601 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "giallo",
+          "text": "CTR 2.47% sopra la media (target ≥1.5%). Reach 1.601 su bacino dichiarato 339K (consumato il 0.47%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.0 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 11,55 €, sotto la media degli ultimi 3 giorni (25,20 €, -54%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 2.47% (ottimo) · CPM 10,20 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=853059970277041",
+        "target_geo": "40.2464,18.2798 +16km | Copertino | Lecce | Nardò",
+        "audience_size": "339K",
+        "campaigns": [
+          {
+            "name": "un mese di trattamenti a 340€",
+            "spend": 23.1,
+            "lead": 2,
+            "cpl": 11.55,
+            "impressions": 2264,
+            "clicks": 56,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV - Atelier Fiumara",
+        "source": "ACTIVE",
+        "spend_y": 18.82,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 9.98,
+        "cpm": 23.35,
+        "ctr": 2.11,
+        "impressions": 806,
+        "clicks": 17,
+        "reach": 581,
+        "frequency": 1.39,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "",
+        "freq_analysis": "Frequenza 1.39 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 1.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 581 · audience dichiarata 491K · frequenza 1.39. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.7 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "18,82 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 2.11% (ottimo) · CPM 23,35 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=901837095714377",
+        "target_geo": "45.0603,7.6732 +7km",
+        "audience_size": "491K",
+        "campaigns": [
+          {
+            "name": "Prova tecnologia a 39€",
+            "spend": 18.82,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 806,
+            "clicks": 17,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV Solelù",
+        "source": "ACTIVE",
+        "spend_y": 14.55,
+        "lead_y": 2,
+        "contatti_y": 2,
+        "cpl_y": 7.28,
+        "cpl_mean_3d": 11.78,
+        "cpm": 5.38,
+        "ctr": 1.92,
+        "impressions": 2705,
+        "clicks": 52,
+        "reach": 1847,
+        "frequency": 1.46,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.46 (zona <b>Bassa · pubblico fresco</b>): le 1.847 persone raggiunte hanno visto l'annuncio in media 1.5 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "giallo",
+          "text": "CTR 1.92% sopra la media (target ≥1.5%). Reach 1.847 su bacino dichiarato 447K (consumato il 0.41%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.7 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 7,28 €, sotto la media degli ultimi 3 giorni (11,78 €, -38%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 1.92% (buono) · CPM 5,38 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=661211788189736",
+        "target_geo": "Francavilla Fontana+18km | Grottaglie+19km | Mesagne+17km | Taranto+20km",
+        "audience_size": "447K",
+        "campaigns": [
+          {
+            "name": "DCD_Taranto+Grottaglie_3ESC poi 2ESC",
+            "spend": 14.55,
+            "lead": 2,
+            "cpl": 7.28,
+            "impressions": 2705,
+            "clicks": 52,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Laboratorio Estetico Catia",
+        "source": "ACTIVE",
+        "spend_y": 9.68,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 15.53,
+        "cpm": 3.57,
+        "ctr": 3.32,
+        "impressions": 2713,
+        "clicks": 90,
+        "reach": 2085,
+        "frequency": 1.3,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "",
+        "freq_analysis": "Frequenza 1.30 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 1.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Audience con potenziale di lead",
+          "code": "giallo",
+          "text": "CTR 3.32% sopra la media (target ≥1.5%). Reach 2.085 su bacino dichiarato 147K (consumato il 1.42%). Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.0 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "9,68 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 3.32% (ottimo) · CPM 3,57 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=338264162577736",
+        "target_geo": "Martano+20km",
+        "audience_size": "147K",
+        "campaigns": [
+          {
+            "name": "[SV] Laboratorio Estetico - Lead Gen",
+            "spend": 9.68,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 2713,
+            "clicks": 90,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV - Centro Benessere Polverino",
+        "source": "ACTIVE",
+        "spend_y": 8.91,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 7.62,
+        "cpm": 4.8,
+        "ctr": 1.72,
+        "impressions": 1858,
+        "clicks": 32,
+        "reach": 1394,
+        "frequency": 1.33,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "",
+        "freq_analysis": "Frequenza 1.33 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 1.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.394 · audience dichiarata 252K · frequenza 1.33. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.0 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "8,91 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 1.72% (buono) · CPM 4,80 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=3837861476462160",
+        "target_geo": "40.5021,17.2124 +15km",
+        "audience_size": "252K",
+        "campaigns": [
+          {
+            "name": "[SV] - Trattamento Infrabaldan + T-Shape",
+            "spend": 8.91,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 1858,
+            "clicks": 32,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV CENTRO ESTETICO AMBRA",
+        "source": "ACTIVE",
+        "spend_y": 7.52,
+        "lead_y": 1,
+        "contatti_y": 1,
+        "cpl_y": 7.52,
+        "cpl_mean_3d": 4.29,
+        "cpm": 5.99,
+        "ctr": 1.27,
+        "impressions": 1256,
+        "clicks": 16,
+        "reach": 822,
+        "frequency": 1.53,
+        "freq_bucket": "ottimale",
+        "freq_bucket_label": "Ottimale",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.53 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 1.0,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 822 · audience dichiarata 66K · frequenza 1.53. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.0 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 7,52 € contro media 3 giorni 4,29 € (+75%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
+        "performance_eval": "CTR 1.27% (nella media) · CPM 5,99 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=595663015630974",
+        "target_geo": "42.4373,12.1099 +8km",
+        "audience_size": "66K",
+        "campaigns": [
+          {
+            "name": "[LEAD] Welcome experience 59€",
+            "spend": 7.52,
+            "lead": 1,
+            "cpl": 7.52,
+            "impressions": 1256,
+            "clicks": 16,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Eternity LB - Account pubblicitario",
+        "source": "ACTIVE",
+        "spend_y": 5.13,
+        "lead_y": 2,
+        "contatti_y": 2,
+        "cpl_y": 2.56,
+        "cpl_mean_3d": 4.11,
+        "cpm": 9.0,
+        "ctr": 1.93,
+        "impressions": 570,
+        "clicks": 11,
+        "reach": 524,
+        "frequency": 1.09,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.09 (zona <b>Bassa · pubblico fresco</b>): le 524 persone raggiunte hanno visto l'annuncio in media 1.1 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 524 · audience dichiarata 828K · frequenza 1.09. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.3 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 2,56 €, sotto la media degli ultimi 3 giorni (4,11 €, -38%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 1.93% (buono) · CPM 9,00 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=575168796489608",
+        "target_geo": "41.9264,12.5137 +7km",
+        "audience_size": "828K",
+        "campaigns": [
+          {
+            "name": "Nuova campagna Contatti wonder 2",
+            "spend": 5.13,
+            "lead": 2,
+            "cpl": 2.56,
+            "impressions": 570,
+            "clicks": 11,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
         "name": "Baldan Group USA",
         "source": "ACTIVE",
         "spend_y": 648.0,
         "lead_y": 7,
         "contatti_y": 7,
         "cpl_y": 92.57,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 74.33,
         "cpm": 121.99,
         "ctr": 3.52,
         "impressions": 5312,
@@ -5412,6 +6030,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.22 (zona <b>Bassa · pubblico fresco</b>): le 4.372 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 12.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5419,9 +6040,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 12.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 92,57 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 92,57 € contro media 3 giorni 74,33 € (+25%): leggera salita, ancora ampiamente nella tolleranza. Da osservare oggi: se rimbalza sotto media è rumore di breve periodo; se cresce ancora si entra in zona gialla.",
         "performance_eval": "CTR 3.52% (ottimo) · CPM 121,99 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1318427776037376",
         "target_geo": "US",
@@ -5456,7 +6077,7 @@
         "lead_y": 2,
         "contatti_y": 2,
         "cpl_y": 43.57,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 32.25,
         "cpm": 11.84,
         "ctr": 2.19,
         "impressions": 7358,
@@ -5467,6 +6088,9 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.67 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.7 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 3.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5474,9 +6098,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 3.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 43,57 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 43,57 € contro media 3 giorni 32,25 € (+35%): tendenza in salita, vicina al limite +50%. È probabile una saturazione delle creatività o un'asta più competitiva: rotazione creativa consigliata entro 48 ore.",
         "performance_eval": "CTR 2.19% (ottimo) · CPM 11,84 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1925041888298145",
         "target_geo": "44.6081,7.9514 +7km | 44.6940,7.8401 +8km | 44.7006,8.0385 +5km | Barolo",
@@ -5515,58 +6139,13 @@
         ]
       },
       {
-        "name": "BaldanGroupUAE_Ad.Account",
-        "source": "ACTIVE",
-        "spend_y": 48.88,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 48.88,
-        "cpl_mean_3d": null,
-        "cpm": 172.11,
-        "ctr": 1.41,
-        "impressions": 284,
-        "clicks": 4,
-        "reach": 238,
-        "frequency": 1.19,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.19 (zona <b>Bassa · pubblico fresco</b>): le 238 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 48,88 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.41% (nella media) · CPM 172,11 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1594622364424756",
-        "target_geo": "Dubai+10km | Abu Dhabi+10km | Emirate of Sharjah",
-        "audience_size": "333K",
-        "campaigns": [
-          {
-            "name": "[5/9/2026] Promoting InfraBaldan Demo Request UAE",
-            "spend": 48.88,
-            "lead": 1,
-            "cpl": 48.88,
-            "impressions": 284,
-            "clicks": 4,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "ADV FARMACIA CLEMENTE",
         "source": "ACTIVE",
         "spend_y": 31.45,
         "lead_y": 4,
         "contatti_y": 4,
         "cpl_y": 7.86,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 7.61,
         "cpm": 4.61,
         "ctr": 4.78,
         "impressions": 6815,
@@ -5577,6 +6156,9 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.91 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.9 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 3.0,
+        "days_history": 2,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5584,9 +6166,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 3.0 lead/day su 2 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 7,86 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 7,86 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
         "performance_eval": "CTR 4.78% (ottimo) · CPM 4,61 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=2408587346203097",
         "target_geo": "Airola | Arienzo+17km | Maddaloni | Santa Maria a Vico",
@@ -5599,96 +6181,6 @@
             "cpl": 7.86,
             "impressions": 6815,
             "clicks": 326,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV - Brera13 Beauty",
-        "source": "ACTIVE",
-        "spend_y": 29.85,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 29.85,
-        "cpl_mean_3d": null,
-        "cpm": 32.27,
-        "ctr": 1.73,
-        "impressions": 925,
-        "clicks": 16,
-        "reach": 716,
-        "frequency": 1.29,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.29 (zona <b>Bassa · pubblico fresco</b>): le 716 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 29,85 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.73% (buono) · CPM 32,27 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1773292814069337",
-        "target_geo": "45.4809,9.1888 +3km",
-        "audience_size": "490K",
-        "campaigns": [
-          {
-            "name": "2 TRATTAMENTI CORPO A 97€",
-            "spend": 29.85,
-            "lead": 1,
-            "cpl": 29.85,
-            "impressions": 925,
-            "clicks": 16,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV - ELYSIR CURNO",
-        "source": "ACTIVE",
-        "spend_y": 27.72,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 27.72,
-        "cpl_mean_3d": null,
-        "cpm": 8.08,
-        "ctr": 1.22,
-        "impressions": 3429,
-        "clicks": 42,
-        "reach": 2312,
-        "frequency": 1.48,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.48 (zona <b>Bassa · pubblico fresco</b>): le 2.312 persone raggiunte hanno visto l'annuncio in media 1.5 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 27,72 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.22% (nella media) · CPM 8,08 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=3433522690277613",
-        "target_geo": "45.6912,9.6074 +8km",
-        "audience_size": "116K",
-        "campaigns": [
-          {
-            "name": "Elysir di Elisabetta Mazzoleni  | Seduta viso antiage a 79€",
-            "spend": 27.72,
-            "lead": 1,
-            "cpl": 27.72,
-            "impressions": 3429,
-            "clicks": 42,
             "adset_count": 1,
             "active": true
           }
@@ -5712,6 +6204,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.27 (zona <b>Bassa · pubblico fresco</b>): le 3.306 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 2.0,
+        "days_history": 1,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5719,7 +6214,7 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (2). Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
         "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 13,71 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
         "performance_eval": "CTR 2.17% (ottimo) · CPM 6,55 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
@@ -5740,68 +6235,13 @@
         ]
       },
       {
-        "name": "ADV - Farmacia Martelletto",
-        "source": "ACTIVE",
-        "spend_y": 27.38,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 27.38,
-        "cpl_mean_3d": null,
-        "cpm": 2.56,
-        "ctr": 0.67,
-        "impressions": 10685,
-        "clicks": 71,
-        "reach": 8906,
-        "frequency": 1.26,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.26 (zona <b>Bassa · pubblico fresco</b>): le 8.906 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 27,38 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 0.67% (basso) · CPM 2,56 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l'asset principale.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1143220330627204",
-        "target_geo": "45.3950,11.2711 +5km | 45.4218,11.1765 +11km | 45.5642,11.1145 +5km | 45.5655,11.1537 +5km",
-        "audience_size": "76K",
-        "campaigns": [
-          {
-            "name": "Trattamento Prova a 47€",
-            "spend": 22.79,
-            "lead": 1,
-            "cpl": 22.79,
-            "impressions": 3412,
-            "clicks": 58,
-            "adset_count": 1,
-            "active": true
-          },
-          {
-            "name": "Maggio 2026",
-            "spend": 4.59,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 7273,
-            "clicks": 13,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "SkinMedic Lecco new",
         "source": "ACTIVE",
         "spend_y": 25.69,
         "lead_y": 1,
         "contatti_y": 1,
         "cpl_y": 25.69,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 9.21,
         "cpm": 7.41,
         "ctr": 1.44,
         "impressions": 3468,
@@ -5812,6 +6252,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): le 2.429 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 2.33,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5819,9 +6262,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 2.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 25,69 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 25,69 € contro media 3 giorni 9,21 € (+179%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
         "performance_eval": "CTR 1.44% (nella media) · CPM 7,41 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1128643681840929",
         "target_geo": "Lecco+19km",
@@ -5850,103 +6293,13 @@
         ]
       },
       {
-        "name": "Farmacia Padre Pio",
-        "source": "ACTIVE",
-        "spend_y": 25.43,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 25.43,
-        "cpl_mean_3d": null,
-        "cpm": 5.92,
-        "ctr": 1.93,
-        "impressions": 4292,
-        "clicks": 83,
-        "reach": 2969,
-        "frequency": 1.45,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): le 2.969 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 25,43 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.93% (buono) · CPM 5,92 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1108761440619660",
-        "target_geo": "Foggia+20km",
-        "audience_size": "635K",
-        "campaigns": [
-          {
-            "name": "3 sedute corpo in 21 giorni a 297€",
-            "spend": 25.43,
-            "lead": 1,
-            "cpl": 25.43,
-            "impressions": 4292,
-            "clicks": 83,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV - Charme estetica benessere",
-        "source": "ACTIVE",
-        "spend_y": 23.1,
-        "lead_y": 2,
-        "contatti_y": 2,
-        "cpl_y": 11.55,
-        "cpl_mean_3d": null,
-        "cpm": 10.2,
-        "ctr": 2.47,
-        "impressions": 2264,
-        "clicks": 56,
-        "reach": 1601,
-        "frequency": 1.41,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.41 (zona <b>Bassa · pubblico fresco</b>): le 1.601 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 11,55 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 2.47% (ottimo) · CPM 10,20 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=853059970277041",
-        "target_geo": "40.2464,18.2798 +16km | Copertino | Lecce | Nardò",
-        "audience_size": "339K",
-        "campaigns": [
-          {
-            "name": "un mese di trattamenti a 340€",
-            "spend": 23.1,
-            "lead": 2,
-            "cpl": 11.55,
-            "impressions": 2264,
-            "clicks": 56,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "ADV Maison Kuku",
         "source": "ACTIVE",
         "spend_y": 22.85,
         "lead_y": 4,
         "contatti_y": 4,
         "cpl_y": 5.71,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 12.0,
         "cpm": 7.45,
         "ctr": 2.61,
         "impressions": 3068,
@@ -5957,6 +6310,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.41 (zona <b>Bassa · pubblico fresco</b>): le 2.176 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 3.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -5964,9 +6320,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 3.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 5,71 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 5,71 €, sotto la media degli ultimi 3 giorni (12,00 €, -52%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 2.61% (ottimo) · CPM 7,45 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1215608660569826",
         "target_geo": "40.6824,14.7672 +10km",
@@ -5991,7 +6347,7 @@
         "lead_y": 10,
         "contatti_y": 10,
         "cpl_y": 2.14,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 3.02,
         "cpm": 12.33,
         "ctr": 3.63,
         "impressions": 1735,
@@ -6002,6 +6358,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.24 (zona <b>Bassa · pubblico fresco</b>): le 1.402 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 8.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6009,9 +6368,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 8.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 2,14 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 2,14 €, sotto la media degli ultimi 3 giorni (3,02 €, -29%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 3.63% (ottimo) · CPM 12,33 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=934139235373864",
         "target_geo": "",
@@ -6036,7 +6395,7 @@
         "lead_y": 2,
         "contatti_y": 2,
         "cpl_y": 9.71,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 14.51,
         "cpm": 9.19,
         "ctr": 1.84,
         "impressions": 2114,
@@ -6047,6 +6406,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.39 (zona <b>Bassa · pubblico fresco</b>): le 1.524 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 2.0,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6054,9 +6416,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 2.0 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 9,71 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 9,71 €, sotto la media degli ultimi 3 giorni (14,51 €, -33%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 1.84% (buono) · CPM 9,19 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1117941209766720",
         "target_geo": "Albano Laziale+40km | Ariccia+40km | Ciampino+40km | Frascati+40km | Genzano di Roma+40km | Velletri+40km",
@@ -6069,6 +6431,54 @@
             "cpl": 9.71,
             "impressions": 2114,
             "clicks": 39,
+            "adset_count": 1,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "ADV SANITAL ECO STORE",
+        "source": "ACTIVE",
+        "spend_y": 19.06,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 7.96,
+        "cpm": 10.52,
+        "ctr": 1.05,
+        "impressions": 1812,
+        "clicks": 19,
+        "reach": 1416,
+        "frequency": 1.28,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "",
+        "freq_analysis": "Frequenza 1.28 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 3.0,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 3.0 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "19,06 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 1.05% (nella media) · CPM 10,52 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=908733656268129",
+        "target_geo": "37.5081,15.0871 +7km",
+        "audience_size": "197K",
+        "campaigns": [
+          {
+            "name": "02/02 - FE corpo uomo/donna - COLD - ABO",
+            "spend": 19.06,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 1812,
+            "clicks": 19,
             "adset_count": 1,
             "active": true
           }
@@ -6092,6 +6502,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.49 (zona <b>Bassa · pubblico fresco</b>): le 921 persone raggiunte hanno visto l'annuncio in media 1.5 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 2.0,
+        "days_history": 1,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6099,7 +6512,7 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (2). Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
         "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 9,32 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
         "performance_eval": "CTR 5.97% (ottimo) · CPM 13,57 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
@@ -6126,7 +6539,7 @@
         "lead_y": 3,
         "contatti_y": 3,
         "cpl_y": 5.94,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 6.41,
         "cpm": 5.43,
         "ctr": 1.86,
         "impressions": 3280,
@@ -6137,6 +6550,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.31 (zona <b>Bassa · pubblico fresco</b>): le 2.504 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 4.33,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6144,9 +6560,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 4.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 5,94 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 5,94 €, sotto la media degli ultimi 3 giorni (6,41 €, -7%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 1.86% (buono) · CPM 5,43 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=443738754713821",
         "target_geo": "45.1424,10.0206 +16km",
@@ -6171,7 +6587,7 @@
         "lead_y": 2,
         "contatti_y": 2,
         "cpl_y": 7.55,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 9.13,
         "cpm": 4.23,
         "ctr": 1.46,
         "impressions": 3567,
@@ -6182,6 +6598,9 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.90 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.9 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 4.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6189,9 +6608,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 4.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 7,55 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 7,55 €, sotto la media degli ultimi 3 giorni (9,13 €, -17%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 1.46% (nella media) · CPM 4,23 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=490001890215187",
         "target_geo": "43.6133,10.5496 +4km | 43.6293,10.6326 +13km | 43.6734,10.5743 +3km",
@@ -6216,7 +6635,7 @@
         "lead_y": 6,
         "contatti_y": 6,
         "cpl_y": 2.44,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 7.06,
         "cpm": 4.45,
         "ctr": 4.07,
         "impressions": 3289,
@@ -6227,6 +6646,9 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.25 (zona <b>Bassa · pubblico fresco</b>): le 2.635 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 3.67,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6234,9 +6656,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 3.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 2,44 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 2,44 €, sotto la media degli ultimi 3 giorni (7,06 €, -65%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 4.07% (ottimo) · CPM 4,45 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1272417584238428",
         "target_geo": "",
@@ -6255,103 +6677,13 @@
         ]
       },
       {
-        "name": "ADV Solelù",
-        "source": "ACTIVE",
-        "spend_y": 14.55,
-        "lead_y": 2,
-        "contatti_y": 2,
-        "cpl_y": 7.28,
-        "cpl_mean_3d": null,
-        "cpm": 5.38,
-        "ctr": 1.92,
-        "impressions": 2705,
-        "clicks": 52,
-        "reach": 1847,
-        "frequency": 1.46,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.46 (zona <b>Bassa · pubblico fresco</b>): le 1.847 persone raggiunte hanno visto l'annuncio in media 1.5 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 7,28 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.92% (buono) · CPM 5,38 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=661211788189736",
-        "target_geo": "Francavilla Fontana+18km | Grottaglie+19km | Mesagne+17km | Taranto+20km",
-        "audience_size": "447K",
-        "campaigns": [
-          {
-            "name": "DCD_Taranto+Grottaglie_3ESC poi 2ESC",
-            "spend": 14.55,
-            "lead": 2,
-            "cpl": 7.28,
-            "impressions": 2705,
-            "clicks": 52,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "ADV Slim'Up",
-        "source": "ACTIVE",
-        "spend_y": 10.17,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 10.17,
-        "cpl_mean_3d": null,
-        "cpm": 5.47,
-        "ctr": 1.34,
-        "impressions": 1859,
-        "clicks": 25,
-        "reach": 1205,
-        "frequency": 1.54,
-        "freq_bucket": "ottimale",
-        "freq_bucket_label": "Ottimale",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.54 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 10,17 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.34% (nella media) · CPM 5,47 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=45078389",
-        "target_geo": "43.6720,13.2896 +17km",
-        "audience_size": "125K",
-        "campaigns": [
-          {
-            "name": "Laser | Cold | Modulo | Lead | ABO | 13/01/2026",
-            "spend": 10.17,
-            "lead": 1,
-            "cpl": 10.17,
-            "impressions": 1859,
-            "clicks": 25,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "Fatima Nail Studio",
         "source": "ACTIVE",
         "spend_y": 8.5,
         "lead_y": 3,
         "contatti_y": 3,
         "cpl_y": 2.83,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 3.54,
         "cpm": 3.73,
         "ctr": 3.03,
         "impressions": 2279,
@@ -6362,6 +6694,9 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.91 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.9 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 2.33,
+        "days_history": 3,
+        "audience_narrative": null,
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6369,9 +6704,9 @@
         "status": {
           "color": "green",
           "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "reason": "Media 2.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 2,83 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 2,83 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
         "performance_eval": "CTR 3.03% (ottimo) · CPM 3,73 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1053437945065989",
         "target_geo": "Salerno+35km",
@@ -6388,103 +6723,14 @@
             "active": true
           }
         ]
-      },
-      {
-        "name": "ADV CENTRO ESTETICO AMBRA",
-        "source": "ACTIVE",
-        "spend_y": 7.52,
-        "lead_y": 1,
-        "contatti_y": 1,
-        "cpl_y": 7.52,
-        "cpl_mean_3d": null,
-        "cpm": 5.99,
-        "ctr": 1.27,
-        "impressions": 1256,
-        "clicks": 16,
-        "reach": 822,
-        "frequency": 1.53,
-        "freq_bucket": "ottimale",
-        "freq_bucket_label": "Ottimale",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.53 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 7,52 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.27% (nella media) · CPM 5,99 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un'angolazione creativa più diretta per spingere il CTR.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=595663015630974",
-        "target_geo": "42.4373,12.1099 +8km",
-        "audience_size": "66K",
-        "campaigns": [
-          {
-            "name": "[LEAD] Welcome experience 59€",
-            "spend": 7.52,
-            "lead": 1,
-            "cpl": 7.52,
-            "impressions": 1256,
-            "clicks": 16,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Eternity LB - Account pubblicitario",
-        "source": "ACTIVE",
-        "spend_y": 5.13,
-        "lead_y": 2,
-        "contatti_y": 2,
-        "cpl_y": 2.56,
-        "cpl_mean_3d": null,
-        "cpm": 9.0,
-        "ctr": 1.93,
-        "impressions": 570,
-        "clicks": 11,
-        "reach": 524,
-        "frequency": 1.09,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.09 (zona <b>Bassa · pubblico fresco</b>): le 524 persone raggiunte hanno visto l'annuncio in media 1.1 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 2,56 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 1.93% (buono) · CPM 9,00 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=575168796489608",
-        "target_geo": "41.9264,12.5137 +7km",
-        "audience_size": "828K",
-        "campaigns": [
-          {
-            "name": "Nuova campagna Contatti wonder 2",
-            "spend": 5.13,
-            "lead": 2,
-            "cpl": 2.56,
-            "impressions": 570,
-            "clicks": 11,
-            "adset_count": 1,
-            "active": true
-          }
-        ]
       }
     ],
     "recap": "",
     "_meta": {
       "reference_date": "2026-05-21",
       "synced_at": "2026-05-22T10:58:44.477528",
-      "source": "csv_alfredo"
+      "source": "csv_alfredo",
+      "semaphore_version": "v2"
     }
   },
   "medtech": {
@@ -6496,9 +6742,9 @@
       "total_lead": 21,
       "cpc_y": 8.83,
       "cpl_y": 8.83,
-      "rosso": 3,
-      "giallo": 0,
-      "verde": 7,
+      "rosso": 2,
+      "giallo": 3,
+      "verde": 5,
       "nero": 0
     },
     "entries": [
@@ -6509,7 +6755,7 @@
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 18.2,
         "cpm": 12.81,
         "ctr": 2.44,
         "impressions": 1718,
@@ -6520,6 +6766,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.182 · frequenza 1.45. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6527,9 +6780,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 22,01 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 22,01 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "22,01 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 2.44% (ottimo) · CPM 12,81 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
         "campaigns": [
@@ -6545,55 +6798,13 @@
         ]
       },
       {
-        "name": "Open Day - Total Lift - DOTT.SSA TIZIANA MASTROMARINO",
-        "source": "ACTIVE",
-        "spend_y": 21.65,
-        "lead_y": 0,
-        "contatti_y": 0,
-        "cpl_y": null,
-        "cpl_mean_3d": null,
-        "cpm": 17.83,
-        "ctr": 2.06,
-        "impressions": 1214,
-        "clicks": 25,
-        "reach": 794,
-        "frequency": 1.53,
-        "freq_bucket": "ottimale",
-        "freq_bucket_label": "Ottimale",
-        "freq_analysis_color": "giallo",
-        "freq_analysis": "Frequenza 1.53 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.5 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> (numero campi, friction).",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "red",
-          "label": "ROSSO",
-          "reason": "Investiti 21,65 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 21,65 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
-        "performance_eval": "CTR 2.06% (ottimo) · CPM 17,83 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
-        "campaigns": [
-          {
-            "name": "Open Day - Total Lift - DOTT.SSA TIZIANA MASTROMARINO",
-            "spend": 21.65,
-            "lead": 0,
-            "cpl": null,
-            "impressions": 1214,
-            "clicks": 25,
-            "active": true
-          }
-        ]
-      },
-      {
         "name": "Open Day - Total Lift - STUDIO DEL DOTT. MATTEO PARADISO",
         "source": "ACTIVE",
         "spend_y": 6.59,
         "lead_y": 0,
         "contatti_y": 0,
         "cpl_y": null,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 14.23,
         "cpm": 11.0,
         "ctr": 0.67,
         "impressions": 599,
@@ -6604,6 +6815,13 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "",
         "freq_analysis": "Frequenza 1.27 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.",
+        "mean_leads_3d": 0.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 471 · frequenza 1.27. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
@@ -6611,9 +6829,9 @@
         "status": {
           "color": "red",
           "label": "ROSSO",
-          "reason": "Investiti 6,59 € ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno 1/3 di apprendimento)."
+          "reason": "Media 0.3 lead/day su 3 giorni rolling. Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): 6,59 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.",
+        "cpl_narrative": "6,59 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
         "performance_eval": "CTR 0.67% (basso) · CPM 11,00 € (in media). Creative non aggancia, costi in linea. Test di 2 nuove varianti creative su angolazioni diverse, mantenendo audience e budget.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
         "campaigns": [
@@ -6629,169 +6847,50 @@
         ]
       },
       {
-        "name": "Open Day - Total Lift - DR. RICAPITO EZIO",
+        "name": "Open Day - Total Lift - DOTT.SSA TIZIANA MASTROMARINO",
         "source": "ACTIVE",
-        "spend_y": 26.28,
-        "lead_y": 7,
-        "contatti_y": 7,
-        "cpl_y": 3.75,
-        "cpl_mean_3d": null,
-        "cpm": 10.58,
-        "ctr": 4.91,
-        "impressions": 2483,
-        "clicks": 122,
-        "reach": 1794,
-        "frequency": 1.38,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.38 (zona <b>Bassa · pubblico fresco</b>): le 1.794 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 3,75 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 4.91% (ottimo) · CPM 10,58 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
-        "campaigns": [
-          {
-            "name": "Open Day - Total Lift - DR. RICAPITO EZIO",
-            "spend": 26.28,
-            "lead": 7,
-            "cpl": 3.75,
-            "impressions": 2483,
-            "clicks": 122,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Open Day - Total Lift - DOTT.SSA DEL VESCOVO",
-        "source": "ACTIVE",
-        "spend_y": 20.39,
-        "lead_y": 2,
-        "contatti_y": 2,
-        "cpl_y": 10.2,
-        "cpl_mean_3d": null,
-        "cpm": 11.35,
-        "ctr": 2.23,
-        "impressions": 1797,
-        "clicks": 40,
-        "reach": 1282,
-        "frequency": 1.4,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.40 (zona <b>Bassa · pubblico fresco</b>): le 1.282 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 10,20 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 2.23% (ottimo) · CPM 11,35 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
-        "campaigns": [
-          {
-            "name": "Open Day - Total Lift - DOTT.SSA DEL VESCOVO",
-            "spend": 20.39,
-            "lead": 2,
-            "cpl": 10.2,
-            "impressions": 1797,
-            "clicks": 40,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Open Day - Total Lift - DOTT.SSA ROSALBA DI NATALE",
-        "source": "ACTIVE",
-        "spend_y": 20.08,
-        "lead_y": 3,
-        "contatti_y": 3,
-        "cpl_y": 6.69,
-        "cpl_mean_3d": null,
-        "cpm": 11.12,
-        "ctr": 3.27,
-        "impressions": 1805,
-        "clicks": 59,
-        "reach": 1136,
-        "frequency": 1.59,
+        "spend_y": 21.65,
+        "lead_y": 0,
+        "contatti_y": 0,
+        "cpl_y": null,
+        "cpl_mean_3d": 11.39,
+        "cpm": 17.83,
+        "ctr": 2.06,
+        "impressions": 1214,
+        "clicks": 25,
+        "reach": 794,
+        "frequency": 1.53,
         "freq_bucket": "ottimale",
         "freq_bucket_label": "Ottimale",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.59 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.6 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "freq_analysis_color": "giallo",
+        "freq_analysis": "Frequenza 1.53 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.5 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità), <b>landing page</b> (caricamento, mobile, form) e <b>lead form</b> (numero campi, friction).",
+        "mean_leads_3d": 1.33,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 794 · frequenza 1.53. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
         "prev7_contatti": 0,
         "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.3 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 6,69 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 3.27% (ottimo) · CPM 11,12 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "cpl_narrative": "21,65 € investiti ieri senza contatti tracciati. Il punto di rottura può essere in tre aree: il tracciamento (pixel/CAPI), il modulo (caricamento o campi), oppure l'offerta non sufficientemente chiara. Verifica prioritaria.",
+        "performance_eval": "CTR 2.06% (ottimo) · CPM 17,83 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
         "campaigns": [
           {
-            "name": "Open Day - Total Lift - DOTT.SSA ROSALBA DI NATALE",
-            "spend": 20.08,
-            "lead": 3,
-            "cpl": 6.69,
-            "impressions": 1805,
-            "clicks": 59,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Open Day - Total Lift - DOTT. FABIO SCUDERI",
-        "source": "ACTIVE",
-        "spend_y": 19.12,
-        "lead_y": 3,
-        "contatti_y": 3,
-        "cpl_y": 6.37,
-        "cpl_mean_3d": null,
-        "cpm": 10.81,
-        "ctr": 5.09,
-        "impressions": 1769,
-        "clicks": 90,
-        "reach": 1295,
-        "frequency": 1.37,
-        "freq_bucket": "bassa",
-        "freq_bucket_label": "Bassa · pubblico fresco",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.37 (zona <b>Bassa · pubblico fresco</b>): le 1.295 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 6,37 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 5.09% (ottimo) · CPM 10,81 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
-        "campaigns": [
-          {
-            "name": "Open Day - Total Lift - DOTT. FABIO SCUDERI",
-            "spend": 19.12,
-            "lead": 3,
-            "cpl": 6.37,
-            "impressions": 1769,
-            "clicks": 90,
+            "name": "Open Day - Total Lift - DOTT.SSA TIZIANA MASTROMARINO",
+            "spend": 21.65,
+            "lead": 0,
+            "cpl": null,
+            "impressions": 1214,
+            "clicks": 25,
             "active": true
           }
         ]
@@ -6803,7 +6902,7 @@
         "lead_y": 3,
         "contatti_y": 3,
         "cpl_y": 6.29,
-        "cpl_mean_3d": null,
+        "cpl_mean_3d": 16.03,
         "cpm": 12.95,
         "ctr": 3.64,
         "impressions": 1458,
@@ -6814,16 +6913,23 @@
         "freq_bucket_label": "Bassa · pubblico fresco",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): le 1.008 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 1.67,
+        "days_history": 3,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 1.008 · frequenza 1.45. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
         "prev7_contatti": 0,
         "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "Media 1.7 lead/day su 3 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
         },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 6,29 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
+        "cpl_narrative": "Costo per contatto ieri 6,29 €, sotto la media degli ultimi 3 giorni (16,03 €, -61%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
         "performance_eval": "CTR 3.64% (ottimo) · CPM 12,95 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
         "campaigns": [
@@ -6834,48 +6940,6 @@
             "cpl": 6.29,
             "impressions": 1458,
             "clicks": 53,
-            "active": true
-          }
-        ]
-      },
-      {
-        "name": "Open Day - Total Lift - DOTT. LO GIUDICE",
-        "source": "ACTIVE",
-        "spend_y": 18.2,
-        "lead_y": 2,
-        "contatti_y": 2,
-        "cpl_y": 9.1,
-        "cpl_mean_3d": null,
-        "cpm": 9.15,
-        "ctr": 2.61,
-        "impressions": 1990,
-        "clicks": 52,
-        "reach": 1284,
-        "frequency": 1.55,
-        "freq_bucket": "ottimale",
-        "freq_bucket_label": "Ottimale",
-        "freq_analysis_color": "verde",
-        "freq_analysis": "Frequenza 1.55 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.6 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
-        "trend_3d": [],
-        "prev7_spend": 0,
-        "prev7_lead": 0,
-        "prev7_contatti": 0,
-        "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
-        },
-        "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 9,10 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
-        "performance_eval": "CTR 2.61% (ottimo) · CPM 9,15 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
-        "campaigns": [
-          {
-            "name": "Open Day - Total Lift - DOTT. LO GIUDICE",
-            "spend": 18.2,
-            "lead": 2,
-            "cpl": 9.1,
-            "impressions": 1990,
-            "clicks": 52,
             "active": true
           }
         ]
@@ -6898,14 +6962,21 @@
         "freq_bucket_label": "Ottimale",
         "freq_analysis_color": "verde",
         "freq_analysis": "Frequenza 2.06 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 2.1 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 1.0,
+        "days_history": 1,
+        "audience_narrative": {
+          "label": "Zona target vuota / esaurita",
+          "code": "rosso",
+          "text": "reach 480 · frequenza 2.06. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — poche persone nuove da intercettare in proporzione al budget impostato. <b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+        },
         "trend_3d": [],
         "prev7_spend": 0,
         "prev7_lead": 0,
         "prev7_contatti": 0,
         "status": {
-          "color": "green",
-          "label": "VERDE",
-          "reason": "Primi contatti raccolti in fase di apprendimento (giorno 1/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni."
+          "color": "yellow",
+          "label": "GIALLO",
+          "reason": "In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (1). A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti."
         },
         "cpl_narrative": "Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 12,29 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.",
         "performance_eval": "CTR 3.34% (ottimo) · CPM 12,43 € (alto). Creative performa ma l'audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull'asta.",
@@ -6921,13 +6992,239 @@
             "active": true
           }
         ]
+      },
+      {
+        "name": "Open Day - Total Lift - DR. RICAPITO EZIO",
+        "source": "ACTIVE",
+        "spend_y": 26.28,
+        "lead_y": 7,
+        "contatti_y": 7,
+        "cpl_y": 3.75,
+        "cpl_mean_3d": 3.86,
+        "cpm": 10.58,
+        "ctr": 4.91,
+        "impressions": 2483,
+        "clicks": 122,
+        "reach": 1794,
+        "frequency": 1.38,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.38 (zona <b>Bassa · pubblico fresco</b>): le 1.794 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 6.33,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 6.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 3,75 €, sotto la media degli ultimi 3 giorni (3,86 €, -3%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 4.91% (ottimo) · CPM 10,58 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
+        "campaigns": [
+          {
+            "name": "Open Day - Total Lift - DR. RICAPITO EZIO",
+            "spend": 26.28,
+            "lead": 7,
+            "cpl": 3.75,
+            "impressions": 2483,
+            "clicks": 122,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Open Day - Total Lift - DOTT.SSA DEL VESCOVO",
+        "source": "ACTIVE",
+        "spend_y": 20.39,
+        "lead_y": 2,
+        "contatti_y": 2,
+        "cpl_y": 10.2,
+        "cpl_mean_3d": 13.57,
+        "cpm": 11.35,
+        "ctr": 2.23,
+        "impressions": 1797,
+        "clicks": 40,
+        "reach": 1282,
+        "frequency": 1.4,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.40 (zona <b>Bassa · pubblico fresco</b>): le 1.282 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 2.0,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 2.0 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 10,20 €, sotto la media degli ultimi 3 giorni (13,57 €, -25%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 2.23% (ottimo) · CPM 11,35 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
+        "campaigns": [
+          {
+            "name": "Open Day - Total Lift - DOTT.SSA DEL VESCOVO",
+            "spend": 20.39,
+            "lead": 2,
+            "cpl": 10.2,
+            "impressions": 1797,
+            "clicks": 40,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Open Day - Total Lift - DOTT.SSA ROSALBA DI NATALE",
+        "source": "ACTIVE",
+        "spend_y": 20.08,
+        "lead_y": 3,
+        "contatti_y": 3,
+        "cpl_y": 6.69,
+        "cpl_mean_3d": 9.03,
+        "cpm": 11.12,
+        "ctr": 3.27,
+        "impressions": 1805,
+        "clicks": 59,
+        "reach": 1136,
+        "frequency": 1.59,
+        "freq_bucket": "ottimale",
+        "freq_bucket_label": "Ottimale",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.59 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.6 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 2.67,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 2.7 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 6,69 €, sotto la media degli ultimi 3 giorni (9,03 €, -26%). L'apprendimento sta consolidando: c'è margine per un aumento controllato del budget (+15-20%) senza compromettere l'efficienza.",
+        "performance_eval": "CTR 3.27% (ottimo) · CPM 11,12 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
+        "campaigns": [
+          {
+            "name": "Open Day - Total Lift - DOTT.SSA ROSALBA DI NATALE",
+            "spend": 20.08,
+            "lead": 3,
+            "cpl": 6.69,
+            "impressions": 1805,
+            "clicks": 59,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Open Day - Total Lift - DOTT. FABIO SCUDERI",
+        "source": "ACTIVE",
+        "spend_y": 19.12,
+        "lead_y": 3,
+        "contatti_y": 3,
+        "cpl_y": 6.37,
+        "cpl_mean_3d": 3.69,
+        "cpm": 10.81,
+        "ctr": 5.09,
+        "impressions": 1769,
+        "clicks": 90,
+        "reach": 1295,
+        "frequency": 1.37,
+        "freq_bucket": "bassa",
+        "freq_bucket_label": "Bassa · pubblico fresco",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.37 (zona <b>Bassa · pubblico fresco</b>): le 1.295 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.",
+        "mean_leads_3d": 5.33,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 5.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 6,37 € contro media 3 giorni 3,69 € (+73%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
+        "performance_eval": "CTR 5.09% (ottimo) · CPM 10,81 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
+        "campaigns": [
+          {
+            "name": "Open Day - Total Lift - DOTT. FABIO SCUDERI",
+            "spend": 19.12,
+            "lead": 3,
+            "cpl": 6.37,
+            "impressions": 1769,
+            "clicks": 90,
+            "active": true
+          }
+        ]
+      },
+      {
+        "name": "Open Day - Total Lift - DOTT. LO GIUDICE",
+        "source": "ACTIVE",
+        "spend_y": 18.2,
+        "lead_y": 2,
+        "contatti_y": 2,
+        "cpl_y": 9.1,
+        "cpl_mean_3d": 4.0,
+        "cpm": 9.15,
+        "ctr": 2.61,
+        "impressions": 1990,
+        "clicks": 52,
+        "reach": 1284,
+        "frequency": 1.55,
+        "freq_bucket": "ottimale",
+        "freq_bucket_label": "Ottimale",
+        "freq_analysis_color": "verde",
+        "freq_analysis": "Frequenza 1.55 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.6 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.",
+        "mean_leads_3d": 3.33,
+        "days_history": 3,
+        "audience_narrative": null,
+        "trend_3d": [],
+        "prev7_spend": 0,
+        "prev7_lead": 0,
+        "prev7_contatti": 0,
+        "status": {
+          "color": "green",
+          "label": "VERDE",
+          "reason": "Media 3.3 lead/day su 3 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti."
+        },
+        "cpl_narrative": "Costo per contatto ieri 9,10 € contro media 3 giorni 4,00 € (+128%, oltre +50%): fuori scala. La combinazione creatività + pubblico + offerta non sta più convertendo agli stessi costi. Intervento immediato: nuovo set creativo + verifica targeting + revisione delle puntate d'asta.",
+        "performance_eval": "CTR 2.61% (ottimo) · CPM 9,15 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d'occhio la frequenza.",
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=533672775128363",
+        "campaigns": [
+          {
+            "name": "Open Day - Total Lift - DOTT. LO GIUDICE",
+            "spend": 18.2,
+            "lead": 2,
+            "cpl": 9.1,
+            "impressions": 1990,
+            "clicks": 52,
+            "active": true
+          }
+        ]
       }
     ],
     "recap": "",
     "_meta": {
       "reference_date": "2026-05-21",
       "synced_at": "2026-05-22T10:58:44.477528",
-      "source": "csv_alfredo"
+      "source": "csv_alfredo",
+      "semaphore_version": "v2"
     }
   }
 }

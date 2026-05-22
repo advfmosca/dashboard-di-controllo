@@ -276,25 +276,32 @@ def parse_medtech_csv():
     out.sort(key=lambda x: -x["spesa"])
     return out
 
-# -------- semaphore --------
-def semaphore(spesa, lead, cpl, mean7, days_history):
+# -------- semaphore (v2: lead-volume based) --------  # SEMAPHORE_V2
+# Sostituita il 2026-05-22: il colore è guidato dalla media leads/day su 3 giorni
+# rolling (incluso ieri), non più dal confronto CPL vs media. Soglie:
+#   VERDE  ≥ 2 lead/day  (sopra soglia di copertura agenda appuntamenti)
+#   GIALLO 1-2 lead/day  (sotto soglia, segnali di traction presenti)
+#   ROSSO  < 1 lead/day  (volume insufficiente per il funnel di conversione)
+#   NERO   spesa 0       (campagna ferma)
+# Il CPL resta calcolato e visualizzato ma diventa informativo, non guida il colore.
+def semaphore(spesa, lead_y, mean_leads, days_history):
     if spesa == 0:
-        return ("nero", "Nessuna spesa registrata nel giorno.")
-    cold = days_history < 3
-    if cold:
-        if lead == 0:
-            return ("rosso", f"Investiti {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, messaggio, pubblico e modulo di richiesta (giorno {days_history+1}/3 di apprendimento).")
-        return ("verde", f"Primi contatti raccolti in fase di apprendimento (giorno {days_history+1}/3). In attesa di consolidare lo storico per attivare il confronto sulla media 3 giorni.")
-    if lead == 0:
-        return ("rosso", f"Investiti {fmt_eur(spesa)} ieri senza generare contatti. Verificare creatività, messaggio, pubblico e funzionamento del modulo.")
-    if mean7 is None or mean7 == 0:
-        return ("verde", "Primi contatti dopo un periodo senza richieste: monitorare consolidamento nei prossimi giorni.")
-    delta_pct = (cpl - mean7) / mean7 * 100
-    if cpl <= mean7:
-        return ("verde", f"Costo per contatto ieri {fmt_eur(cpl)}, in linea o sotto la media degli ultimi 3 giorni ({fmt_eur(mean7)}). Valutare un aumento del budget se il volume è basso.")
-    if delta_pct <= 50:
-        return ("giallo", f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean7)} (+{delta_pct:.1f}%, sotto la soglia +50%).")
-    return ("rosso", f"Costo per contatto ieri {fmt_eur(cpl)} contro media 3 giorni {fmt_eur(mean7)} (+{delta_pct:.1f}%, oltre la soglia +50%).")
+        return ("nero", "Nessuna spesa registrata: campagna ferma.")
+    if days_history < 2:
+        # Cold start: fallback su lead di ieri come proxy
+        avg = lead_y
+        prefix = (
+            f"In apprendimento (storico {days_history} {'giorno' if days_history == 1 else 'giorni'}): "
+            f"valutazione provvisoria su lead di ieri ({lead_y})."
+        )
+    else:
+        avg = mean_leads if mean_leads is not None else 0
+        prefix = f"Media {avg:.1f} lead/day su {days_history} giorni rolling."
+    if avg >= 2:
+        return ("verde", f"{prefix} Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.")
+    if avg >= 1:
+        return ("giallo", f"{prefix} A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l'agenda appuntamenti.")
+    return ("rosso", f"{prefix} Volume insufficiente (<1 lead/day): il funnel di conversione non ha materiale da lavorare.")
 
 # -------- 3gg lookback (campagne corte) using local csv-daily-snapshots data.json --------
 def load_history_csv_snapshots():
@@ -318,6 +325,23 @@ def mean_cpl(history, section, key_field, key_value, current_date):
                     cpls.append(it["cpl"])
                 break
     return (sum(cpls) / len(cpls) if cpls else None), days_data
+
+def mean_leads(history, section, key_field, key_value, current_date, lead_today=0):
+    """Media leads/day su 3 giorni rolling, INCLUSIVO di current_date (= ieri).
+    `lead_today` è il valore di lead del current_date stesso (= lead_y).
+    Ritorna (avg, days_with_data) dove days_with_data conta anche il current_date."""
+    leads = [lead_today]   # include reference_date stesso
+    days = 1
+    for i in range(1, 3):  # i = 1, 2 → 2 giorni precedenti
+        d = date_minus(current_date, i)
+        items = history.get(d, {}).get(section, [])
+        for it in items:
+            if it.get(key_field) == key_value:
+                leads.append(it.get("lead", 0) or 0)
+                days += 1
+                break
+    avg = sum(leads) / len(leads) if leads else 0
+    return avg, days
 
 # -------- narrative + performance evaluation --------
 def cpl_narrative(cpl, mean3, days_history, lead, spesa, color_it):
@@ -496,6 +520,126 @@ def freq_analysis(frequency, lead, reach, impressions):
         f"revisione targeting, ripartenza con budget contenuto.")
 
 
+# -------- audience narrative (v2: per ROSSE/GIALLE) --------  # SEMAPHORE_V2
+# Diagnosi che incrocia audience size × CTR × frequenza × reach per spiegare
+# perché una campagna non sta generando lead. 4 etichette possibili:
+#   - "Audience con potenziale di lead"   → pubblico c'è, creative aggancia: problema downstream
+#   - "Audience poco recettiva"            → creative non aggancia: problema messaggio
+#   - "Zona target vuota / esaurita"       → bacino troppo piccolo: problema targeting
+#   - "Audience tiepida"                   → zona grigia, segnali misti
+_AUD_CTR_GOOD = 1.5    # ≥ → buono
+_AUD_CTR_LOW  = 0.8    # < → basso
+_AUD_FREQ_SAT = 2.5    # > → saturazione iniziale
+_AUD_FREQ_HIGH = 5.0   # > → fatigue
+_AUD_REACH_TINY = 1500 # < → bacino troppo piccolo
+_AUD_SMALL_AUDIENCE = 30_000  # audience dichiarata < 30K = small
+
+def _parse_audience_size(s):
+    """'279K' -> 279000, '11.3M' -> 11_300_000, '20K' -> 20000."""
+    if not s: return None
+    s = str(s).strip().upper().replace(" ", "")
+    m = re.match(r"([\d.,]+)\s*([KM])?", s)
+    if not m: return None
+    try:
+        n = float(m.group(1).replace(",", "."))
+    except: return None
+    unit = m.group(2) or ""
+    if unit == "K": n *= 1_000
+    elif unit == "M": n *= 1_000_000
+    return int(n)
+
+def audience_narrative(lead_avg, ctr, freq, reach, audience_size_str, lead_y):
+    """Ritorna dict {label, code, text} oppure None se non applicabile.
+    code ∈ {'rosso','giallo'} per coerenza CSS con .rational.<code>."""
+    if reach is None and ctr is None and freq is None:
+        return None  # nessun dato per diagnosi
+    audience_n = _parse_audience_size(audience_size_str)
+    reach_v = reach or 0
+    ctr_v = ctr if ctr is not None else 0.0
+    freq_v = freq if freq is not None else 0.0
+    aud_str = audience_size_str if audience_size_str else "—"
+    reach_str = fmt_int(reach_v) if reach_v else "—"
+
+    # Check #1: ZONA TARGET VUOTA / ESAURITA
+    is_tiny_reach = reach_v > 0 and reach_v < _AUD_REACH_TINY
+    is_burnt = freq_v > _AUD_FREQ_HIGH
+    is_small_audience = audience_n is not None and audience_n < _AUD_SMALL_AUDIENCE
+    if is_tiny_reach or is_burnt or (is_small_audience and freq_v > 2.0):
+        bits = []
+        if reach_v: bits.append(f"reach {reach_str}")
+        if audience_n: bits.append(f"audience dichiarata {aud_str}")
+        if freq_v: bits.append(f"frequenza {freq_v:.2f}")
+        diag = " · ".join(bits) if bits else "dati audience parziali"
+        return {
+            "label": "Zona target vuota / esaurita",
+            "code": "rosso",
+            "text": (
+                f"{diag}. Il bacino è troppo ridotto per sostenere l'investimento giornaliero — "
+                f"{'poche persone nuove da intercettare e già esposte oltre soglia' if freq_v > 3 else 'poche persone nuove da intercettare in proporzione al budget impostato'}. "
+                f"<b>Zona target vuota</b>: l'audience non regge il ritmo di spesa. "
+                f"Allargare il raggio geografico (+5-10 km) o aprire un secondo set di interessi prima di rimettere mano alla creatività."
+            ),
+        }
+
+    # Check #2: AUDIENCE POCO RECETTIVA (CTR basso)
+    if ctr_v > 0 and ctr_v < _AUD_CTR_LOW:
+        sat_note = (
+            f" e frequenza {freq_v:.2f} già in fascia di saturazione iniziale (>2.5) — la creatività non aggancia E il pubblico è cotto"
+            if freq_v > _AUD_FREQ_SAT
+            else f" con frequenza {freq_v:.2f} ancora nella norma — il pubblico vede l'annuncio ma non lo trova rilevante"
+        )
+        return {
+            "label": "Audience poco recettiva",
+            "code": "rosso",
+            "text": (
+                f"CTR {ctr_v:.2f}% sotto soglia di engagement (target ≥{_AUD_CTR_GOOD}%){sat_note}. "
+                f"<b>Audience poco recettiva</b>: il problema non è il bacino né la pressione, è il messaggio. "
+                f"Refresh creative entro 48h con angolazione diversa (benefit chiaro in head, prova sociale o leva temporale), audience invariata."
+            ),
+        }
+
+    # Check #3: AUDIENCE CON POTENZIALE LEAD (CTR buono)
+    if ctr_v >= _AUD_CTR_GOOD:
+        if freq_v > _AUD_FREQ_SAT:
+            label = "Audience con potenziale, in saturazione iniziale"
+            text = (
+                f"CTR {ctr_v:.2f}% sopra la media (target ≥{_AUD_CTR_GOOD}%), frequenza {freq_v:.2f} sopra il sweet spot (1.5-2.5): "
+                f"il pubblico ha già visto l'annuncio più volte. <b>Preparare il refresh creative</b> nei prossimi 5-7 giorni per non perdere "
+                f"l'aggancio, in parallelo verificare il modulo lead (campi, friction mobile)."
+            )
+        else:
+            label = "Audience con potenziale di lead"
+            consumed_pct = (reach_v / audience_n * 100) if (audience_n and reach_v) else None
+            extra = (
+                f" Reach {reach_str} su bacino dichiarato {aud_str} (consumato il {consumed_pct:.2f}%)."
+                if consumed_pct
+                else f" Reach {reach_str}, frequenza {freq_v:.2f} ancora fresca."
+            )
+            text = (
+                f"CTR {ctr_v:.2f}% sopra la media (target ≥{_AUD_CTR_GOOD}%).{extra} "
+                f"Aggancio e copertura ci sono, manca la conversione a valle. Verificare modulo lead (numero campi, tempo di caricamento mobile) "
+                f"e offerta in head — sono le uniche leve rimaste prima di toccare creative o targeting."
+            )
+        return {
+            "label": label,
+            "code": "giallo" if lead_avg >= 1 else "rosso",
+            "text": text,
+        }
+
+    # Check #4: AUDIENCE TIEPIDA (zona grigia 0.8 ≤ CTR < 1.5%)
+    return {
+        "label": "Audience tiepida",
+        "code": "giallo",
+        "text": (
+            f"CTR {ctr_v:.2f}% in fascia neutra (0.8-1.5%), frequenza {freq_v:.2f}, reach {reach_str}. "
+            f"<b>Audience tiepida</b>: segnali misti — né rifiuto netto né adesione chiara. "
+            f"Test A/B di una variante creative su angolazione diversa mantenendo budget e audience: "
+            f"se sblocca il CTR vuol dire che mancava il match copy/pubblico, altrimenti il problema è a valle."
+        ),
+    }
+
+
+
 # -------- entry builders --------
 def entry_status(color_it, reason):
     return {
@@ -511,7 +655,8 @@ def build_cea_payload(items, history, date_str):
     tot_lead = 0
     for it in items:
         mean7, days = mean_cpl(history, "cea", "cliente", it["cliente"], date_str)
-        sem, reason = semaphore(it["spesa"], it["lead"], it["cpl"], mean7, days)
+        avg_leads, days_v2 = mean_leads(history, "cea", "cliente", it["cliente"], date_str, lead_today=it["lead"])  # SEMAPHORE_V2
+        sem, reason = semaphore(it["spesa"], it["lead"], avg_leads, days_v2)
         counts[sem] += 1
         tot_spend += it["spesa"]
         tot_lead += it["lead"]
@@ -538,6 +683,11 @@ def build_cea_payload(items, history, date_str):
             "freq_bucket_label": f_label,
             "freq_analysis_color": f_color,
             "freq_analysis": f_text,
+            "mean_leads_3d": round(avg_leads, 2),  # SEMAPHORE_V2: nuovo KPI driver
+            "days_history": days_v2,                # SEMAPHORE_V2
+            "audience_narrative": audience_narrative(  # SEMAPHORE_V2: solo per rosse/gialle
+                avg_leads, it.get("ctr"), freq_v, it.get("reach"), it.get("audience_size"), it["lead"]
+            ) if sem in ("rosso", "giallo") else None,
             "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,
@@ -581,7 +731,8 @@ def build_medtech_payload(items, history, date_str):
     tot_lead = 0
     for it in items:
         mean7, days = mean_cpl(history, "medtech", "id", it["id"], date_str)
-        sem, reason = semaphore(it["spesa"], it["lead"], it["cpl"], mean7, days)
+        avg_leads, days_v2 = mean_leads(history, "medtech", "id", it["id"], date_str, lead_today=it["lead"])  # SEMAPHORE_V2
+        sem, reason = semaphore(it["spesa"], it["lead"], avg_leads, days_v2)
         counts[sem] += 1
         tot_spend += it["spesa"]
         tot_lead += it["lead"]
@@ -608,6 +759,11 @@ def build_medtech_payload(items, history, date_str):
             "freq_bucket_label": f_label,
             "freq_analysis_color": f_color,
             "freq_analysis": f_text,
+            "mean_leads_3d": round(avg_leads, 2),  # SEMAPHORE_V2: nuovo KPI driver
+            "days_history": days_v2,                # SEMAPHORE_V2
+            "audience_narrative": audience_narrative(  # SEMAPHORE_V2: solo per rosse/gialle
+                avg_leads, it.get("ctr"), freq_v, it.get("reach"), it.get("audience_size"), it["lead"]
+            ) if sem in ("rosso", "giallo") else None,
             "trend_3d": [],
             "prev7_spend": 0,
             "prev7_lead": 0,
@@ -680,6 +836,7 @@ def merge_into_dashboard(cea_payload, medtech_payload, date_str):
         "reference_date": date_str,
         "synced_at": iso_now,
         "source": "csv_alfredo",
+        "semaphore_version": "v2",  # SEMAPHORE_V2: soglie leads/day
     }
     # IMPORTANTE: preserva _meta se è già stato impostato a stale_fallback in main()
     # (caso CSV mancante). Sovrascrive solo quando i payload arrivano dal parse CSV fresh.

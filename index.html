@@ -405,6 +405,19 @@
     .recap-actions { flex-direction: column; align-items: stretch; }
     .copy-feedback { text-align: center; }
   }
+
+  /* SEMAPHORE_V2: mini-tag diagnostico audience nelle card MT/CEA */
+  .aghc-card .aud-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: .02em; line-height: 1.4; }
+  .aghc-card .aud-tag.rosso  { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .aghc-card .aud-tag.giallo { background: #fffbeb; color: #9a3412; border: 1px solid #fde68a; }
+  /* SEMAPHORE_V2: blocco audience narrative colorato */
+  .aghc-card .rational.aud-narr { padding: 11px 13px; }
+  .aghc-card .rational.aud-narr.rosso  { background: #fef2f2; color: #7f1d1d; border-left: 3px solid #ef4444; }
+  .aghc-card .rational.aud-narr.giallo { background: #fffbeb; color: #78350f; border-left: 3px solid #f59e0b; }
+  .aghc-card .rational.aud-narr .rat-label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin-bottom: 6px; }
+  .aghc-card .rational.aud-narr.rosso  .rat-label { color: #991b1b; }
+  .aghc-card .rational.aud-narr.giallo .rat-label { color: #9a3412; }
+  .aghc-card .rational.aud-narr .aud-headline { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
 </style>
 </head>
 <body>
@@ -566,13 +579,15 @@
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="mt-k-spend">–</div></div>
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
+      <!-- SEMAPHORE_V2 -->
+      <div class="kpi" title="Media leads/giorno per campagna attiva: total_lead / campagne_attive. Driver del nuovo semaforo (≥2 verde, 1-2 giallo, <1 rosso)."><div class="label">⌀ Lead/giorno per campagna</div><div class="value" id="mt-k-avglead">–</div><div class="sub">soglia VERDE ≥ 2</div></div>
     </div>
     <!-- Conteggi semafori cliccabili: filtrano le entries -->
     <div class="kpis sem-grid-filter" data-scope="mt" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
-      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
-      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
-      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
+      <div class="kpi sem-cell" data-filter="red"    title="ROSSO = meno di 1 lead/day di media (rolling 3gg, ieri incluso). Volume insufficiente per coprire l'agenda appuntamenti." style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" title="GIALLO = tra 1 e 2 lead/day di media (rolling 3gg). Sotto soglia di copertura agenda ma con segnali di traction." style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  title="VERDE = almeno 2 lead/day di media (rolling 3gg). Sopra soglia di conversione appuntamenti, margine per scaling." style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  title="NERO = nessuna spesa registrata: campagna ferma (pausa voluta o blocco tecnico)." style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
     </div>
     <section class="card"><h2>Card per cliente <span class="pill" id="mt-cards-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px;">
@@ -595,13 +610,15 @@
       <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="cea-k-spend">–</div></div>
       <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="cea-k-contatti">–</div><div class="sub">Instant Form</div></div>
       <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="cea-k-cpc">–</div></div>
+      <!-- SEMAPHORE_V2 -->
+      <div class="kpi" title="Media leads/giorno per campagna attiva: total_lead / campagne_attive. Driver del nuovo semaforo (≥2 verde, 1-2 giallo, <1 rosso)."><div class="label">⌀ Lead/giorno per campagna</div><div class="value" id="cea-k-avglead">–</div><div class="sub">soglia VERDE ≥ 2</div></div>
     </div>
     <!-- Conteggi semafori CEA cliccabili (filtrano le entries) -->
     <div class="kpis sem-grid-filter" data-scope="cea" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
-      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
-      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
-      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
+      <div class="kpi sem-cell" data-filter="red"    title="ROSSO = meno di 1 lead/day di media (rolling 3gg, ieri incluso). Volume insufficiente per coprire l'agenda appuntamenti." style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" title="GIALLO = tra 1 e 2 lead/day di media (rolling 3gg). Sotto soglia di copertura agenda ma con segnali di traction." style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  title="VERDE = almeno 2 lead/day di media (rolling 3gg). Sopra soglia di conversione appuntamenti, margine per scaling." style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  title="NERO = nessuna spesa registrata: campagna ferma (pausa voluta o blocco tecnico)." style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
     </div>
     <section class="card"><h2>Card per cliente <span class="pill" id="cea-cards-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px;">
@@ -1677,9 +1694,13 @@
     const statusColor = (entry.status && entry.status.color) || "gray";
     const badgeCls = projectLabel === "Med & Tech" ? "medtech" : "cea";
     const badgeLbl = projectLabel === "Med & Tech" ? "MED & TECH" : "CEA";
+    // SEMAPHORE_V2: mini-tag diagnostico audience (solo per rosse/gialle)
+    const _an = entry.audience_narrative;
+    const audTag = _an ? `<span class="aud-tag ${_an.code}" title="${escapeHtml(_an.label)}">${escapeHtml(_an.label)}</span>` : "";
     const header = `<div class="header-row">
       <span class="proj-badge ${badgeCls}">${badgeLbl}</span>
       <div class="name">${escapeHtml(clientName)}</div>
+      ${audTag}
     </div>`;
     // Riga 3 KPI 7gg cliente-friendly (popolata async da loadDailySeries15d).
     // Per il primo render usiamo placeholders: verranno aggiornati da wireMTCEASeries.
@@ -1709,7 +1730,15 @@
     const adLink = effectiveAdUrl ? openAccountBtn(effectiveAdUrl, "Meta") : "";
     const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(clientName)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
     const footer = `<div class="footer">${statusPill}${adLink}${previewBtn}</div>`;
-    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${footer}</div>`;
+    // SEMAPHORE_V2: blocco audience narrative inserito dopo il rational (solo rosse/gialle)
+    const audBlock = _an
+      ? `<div class="rational aud-narr ${_an.code}">
+          <span class="rat-label">Analisi audience — perché non genera lead</span>
+          <span class="aud-headline">${escapeHtml(_an.label)}</span>
+          ${_an.text}
+        </div>`
+      : "";
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${audBlock}${footer}</div>`;
   }
 
   function wireMTCEASeries(entry, idPrefix, projectLabel, attachKeyboardOn) {
@@ -2674,6 +2703,10 @@
     document.getElementById("mt-k-spend").textContent = fmtEUR(kpi.total_spend);
     document.getElementById("mt-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
     document.getElementById("mt-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    // SEMAPHORE_V2: ⌀ Lead/giorno per campagna attiva
+    const _mtAvg = (kpi.actives && kpi.actives > 0 && kpi.total_lead != null) ? (kpi.total_lead / kpi.actives) : null;
+    const _mtAvgEl = document.getElementById("mt-k-avglead");
+    if (_mtAvgEl) _mtAvgEl.textContent = _mtAvg != null ? _mtAvg.toFixed(1).replace(".", ",") : "–";
     // Conteggi semaforici
     document.getElementById("mt-k-rosso").textContent = kpi.rosso != null ? kpi.rosso : "–";
     document.getElementById("mt-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
@@ -2710,7 +2743,7 @@
     const proj = d.cea;
     if (!proj || !Array.isArray(proj.entries) || proj.entries.length === 0) {
       // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto + hint
-      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
+      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-avglead","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
         const el = document.getElementById(id); if (el) el.textContent = "–";
       });
       const ap = document.getElementById("cea-alerts-pill");
@@ -2724,6 +2757,10 @@
     document.getElementById("cea-k-spend").textContent = fmtEUR(kpi.total_spend);
     document.getElementById("cea-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
     document.getElementById("cea-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    // SEMAPHORE_V2: ⌀ Lead/giorno per campagna attiva
+    const _ceaAvg = (kpi.actives && kpi.actives > 0 && kpi.total_lead != null) ? (kpi.total_lead / kpi.actives) : null;
+    const _ceaAvgEl = document.getElementById("cea-k-avglead");
+    if (_ceaAvgEl) _ceaAvgEl.textContent = _ceaAvg != null ? _ceaAvg.toFixed(1).replace(".", ",") : "–";
     document.getElementById("cea-k-rosso").textContent  = kpi.rosso  != null ? kpi.rosso  : "–";
     document.getElementById("cea-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
     document.getElementById("cea-k-verde").textContent  = kpi.verde  != null ? kpi.verde  : "–";
