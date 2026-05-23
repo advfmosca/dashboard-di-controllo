@@ -1,0 +1,1902 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c1c1e">
+<title>CEA — Andamento campagne 2026-05-22</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-card: #ffffff;
+  --border: #ececef;
+  --border-soft: #f4f4f5;
+  --text: #1c1c1e;
+  --text-muted: #6b6b70;
+  --text-dim: #8a8a90;
+  --red: #d93025;
+  --yellow: #f5a623;
+  --green: #1e8e3e;
+  --gray: #9a9aa0;
+  --black: #1a1a1a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
+
+.brand-header { text-align: center; margin: 4px 0 14px; padding: 14px 18px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 12px; }
+h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; }
+.subtitle { color: var(--text-muted); font-size: 12.5px; margin: 0 0 18px; }
+
+/* KPI in alto */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.kpi { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; min-width: 0; }
+.kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+.kpi .value { font-size: 24px; font-weight: 700; line-height: 1.1; color: #0f0f10; font-variant-numeric: tabular-nums; }
+.kpi.total { background: #1c1c1e; border-color: #1c1c1e; }
+.kpi.total .label { color: #b8b8bf; }
+.kpi.total .value { color: #fff; }
+
+/* Conteggi semafori 4 colonne — CLICCABILI come filtro */
+.sem-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.sem-grid .kpi { padding: 11px 13px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; }
+.sem-grid .kpi:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+.sem-grid .kpi.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.sem-grid.has-active .kpi:not(.active-filter) { opacity: 0.42; }
+.sem-grid .kpi.rosso  { background: #fee2e2; border-color: #fca5a5; }
+.sem-grid .kpi.rosso  .label { color: #991b1b; }
+.sem-grid .kpi.rosso  .value { color: #991b1b; }
+.sem-grid .kpi.giallo { background: #ffedd5; border-color: #fed7aa; }
+.sem-grid .kpi.giallo .label { color: #9a3412; }
+.sem-grid .kpi.giallo .value { color: #9a3412; }
+.sem-grid .kpi.verde  { background: #d1fadf; border-color: #86efac; }
+.sem-grid .kpi.verde  .label { color: #14532d; }
+.sem-grid .kpi.verde  .value { color: #14532d; }
+.sem-grid .kpi.nero   { background: #1a1a1a; border-color: #1a1a1a; }
+.sem-grid .kpi.nero   .label { color: #b8b8bf; }
+.sem-grid .kpi.nero   .value { color: #fff; }
+
+/* Search bar */
+.search-bar { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; flex-wrap: wrap; }
+.search-bar .search-ico { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+.search-bar input[type="search"] { flex: 1; font: inherit; font-size: 13px; padding: 6px 8px; border: 0; background: transparent; color: var(--text); outline: none; min-width: 160px; }
+.search-bar input[type="search"]::placeholder { color: var(--text-dim); }
+.search-bar .filter-count { font-size: 11.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.search-bar .clear-btn { font: inherit; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text-muted); cursor: pointer; flex-shrink: 0; }
+.search-bar .clear-btn:hover { background: #f5f5f7; color: var(--text); }
+.search-bar .clear-btn.hidden { display: none; }
+.empty-result { padding: 20px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 13px; background: var(--bg-soft); border-radius: 10px; border: 1px dashed var(--border); }
+
+/* ─── HERO STATO SALUTE ─── */
+.smart-summary { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 12px; padding: 16px; background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 14px; align-items: stretch; }
+.smart-summary .ss-hero { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); border-radius: 10px; padding: 14px 16px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+.smart-summary .ss-hero .lbl { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #b8b8bf; }
+.smart-summary .ss-hero .val { font-size: 32px; font-weight: 800; line-height: 1.05; margin: 2px 0 1px; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-hero .sub { font-size: 11.5px; color: #d1d5db; }
+.smart-summary .ss-cell { padding: 10px 12px; border-radius: 10px; cursor: pointer; user-select: none; transition: transform .15s, box-shadow .15s, opacity .15s; display: flex; flex-direction: column; gap: 3px; }
+.smart-summary .ss-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.smart-summary .ss-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+.smart-summary.has-active .ss-cell:not(.active-filter):not(.ss-hero) { opacity: 0.42; }
+.smart-summary .ss-cell .ico { font-size: 16px; line-height: 1; }
+.smart-summary .ss-cell .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.smart-summary .ss-cell .val { font-size: 24px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.smart-summary .ss-cell .micro { font-size: 10.5px; opacity: 0.85; }
+.smart-summary .ss-cell.rosso  { background: #fee2e2; color: #991b1b; }
+.smart-summary .ss-cell.giallo { background: #ffedd5; color: #9a3412; }
+.smart-summary .ss-cell.verde  { background: #d1fadf; color: #14532d; }
+.smart-summary .ss-cell.nero   { background: #1a1a1a; color: #fff; }
+@media (max-width: 820px) {
+  .smart-summary { grid-template-columns: 1fr 1fr; }
+  .smart-summary .ss-hero { grid-column: 1 / -1; }
+}
+
+/* ─── CARD RIPROGETTATA ─── */
+.card-new { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04); display: flex; flex-direction: column; margin-bottom: 12px; }
+.card-new.rosso  { border-top: 5px solid var(--red); }
+.card-new.giallo { border-top: 5px solid var(--yellow); }
+.card-new.verde  { border-top: 5px solid var(--green); }
+.card-new.nero   { border-top: 5px solid var(--black); }
+.card-new .nc-hero { padding: 14px 16px 10px; }
+.card-new.rosso  .nc-hero { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); }
+.card-new.giallo .nc-hero { background: linear-gradient(180deg, #fffaf0 0%, #fff 100%); }
+.card-new.verde  .nc-hero { background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%); }
+.card-new.nero   .nc-hero { background: linear-gradient(180deg, #f5f5f7 0%, #fff 100%); }
+.card-new .nc-chart-wrap { margin: 12px 16px; padding: 10px 12px; background: var(--bg-soft); border-radius: 10px; }
+.card-new .nc-chart-title { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+.card-new .nc-chart-legend { font-size: 10px; display: flex; gap: 8px; }
+.card-new .nc-chart-legend .lg-s { display: inline-flex; align-items: center; gap: 4px; text-transform: none; letter-spacing: 0; }
+.card-new .nc-chart-legend .lg-sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; }
+.card-new .nc-chart { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 6px; }
+.card-new .nc-chart svg { width: 100%; height: auto; display: block; }
+.card-new .nc-chart .nc-loading { padding: 14px; text-align: center; color: var(--text-dim); font-size: 12px; }
+.card-new .nc-day-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; padding: 6px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
+.card-new .nc-nav-btn { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; font: inherit; font-size: 13px; cursor: pointer; color: var(--text); }
+.card-new .nc-nav-btn:hover { background: var(--bg-soft); }
+.card-new .nc-nav-btn:disabled { color: var(--text-dim); cursor: not-allowed; opacity: 0.5; }
+.card-new .nc-day-label { font-weight: 600; font-size: 12.5px; text-align: center; }
+.card-new .nc-day-label .small { display: block; font-weight: 500; font-size: 10.5px; color: var(--text-muted); margin-top: 1px; }
+.card-new .nc-day-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+.card-new .nc-day-kpis .dk-cell { background: #fff; border: 1px solid var(--border-soft); border-radius: 8px; padding: 7px 9px; text-align: center; }
+.card-new .nc-day-kpis .dk-lbl { font-size: 9.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.card-new .nc-day-kpis .dk-val { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+.card-new .nc-meta { margin: 8px 0 12px; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+.card-new .nc-meta dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media (min-width: 640px) { .card-new .nc-meta dl { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+.card-new .nc-meta dt { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 2px; }
+.card-new .nc-meta dd { margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text); }
+.card-new .nc-meta dd.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+
+.card-new .nc-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.card-new .client-btn { margin-left: auto; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #fff; border: 1px solid #d2d2d7; color: var(--text); text-decoration: none; transition: background .12s; }
+.card-new .client-btn:hover { background: var(--bg-soft); }
+.card-new .nc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; padding: 4px 10px; border-radius: 999px; }
+.card-new.rosso  .nc-status { background: #fee2e2; color: #991b1b; }
+.card-new.giallo .nc-status { background: #ffedd5; color: #9a3412; }
+.card-new.verde  .nc-status { background: #d1fadf; color: #14532d; }
+.card-new.nero   .nc-status { background: #1a1a1a; color: #fff; }
+.card-new .nc-status .ico { font-size: 13px; }
+.card-new .nc-since { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.card-new .nc-name { font-size: 15px; font-weight: 700; line-height: 1.25; margin: 0; word-break: break-word; }
+.card-new .nc-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 8px; padding: 0 16px 14px; }
+.card-new .nc-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
+.card-new .nc-kpi .lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.card-new .nc-kpi .val { font-size: 17px; font-weight: 800; color: #0f0f10; line-height: 1.1; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.card-new .nc-kpi .delta { font-size: 11px; font-weight: 600; margin-top: 2px; color: var(--text-muted); }
+.card-new .nc-kpi .delta.up   { color: var(--red); }
+.card-new .nc-kpi .delta.down { color: var(--green); }
+.card-new .nc-kpi.highlight   { background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); }
+.card-new .nc-kpi.highlight .lbl { color: #b8b8bf; }
+.card-new .nc-kpi.highlight .val { color: #fff; }
+.card-new .nc-kpi.highlight .delta { color: #d1d5db; }
+.card-new .nc-body { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); }
+.card-new .nc-section-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 6px 0 4px; }
+.card-new .nc-story { font-size: 13px; line-height: 1.55; color: #2c2c2c; margin: 0; }
+.card-new .nc-action { display: flex; gap: 10px; padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-action .arrow { font-size: 16px; line-height: 1.2; flex-shrink: 0; }
+.card-new.rosso  .nc-action .arrow { color: var(--red); }
+.card-new.giallo .nc-action .arrow { color: var(--yellow); }
+.card-new.verde  .nc-action .arrow { color: var(--green); }
+.card-new.nero   .nc-action .arrow { color: #555; }
+.card-new .nc-action .text { font-size: 13px; line-height: 1.5; color: #2c2c2c; flex: 1; }
+.card-new .nc-action .text b { color: #1c1c1e; }
+.card-new details { padding: 8px 16px 14px; font-size: 12.5px; color: var(--text-muted); border-top: 1px dashed var(--border-soft); }
+.card-new details summary { cursor: pointer; user-select: none; font-weight: 600; color: var(--text); list-style: none; padding: 4px 0; }
+.card-new details summary::-webkit-details-marker { display: none; }
+.card-new details summary::before { content: "▸ "; color: var(--text-dim); display: inline-block; transition: transform .15s; }
+.card-new details[open] summary::before { transform: rotate(90deg); }
+.card-new details .det-content { padding: 6px 0 0; line-height: 1.55; }
+.card-new details .det-content b { color: var(--text); }
+
+/* === Visualizzazioni & Frequenza (introdotte 2026-05-22) === */
+.card-new .nc-kpi .freq-pill { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; margin-top: 4px; text-transform: uppercase; }
+.card-new .nc-kpi .freq-pill.bassa     { background: #dbeafe; color: #1e3a8a; }
+.card-new .nc-kpi .freq-pill.ottimale  { background: #d1fadf; color: #14532d; }
+.card-new .nc-kpi .freq-pill.monitorare{ background: #ffedd5; color: #9a3412; }
+.card-new .nc-kpi .freq-pill.alta      { background: #fee2e2; color: #991b1b; }
+.card-new .nc-kpi .freq-pill.critica   { background: #1a1a1a; color: #fff; }
+.card-new .nc-freq { padding: 12px 16px 0; border-top: 1px solid var(--border-soft); margin-top: 12px; }
+.card-new .nc-freq .nc-story.rosso  { color: #991b1b; }
+.card-new .nc-freq .nc-story.giallo { color: #9a3412; }
+.card-new .nc-freq .nc-story.verde  { color: #14532d; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 12px; color: var(--text-muted); background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
+.legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.dot-rosso { background: var(--red); }
+.dot-giallo { background: var(--yellow); }
+.dot-verde { background: var(--green); }
+.dot-nero  { background: var(--black); }
+
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 12px; padding: 14px 16px; }
+.card.rosso  { border-left-color: var(--red); }
+.card.giallo { border-left-color: var(--yellow); }
+.card.verde  { border-left-color: var(--green); }
+.card.nero   { border-left-color: var(--black); }
+.card-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; color: #fff; flex-shrink: 0; }
+.tag.rosso  { background: var(--red); }
+.tag.giallo { background: var(--yellow); color: var(--text); }
+.tag.verde  { background: var(--green); }
+.tag.nero   { background: var(--black); }
+.camp-name { font-weight: 700; font-size: 14px; flex: 1; }
+.meta { color: var(--text-muted); font-size: 12.5px; margin-top: 6px; }
+.reason { font-size: 12.5px; color: #2c2c2c; margin-top: 8px; line-height: 1.55; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; }
+.r-cpl  { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 8px; padding: 9px 11px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid #0866FF; }
+.r-perf { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 8px; padding: 9px 11px; background: #fffaf0; border-radius: 8px; border-left: 3px solid var(--yellow); }
+.r-perf strong { color: #1c1c1e; }
+
+/* Index list */
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 14px 0 10px; }
+.report-list { display: flex; flex-direction: column; gap: 4px; list-style: none; padding: 0; }
+.report-list a.report-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
+.report-list a.report-item:hover { background: var(--bg-soft); border-color: #d2d2d7; }
+.report-list .day-name { font-weight: 600; font-size: 13.5px; }
+.report-list .day-counts { font-size: 12.5px; color: var(--text-muted); margin-left: 12px; font-variant-numeric: tabular-nums; }
+.report-list .day-counts .c-rosso  { color: var(--red);   font-weight: 700; }
+.report-list .day-counts .c-giallo { color: #b88a00;      font-weight: 700; }
+.report-list .day-counts .c-verde  { color: var(--green); font-weight: 700; }
+.report-list .day-counts .c-nero   { color: #444;         font-weight: 700; }
+.report-list .arrow { margin-left: auto; color: var(--text-dim); font-size: 18px; }
+
+.signature { font-size: 11.5px; color: var(--text-dim); margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border-soft); text-align: center; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  
+  <div class="brand-header">
+    <h1>CEA — Andamento campagne</h1>
+    <p class="subtitle">Snapshot del Venerdì 22 Maggio 2026 · 43 clienti con investimento nel periodo · soglia semaforica calcolata sul costo per contatto medio 3gg (campagne brevi)</p>
+    <p class="subtitle" style="margin-top:4px;font-size:11.5px;">Contatti aggiornati alle <b>07:34</b> del 23/05/2026</p>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="label">Clienti attivi</div><div class="value">43</div></div>
+    <div class="kpi total"><div class="label">Spesa totale</div><div class="value">1.932,79 €</div></div>
+    <div class="kpi"><div class="label">Contatti generati</div><div class="value">76</div></div>
+    <div class="kpi"><div class="label">Costo medio per contatto</div><div class="value">25,43 €</div></div>
+  </div>
+
+  <div class="smart-summary" id="sem-grid">
+    <div class="ss-hero">
+      <div class="lbl">Stato salute portafoglio</div>
+      <div class="val">12%</div>
+      <div class="sub">5 di 43 campagne in linea</div>
+    </div>
+    <div class="ss-cell rosso"  data-filter="rosso"><div class="ico">🔴</div><div class="lbl">Da rivedere</div><div class="val">27</div><div class="micro">in zona critica</div></div>
+    <div class="ss-cell giallo" data-filter="giallo"><div class="ico">🟡</div><div class="lbl">Da monitorare</div><div class="val">11</div><div class="micro">scostamento lieve</div></div>
+    <div class="ss-cell verde"  data-filter="verde"><div class="ico">🟢</div><div class="lbl">In linea</div><div class="val">5</div><div class="micro">o sotto media</div></div>
+    <div class="ss-cell nero"   data-filter="nero"><div class="ico">⚫</div><div class="lbl">Spente</div><div class="val">0</div><div class="micro">nessuna spesa</div></div>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-ico">🔎</span>
+    <input id="search-input" type="search" autocomplete="off" spellcheck="false" placeholder="Cerca campagna o cliente…" />
+    <span class="filter-count" id="filter-count"></span>
+    <button type="button" class="clear-btn hidden" id="search-clear" title="Pulisci">Pulisci</button>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot dot-verde"></span><b>In linea</b> — costo per contatto sotto o pari alla media 3gg</span>
+    <span><span class="dot dot-giallo"></span><b>Da monitorare</b> — costo per contatto fino a +50% vs media</span>
+    <span><span class="dot dot-rosso"></span><b>Da rivedere</b> — 0 contatti o costo &gt; +50% vs media</span>
+    <span><span class="dot dot-nero"></span><b>Spenta</b> — nessuna spesa</span>
+    <span style="opacity:.7">· Clicca un riquadro in alto per filtrare</span>
+  </div>
+
+  <div class="cards" id="cards">
+
+<div class="card-new rosso" data-name="dott.ssa orsola bruno ap" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Dott.ssa%20Orsola%20Bruno%20AP&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Dott.ssa Orsola Bruno AP</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Dott.ssa Orsola Bruno AP</dd></div>
+  <div><dt>Target</dt><dd>IT</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>11.3M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 66,58 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">66,58 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.213</div><div class="delta">Reach 2.591</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,24</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c1">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c1"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c1" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c1">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c1" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 66,58 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.24 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 5.85% (ottimo) · CPM 20,72 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="farmacia di gennaro" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Di%20Gennaro&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Farmacia Di Gennaro</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Farmacia Di Gennaro</dd></div>
+  <div><dt>Target</dt><dd>Bisceglie+17km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>303K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 37,19 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">37,19 €</div><div class="delta up">+367% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">37,19 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">7,97 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">7.738</div><div class="delta">Reach 5.968</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,30</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c2">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c2"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c2" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c2">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c2" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 37,19 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.30 (zona <b>Bassa · pubblico fresco</b>): le 5.968 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.45% (nella media) · CPM 4,80 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="tyla institute estetica" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Tyla%20Institute%20Estetica&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Tyla Institute Estetica</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Tyla Institute Estetica</dd></div>
+  <div><dt>Target</dt><dd>Rome+10km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>3.5M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 33,55 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">33,55 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">23,73 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.845</div><div class="delta">Reach 2.618</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,10</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c3">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c3"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c3" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c3">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c3" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 33,55 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.10 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.23% (ottimo) · CPM 11,79 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - farmacia martelletto" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Martelletto&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Farmacia Martelletto</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>45.3950,11.2711 +5km | 45.4218,11.1765 +11km | 45.5642,11.1145 +5km | 45.5655,11.1537 +5km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>76K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 30,14 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">30,14 €</div><div class="delta up">+195% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">30,14 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,21 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">12.108</div><div class="delta">Reach 10.235</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,21</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c4">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c4"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c4" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c4">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c4" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 30,14 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.21 (zona <b>Bassa · pubblico fresco</b>): le 10.235 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.48% (basso) · CPM 2,49 € (contenuto). Algoritmo distribuisce a basso costo ma la creative non aggancia. Refresh creative prioritario — sostituire l&#39;asset principale.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="nuove sensazioni" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Nuove%20Sensazioni&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Nuove Sensazioni</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Nuove Sensazioni</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>48K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 27,69 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">27,69 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">27,69 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.687</div><div class="delta">Reach 2.640</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,40</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c5">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c5"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c5" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c5">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c5" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 27,69 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.40 (zona <b>Bassa · pubblico fresco</b>): le 2.640 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.71% (buono) · CPM 7,51 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="donnauomo" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Donnauomo&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Donnauomo</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Donnauomo</dd></div>
+  <div><dt>Target</dt><dd>43.6133,10.5496 +4km | 43.6293,10.6326 +13km | 43.6734,10.5743 +3km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>65K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 25,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,89 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,96 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">5.233</div><div class="delta">Reach 3.054</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,73</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c6">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c6"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c6" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c6">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c6" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 25,89 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story giallo">Frequenza 1.73 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.7 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità) e <b>angolazione dell'offerta</b> (timing, urgenza, ricettività del target in questa finestra) — il modulo Meta è già minimal e le domande sono essenziali, il punto di rottura non è lì.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.03% (nella media) · CPM 4,95 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - brera13 beauty" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Brera13%20Beauty&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Brera13 Beauty</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>45.4809,9.1888 +3km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>490K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 25,74 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">25,74 €</div><div class="delta up">+162% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,74 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">9,81 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">687</div><div class="delta">Reach 526</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,31</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c7">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c7"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c7" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c7">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c7" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 25,74 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.31 (zona <b>Bassa · pubblico fresco</b>): le 526 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.35% (ottimo) · CPM 37,47 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv linea perfetta" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20LINEA%20PERFETTA&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV LINEA PERFETTA</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV LINEA PERFETTA</dd></div>
+  <div><dt>Target</dt><dd>45.5922,8.8971 +10km | Gallarate</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>300K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 25,57 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,57 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.643</div><div class="delta">Reach 1.247</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,32</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c8">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c8"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c8" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c8">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c8" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 25,57 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.32 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.40% (nella media) · CPM 15,56 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="farmacia padre pio" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Farmacia%20Padre%20Pio&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Farmacia Padre Pio</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Farmacia Padre Pio</dd></div>
+  <div><dt>Target</dt><dd>Foggia+20km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>637K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 25,04 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">25,04 €</div><div class="delta up">+180% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,04 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">8,94 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.116</div><div class="delta">Reach 2.951</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,39</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c9">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c9"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c9" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c9">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c9" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 25,04 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.39 (zona <b>Bassa · pubblico fresco</b>): le 2.951 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.87% (buono) · CPM 6,08 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv esthetique" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Esthetique&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Esthetique</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Esthetique</dd></div>
+  <div><dt>Target</dt><dd>45.9113,12.8578 +8km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>20K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 23,97 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">23,97 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">23,97 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.816</div><div class="delta">Reach 2.232</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,71</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c10">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c10"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c10" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c10">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c10" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 23,97 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.71 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.7 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.10% (nella media) · CPM 6,28 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - charme estetica benessere" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Charme%20estetica%20benessere&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Charme estetica benessere</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>40.2464,18.2798 +16km | Copertino | Lecce | Nardò</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>342K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 20,50 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,50 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.881</div><div class="delta">Reach 1.366</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,38</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c11">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c11"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c11" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c11">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c11" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 20,50 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.38 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.18% (ottimo) · CPM 10,90 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="black queen beauty art" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Black%20Queen%20Beauty%20Art&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Black Queen Beauty Art</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Black Queen Beauty Art</dd></div>
+  <div><dt>Target</dt><dd>Albano Laziale+40km | Ariccia+40km | Ciampino+40km | Frascati+40km | Genzano di Roma+40km | Velletri+40km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>4.8M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 20,37 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">20,37 €</div><div class="delta up">+291% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">20,37 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,21 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.974</div><div class="delta">Reach 1.454</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,36</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c12">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c12"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c12" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c12">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c12" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 20,37 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.36 (zona <b>Bassa · pubblico fresco</b>): le 1.454 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.37% (nella media) · CPM 10,32 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - atelier fiumara" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Atelier%20Fiumara&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Atelier Fiumara</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>45.0603,7.6732 +7km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>492K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 19,07 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,07 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">11,27 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">592</div><div class="delta">Reach 430</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,38</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c13">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c13"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c13" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c13">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c13" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 19,07 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.38 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.04% (ottimo) · CPM 32,21 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="andreea francu renzo gestione" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Andreea%20Francu%20Renzo%20Gestione&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Andreea Francu Renzo Gestione</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Andreea Francu Renzo Gestione</dd></div>
+  <div><dt>Target</dt><dd>Falconara Marittima+80km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>1.3M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 16,62 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,62 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.461</div><div class="delta">Reach 1.872</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,31</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c14">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c14"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c14" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c14">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c14" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 16,62 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.31 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.89% (nella media) · CPM 6,75 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - estetica rosy" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Estetica%20Rosy&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Estetica Rosy</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>45.8358,9.0265 +5km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>11K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 15,56 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">15,56 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">975</div><div class="delta">Reach 503</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,94</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c15">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c15"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c15" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c15">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c15" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 15,56 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story giallo">Frequenza 1.94 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.9 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità) e <b>angolazione dell'offerta</b> (timing, urgenza, ricettività del target in questa finestra) — il modulo Meta è già minimal e le domande sono essenziali, il punto di rottura non è lì.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.36% (ottimo) · CPM 15,96 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (0). Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="centro mességué ads 2025" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20Mess%C3%A9gu%C3%A9%20ADS%202025&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Centro Mességué ADS 2025</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Centro Mességué ADS 2025</dd></div>
+  <div><dt>Target</dt><dd>IT</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>40.5M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 14,07 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,07 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.481</div><div class="delta">Reach 2.285</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,09</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c16">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c16"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c16" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c16">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c16" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): 14,07 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.09 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.35% (ottimo) · CPM 5,67 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv solelù" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Solel%C3%B9&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Solelù</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Solelù</dd></div>
+  <div><dt>Target</dt><dd>Francavilla Fontana+18km | Grottaglie+19km | Mesagne+17km | Taranto+20km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>446K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 12,84 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">12,84 €</div><div class="delta up">+133% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">12,84 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">5,51 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.520</div><div class="delta">Reach 1.770</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,42</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c17">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c17"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c17" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c17">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c17" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 12,84 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.42 (zona <b>Bassa · pubblico fresco</b>): le 1.770 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.71% (buono) · CPM 5,10 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="erresse esthetique ads" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Erresse%20Esthetique%20Ads&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Erresse Esthetique Ads</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Erresse Esthetique Ads</dd></div>
+  <div><dt>Target</dt><dd>46.0032,8.9312 +10km | Agno | Bellinzona</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>59K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 12,14 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">12,14 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">784</div><div class="delta">Reach 564</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,39</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c18">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c18"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c18" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c18">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c18" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): 12,14 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.39 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.55% (ottimo) · CPM 15,48 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (0). Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="centro estetico natura" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20estetico%20natura&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Centro estetico natura</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Centro estetico natura</dd></div>
+  <div><dt>Target</dt><dd>Volpago del Montello+24km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>423K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 10,54 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">10,54 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">10,54 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">465</div><div class="delta">Reach 338</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,38</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c19">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c19"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c19" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c19">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c19" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 10,54 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.38 (zona <b>Bassa · pubblico fresco</b>): le 338 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.29% (nella media) · CPM 22,67 € (alto). CPM in salita ma CTR tiene: audience che sta diventando cara. Refresh creative entro 7 giorni per non scivolare in saturazione.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.5 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv slim&#39;up" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Slim%27Up&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Slim&#39;Up</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Slim&#39;Up</dd></div>
+  <div><dt>Target</dt><dd>43.6720,13.2896 +17km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>125K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 9,89 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,89 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,05 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.762</div><div class="delta">Reach 1.404</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,25</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c20">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c20"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c20" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c20">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c20" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 9,89 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.25 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.42% (nella media) · CPM 5,61 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv linea più casale" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Linea%20Pi%C3%B9%20Casale&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Linea Più Casale</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Linea Più Casale</dd></div>
+  <div><dt>Target</dt><dd>45.3311,8.4194 +6km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>156K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 8,99 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,99 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.601</div><div class="delta">Reach 937</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,71</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c21">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c21"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c21" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c21">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c21" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 8,99 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story giallo">Frequenza 1.71 (zona <b>Ottimale</b>): esposizione adeguata ma <b>0 lead</b> nonostante il pubblico abbia visto l'annuncio in media 1.7 volte. Il problema non è la frequenza: verificare <b>audience</b> (qualità) e <b>angolazione dell'offerta</b> (timing, urgenza, ricettività del target in questa finestra) — il modulo Meta è già minimal e le domande sono essenziali, il punto di rottura non è lì.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.50% (ottimo) · CPM 5,62 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv - centro benessere polverino" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20Benessere%20Polverino&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Centro Benessere Polverino</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd>40.5021,17.2124 +15km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>253K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 8,88 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,88 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,86 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.853</div><div class="delta">Reach 1.428</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,30</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c22">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c22"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c22" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c22">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c22" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 8,88 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.30 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.89% (buono) · CPM 4,79 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="riflesso evolution" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Riflesso%20Evolution&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Riflesso Evolution</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Riflesso Evolution</dd></div>
+  <div><dt>Target</dt><dd>Montebelluna+17km | Treviso+17km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>1K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 8,82 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,82 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.014</div><div class="delta">Reach 856</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,18</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c23">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c23"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c23" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c23">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c23" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 8,82 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.18 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.98% (nella media) · CPM 8,70 € (in media). Performance regolare, niente segnali di rottura. Confermare assetto e preparare un test creative a basso budget per la prossima settimana.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="beauty art" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Beauty%20Art&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Beauty Art</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Beauty Art</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>56K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 8,06 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,06 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.654</div><div class="delta">Reach 3.045</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,21</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c24">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c24"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c24" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c24">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c24" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 8,06 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.21 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.12% (nella media) · CPM 2,21 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="adv centro estetico ambra" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20CENTRO%20ESTETICO%20AMBRA&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV CENTRO ESTETICO AMBRA</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV CENTRO ESTETICO AMBRA</dd></div>
+  <div><dt>Target</dt><dd>42.4373,12.1099 +8km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>66K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 5,88 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">5,88 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.105</div><div class="delta">Reach 764</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,45</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c25">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c25"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c25" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c25">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c25" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 5,88 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.45 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.27% (nella media) · CPM 5,32 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="eternity lb - account pubblicitario" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=Account%20pubblicitario&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Eternity LB - Account pubblicitario</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Eternity LB</dd></div>
+  <div><dt>Target</dt><dd>41.9264,12.5137 +7km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>826K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 4,77 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">4,77 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,52 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">507</div><div class="delta">Reach 465</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,09</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c26">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c26"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c26" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c26">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c26" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 4,77 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.09 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.16% (ottimo) · CPM 9,41 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new rosso" data-name="aguaviva adv" data-color="rosso">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🔴</span> Da rivedere</span>
+      <a class="client-btn" href="cliente.html?name=aguaviva%20adv&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">aguaviva adv</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>aguaviva adv</dd></div>
+  <div><dt>Target</dt><dd>Cervia+30km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>341K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">0</div><div class="delta">su 3,15 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">—</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">3,15 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.327</div><div class="delta">Reach 2.162</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,08</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c27">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c27"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c27" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c27">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c27" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): 3,15 € investiti senza contatti. È normale nei primi giorni di erogazione; se anche oggi la campagna non genera richieste sarà utile una verifica rapida del modulo e del pubblico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story ">Frequenza 1.08 (zona <b>Bassa · pubblico fresco</b>): il pubblico è ancora poco esposto al messaggio. È <b>presto per giudicare</b>: la fase di apprendimento ha bisogno di più ripetizioni prima di valutare la capacità di convertire.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 8.47% (ottimo) · CPM 1,35 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 0.0 lead/day su 2 giorni rolling. Volume insufficiente (&lt;1 lead/day): il funnel di conversione non ha materiale da lavorare.</div></details>
+</div>
+<div class="card-new giallo" data-name="l&#39;estetica che ti cambia la vita - italia" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ITALIA&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">L&#39;estetica che ti cambia la vita - ITALIA</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>L&#39;estetica che ti cambia la vita</dd></div>
+  <div><dt>Target</dt><dd>44.6081,7.9514 +7km | 44.6940,7.8401 +8km | 44.7006,8.0385 +5km | Barolo</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>945K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 82,31 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">41,16 €</div><div class="delta up">+38% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">82,31 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">29,85 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">7.866</div><div class="delta">Reach 5.346</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,51</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c28">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c28"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c28" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c28">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c28" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 41,16 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.51 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.58% (buono) · CPM 10,47 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.0 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="exthetyc" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=Exthetyc&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Exthetyc</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Exthetyc</dd></div>
+  <div><dt>Target</dt><dd>37.1095,13.9372 +10km | 37.2546,13.8132 +18km | 37.3036,13.9862 +14km | 37.3699,14.1814 +13km | 37.3811,14.0419 +10km | 37.4923,14.0625 +14km | 37.5065,13.8881 +13km | 37.5487,14.0258 +10km | 37.5791,13.7504 +4km | 37.6225,13.8219 +4km | Agrigento+13km | Delia | Grotte+10km | Mazzarino+10km | Palma di Montechiaro+25km | Racalmuto+10km | Santa Caterina Villarmosa+10km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>278K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 28,32 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,44 €</div><div class="delta up">+10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">28,32 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">8,58 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">8.534</div><div class="delta">Reach 6.227</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,37</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c29">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c29"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c29" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c29">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c29" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 9,44 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.37 (zona <b>Bassa · pubblico fresco</b>): le 6.227 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.03% (ottimo) · CPM 3,32 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv sanital eco store" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20SANITAL%20ECO%20STORE&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV SANITAL ECO STORE</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV SANITAL ECO STORE</dd></div>
+  <div><dt>Target</dt><dd>37.5081,15.0871 +7km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>197K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 26,81 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,94 €</div><div class="delta up">+33% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">26,81 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">6,72 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.164</div><div class="delta">Reach 1.723</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,26</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c30">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c30"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c30" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c30">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c30" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 8,94 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.26 (zona <b>Bassa · pubblico fresco</b>): le 1.723 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.99% (buono) · CPM 12,39 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv centro benessere coccole" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20CENTRO%20BENESSERE%20COCCOLE&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV CENTRO BENESSERE COCCOLE</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV CENTRO BENESSERE COCCOLE</dd></div>
+  <div><dt>Target</dt><dd>45.8800,10.1820 +8km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>17K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">1</div><div class="delta">su 25,63 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">25,63 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">25,63 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.914</div><div class="delta">Reach 2.361</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,66</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c31">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c31"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c31" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c31">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c31" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 25,63 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.66 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.7 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 0.95% (nella media) · CPM 6,55 € (contenuto). Distribuzione efficiente ma engagement medio. Si può testare un&#39;angolazione creativa più diretta per spingere il CTR.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (1). A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv maison kuku" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Maison%20Kuku&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Maison Kuku</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Maison Kuku</dd></div>
+  <div><dt>Target</dt><dd>40.6824,14.7672 +10km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>249K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 22,73 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">7,58 €</div><div class="delta down">-10% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">22,73 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">8,43 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.755</div><div class="delta">Reach 2.026</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,36</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c32">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c32"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c32" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c32">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c32" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 7,58 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.36 (zona <b>Bassa · pubblico fresco</b>): le 2.026 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.58% (ottimo) · CPM 8,25 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="skinmedic lecco new" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=SkinMedic%20Lecco%20new&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">SkinMedic Lecco new</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>SkinMedic Lecco new</dd></div>
+  <div><dt>Target</dt><dd>Lecco+19km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>2.6M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 22,10 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">7,37 €</div><div class="delta up">+69% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">22,10 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">4,35 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.515</div><div class="delta">Reach 2.898</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,22</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c33">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c33"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c33" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c33">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c33" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 7,37 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.22 (zona <b>Bassa · pubblico fresco</b>): le 2.898 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.19% (ottimo) · CPM 6,29 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv visamour" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20Visamour&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV Visamour</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV Visamour</dd></div>
+  <div><dt>Target</dt><dd>San Salvo+20km | Vasto+20km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>144K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 19,54 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">9,77 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">19,54 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.537</div><div class="delta">Reach 2.813</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,26</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c34">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c34"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c34" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c34">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c34" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 9,77 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.26 (zona <b>Bassa · pubblico fresco</b>): le 2.813 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 1.89% (buono) · CPM 5,52 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.0 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv farmacia clemente" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=ADV%20FARMACIA%20CLEMENTE&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV FARMACIA CLEMENTE</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV FARMACIA CLEMENTE</dd></div>
+  <div><dt>Target</dt><dd>Airola | Arienzo+17km | Maddaloni | Santa Maria a Vico</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>2.1M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 17,79 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">5,93 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">17,79 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">4.087</div><div class="delta">Reach 2.700</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,51</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c35">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c35"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c35" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c35">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c35" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 5,93 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.51 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.5 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.03% (ottimo) · CPM 4,35 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="adv - pietrabianca" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=Pietrabianca&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Pietrabianca</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>1.5M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 14,40 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,80 €</div><div class="delta up">+25% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">14,40 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">3,85 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.793</div><div class="delta">Reach 2.283</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,22</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c36">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c36"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c36" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c36">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c36" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 4,80 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.22 (zona <b>Bassa · pubblico fresco</b>): le 2.283 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.69% (ottimo) · CPM 5,16 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.5 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="mercato digital" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=Mercato%20Digital&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Mercato Digital</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Mercato Digital</dd></div>
+  <div><dt>Target</dt><dd>Vignola+20km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>103K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 13,80 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">6,90 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">13,80 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.478</div><div class="delta">Reach 1.136</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,30</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c37">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c37"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c37" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c37">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c37" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 2/3): primo costo per contatto utile a 6,90 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.30 (zona <b>Bassa · pubblico fresco</b>): le 1.136 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.04% (ottimo) · CPM 9,34 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.0 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new giallo" data-name="fatima nail studio" data-color="giallo">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟡</span> Da monitorare</span>
+      <a class="client-btn" href="cliente.html?name=Fatima%20Nail%20Studio&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Fatima Nail Studio</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Fatima Nail Studio</dd></div>
+  <div><dt>Target</dt><dd>Salerno+35km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>421K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">2</div><div class="delta">su 9,51 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,75 €</div><div class="delta up">+65% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">9,51 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">2,88 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">2.746</div><div class="delta">Reach 1.503</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,83</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c38">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c38"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c38" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c38">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c38" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 4,75 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.83 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.8 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.04% (ottimo) · CPM 3,46 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 1.0 lead/day su 2 giorni rolling. A metà strada (1-2 lead/day): segnali presenti ma sotto soglia per coprire l&#39;agenda appuntamenti.</div></details>
+</div>
+<div class="card-new verde" data-name="baldan group usa" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Baldan%20Group%20USA&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Baldan Group USA</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Baldan Group USA</dd></div>
+  <div><dt>Target</dt><dd>US</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>137.6M</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">20</div><div class="delta">su 1.059,96 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">53,00 €</div><div class="delta down">-29% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">1.059,96 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">74,57 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">11.811</div><div class="delta">Reach 8.636</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,37</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c39">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c39"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c39" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c39">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c39" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 53,00 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.37 (zona <b>Bassa · pubblico fresco</b>): le 8.636 persone raggiunte hanno visto l'annuncio in media 1.4 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.47% (ottimo) · CPM 89,74 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 10.0 lead/day su 2 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.</div></details>
+</div>
+<div class="card-new verde" data-name="corporea wellness experience" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Corporea%20Wellness%20Experience&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Corporea Wellness Experience</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Corporea Wellness Experience</dd></div>
+  <div><dt>Target</dt><dd>40.8398,14.2285 +3km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>417K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 24,90 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">8,30 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">24,90 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.850</div><div class="delta">Reach 1.169</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,58</div><span class="freq-pill ottimale">Ottimale</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c40">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c40"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c40" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c40">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c40" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 8,30 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.58 (zona <b>Ottimale</b>): le persone raggiunte hanno visto l'annuncio in media 1.6 volte — <b>sweet spot per lead-gen</b>, il messaggio entra senza saturare il pubblico. <b>Niente da toccare sul front-end</b>, c'è margine per scaling controllato del budget prima di rischiare la saturazione.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.27% (ottimo) · CPM 13,46 € (alto). Creative performa ma l&#39;audience è cara/satura. Ampliare il targeting (lookalike più ampi o nuovi interessi) per ridurre la pressione sull&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (3). Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.</div></details>
+</div>
+<div class="card-new verde" data-name="centro estetico enrica" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Centro%20Estetico%20Enrica&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Centro Estetico Enrica</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Centro Estetico Enrica</dd></div>
+  <div><dt>Target</dt><dd>45.1424,10.0206 +16km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>46K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">4</div><div class="delta">su 18,49 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">4,62 €</div><div class="delta down">-55% vs media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">18,49 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">10,38 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">3.410</div><div class="delta">Reach 2.698</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,26</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c41">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c41"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c41" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c41">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c41" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 4,62 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.26 (zona <b>Bassa · pubblico fresco</b>): le 2.698 persone raggiunte hanno visto l'annuncio in media 1.3 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 2.20% (ottimo) · CPM 5,42 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 2.0 lead/day su 2 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.</div></details>
+</div>
+<div class="card-new verde" data-name="adv - body laser" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Body%20Laser&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">ADV - Body Laser</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>ADV</dd></div>
+  <div><dt>Target</dt><dd class="placeholder">Da configurare</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>445K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">10</div><div class="delta">su 16,78 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">1,68 €</div><div class="delta">In linea con media 3gg</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">16,78 €</div></div><div class="nc-kpi"><div class="lbl">Costo medio 3gg</div><div class="val">1,74 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.426</div><div class="delta">Reach 1.225</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,16</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c42">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c42"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c42" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c42">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c42" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 3/3): primo costo per contatto utile a 1,68 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.16 (zona <b>Bassa · pubblico fresco</b>): le 1.225 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 4.28% (ottimo) · CPM 11,77 € (in media). Creative aggancia bene il pubblico ma il costo media è in linea. Scaling controllato (+15%) tenendo d&#39;occhio la frequenza.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">Media 5.0 lead/day su 2 giorni rolling. Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.</div></details>
+</div>
+<div class="card-new verde" data-name="urban fitness cantù" data-color="verde">
+  <div class="nc-hero">
+    <div class="nc-status-row">
+      <span class="nc-status"><span class="ico">🟢</span> In linea</span>
+      <a class="client-btn" href="cliente.html?name=Urban%20Fitness%20Cant%C3%B9&date=2026-05-22" target="_blank" rel="noopener">👁 Vista cliente</a>
+    </div>
+    <div class="nc-name">Urban Fitness Cantù</div>
+  </div>
+  <div class="nc-meta"><dl>
+  <div><dt>Campagna attiva</dt><dd>Urban Fitness Cantù</dd></div>
+  <div><dt>Target</dt><dd>Cantù+17km</dd></div>
+  <div><dt>Grandezza pubblico</dt><dd>622K</dd></div>
+</dl></div>
+  <div class="nc-kpis">
+    <div class="nc-kpi highlight"><div class="lbl">Contatti ieri</div><div class="val">3</div><div class="delta">su 8,21 € di spesa</div></div><div class="nc-kpi"><div class="lbl">Costo per contatto</div><div class="val">2,74 €</div></div><div class="nc-kpi"><div class="lbl">Spesa</div><div class="val">8,21 €</div></div><div class="nc-kpi"><div class="lbl">Visualizzazioni</div><div class="val">1.216</div><div class="delta">Reach 992</div></div><div class="nc-kpi"><div class="lbl">Frequenza</div><div class="val">1,23</div><span class="freq-pill bassa">Bassa · pubblico fresco</span></div>
+  </div>
+  <div class="nc-chart-wrap" data-chart-id="c43">
+  <div class="nc-chart-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span>
+    <span class="nc-chart-legend"><span class="lg-s"><span class="lg-sw" style="background:#1c1c1e"></span>Spesa</span> <span class="lg-s"><span class="lg-sw" style="background:#0866FF"></span>Contatti</span></span>
+  </div>
+  <div class="nc-chart" id="chart-c43"><div class="nc-loading">Carico la serie storica…</div></div>
+  <div class="nc-day-nav" id="daynav-c43" style="display:none">
+    <button type="button" class="nc-nav-btn" data-action="prev">←</button>
+    <div class="nc-day-label" id="daylbl-c43">—<span class="small">giorno selezionato</span></div>
+    <button type="button" class="nc-nav-btn" data-action="next">→</button>
+  </div>
+  <div class="nc-day-kpis" id="daykpi-c43" style="display:none"></div>
+</div>
+  <div class="nc-body"><div class="nc-section-lbl">Cosa è successo</div><p class="nc-story">Fase di apprendimento (giorno 1/3): primo costo per contatto utile a 2,74 €. La valutazione vera arriva quando saranno disponibili almeno 3 giorni di storico.</p></div>
+  <div class="nc-freq"><div class="nc-section-lbl">Analisi frequenza</div><p class="nc-story verde">Frequenza 1.23 (zona <b>Bassa · pubblico fresco</b>): le 992 persone raggiunte hanno visto l'annuncio in media 1.2 volte, ricevendo già richieste — combo virtuosa di pubblico fresco e conversione. <b>Ottimo per scaling</b>.</p></div>
+  <div class="nc-action"><div class="arrow">→</div><div class="text"><b>Cosa faremo.</b> CTR 3.21% (ottimo) · CPM 6,75 € (contenuto). Creative + audience funzionano bene a costi contenuti. Spazio per scalare il budget del 20–30% senza forzare l&#39;asta.</div></div>
+  <details><summary>Dettaglio tecnico</summary><div class="det-content">In apprendimento (storico 1 giorno): valutazione provvisoria su lead di ieri (3). Sopra soglia di copertura agenda (≥2 lead/day): volume in linea con il benchmark di conversione appuntamenti.</div></details>
+</div>
+  </div>
+  <div class="empty-result" id="empty-result" style="display:none">Nessuna campagna corrisponde ai filtri attivi.</div>
+
+  <div class="signature">© Francesco Maria Mosca 2026</div>
+</div>
+<script>
+const ALL_SERIES = {"c1":[{"date":"2026-05-16","spend":37.87,"lead":0.0},{"date":"2026-05-17","spend":65.46,"lead":0.0},{"date":"2026-05-18","spend":46.64,"lead":0.0},{"date":"2026-05-19","spend":26.55,"lead":0.0},{"date":"2026-05-20","spend":50.35,"lead":0.0},{"date":"2026-05-21","spend":44.26,"lead":0.0},{"date":"2026-05-22","spend":66.58,"lead":0.0}],"c2":[{"date":"2026-05-16","spend":33.03,"lead":6.0},{"date":"2026-05-17","spend":23.73,"lead":0.0},{"date":"2026-05-18","spend":20.65,"lead":4.0},{"date":"2026-05-19","spend":23.91,"lead":3.0},{"date":"2026-05-20","spend":8.95,"lead":1.0},{"date":"2026-05-22","spend":37.19,"lead":1.0}],"c3":[{"date":"2026-05-16","spend":23.32,"lead":0.0},{"date":"2026-05-17","spend":32.95,"lead":1.0},{"date":"2026-05-18","spend":39.33,"lead":2.0},{"date":"2026-05-19","spend":47.47,"lead":2.0},{"date":"2026-05-20","spend":27.49,"lead":0.0},{"date":"2026-05-21","spend":33.13,"lead":0.0},{"date":"2026-05-22","spend":33.55,"lead":0.0}],"c4":[{"date":"2026-05-16","spend":36.2,"lead":1.0},{"date":"2026-05-17","spend":32.71,"lead":1.0},{"date":"2026-05-18","spend":30.27,"lead":1.0},{"date":"2026-05-19","spend":30.62,"lead":3.0},{"date":"2026-05-20","spend":26.41,"lead":0.0},{"date":"2026-05-21","spend":27.38,"lead":1.0},{"date":"2026-05-22","spend":30.14,"lead":1.0}],"c5":[{"date":"2026-05-16","spend":27.73,"lead":0.0},{"date":"2026-05-17","spend":25.07,"lead":0.0},{"date":"2026-05-18","spend":14.64,"lead":1.0},{"date":"2026-05-19","spend":16.81,"lead":0.0},{"date":"2026-05-20","spend":20.03,"lead":0.0},{"date":"2026-05-21","spend":22.54,"lead":0.0},{"date":"2026-05-22","spend":27.69,"lead":1.0}],"c6":[{"date":"2026-05-16","spend":20.29,"lead":0.0},{"date":"2026-05-18","spend":11.53,"lead":0.0},{"date":"2026-05-19","spend":53.66,"lead":9.0},{"date":"2026-05-20","spend":36.89,"lead":3.0},{"date":"2026-05-21","spend":15.1,"lead":2.0},{"date":"2026-05-22","spend":25.89,"lead":0.0}],"c7":[{"date":"2026-05-16","spend":18.98,"lead":0.0},{"date":"2026-05-17","spend":30.85,"lead":6.0},{"date":"2026-05-18","spend":33.92,"lead":2.0},{"date":"2026-05-19","spend":29.43,"lead":3.0},{"date":"2026-05-20","spend":31.29,"lead":1.0},{"date":"2026-05-21","spend":29.85,"lead":1.0},{"date":"2026-05-22","spend":25.74,"lead":1.0}],"c8":[{"date":"2026-05-16","spend":22.5,"lead":2.0},{"date":"2026-05-17","spend":32.92,"lead":0.0},{"date":"2026-05-18","spend":24.28,"lead":1.0},{"date":"2026-05-19","spend":18.55,"lead":0.0},{"date":"2026-05-20","spend":28.37,"lead":0.0},{"date":"2026-05-21","spend":21.32,"lead":0.0},{"date":"2026-05-22","spend":25.57,"lead":0.0}],"c9":[{"date":"2026-05-16","spend":24.64,"lead":0.0},{"date":"2026-05-17","spend":21.83,"lead":2.0},{"date":"2026-05-18","spend":23.54,"lead":2.0},{"date":"2026-05-19","spend":26.81,"lead":3.0},{"date":"2026-05-20","spend":26.83,"lead":1.0},{"date":"2026-05-21","spend":25.43,"lead":1.0},{"date":"2026-05-22","spend":25.04,"lead":1.0}],"c10":[{"date":"2026-05-20","spend":9.43,"lead":0.0},{"date":"2026-05-21","spend":23.25,"lead":0.0},{"date":"2026-05-22","spend":23.97,"lead":1.0}],"c11":[{"date":"2026-05-16","spend":27.75,"lead":1.0},{"date":"2026-05-17","spend":23.87,"lead":2.0},{"date":"2026-05-18","spend":24.88,"lead":0.0},{"date":"2026-05-19","spend":15.99,"lead":0.0},{"date":"2026-05-20","spend":25.2,"lead":1.0},{"date":"2026-05-21","spend":23.1,"lead":2.0},{"date":"2026-05-22","spend":20.5,"lead":0.0}],"c12":[{"date":"2026-05-16","spend":13.68,"lead":0.0},{"date":"2026-05-17","spend":16.76,"lead":0.0},{"date":"2026-05-18","spend":23.81,"lead":1.0},{"date":"2026-05-19","spend":20.83,"lead":4.0},{"date":"2026-05-20","spend":14.63,"lead":0.0},{"date":"2026-05-21","spend":19.43,"lead":2.0},{"date":"2026-05-22","spend":20.37,"lead":1.0}],"c13":[{"date":"2026-05-16","spend":15.01,"lead":0.0},{"date":"2026-05-17","spend":20.95,"lead":0.0},{"date":"2026-05-18","spend":18.75,"lead":0.0},{"date":"2026-05-19","spend":22.54,"lead":2.0},{"date":"2026-05-20","spend":26.08,"lead":3.0},{"date":"2026-05-21","spend":18.82,"lead":0.0},{"date":"2026-05-22","spend":19.07,"lead":0.0}],"c14":[{"date":"2026-05-17","spend":4.69,"lead":0.0},{"date":"2026-05-18","spend":14.51,"lead":1.0},{"date":"2026-05-19","spend":16.7,"lead":0.0},{"date":"2026-05-20","spend":17.95,"lead":1.0},{"date":"2026-05-21","spend":16.02,"lead":0.0},{"date":"2026-05-22","spend":16.62,"lead":0.0}],"c15":[{"date":"2026-05-22","spend":15.56,"lead":0.0}],"c16":[{"date":"2026-05-20","spend":2.1,"lead":0.0},{"date":"2026-05-21","spend":15.42,"lead":0.0},{"date":"2026-05-22","spend":14.07,"lead":0.0}],"c17":[{"date":"2026-05-16","spend":16.89,"lead":3.0},{"date":"2026-05-17","spend":17.47,"lead":2.0},{"date":"2026-05-18","spend":18.05,"lead":1.0},{"date":"2026-05-19","spend":16.54,"lead":3.0},{"date":"2026-05-20","spend":16.73,"lead":0.0},{"date":"2026-05-21","spend":14.55,"lead":2.0},{"date":"2026-05-22","spend":12.84,"lead":1.0}],"c18":[{"date":"2026-05-22","spend":12.14,"lead":0.0}],"c19":[{"date":"2026-05-16","spend":3.86,"lead":0.0},{"date":"2026-05-17","spend":6.72,"lead":0.0},{"date":"2026-05-18","spend":13.72,"lead":0.0},{"date":"2026-05-19","spend":9.28,"lead":0.0},{"date":"2026-05-20","spend":10.91,"lead":1.0},{"date":"2026-05-21","spend":9.7,"lead":0.0},{"date":"2026-05-22","spend":10.54,"lead":1.0}],"c20":[{"date":"2026-05-16","spend":8.07,"lead":0.0},{"date":"2026-05-17","spend":10.93,"lead":0.0},{"date":"2026-05-18","spend":3.19,"lead":0.0},{"date":"2026-05-19","spend":10.05,"lead":1.0},{"date":"2026-05-20","spend":9.39,"lead":0.0},{"date":"2026-05-21","spend":10.17,"lead":1.0},{"date":"2026-05-22","spend":9.89,"lead":0.0}],"c21":[{"date":"2026-05-16","spend":52.35,"lead":1.0},{"date":"2026-05-17","spend":52.22,"lead":2.0},{"date":"2026-05-18","spend":46.65,"lead":0.0},{"date":"2026-05-19","spend":45.58,"lead":0.0},{"date":"2026-05-20","spend":25.1,"lead":0.0},{"date":"2026-05-22","spend":8.99,"lead":0.0}],"c22":[{"date":"2026-05-16","spend":10.26,"lead":1.0},{"date":"2026-05-17","spend":11.35,"lead":2.0},{"date":"2026-05-18","spend":9.73,"lead":0.0},{"date":"2026-05-19","spend":9.72,"lead":2.0},{"date":"2026-05-20","spend":10.37,"lead":1.0},{"date":"2026-05-21","spend":8.91,"lead":0.0},{"date":"2026-05-22","spend":8.88,"lead":0.0}],"c23":[{"date":"2026-05-16","spend":13.48,"lead":0.0},{"date":"2026-05-17","spend":16.98,"lead":1.0},{"date":"2026-05-18","spend":16.71,"lead":1.0},{"date":"2026-05-19","spend":16.08,"lead":0.0},{"date":"2026-05-20","spend":13.92,"lead":1.0},{"date":"2026-05-21","spend":13.27,"lead":0.0},{"date":"2026-05-22","spend":8.82,"lead":0.0}],"c24":[{"date":"2026-05-16","spend":12.99,"lead":1.0},{"date":"2026-05-17","spend":11.87,"lead":1.0},{"date":"2026-05-18","spend":5.0,"lead":0.0},{"date":"2026-05-19","spend":4.83,"lead":0.0},{"date":"2026-05-20","spend":3.24,"lead":0.0},{"date":"2026-05-21","spend":4.58,"lead":0.0},{"date":"2026-05-22","spend":8.06,"lead":0.0}],"c25":[{"date":"2026-05-16","spend":3.66,"lead":0.0},{"date":"2026-05-17","spend":4.49,"lead":1.0},{"date":"2026-05-18","spend":6.13,"lead":0.0},{"date":"2026-05-19","spend":5.85,"lead":0.0},{"date":"2026-05-20","spend":8.58,"lead":2.0},{"date":"2026-05-21","spend":7.52,"lead":1.0},{"date":"2026-05-22","spend":5.88,"lead":0.0}],"c26":[{"date":"2026-05-16","spend":3.64,"lead":2.0},{"date":"2026-05-17","spend":5.87,"lead":3.0},{"date":"2026-05-18","spend":6.31,"lead":2.0},{"date":"2026-05-19","spend":4.52,"lead":1.0},{"date":"2026-05-20","spend":4.66,"lead":1.0},{"date":"2026-05-21","spend":5.13,"lead":2.0},{"date":"2026-05-22","spend":4.77,"lead":0.0}],"c27":[{"date":"2026-05-19","spend":10.2,"lead":0.0},{"date":"2026-05-20","spend":14.4,"lead":0.0},{"date":"2026-05-21","spend":3.14,"lead":0.0},{"date":"2026-05-22","spend":3.15,"lead":0.0}],"c28":[{"date":"2026-05-16","spend":94.91,"lead":6.0},{"date":"2026-05-17","spend":112.42,"lead":3.0},{"date":"2026-05-18","spend":100.59,"lead":2.0},{"date":"2026-05-19","spend":89.54,"lead":3.0},{"date":"2026-05-20","spend":99.6,"lead":6.0},{"date":"2026-05-21","spend":87.14,"lead":2.0},{"date":"2026-05-22","spend":82.31,"lead":2.0}],"c29":[{"date":"2026-05-16","spend":46.54,"lead":6.0},{"date":"2026-05-17","spend":70.93,"lead":5.0},{"date":"2026-05-18","spend":55.35,"lead":1.0},{"date":"2026-05-19","spend":25.75,"lead":3.0},{"date":"2026-05-20","spend":28.9,"lead":1.0},{"date":"2026-05-21","spend":26.07,"lead":0.0},{"date":"2026-05-22","spend":28.32,"lead":3.0}],"c30":[{"date":"2026-05-16","spend":13.23,"lead":1.0},{"date":"2026-05-17","spend":11.83,"lead":0.0},{"date":"2026-05-18","spend":31.16,"lead":0.0},{"date":"2026-05-19","spend":47.02,"lead":7.0},{"date":"2026-05-20","spend":18.37,"lead":2.0},{"date":"2026-05-21","spend":19.06,"lead":0.0},{"date":"2026-05-22","spend":26.81,"lead":3.0}],"c31":[{"date":"2026-05-22","spend":25.63,"lead":1.0}],"c32":[{"date":"2026-05-16","spend":27.71,"lead":4.0},{"date":"2026-05-17","spend":33.65,"lead":2.0},{"date":"2026-05-18","spend":20.58,"lead":1.0},{"date":"2026-05-19","spend":25.3,"lead":3.0},{"date":"2026-05-20","spend":27.91,"lead":4.0},{"date":"2026-05-21","spend":22.85,"lead":4.0},{"date":"2026-05-22","spend":22.73,"lead":3.0}],"c33":[{"date":"2026-05-16","spend":22.41,"lead":3.0},{"date":"2026-05-17","spend":23.4,"lead":0.0},{"date":"2026-05-18","spend":20.59,"lead":3.0},{"date":"2026-05-19","spend":17.39,"lead":4.0},{"date":"2026-05-20","spend":32.84,"lead":2.0},{"date":"2026-05-21","spend":25.69,"lead":1.0},{"date":"2026-05-22","spend":22.1,"lead":3.0}],"c34":[{"date":"2026-05-16","spend":12.19,"lead":2.0},{"date":"2026-05-17","spend":12.87,"lead":1.0},{"date":"2026-05-18","spend":31.22,"lead":2.0},{"date":"2026-05-19","spend":16.4,"lead":0.0},{"date":"2026-05-20","spend":18.05,"lead":2.0},{"date":"2026-05-21","spend":19.36,"lead":0.0},{"date":"2026-05-22","spend":19.54,"lead":2.0}],"c35":[{"date":"2026-05-20","spend":15.21,"lead":2.0},{"date":"2026-05-21","spend":31.45,"lead":4.0},{"date":"2026-05-22","spend":17.79,"lead":3.0}],"c36":[{"date":"2026-05-16","spend":25.79,"lead":9.0},{"date":"2026-05-17","spend":20.16,"lead":7.0},{"date":"2026-05-18","spend":14.36,"lead":3.0},{"date":"2026-05-19","spend":15.41,"lead":4.0},{"date":"2026-05-20","spend":12.54,"lead":1.0},{"date":"2026-05-21","spend":14.63,"lead":6.0},{"date":"2026-05-22","spend":14.4,"lead":3.0}],"c37":[{"date":"2026-05-20","spend":10.49,"lead":0.0},{"date":"2026-05-21","spend":13.25,"lead":0.0},{"date":"2026-05-22","spend":13.8,"lead":2.0}],"c38":[{"date":"2026-05-19","spend":5.75,"lead":2.0},{"date":"2026-05-20","spend":8.43,"lead":2.0},{"date":"2026-05-21","spend":8.5,"lead":3.0},{"date":"2026-05-22","spend":9.51,"lead":2.0}],"c39":[{"date":"2026-05-16","spend":1124.81,"lead":9.0},{"date":"2026-05-17","spend":1337.24,"lead":12.0},{"date":"2026-05-18","spend":1317.63,"lead":19.0},{"date":"2026-05-19","spend":1193.17,"lead":16.0},{"date":"2026-05-20","spend":1186.27,"lead":15.0},{"date":"2026-05-21","spend":648.0,"lead":7.0},{"date":"2026-05-22","spend":1059.96,"lead":20.0}],"c40":[{"date":"2026-05-21","spend":18.65,"lead":2.0},{"date":"2026-05-22","spend":24.9,"lead":3.0}],"c41":[{"date":"2026-05-16","spend":25.01,"lead":3.0},{"date":"2026-05-17","spend":19.28,"lead":3.0},{"date":"2026-05-18","spend":17.71,"lead":3.0},{"date":"2026-05-19","spend":20.75,"lead":2.0},{"date":"2026-05-20","spend":23.6,"lead":8.0},{"date":"2026-05-21","spend":17.82,"lead":3.0},{"date":"2026-05-22","spend":18.49,"lead":4.0}],"c42":[{"date":"2026-05-16","spend":9.41,"lead":3.0},{"date":"2026-05-17","spend":9.96,"lead":7.0},{"date":"2026-05-18","spend":17.09,"lead":4.0},{"date":"2026-05-19","spend":15.64,"lead":9.0},{"date":"2026-05-20","spend":21.38,"lead":7.0},{"date":"2026-05-21","spend":21.4,"lead":10.0},{"date":"2026-05-22","spend":16.78,"lead":10.0}],"c43":[{"date":"2026-05-22","spend":8.21,"lead":3.0}]};
+</script>
+<script>
+(function() {
+  "use strict";
+  // ============================================================
+  // Chart navigabile per ogni card: linea Spesa (nera) + Contatti (blu)
+  // + day-navigator (← →) + day-panel coi 3 KPI del giorno selezionato.
+  // ============================================================
+  function fmtEUR(n) {
+    if (n == null || isNaN(n)) return "—";
+    return Number(n).toLocaleString("it-IT", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtInt(n) {
+    if (n == null || isNaN(n)) return "—";
+    return Math.round(Number(n)).toLocaleString("it-IT");
+  }
+  function dayLabelIT(iso) {
+    const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return iso || "—";
+    const wd = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+    const mo = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+    const dt = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return wd[dt.getDay()] + " " + Number(m[3]) + " " + mo[dt.getMonth()];
+  }
+  function shortDate(iso) {
+    const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? (m[3] + "/" + m[2]) : (iso || "");
+  }
+  function drawChart(root, series, selectedIdx, onSelect) {
+    const valid = [];
+    const validToOrig = [];
+    for (let i = 0; i < series.length; i++) {
+      if (series[i].spend != null) { valid.push(series[i]); validToOrig.push(i); }
+    }
+    if (valid.length === 0) { root.innerHTML = '<div class="nc-loading">Nessun dato giornaliero disponibile</div>'; return; }
+    const W = 640, H = 220;
+    const padL = 40, padR = 40, padT = 12, padB = 32;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = valid.length;
+    const spends = valid.map(p => p.spend);
+    const leads = valid.map(p => p.lead != null ? p.lead : 0);
+    const hasLeads = valid.some(p => p.lead != null && p.lead > 0);
+    const spendMax = Math.max(...spends) * 1.15 || 1;
+    const leadMax = Math.max(...leads, 1) * 1.15;
+    const xAt = i => padL + (n <= 1 ? innerW / 2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax) * innerH;
+    let grid = "";
+    for (let i = 0; i <= 3; i++) {
+      const y = padT + (innerH * i) / 3;
+      grid += '<line stroke="#ececef" stroke-dasharray="2,3" x1="' + padL + '" x2="' + (W-padR) + '" y1="' + y + '" y2="' + y + '"/>';
+    }
+    let xLabels = "";
+    for (let i = 0; i < n; i++) {
+      xLabels += '<text x="' + xAt(i) + '" y="' + (H - padB + 14) + '" text-anchor="middle" font-size="10" fill="#6b6b70">' + shortDate(valid[i].date) + '</text>';
+    }
+    const pathSpend = spends.map((v,i) => (i===0?"M":"L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = hasLeads ? leads.map((v,i) => (i===0?"M":"L") + xAt(i) + "," + yLeads(v)).join(" ") : "";
+    let selValidIdx = validToOrig.indexOf(selectedIdx);
+    if (selValidIdx < 0) selValidIdx = n - 1;
+    const selX = xAt(selValidIdx);
+    const dayMarker = '<line stroke="#8a8a90" stroke-dasharray="3,3" x1="' + selX + '" x2="' + selX + '" y1="' + padT + '" y2="' + (padT + innerH) + '"/>';
+    let dots = "", interact = "";
+    for (let i = 0; i < n; i++) {
+      const xs = xAt(i);
+      const isSel = i === selValidIdx;
+      dots += '<circle cx="' + xs + '" cy="' + ySpend(spends[i]) + '" r="' + (isSel?5:3) + '" fill="#1c1c1e" stroke="#fff" stroke-width="' + (isSel?2:1) + '"/>';
+      if (hasLeads) dots += '<circle cx="' + xs + '" cy="' + yLeads(leads[i]) + '" r="' + (isSel?5:3) + '" fill="#0866FF" stroke="#fff" stroke-width="' + (isSel?2:1) + '"/>';
+      interact += '<rect x="' + (xs - innerW/(n*2)) + '" y="' + padT + '" width="' + (innerW/n) + '" height="' + innerH + '" fill="transparent" style="cursor:pointer" data-orig-idx="' + validToOrig[i] + '"/>';
+    }
+    const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Andamento spesa e contatti 7 giorni">'
+      + grid
+      + '<line stroke="#d2d2d7" stroke-width="0.5" x1="' + padL + '" x2="' + (W-padR) + '" y1="' + (padT+innerH) + '" y2="' + (padT+innerH) + '"/>'
+      + dayMarker
+      + '<path fill="none" stroke="#1c1c1e" stroke-width="1.6" d="' + pathSpend + '"/>'
+      + (pathLeads ? '<path fill="none" stroke="#0866FF" stroke-width="1.6" d="' + pathLeads + '"/>' : "")
+      + dots + xLabels + interact
+      + '</svg>';
+    root.innerHTML = svg;
+    if (onSelect) {
+      root.querySelectorAll("rect[data-orig-idx]").forEach(el => {
+        el.addEventListener("click", () => {
+          const i = Number(el.getAttribute("data-orig-idx"));
+          if (!isNaN(i)) onSelect(i);
+        });
+      });
+    }
+  }
+  function renderDayPanel(panelRoot, p) {
+    if (!panelRoot) return;
+    const cells = [];
+    const cell = (lbl, val) => '<div class="dk-cell"><div class="dk-lbl">' + lbl + '</div><div class="dk-val">' + val + '</div></div>';
+    if (p && p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
+    if (p && p.lead != null) cells.push(cell("Contatti", fmtInt(p.lead)));
+    if (p && p.lead > 0 && p.spend != null) cells.push(cell("Costo per contatto", fmtEUR(p.spend / p.lead)));
+    panelRoot.innerHTML = cells.length ? cells.join("") : '<div class="nc-loading">Nessun KPI disponibile</div>';
+  }
+  function wireCard(cardId) {
+    const series = ALL_SERIES[cardId] || [];
+    const chartRoot = document.getElementById("chart-" + cardId);
+    const navRoot   = document.getElementById("daynav-" + cardId);
+    const kpiRoot   = document.getElementById("daykpi-" + cardId);
+    const labelEl   = document.getElementById("daylbl-" + cardId);
+    if (!chartRoot) return;
+    let selIdx = -1;
+    for (let i = series.length - 1; i >= 0; i--) {
+      if (series[i].spend != null) { selIdx = i; break; }
+    }
+    if (selIdx < 0) selIdx = series.length - 1;
+    const hasAnySpend = series.some(p => p.spend != null);
+    if (!hasAnySpend) {
+      chartRoot.innerHTML = '<div class="nc-loading">Nessun dato giornaliero disponibile</div>';
+      return;
+    }
+    function update() {
+      drawChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+      if (navRoot) navRoot.style.display = "";
+      if (kpiRoot) kpiRoot.style.display = "";
+      if (labelEl) {
+        const d = series[selIdx] && series[selIdx].date;
+        labelEl.innerHTML = dayLabelIT(d) + '<span class="small">' + (d || "") + '</span>';
+      }
+      if (kpiRoot) renderDayPanel(kpiRoot, series[selIdx]);
+      const prev = document.querySelector('#daynav-' + cardId + ' [data-action="prev"]');
+      const next = document.querySelector('#daynav-' + cardId + ' [data-action="next"]');
+      if (prev) prev.disabled = selIdx <= 0;
+      if (next) next.disabled = selIdx >= series.length - 1;
+    }
+    update();
+    const prevBtn = document.querySelector('#daynav-' + cardId + ' [data-action="prev"]');
+    const nextBtn = document.querySelector('#daynav-' + cardId + ' [data-action="next"]');
+    if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+    if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+  }
+  // Wire tutte le card al ready
+  Object.keys(ALL_SERIES).forEach(wireCard);
+
+  const SEM_FILTERS = new Set();
+  let SEARCH_Q = "";
+  const searchInput = document.getElementById("search-input");
+  const clearBtn    = document.getElementById("search-clear");
+  const semGrid     = document.getElementById("sem-grid");
+  const cards       = Array.from(document.querySelectorAll("#cards .card-new, #cards .card"));
+  const cntEl       = document.getElementById("filter-count");
+  const emptyEl     = document.getElementById("empty-result");
+
+  function applyFilters() {
+    const q = SEARCH_Q.toLowerCase().trim();
+    let visible = 0;
+    for (const c of cards) {
+      const name = (c.dataset.name || "").toLowerCase();
+      const color = c.dataset.color || "";
+      const matchName  = !q || name.indexOf(q) !== -1;
+      const matchColor = SEM_FILTERS.size === 0 || SEM_FILTERS.has(color);
+      const show = matchName && matchColor;
+      c.style.display = show ? "" : "none";
+      if (show) visible++;
+    }
+    if (cntEl) {
+      if (q || SEM_FILTERS.size > 0) cntEl.textContent = visible + " su " + cards.length;
+      else cntEl.textContent = "";
+    }
+    if (emptyEl) emptyEl.style.display = (visible === 0) ? "" : "none";
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      SEARCH_Q = searchInput.value;
+      if (clearBtn) clearBtn.classList.toggle("hidden", !SEARCH_Q);
+      applyFilters();
+    });
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { searchInput.value = ""; SEARCH_Q = ""; clearBtn.classList.add("hidden"); applyFilters(); }
+    });
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = ""; SEARCH_Q = ""; clearBtn.classList.add("hidden");
+      applyFilters(); searchInput.focus();
+    });
+  }
+
+  if (semGrid) {
+    semGrid.querySelectorAll("[data-filter]").forEach(el => {
+      el.addEventListener("click", () => {
+        const c = el.dataset.filter;
+        if (SEM_FILTERS.has(c)) SEM_FILTERS.delete(c);
+        else SEM_FILTERS.add(c);
+        el.classList.toggle("active-filter", SEM_FILTERS.has(c));
+        semGrid.classList.toggle("has-active", SEM_FILTERS.size > 0);
+        applyFilters();
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
