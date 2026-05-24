@@ -28,3 +28,10 @@ credentials.json
 
 # Local backup folder (30gg retention) — non pubblicare
 _backups/
+
+# Drift monitor log — append-only, stato locale dello scheduled task semaforo-v2-drift-monitor
+_automation/drift_log.json
+
+# Python caches
+__pycache__/
+*.pyc
