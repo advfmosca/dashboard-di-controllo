@@ -1752,48 +1752,18 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     # ============ Brief payload light (token-saving P3 — 2026-05-22) ============
-    # Endpoint dedicato a fmm-morning-brief: solo i campi che il brief Slack usa.
-    # ~30-50 KB vs ~400 KB di data.json → -85% banda + token al curl giornaliero.
-    sp_obj = data.get("spending") or {}
-    bf_entries = (data.get("beefamily") or {}).get("entries", []) or []
-    ag_cards   = (data.get("aghc") or {}).get("cards", []) or []
-    mt_entries = (data.get("medtech") or {}).get("entries", []) or []
-    cea_entries = (data.get("cea") or {}).get("entries", []) or []
-    other_obj   = data.get("other_roster") or {}
-    brief = {
-        "reference_date": data.get("reference_date"),
-        "reference_date_label": data.get("reference_date_label"),
-        "pages_url": data.get("pages_url"),
-        "overview": data.get("overview", {}),
-        "spending": {
-            "zero": (sp_obj.get("zero") or [])[:5],   # top 5 zero — il brief mostra solo top 3
-            "zero_count": len(sp_obj.get("zero") or []),
-            "high_count": len(sp_obj.get("high") or []),
-        },
-        "beefamily": {
-            "entries_count": len(bf_entries),
-            "alerts": sum(1 for e in bf_entries if (e.get("status") or {}).get("color") in ("red", "yellow")),
-        },
-        "aghc": {
-            "cards_count": len(ag_cards),
-            "alerts": sum(1 for c in ag_cards if (c.get("status") or {}).get("color") in ("red", "yellow")),
-        },
-        "medtech": {
-            "entries_count": len(mt_entries),
-            "alerts": sum(1 for e in mt_entries if (e.get("status") or {}).get("color") in ("red", "yellow")),
-        },
-        "cea": {
-            "entries_count": len(cea_entries),
-            "alerts": sum(1 for e in cea_entries if (e.get("status") or {}).get("color") in ("red", "yellow")),
-        },
-        "other_roster": {
-            "total_count": other_obj.get("total_count", 0),
-            "total_spend_window": other_obj.get("total_spend_window", 0),
-        },
-    }
-    brief_path = os.path.join(workspace, "data-brief.json")
-    with open(brief_path, "w", encoding="utf-8") as f:
-        json.dump(brief, f, ensure_ascii=False)  # niente indent → minimo footprint
+    # Endpoint dedicato a fmm-morning-brief + semaforo-v2-drift-monitor.
+    # Logica centralizzata in _automation/brief_builder.py (2026-05-24):
+    # ora include anche kpi+_meta v2 per cea/medtech (drift monitor leggeva
+    # data.json ~400 KB e WebFetch tagliava a 88 KB prima di arrivare a quelle sezioni).
+    # Stesso modulo viene chiamato anche da _automation/build_dashboard_payload.py
+    # dopo il merge dei CSV di Alfredo, così il brief resta fresh per cea/medtech.
+    import sys as _sys
+    _automation_dir = os.path.join(workspace, "_automation")
+    if _automation_dir not in _sys.path:
+        _sys.path.insert(0, _automation_dir)
+    from brief_builder import write_brief  # noqa: E402
+    write_brief(data, workspace)
 
     # Retention: remove snapshots older than retention-days
     today = datetime.now().date()

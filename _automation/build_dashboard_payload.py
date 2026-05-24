@@ -978,6 +978,18 @@ def main():
 
     merge_into_dashboard(cea_payload, medtech_payload, DATA_REPORT)
 
+    # Rigenera data-brief.json (endpoint light, usato da fmm-morning-brief +
+    # semaforo-v2-drift-monitor). Senza questa chiamata il brief restava 24h
+    # indietro sulle sezioni cea/medtech aggiornate qui dai CSV di Alfredo.
+    # Aggiunto 2026-05-24 contestualmente all'esposizione di kpi+_meta v2 nel brief.
+    try:
+        from brief_builder import write_brief
+        data_fresh = json.load(open(DATA_JSON))
+        brief_path = write_brief(data_fresh, str(REPO_DASH))
+        print(f"BRIEF rigenerato: {brief_path}")
+    except Exception as e:
+        print(f"⚠ BRIEF non rigenerato (non bloccante): {type(e).__name__}: {e}")
+
     print("CEA KPI:", json.dumps(cea_payload["kpi"], ensure_ascii=False))
     print("MEDTECH KPI:", json.dumps(medtech_payload["kpi"], ensure_ascii=False))
 
