@@ -302,14 +302,14 @@ def _fmt_it_date(iso):
     return f"{d}/{m}/{y[2:]}"
 
 AD_FATIGUE_PROPOSTE = [
-    "ci basterebbe ricevere da voi un video di 30-60 secondi di una vostra cliente reale (volto + breve frase su cosa ha apprezzato del trattamento) per produrre una variante con testimonianza, che storicamente sblocca queste fasi di saturazione",
-    "fornendoci 1-2 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo), produrremo una variante con prova visiva che tipicamente alza i contatti del 20-30%",
-    "se ci date la possibilità di girare 1 breve reel in struttura (anche solo backstage di una seduta), produrremo una variante 'dietro le quinte' che spesso ribalta una campagna in saturazione",
+    "se la struttura ci fornisce un video di 30-60 secondi di una loro cliente reale (volto + breve frase su cosa ha apprezzato del trattamento), produrremo una variante con testimonianza che storicamente sblocca queste fasi di saturazione",
+    "chiedere alla struttura 1-2 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo): con quel materiale produrremo una variante con prova visiva che tipicamente alza i contatti del 20-30%",
+    "se la struttura ci concede l'accesso per girare 1 breve reel in sede (anche solo backstage di una seduta), produrremo una variante 'dietro le quinte' che spesso ribalta una campagna in saturazione",
 ]
 OFFERTA_PROPOSTE = [
-    "fornendoci 1 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo, es. addome o profilo), produrremo una variante creatività testimoniale che tipicamente alza i contatti del 20-30%",
-    "ci basterebbe ricevere un video di 30-60 secondi di una cliente reale che racconti il proprio risultato (volto + breve frase) per produrre una variante con prova sociale che spesso sblocca questo blocco",
-    "fornendoci 1-2 immagini di lavorazioni reali eseguite nel vostro studio (anche dettaglio macchinario + risultato visibile), produrremo una variante 'prima/durante/dopo' che dà al pubblico la prova concreta del valore",
+    "chiedere alla struttura 1 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo, es. addome o profilo): con quel materiale produrremo una variante creatività testimoniale che tipicamente alza i contatti del 20-30%",
+    "se la struttura ci invia un video di 30-60 secondi di una cliente reale che racconti il proprio risultato (volto + breve frase), produrremo una variante con prova sociale che spesso sblocca questo blocco",
+    "richiedere alla struttura 1-2 immagini di lavorazioni reali eseguite in sede (anche dettaglio macchinario + risultato visibile): con quel materiale produrremo una variante 'prima/durante/dopo' che dà al pubblico la prova concreta del valore",
 ]
 
 def per_client_op(a, idx_in_group=0):
