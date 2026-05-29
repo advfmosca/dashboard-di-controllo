@@ -238,12 +238,21 @@ def main():
         blocks.append("\n✅ Nessun cliente in stato 0-lead 2gg consecutivi.")
 
     full = "".join(blocks)
-    out_path = Path(os.environ.get("ALERT_OUT", "/sessions/exciting-compassionate-clarke/mnt/outputs/work/_zero_leads_alert.md"))
+    # Path di default: auto-detect (sandbox Cowork → /sessions/*/mnt/outputs/work; altrimenti /tmp).
+    def _default_out():
+        import glob as _g
+        cands = _g.glob("/sessions/*/mnt/outputs/work")
+        if cands:
+            return cands[0] + "/_zero_leads_alert.md"
+        return "/tmp/_zero_leads_alert.md"
+    out_path = Path(os.environ.get("ALERT_OUT", _default_out()))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(full, encoding="utf-8")
     # JSON strutturato per altri consumer
     json_path = out_path.with_suffix(".json")
     json_path.write_text(json.dumps({"date": today_iso, "cea": cea_alerts, "medtech": mt_alerts}, ensure_ascii=False, indent=2), encoding="utf-8")
     print(full)
+    print(f"\n📄 Salvato: {out_path}\n📄 JSON:    {json_path}")
 
 if __name__ == "__main__":
     main()
