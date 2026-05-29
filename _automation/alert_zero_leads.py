@@ -454,8 +454,7 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
             lines.append(f"*{a['name']}* — speso {fmt_eur(a['spend_2d'])}")
             lines.append(f"{_cap_first(op['diagnosi'])}.")
             lines.append(f"*Cosa faremo:* {op['azione']}.")
-            if op["proposta"]:
-                lines.append(f"*Proposta strategica:* {op['proposta']}.")
+            # Proposta strategica disattivata (decisione 29/05/2026) — viene mantenuta nel JSON ma non stampata nel brief Slack.
         lines.append("")
     return "\n".join(lines).rstrip()
 
