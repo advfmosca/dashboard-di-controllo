@@ -312,7 +312,44 @@ OFFERTA_PROPOSTE = [
     "richiedere alla struttura 1-2 immagini di lavorazioni reali eseguite in sede (anche dettaglio macchinario + risultato visibile): con quel materiale produrremo una variante 'prima/durante/dopo' che dà al pubblico la prova concreta del valore",
 ]
 
-def per_client_op(a, idx_in_group=0):
+def detect_winning_creative_type(name, project, today_iso, days=LOOKBACK_DAYS):
+    """Analizza gli ultimi `days` snapshot per inferire se i contatti dell'entity
+       provengono da inserzioni VIDEO o da CREATIVE STATICHE.
+       Pattern naming convention: vid/video/reel/ugc/motion vs img/static/foto/grafica/immagine/statica.
+       Ritorna 'video' | 'static' | 'mixed' | 'unknown'."""
+    import re as _re
+    vid_re = _re.compile(r"(?:^|[_\s\-/])(vid|video|reel|ugc|motion)(?:[_\s\-/0-9]|$)", _re.IGNORECASE)
+    sta_re = _re.compile(r"(?:^|[_\s\-/])(img|static|statica|foto|grafica|still|immagine)(?:[_\s\-/0-9]|$)", _re.IGNORECASE)
+    def classify(s):
+        s = (s or "").lower()
+        has_v = bool(vid_re.search(s))
+        has_s = bool(sta_re.search(s))
+        if has_v and not has_s: return "video"
+        if has_s and not has_v: return "static"
+        if has_v and has_s: return "mixed"
+        return None
+    tally = {"video": 0, "static": 0, "mixed": 0}
+    for n in range(2, 2 + days):
+        d_iso = date_minus(today_iso, n)
+        snap = load_snap(d_iso)
+        if not snap: continue
+        for e in (snap.get(project) or {}).get("entries", []):
+            if e.get("name") != name: continue
+            for c in (e.get("campaigns") or []):
+                if (c.get("lead") or 0) > 0:
+                    cls = classify(c.get("name", ""))
+                    if cls: tally[cls] += c.get("lead", 0)
+            break
+    total = sum(tally.values())
+    if total == 0:
+        return "unknown"
+    if tally["mixed"] > 0 or (tally["video"] > 0 and tally["static"] > 0
+                              and min(tally["video"], tally["static"]) >= 0.25 * total):
+        return "mixed"
+    return max(tally, key=tally.get)
+
+
+def per_client_op(a, idx_in_group=0, project=None, today_iso=None):
     """Ritorna dict {action, proposta?}.
        Vincoli FMM:
          - Target = donne (sempre esplicitato)
@@ -331,19 +368,36 @@ def per_client_op(a, idx_in_group=0):
     days_active = hist.get("days_active", 0) or 0
 
     if cause == "ad_fatigue":
-        if freq >= 2.0:
-            action = (f"il pubblico (donne) vede ormai troppe volte la stessa inserzione (esposizione media {freq:.2f} volte a persona). "
-                      f"Metteremo in pausa l'inserzione principale e produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura diverse")
-        elif hist_leads >= 8 and last_lead:
-            action = (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni (ultimo il {_fmt_it_date(last_lead)}), poi si è fermato. "
-                      f"Rinnoveremo la creatività principale: produrremo 2 nuove grafiche + 1 nuovo video con un punto di vista diverso sull'offerta "
-                      f"(es. focus sul risultato concreto invece che sul prezzo), mantenendo il target donne")
-        elif hist_leads >= 2 and last_lead:
-            action = (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. "
-                      f"Produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura differenti e un nuovo formato visivo")
+        # Detection automatica del formato sorgente dei contatti (video vs grafica statica)
+        ctype = detect_winning_creative_type(a["name"], project, today_iso) if project and today_iso else "unknown"
+        if ctype == "video":
+            produce = "produrremo 1 nuovo video alternativo con un angolo diverso sull'offerta (i contatti recenti sono arrivati da inserzioni video, rinnoviamo lo stesso formato)"
+        elif ctype == "static":
+            produce = "produrremo 2 nuove grafiche statiche con frasi di apertura diverse (i contatti recenti sono arrivati da grafiche, rinnoviamo lo stesso formato)"
+        elif ctype == "mixed":
+            produce = "produrremo 1 nuovo video + 2 nuove grafiche per coprire entrambi i formati che hanno generato contatti recenti"
         else:
-            action = ("lo stesso messaggio sta perdendo efficacia sul pubblico femminile. "
-                     "Produrremo 2 nuove grafiche + 1 nuovo video con un angolo del messaggio completamente nuovo")
+            # unknown — il naming non permette detection automatica
+            produce = ("analizzeremo prima da quale formato sono arrivati i contatti recenti. "
+                       "Se da video, produrremo 1 nuovo video alternativo con un angolo diverso sull'offerta; "
+                       "se da grafiche statiche, produrremo 2 nuove grafiche con frasi di apertura diverse")
+
+        # premessa contestuale
+        if freq >= 2.0:
+            preamble = (f"il pubblico (donne) vede ormai troppe volte la stessa inserzione "
+                        f"(esposizione media {freq:.2f} volte a persona). Metteremo in pausa l'inserzione principale e ")
+        elif hist_leads >= 8 and last_lead:
+            preamble = (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni (ultimo il {_fmt_it_date(last_lead)}), "
+                        f"poi si è fermato. ")
+        elif hist_leads >= 2 and last_lead:
+            preamble = (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. ")
+        else:
+            preamble = "lo stesso messaggio sta perdendo efficacia sul pubblico femminile. "
+
+        # Capitalizza la prima lettera di produce quando preamble termina con punto+spazio
+        if preamble.rstrip().endswith(".") and produce and produce[0].islower():
+            produce = produce[0].upper() + produce[1:]
+        action = preamble + produce + ", mantenendo il target donne"
         return {"action": action, "proposta": AD_FATIGUE_PROPOSTE[idx_in_group % 3]}
 
     if cause == "geo_ristretta":
@@ -388,6 +442,8 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
     """Brief mattutino — Cosa faremo (perimetro contratto) + Proposta strategica (extra)."""
     y, m, d = data_iso.split("-")
     data_it = f"{d}/{m}/{y}"
+    # mapping project_label → snapshot section key
+    _proj_key = "cea" if project_label.upper().startswith("CEA") else "medtech"
     if not alerts:
         return (
             f"🌅 *Brief operativo {project_label} — {data_it}*\n"
@@ -411,7 +467,7 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
         lines.append(f"{ico} *{name}* ({len(bucket)})")
         bucket.sort(key=lambda x: -x["spend_2d"])
         for idx, a in enumerate(bucket):
-            op = per_client_op(a, idx)
+            op = per_client_op(a, idx, project=_proj_key, today_iso=data_iso)
             lines.append("")
             lines.append(f"• *{a['name']}* (speso {fmt_eur(a['spend_2d'])}) — {op['action']}.")
             if op['proposta']:
