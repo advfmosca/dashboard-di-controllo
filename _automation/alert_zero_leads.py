@@ -281,6 +281,48 @@ def format_alert_text(a):
         f"\n💡 *SOLUZIONE CONSIGLIATA — {sol['label']}*\n{sol['intro']}\n{steps}\n"
     )
 
+CAUSE_BRIEF = {
+    "ad_fatigue":            ("♻️", "AD FATIGUE",            "Pausare ad principale e attivare 2-3 varianti con hook diverso, cambiare formato (statico↔video UGC), refresh copy con nuovo angolo dell'offerta."),
+    "geo_ristretta":         ("🎯", "GEO TROPPO RISTRETTA", "Ampliare raggio geo +10/15 km o aggiungere comuni limitrofi, aggiungere 2-3 interessi correlati, avviare lookalike 1-3% sui lead già acquisiti."),
+    "offerta_non_pertinente":("🎁", "OFFERTA NON PERTINENTE","Rivedere offerta (prezzo, bundle, urgenza), testare 3 angoli del messaggio (emotional / razionale / social proof), verificare allineamento offerta-stagione-segmento."),
+}
+
+def build_morning_brief(project_label, alerts, dash_url, data_iso):
+    """Genera testo brief mattutino pronto per copia/incolla su Slack."""
+    # data in dd/mm/yyyy
+    y, m, d = data_iso.split("-")
+    data_it = f"{d}/{m}/{y}"
+    if not alerts:
+        return (
+            f"🌅 *Brief operativo {project_label} — {data_it}*\n"
+            f"📊 Dashboard: {dash_url}\n\n"
+            f"✅ Nessun account in stato critico oggi. Tutte le campagne hanno generato lead nei 2gg precedenti — nessuna operazione correttiva richiesta."
+        )
+    by_cause = {"ad_fatigue": [], "geo_ristretta": [], "offerta_non_pertinente": []}
+    for a in alerts:
+        by_cause[a["top_cause"]].append(a)
+    tot_burn = sum(a["spend_2d"] for a in alerts)
+
+    lines = []
+    lines.append(f"🌅 *Brief operativo {project_label} — {data_it}*")
+    lines.append(f"📊 Dashboard: {dash_url}")
+    lines.append("")
+    lines.append(f"{len(alerts)} account attenzionati (2gg consecutivi a 0 lead) · budget bruciato totale *{fmt_eur(tot_burn)}*")
+    lines.append("")
+    for cause_key in ("ad_fatigue", "geo_ristretta", "offerta_non_pertinente"):
+        bucket = by_cause[cause_key]
+        if not bucket:
+            continue
+        ico, name, op = CAUSE_BRIEF[cause_key]
+        lines.append(f"{ico} *{name}* ({len(bucket)})")
+        bucket.sort(key=lambda x: -x["spend_2d"])
+        for a in bucket:
+            lines.append(f"  • {a['name']} — {fmt_eur(a['spend_2d'])}/2gg")
+        lines.append(f"  → *Operazione*: {op}")
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
 def main():
     today_iso = DATA
     yest_iso = date_minus(today_iso, 1)
@@ -328,10 +370,22 @@ def main():
     repo_alerts = Path("/tmp/dashboard-di-controllo/alerts.json")
     if repo_alerts.parent.exists():
         repo_alerts.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # ===== BRIEF MATTUTINO Slack-ready (copia/incolla) =====
+    brief_cea = build_morning_brief("CEA", cea_alerts,
+                                    "https://advfmosca.github.io/dashboard-di-controllo/#cea", today_iso)
+    brief_mt  = build_morning_brief("MED & TECH", mt_alerts,
+                                    "https://advfmosca.github.io/dashboard-di-controllo/#medtech", today_iso)
+    brief_dir = out_path.parent
+    (brief_dir / "_brief_cea.md").write_text(brief_cea, encoding="utf-8")
+    (brief_dir / "_brief_medtech.md").write_text(brief_mt, encoding="utf-8")
+
     print(full)
     print(f"\n📄 Salvato: {out_path}\n📄 JSON:    {json_path}")
     if repo_alerts.parent.exists():
         print(f"📄 Repo alerts.json: {repo_alerts}")
+    print(f"📄 Brief CEA:     {brief_dir / '_brief_cea.md'}")
+    print(f"📄 Brief MEDTECH: {brief_dir / '_brief_medtech.md'}")
 
 if __name__ == "__main__":
     main()
