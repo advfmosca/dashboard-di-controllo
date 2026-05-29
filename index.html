@@ -452,57 +452,57 @@
   .alert-empty .em-icon { font-size: 26px; display: block; margin-bottom: 6px; }
 
   /* === CARD ALERT (verticale unico, full width) === */
-  .alert-row { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px 18px 24px; margin-bottom: 14px; position: relative; }
-  .alert-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gray); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-  .alert-row.sev-critico::before { background: var(--red); }
-  .alert-row.sev-alto::before    { background: var(--yellow); }
-  .alert-row.sev-medio::before   { background: #d4d4d8; }
+  .alert-card .alert-row { display: block; gap: 0; align-items: stretch; font-size: 14px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px 18px 24px; margin-bottom: 14px; position: relative; }
+  .alert-card .alert-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gray); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+  .alert-card .alert-row.sev-critico::before { background: var(--red); }
+  .alert-card .alert-row.sev-alto::before    { background: var(--yellow); }
+  .alert-card .alert-row.sev-medio::before   { background: #d4d4d8; }
 
   /* Riga 1: rank + nome + budget */
-  .alert-row .ar-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; row-gap: 4px; margin-bottom: 10px; }
-  .alert-row .ar-head-left { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex: 1 1 auto; flex-wrap: wrap; row-gap: 4px; }
-  .alert-row .ar-rank { font-size: 11px; font-weight: 700; color: var(--text-dim); background: var(--bg-soft); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; flex-shrink: 0; align-self: center; }
-  .alert-row .ar-name { font-size: 16px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 100%; }
-  .alert-row .ar-spend { font-size: 14px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; flex-shrink: 0; }
-  .alert-row .ar-spend small { display: inline; font-size: 10px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-left: 4px; }
+  .alert-card .alert-row .ar-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; row-gap: 4px; margin-bottom: 10px; }
+  .alert-card .alert-row .ar-head-left { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex: 1 1 auto; flex-wrap: wrap; row-gap: 4px; }
+  .alert-card .alert-row .ar-rank { font-size: 11px; font-weight: 700; color: var(--text-dim); background: var(--bg-soft); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; flex-shrink: 0; align-self: center; }
+  .alert-card .alert-row .ar-name { font-size: 16px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 100%; }
+  .alert-card .alert-row .ar-spend { font-size: 14px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; flex-shrink: 0; }
+  .alert-card .alert-row .ar-spend small { display: inline; font-size: 10px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-left: 4px; }
 
   /* Riga 2: stats compatti */
-  .alert-row .ar-stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); }
-  .alert-row .ar-stat { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 999px; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-  .alert-row .ar-stat b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .alert-row .ar-stat.warn b { color: #c2410c; }
-  .alert-row .ar-stat.ok b   { color: #15803d; }
-  .alert-row .ar-stat.has-icon { padding-left: 8px; }
-  .alert-row .ar-stat .ic { opacity: 0.7; font-size: 11px; }
-  .alert-row .ar-stat-geo { max-width: 320px; }
+  .alert-card .alert-row .ar-stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); }
+  .alert-card .alert-row .ar-stat { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 999px; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .alert-card .alert-row .ar-stat b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .alert-card .alert-row .ar-stat.warn b { color: #c2410c; }
+  .alert-card .alert-row .ar-stat.ok b   { color: #15803d; }
+  .alert-card .alert-row .ar-stat.has-icon { padding-left: 8px; }
+  .alert-card .alert-row .ar-stat .ic { opacity: 0.7; font-size: 11px; }
+  .alert-card .alert-row .ar-stat-geo { max-width: 320px; }
 
   /* Sezione diagnosi unica */
-  .alert-row .ar-diag-block { background: #fafafa; border: 1px solid var(--border-soft); border-radius: 10px; padding: 14px 16px; }
-  .alert-row .ar-diag-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-  .alert-row .ar-diag-label { font-size: 10.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
-  .alert-row .ar-diag-cause { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 13.5px; font-weight: 700; }
-  .alert-row .ar-diag-cause .ico { font-size: 14px; line-height: 1; }
-  .alert-row .ar-diag-score { font-size: 11.5px; font-weight: 700; color: #991b1b; opacity: 0.85; font-variant-numeric: tabular-nums; }
-  .alert-row .ar-diag-intro { font-size: 13px; line-height: 1.55; color: var(--text); margin: 0 0 14px; }
+  .alert-card .alert-row .ar-diag-block { background: #fafafa; border: 1px solid var(--border-soft); border-radius: 10px; padding: 14px 16px; }
+  .alert-card .alert-row .ar-diag-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .alert-card .alert-row .ar-diag-label { font-size: 10.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .alert-card .alert-row .ar-diag-cause { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 13.5px; font-weight: 700; }
+  .alert-card .alert-row .ar-diag-cause .ico { font-size: 14px; line-height: 1; }
+  .alert-card .alert-row .ar-diag-score { font-size: 11.5px; font-weight: 700; color: #991b1b; opacity: 0.85; font-variant-numeric: tabular-nums; }
+  .alert-card .alert-row .ar-diag-intro { font-size: 13px; line-height: 1.55; color: var(--text); margin: 0 0 14px; }
 
-  .alert-row .ar-ops-label { font-size: 10.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .alert-row .ar-ops { list-style: none; padding: 0; margin: 0; counter-reset: op; }
-  .alert-row .ar-ops li { counter-increment: op; position: relative; padding: 10px 12px 10px 40px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 12.5px; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
-  .alert-row .ar-ops li::before { content: counter(op); position: absolute; left: 10px; top: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--text); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-  .alert-row .ar-ops li:last-child { margin-bottom: 0; }
+  .alert-card .alert-row .ar-ops-label { font-size: 10.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .alert-card .alert-row .ar-ops { list-style: none; padding: 0; margin: 0; counter-reset: op; }
+  .alert-card .alert-row .ar-ops li { counter-increment: op; position: relative; padding: 10px 12px 10px 40px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-size: 12.5px; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
+  .alert-card .alert-row .ar-ops li::before { content: counter(op); position: absolute; left: 10px; top: 9px; width: 22px; height: 22px; border-radius: 50%; background: var(--text); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .alert-card .alert-row .ar-ops li:last-child { margin-bottom: 0; }
 
   /* Cause-specific accents */
-  .alert-row[data-cause="ad_fatigue"] .ar-diag-cause { background: #ffedd5; color: #9a3412; }
-  .alert-row[data-cause="ad_fatigue"] .ar-diag-score { color: #9a3412; }
-  .alert-row[data-cause="geo_ristretta"] .ar-diag-cause { background: #ecfeff; color: #155e75; }
-  .alert-row[data-cause="geo_ristretta"] .ar-diag-score { color: #155e75; }
-  .alert-row[data-cause="offerta_non_pertinente"] .ar-diag-cause { background: #fef3c7; color: #854d0e; }
-  .alert-row[data-cause="offerta_non_pertinente"] .ar-diag-score { color: #854d0e; }
+  .alert-card .alert-row[data-cause="ad_fatigue"] .ar-diag-cause { background: #ffedd5; color: #9a3412; }
+  .alert-card .alert-row[data-cause="ad_fatigue"] .ar-diag-score { color: #9a3412; }
+  .alert-card .alert-row[data-cause="geo_ristretta"] .ar-diag-cause { background: #ecfeff; color: #155e75; }
+  .alert-card .alert-row[data-cause="geo_ristretta"] .ar-diag-score { color: #155e75; }
+  .alert-card .alert-row[data-cause="offerta_non_pertinente"] .ar-diag-cause { background: #fef3c7; color: #854d0e; }
+  .alert-card .alert-row[data-cause="offerta_non_pertinente"] .ar-diag-score { color: #854d0e; }
 
   @media (max-width: 640px) {
-    .alert-row { padding: 14px 16px 14px 20px; }
-    .alert-row .ar-name { font-size: 14.5px; }
-    .alert-row .ar-spend { font-size: 13px; }
+    .alert-card .alert-row { padding: 14px 16px 14px 20px; }
+    .alert-card .alert-row .ar-name { font-size: 14.5px; }
+    .alert-card .alert-row .ar-spend { font-size: 13px; }
     .alerts-toolbar .summary { font-size: 11.5px; }
   }
     .alert-row .ar-body { padding: 12px 14px 14px; }
