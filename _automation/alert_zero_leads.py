@@ -44,6 +44,15 @@ def fmt_eur(v):
     if v is None: return "—"
     return (f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")) + " €"
 
+def parse_raggio_km(geo_str):
+    """Estrae il raggio in km dal campo Target Geo, es. '45.7581,8.5587 +12km' → 12.
+       Ritorna None se non c'è il pattern +Nkm (es. 'IT', 'Lazio')."""
+    if not geo_str: return None
+    import re as _re
+    m = _re.search(r"\+\s*(\d+)\s*km", str(geo_str).lower())
+    if m: return int(m.group(1))
+    return None
+
 def parse_audience_size(s):
     if not s: return None
     s = str(s).strip().upper().replace(" ", "")
@@ -304,12 +313,18 @@ OFFERTA_PROPOSTE = [
 ]
 
 def per_client_op(a, idx_in_group=0):
-    """Ritorna dict {action, proposta?} — perimetro contratto + eventuale proposta strategica extra."""
+    """Ritorna dict {action, proposta?}.
+       Vincoli FMM:
+         - Target = donne (sempre esplicitato)
+         - Raggio massimo consentito = 15 km dall'indirizzo
+         - Su audience geo piccole, NON suggerire interessi o lookalike (quasi sempre inutili)"""
     cause = a.get("top_cause")
     ctr = a.get("ctr") or 0
     freq = a.get("freq") or 0
     aud_str = a.get("audience_size") or "n.d."
     aud_int = parse_audience_size(aud_str)
+    geo_str = a.get("geo") or ""
+    raggio = parse_raggio_km(geo_str)
     hist = a.get("hist") or {}
     hist_leads = hist.get("leads", 0) or 0
     last_lead = hist.get("last_lead_date")
@@ -317,48 +332,54 @@ def per_client_op(a, idx_in_group=0):
 
     if cause == "ad_fatigue":
         if freq >= 2.0:
-            action = (f"il pubblico vede ormai troppe volte la stessa inserzione (esposizione media {freq:.2f} volte a persona). "
+            action = (f"il pubblico (donne) vede ormai troppe volte la stessa inserzione (esposizione media {freq:.2f} volte a persona). "
                       f"Metteremo in pausa l'inserzione principale e produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura diverse")
         elif hist_leads >= 8 and last_lead:
             action = (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni (ultimo il {_fmt_it_date(last_lead)}), poi si è fermato. "
                       f"Rinnoveremo la creatività principale: produrremo 2 nuove grafiche + 1 nuovo video con un punto di vista diverso sull'offerta "
-                      f"(es. focus sul risultato concreto invece che sul prezzo)")
+                      f"(es. focus sul risultato concreto invece che sul prezzo), mantenendo il target donne")
         elif hist_leads >= 2 and last_lead:
             action = (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. "
                       f"Produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura differenti e un nuovo formato visivo")
         else:
-            action = ("lo stesso messaggio sta perdendo efficacia. "
-                      "Produrremo 2 nuove grafiche + 1 nuovo video con un angolo del messaggio completamente nuovo")
+            action = ("lo stesso messaggio sta perdendo efficacia sul pubblico femminile. "
+                     "Produrremo 2 nuove grafiche + 1 nuovo video con un angolo del messaggio completamente nuovo")
         return {"action": action, "proposta": AD_FATIGUE_PROPOSTE[idx_in_group % 3]}
 
     if cause == "geo_ristretta":
-        if aud_int is not None and aud_int < 70_000:
-            action = (f"pubblico molto ristretto (≈{aud_str}). Amplieremo il raggio della zona di +15 km includendo i comuni vicini, "
-                      f"mantenendo lo stesso tipo di cliente ideale")
-        elif aud_int is not None and aud_int < 200_000:
-            action = (f"pubblico ristretto (≈{aud_str}). Amplieremo leggermente la zona e aggiungeremo 2 nuovi interessi correlati al servizio "
-                      f"per aumentare il potenziale")
+        # Vincoli FMM: max 15km dall'indirizzo + niente interessi/lookalike su geo piccole
+        if raggio is not None and raggio >= 15:
+            action = (f"siamo già al massimo del raggio consentito (15 km dall'indirizzo) e il bacino di donne disponibili (≈{aud_str}) "
+                      f"è esaurito. Su audience geo piccole aggiungere interessi o lookalike è quasi sempre inutile: serve cambiare leva. "
+                      f"Proporremo una pausa di 7 giorni per ri-ossigenare il pubblico e in parallelo produrremo 2 nuove grafiche + 1 nuovo video "
+                      f"con un angolo dell'offerta completamente nuovo per ripartire forte")
+        elif raggio is not None:
+            margine = 15 - raggio
+            action = (f"oggi il raggio è di {raggio} km (pubblico donne ≈{aud_str}). "
+                      f"Amplieremo fino al massimo consentito da contratto (15 km dall'indirizzo, +{margine} km) per ampliare il bacino di donne raggiungibili. "
+                      f"Non attiveremo interessi né lookalike: su geo piccole sono quasi sempre inefficaci")
         else:
-            action = (f"potenziale limitato (≈{aud_str}). Amplieremo la zona geografica e attiveremo in parallelo un pubblico simile "
-                      f"a chi aveva già richiesto consulenza in passato")
+            # raggio non rilevabile (es. solo coordinate senza +km, o nazionale/regionale strano per CEA)
+            action = (f"pubblico ristretto (≈{aud_str}) ma l'impostazione geo attuale non è chiara. "
+                      f"Verificheremo il raggio in piattaforma e amplieremo fino al massimo consentito (15 km dall'indirizzo) sul target donne")
         return {"action": action, "proposta": None}
 
     if cause == "offerta_non_pertinente":
         if ctr >= 1.5:
-            action = (f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma non completano il modulo di richiesta. "
+            action = (f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma le donne non completano il modulo di richiesta. "
                       f"Rivedremo la promessa dell'offerta: produrremo 2 nuove grafiche + 1 nuovo video con una scadenza temporale chiara "
                       f"e un beneficio concreto già nel primo paragrafo (es. 'Risultato visibile dopo 3 sedute' invece di 'Promozione esclusiva')")
         elif ctr < 1.0:
-            action = (f"l'inserzione fatica ad agganciare l'attenzione (tasso di clic {ctr:.2f}%). "
+            action = (f"l'inserzione fatica ad agganciare l'attenzione del pubblico femminile (tasso di clic {ctr:.2f}%). "
                       f"Testeremo un nuovo approccio al messaggio: produrremo 2 nuove grafiche + 1 nuovo video con un angolo diverso, "
                       f"basato su un risultato concreto invece che su una promozione astratta")
         elif hist_leads == 0 and days_active >= 5:
-            action = (f"in {days_active} giorni di attività non è mai arrivato un contatto. "
+            action = (f"in {days_active} giorni di attività non è mai arrivato un contatto da una cliente donna. "
                       f"Ripenseremo completamente l'offerta — prezzo di ingresso, pacchetto e momento dell'anno in cui si propone — "
                       f"e produrremo 2 nuove grafiche + 1 nuovo video sulla nuova proposta")
         else:
-            action = ("risultati altalenanti. Produrremo 2 nuove grafiche + 1 nuovo video con un nuovo approccio al messaggio "
-                     "basato su prove concrete invece che sul solo prezzo")
+            action = ("risultati altalenanti sul pubblico femminile. Produrremo 2 nuove grafiche + 1 nuovo video con un nuovo approccio "
+                     "al messaggio basato su prove concrete invece che sul solo prezzo")
         return {"action": action, "proposta": OFFERTA_PROPOSTE[idx_in_group % 3]}
 
     return {"action": "Da rivalutare insieme", "proposta": None}
