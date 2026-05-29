@@ -401,21 +401,17 @@ def per_client_op(a, idx_in_group=0, project=None, today_iso=None):
         return {"action": action, "proposta": AD_FATIGUE_PROPOSTE[idx_in_group % 3]}
 
     if cause == "geo_ristretta":
-        # Vincoli FMM: max 15km dall'indirizzo + niente interessi/lookalike su geo piccole
+        # Vincoli interni FMM (NON esposti nel brief): no interessi/lookalike su geo piccole — regola applicata implicitamente.
         if raggio is not None and raggio >= 15:
-            action = (f"siamo già al massimo del raggio consentito (15 km dall'indirizzo) e il bacino di donne disponibili (≈{aud_str}) "
-                      f"è esaurito. Su audience geo piccole aggiungere interessi o lookalike è quasi sempre inutile: serve cambiare leva. "
+            action = (f"siamo già al massimo performante (15 km dall'indirizzo) e il bacino di donne disponibili (≈{aud_str}) è esaurito. "
                       f"Proporremo una pausa di 7 giorni per ri-ossigenare il pubblico e in parallelo produrremo 2 nuove grafiche + 1 nuovo video "
                       f"con un angolo dell'offerta completamente nuovo per ripartire forte")
         elif raggio is not None:
-            margine = 15 - raggio
             action = (f"oggi il raggio è di {raggio} km (pubblico donne ≈{aud_str}). "
-                      f"Amplieremo fino al massimo consentito da contratto (15 km dall'indirizzo, +{margine} km) per ampliare il bacino di donne raggiungibili. "
-                      f"Non attiveremo interessi né lookalike: su geo piccole sono quasi sempre inefficaci")
+                      f"Amplieremo fino al massimo performante (15 km dall'indirizzo) per ampliare il bacino di donne raggiungibili")
         else:
-            # raggio non rilevabile (es. solo coordinate senza +km, o nazionale/regionale strano per CEA)
             action = (f"pubblico ristretto (≈{aud_str}) ma l'impostazione geo attuale non è chiara. "
-                      f"Verificheremo il raggio in piattaforma e amplieremo fino al massimo consentito (15 km dall'indirizzo) sul target donne")
+                      f"Verificheremo il raggio in piattaforma e amplieremo fino al massimo performante (15 km dall'indirizzo) sul target donne")
         return {"action": action, "proposta": None}
 
     if cause == "offerta_non_pertinente":
