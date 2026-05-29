@@ -419,6 +419,22 @@
   .aghc-card .rational.aud-narr.giallo .rat-label { color: #9a3412; }
   .aghc-card .rational.aud-narr .aud-headline { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
 
+  /* Banner alert nelle card cliente (search + listing) */
+  .client-alert-banner { display: flex; align-items: stretch; gap: 0; margin: 10px 0 8px; border-radius: 10px; overflow: hidden; border: 1px solid #fca5a5; background: #fef2f2; }
+  .client-alert-banner .cab-stripe { width: 4px; background: var(--red); flex-shrink: 0; }
+  .client-alert-banner .cab-body { flex: 1; padding: 10px 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .client-alert-banner .cab-icon { font-size: 16px; line-height: 1; }
+  .client-alert-banner .cab-text { flex: 1; min-width: 200px; font-size: 12.5px; color: #1f2937; line-height: 1.45; }
+  .client-alert-banner .cab-text b { color: #991b1b; font-weight: 700; }
+  .client-alert-banner .cab-cause-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: #fee2e2; color: #991b1b; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+  .client-alert-banner .cab-action { flex-shrink: 0; font-size: 12px; padding: 6px 12px; background: var(--text); color: #fff; border-radius: 7px; text-decoration: none; font-weight: 600; white-space: nowrap; cursor: pointer; border: none; font-family: inherit; }
+  .client-alert-banner .cab-action:hover { background: #000; }
+  @media (max-width: 540px) {
+    .client-alert-banner .cab-body { padding: 10px 12px; gap: 10px; }
+    .client-alert-banner .cab-text { min-width: 100%; }
+    .client-alert-banner .cab-action { width: 100%; text-align: center; }
+  }
+
   /* ============================ ALERT 0 LEAD 2GG (UI v3 — diagnosi) ============================ */
   .alerts-updated { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 10px; }
   .alert-card > h2 { flex-wrap: wrap; row-gap: 4px; padding: 11px 16px 10px; }
@@ -1863,7 +1879,10 @@
           ${_an.text}
         </div>`
       : "";
-    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${audBlock}${footer}</div>`;
+    // Banner alert se il cliente è in stato 0-lead 2gg consecutivi
+    const _alertObj = (typeof findAlertForClient === "function") ? findAlertForClient(clientName, projectLabel) : null;
+    const alertBannerHTML = (typeof buildClientAlertBanner === "function" && _alertObj) ? buildClientAlertBanner(_alertObj) : "";
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${alertBannerHTML}${vRow}${chartBlock}${rationalBlock}${audBlock}${footer}</div>`;
   }
 
   function wireMTCEASeries(entry, idPrefix, projectLabel, attachKeyboardOn) {
@@ -3410,6 +3429,50 @@
     if (sel.id === "cea-alerts-sort") renderAlertSection("cea", ALERTS_STATE.cea, ALERTS_STATE.date);
     if (sel.id === "mt-alerts-sort")  renderAlertSection("mt",  ALERTS_STATE.medtech, ALERTS_STATE.date);
   });
+  function _normName(s) { return (s || "").toLowerCase().replace(/\s+/g, " ").trim(); }
+  function findAlertForClient(clientName, projectLabel) {
+    if (!clientName) return null;
+    var pool;
+    if (projectLabel === "CEA") pool = ALERTS_STATE.cea;
+    else if (projectLabel === "Med & Tech" || projectLabel === "MED & TECH" || projectLabel === "medtech") pool = ALERTS_STATE.medtech;
+    else pool = (ALERTS_STATE.cea || []).concat(ALERTS_STATE.medtech || []);
+    if (!pool || !pool.length) return null;
+    var target = _normName(clientName);
+    // match esatto o substring (la search potrebbe arrivare col nome breve)
+    for (var i = 0; i < pool.length; i++) {
+      var n = _normName(pool[i].name);
+      if (n === target) return pool[i];
+    }
+    for (var i = 0; i < pool.length; i++) {
+      var n = _normName(pool[i].name);
+      if (n.indexOf(target) !== -1 || target.indexOf(n) !== -1) return pool[i];
+    }
+    return null;
+  }
+  function buildClientAlertBanner(alert) {
+    if (!alert) return "";
+    var sol = alert.solution || {};
+    var firstStep = (sol.steps && sol.steps[0]) ? sol.steps[0] : "";
+    var causeLbl = sol.label || (CAUSE_LABEL[alert.top_cause] || "—");
+    var anchorTab = alert.project === "CEA" ? "cea" : "medtech";
+    var hist = alert.hist || {};
+    var histTxt = (hist.leads > 0)
+      ? "ultimo lead " + (hist.last_lead_date || "—") + " · " + (hist.days_active || 0) + "gg attivi"
+      : (hist.days_active || 0) + "gg attivi nei 14gg, mai un lead";
+    return '<div class="client-alert-banner">' +
+      '<div class="cab-stripe"></div>' +
+      '<div class="cab-body">' +
+        '<div class="cab-icon">🚨</div>' +
+        '<div class="cab-text">' +
+          '<b>0 lead 2gg consecutivi</b> · ' + histTxt + '<br>' +
+          '<span class="cab-cause-tag">Diagnosi: ' + causeLbl + '</span> ' +
+          (firstStep ? '<span style="color:#4b5563;">→ ' + firstStep + '</span>' : '') +
+        '</div>' +
+        '<button class="cab-action" type="button" onclick="(function(){var tab=document.querySelector(\'.tab-btn[data-tab=&quot;' + anchorTab + '&quot;]\');if(tab)tab.click();setTimeout(function(){var c=document.getElementById(\'' + (anchorTab === "cea" ? "cea-alert-card" : "mt-alert-card") + '\');if(c)c.scrollIntoView({behavior:\'smooth\',block:\'start\'});},120);})();return false;">Vedi diagnosi completa →</button>' +
+      '</div>' +
+    '</div>';
+  }
+
   (function loadAlerts() {
     fetch("alerts.json?ts=" + Date.now())
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
