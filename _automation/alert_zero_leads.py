@@ -350,10 +350,11 @@ def detect_winning_creative_type(name, project, today_iso, days=LOOKBACK_DAYS):
 
 
 def per_client_op(a, idx_in_group=0, project=None, today_iso=None):
-    """Ritorna dict {diagnosi, azione, proposta}.
-       diagnosi: frase contestuale (perché è in alert)
-       azione  : 'Cosa faremo' — perimetro contrattuale (futuro 1ª pers. plur.)
-       proposta: 'Proposta strategica' opzionale — materiale extra da chiedere alla struttura"""
+    """Ritorna dict {diagnosi, azione, azione_team, proposta}.
+       - diagnosi: frase contestuale
+       - azione: 'Cosa faremo' (futuro 1ª pers. plur.) per brief mattutino
+       - azione_team: stessa azione ma in imperativo, per messaggio operativo team
+       - proposta: opzionale (mantenuta nel JSON, non più stampata nei brief)"""
     cause = a.get("top_cause")
     ctr = a.get("ctr") or 0
     freq = a.get("freq") or 0
@@ -377,56 +378,69 @@ def per_client_op(a, idx_in_group=0, project=None, today_iso=None):
         else:
             diagnosi = "lo stesso messaggio sta perdendo efficacia sul pubblico femminile"
         azione = "aggiungeremo n°2 nuove grafiche per rinnovare l'angolo dell'offerta, mantenendo il target donne"
-        proposta = AD_FATIGUE_PROPOSTE[idx_in_group % 3]
-        return {"diagnosi": diagnosi, "azione": azione, "proposta": proposta}
+        azione_team = "Aggiungere 2 nuove grafiche per rinnovare l'angolo dell'offerta, mantenendo il target donne."
+        return {"diagnosi": diagnosi, "azione": azione, "azione_team": azione_team, "proposta": AD_FATIGUE_PROPOSTE[idx_in_group % 3]}
 
     if cause == "geo_ristretta":
         if raggio is not None and raggio >= 15:
             diagnosi = f"siamo già al massimo performante (15 km dall'indirizzo) e il bacino di donne disponibili (≈{aud_str}) è esaurito"
             azione = ("proporremo una pausa di 7 giorni per ri-ossigenare il pubblico e in parallelo produrremo "
                       "2 nuove grafiche + 1 nuovo video con un angolo dell'offerta completamente nuovo per ripartire forte")
+            azione_team = ("Mettere in pausa la campagna per 7 giorni e nel frattempo produrre 2 nuove grafiche + 1 nuovo video "
+                          "con un angolo dell'offerta completamente nuovo.")
         elif raggio is not None:
             diagnosi = f"oggi il raggio è di {raggio} km (pubblico donne ≈{aud_str})"
             azione = "amplieremo fino al massimo performante (15 km dall'indirizzo) per ampliare il bacino di donne raggiungibili"
+            azione_team = f"Ampliare il raggio dagli attuali {raggio} km fino al massimo performante (15 km dall'indirizzo)."
         else:
             diagnosi = f"pubblico ristretto (≈{aud_str}), l'impostazione geo attuale non è chiara"
             azione = "verificheremo il raggio in piattaforma e amplieremo fino al massimo performante (15 km dall'indirizzo) sul target donne"
-        return {"diagnosi": diagnosi, "azione": azione, "proposta": None}
+            azione_team = "Verificare il raggio in piattaforma e ampliarlo fino al massimo performante (15 km dall'indirizzo)."
+        return {"diagnosi": diagnosi, "azione": azione, "azione_team": azione_team, "proposta": None}
 
     if cause == "offerta_non_pertinente":
         if ctr >= 1.5:
             diagnosi = f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma le donne non completano il modulo di richiesta"
             azione = ("rivedremo la promessa dell'offerta: produrremo 2 nuove grafiche + 1 nuovo video con una scadenza temporale chiara "
                       "e un beneficio concreto già nel primo paragrafo (es. 'Risultato visibile dopo 3 sedute' invece di 'Promozione esclusiva')")
+            azione_team = ("Aggiungere 2 nuove grafiche + 1 nuovo video con una scadenza temporale chiara e un beneficio concreto "
+                          "già nel primo paragrafo (es. 'Risultato visibile dopo 3 sedute' invece di 'Promozione esclusiva').")
         elif ctr < 1.0:
             diagnosi = f"l'inserzione fatica ad agganciare l'attenzione del pubblico femminile (tasso di clic {ctr:.2f}%)"
             azione = ("testeremo un nuovo approccio al messaggio: produrremo 2 nuove grafiche + 1 nuovo video con un angolo diverso, "
                       "basato su un risultato concreto invece che su una promozione astratta")
+            azione_team = ("Aggiungere 2 nuove grafiche + 1 nuovo video con un angolo diverso, basato su un risultato concreto "
+                          "invece che su una promozione astratta.")
         elif hist_leads == 0 and days_active >= 5:
             diagnosi = f"in {days_active} giorni di attività non è mai arrivato un contatto da una cliente donna"
             azione = ("ripenseremo completamente l'offerta — prezzo di ingresso, pacchetto e momento dell'anno in cui si propone — "
                       "e produrremo 2 nuove grafiche + 1 nuovo video sulla nuova proposta")
+            azione_team = ("Ripensare l'offerta (prezzo di ingresso, pacchetto, periodo dell'anno) e produrre 2 nuove grafiche + 1 nuovo video "
+                          "sulla nuova proposta.")
         else:
             diagnosi = "risultati altalenanti sul pubblico femminile"
             azione = "produrremo 2 nuove grafiche + 1 nuovo video con un nuovo approccio al messaggio basato su prove concrete invece che sul solo prezzo"
-        return {"diagnosi": diagnosi, "azione": azione, "proposta": OFFERTA_PROPOSTE[idx_in_group % 3]}
+            azione_team = "Aggiungere 2 nuove grafiche + 1 nuovo video con un approccio basato su prove concrete invece che sul solo prezzo."
+        return {"diagnosi": diagnosi, "azione": azione, "azione_team": azione_team, "proposta": OFFERTA_PROPOSTE[idx_in_group % 3]}
 
-    return {"diagnosi": "da rivalutare insieme", "azione": "", "proposta": None}
+    return {"diagnosi": "da rivalutare insieme", "azione": "", "azione_team": "Da rivalutare insieme.", "proposta": None}
+
+
 
 def _cap_first(s):
     return (s[0].upper() + s[1:]) if s and s[0].islower() else s
 
 def build_morning_brief(project_label, alerts, dash_url, data_iso):
-    """Brief mattutino — formato leggibile (compatibile copy/paste Slack→WhatsApp)."""
+    """Brief mattutino — niente emoji, formato leggibile (Slack↔WhatsApp)."""
     y, m, d = data_iso.split("-")
     data_it = f"{d}/{m}/{y}"
     _proj_key = "cea" if project_label.upper().startswith("CEA") else "medtech"
 
     if not alerts:
         return (
-            f"🌅 *Brief operativo {project_label} — {data_it}*\n"
-            f"📊 Dashboard del giorno: {dash_url}\n\n"
-            f"✅ Nessun account in stato critico oggi. Tutte le campagne hanno generato contatti nei 2 giorni precedenti — "
+            f"*Brief operativo {project_label} — {data_it}*\n"
+            f"Dashboard del giorno: {dash_url}\n\n"
+            f"Nessun account in stato critico oggi. Tutte le campagne hanno generato contatti nei 2 giorni precedenti — "
             f"nessuna operazione correttiva richiesta."
         )
 
@@ -435,17 +449,17 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
     tot_burn = sum(a["spend_2d"] for a in alerts)
 
     lines = []
-    lines.append(f"🌅 *Brief operativo {project_label} — {data_it}*")
-    lines.append(f"📊 Dashboard del giorno: {dash_url}")
+    lines.append(f"*Brief operativo {project_label} — {data_it}*")
+    lines.append(f"Dashboard del giorno: {dash_url}")
     lines.append("")
     lines.append(f"{len(alerts)} account attenzionati (2 giorni consecutivi senza contatti) · budget speso totale *{fmt_eur(tot_burn)}*")
     lines.append("")
     for cause_key in ("ad_fatigue", "geo_ristretta", "offerta_non_pertinente"):
         bucket = by_cause[cause_key]
         if not bucket: continue
-        ico, name = CAUSE_BRIEF[cause_key]
+        _, name = CAUSE_BRIEF[cause_key]
         lines.append(f"━━━━━━━━━━━━━━━━━━━")
-        lines.append(f"{ico} *{name}* ({len(bucket)})")
+        lines.append(f"*{name}* ({len(bucket)})")
         lines.append(f"━━━━━━━━━━━━━━━━━━━")
         bucket.sort(key=lambda x: -x["spend_2d"])
         for idx, a in enumerate(bucket):
@@ -454,9 +468,32 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
             lines.append(f"*{a['name']}* — speso {fmt_eur(a['spend_2d'])}")
             lines.append(f"{_cap_first(op['diagnosi'])}.")
             lines.append(f"*Cosa faremo:* {op['azione']}.")
-            # Proposta strategica disattivata (decisione 29/05/2026) — viene mantenuta nel JSON ma non stampata nel brief Slack.
         lines.append("")
     return "\n".join(lines).rstrip()
+
+def build_team_action_brief(project_label, alerts, data_iso):
+    """3° messaggio operativo — task list pronta per girare al team creativo.
+       Cliente + azione imperativa secca. Ordinato per spesa desc."""
+    y, m, d = data_iso.split("-")
+    data_it = f"{d}/{m}/{y}"
+    _proj_key = "cea" if project_label.upper().startswith("CEA") else "medtech"
+    if not alerts:
+        return None  # nessun task da girare se non ci sono alert
+
+    lines = []
+    lines.append(f"*Brief team {project_label} — {data_it}*")
+    lines.append(f"Cose da fare oggi (ordinate per priorità di spesa):")
+    lines.append("")
+    # ordina tutti per spend desc unitamente
+    ranked = sorted(alerts, key=lambda x: -x["spend_2d"])
+    # serve indice per gruppo per riusare la rotazione delle proposte (resta per il JSON; qui non importa)
+    for idx, a in enumerate(ranked):
+        op = per_client_op(a, idx, project=_proj_key, today_iso=data_iso)
+        lines.append(f"*{a['name']}*")
+        lines.append(op["azione_team"])
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
 
 def main():
     today_iso = DATA
@@ -514,6 +551,11 @@ def main():
     brief_dir = out_path.parent
     (brief_dir / "_brief_cea.md").write_text(brief_cea, encoding="utf-8")
     (brief_dir / "_brief_medtech.md").write_text(brief_mt, encoding="utf-8")
+
+    team_cea = build_team_action_brief("CEA", cea_alerts, today_iso)
+    team_mt  = build_team_action_brief("MED & TECH", mt_alerts, today_iso)
+    if team_cea: (brief_dir / "_brief_team_cea.md").write_text(team_cea, encoding="utf-8")
+    if team_mt:  (brief_dir / "_brief_team_medtech.md").write_text(team_mt, encoding="utf-8")
 
     print(full)
     print(f"\n📄 Salvato: {out_path}\n📄 JSON:    {json_path}")
