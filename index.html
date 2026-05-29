@@ -419,23 +419,74 @@
   .aghc-card .rational.aud-narr.giallo .rat-label { color: #9a3412; }
   .aghc-card .rational.aud-narr .aud-headline { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
 
-  /* === ALERT 0 lead 2gg === */
-  .alert-card h2 { color: #991b1b; }
-  .alerts-updated { float: right; font-size: 11px; color: var(--text-muted); font-weight: 400; margin-top: 4px; }
-  .alert-empty { padding: 14px; background: #d1fadf; border: 1px solid #86efac; border-radius: 8px; color: #14532d; font-size: 13.5px; }
-  .alert-row { border: 1px solid #fca5a5; background: #fff5f5; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
-  .alert-row .ar-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
-  .alert-row .ar-name { font-size: 15px; font-weight: 700; color: #991b1b; }
-  .alert-row .ar-spend { font-size: 13px; color: #991b1b; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .alert-row .ar-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; font-size: 12.5px; color: #4a4a4a; margin-bottom: 8px; }
-  .alert-row .ar-kpi b { display: block; color: #1f2937; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .alert-row .ar-hist { font-size: 12.5px; color: #4a4a4a; margin-bottom: 8px; padding: 6px 10px; background: #fff; border-radius: 6px; border: 1px solid #fed7aa; }
-  .alert-row .ar-analysis { font-size: 12.5px; line-height: 1.45; color: #1f2937; padding: 8px 10px; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb; margin-bottom: 8px; }
-  .alert-row .ar-analysis-label { font-weight: 700; color: #991b1b; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-  .alert-row .ar-recos { font-size: 12.5px; line-height: 1.45; padding: 8px 10px; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb; }
-  .alert-row .ar-recos-label { font-weight: 700; color: #15803d; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-  .alert-row .ar-recos ul { margin: 0; padding-left: 18px; }
-  .alert-row .ar-recos li { margin-bottom: 4px; }
+  /* ============================ ALERT 0 LEAD 2GG (UI v2) ============================ */
+  .alerts-updated { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 10px; }
+  .alerts-toolbar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .alerts-toolbar .summary { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
+  .alerts-toolbar .summary .count { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .alerts-toolbar .summary .sev { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+  .alerts-toolbar .summary .sev-critico { background: #fee2e2; color: #991b1b; }
+  .alerts-toolbar .summary .sev-alto    { background: #ffedd5; color: #9a3412; }
+  .alerts-toolbar .summary .sev-medio   { background: #fef9c3; color: #854d0e; }
+  .alerts-toolbar .sort-block { margin-left: auto; display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--text-muted); }
+  .alerts-toolbar select { font: inherit; font-size: 12px; padding: 5px 9px; border-radius: 7px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; }
+
+  .alert-empty { padding: 18px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; color: #065f46; font-size: 13.5px; text-align: center; }
+  .alert-empty .em-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  .alert-row { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0; margin-bottom: 12px; overflow: hidden; position: relative; }
+  .alert-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--gray); }
+  .alert-row.sev-critico::before { background: var(--red); }
+  .alert-row.sev-alto::before    { background: var(--yellow); }
+  .alert-row.sev-medio::before   { background: #e8b900; }
+
+  .alert-row .ar-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px 10px 20px; border-bottom: 1px solid var(--border-soft); flex-wrap: wrap; }
+  .alert-row .ar-head-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+  .alert-row .ar-rank { font-size: 11px; font-weight: 700; color: var(--text-dim); background: var(--bg-soft); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .alert-row .ar-name { font-size: 15px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+  .alert-row .ar-badge { font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .alert-row.sev-critico .ar-badge { background: #fee2e2; color: #991b1b; }
+  .alert-row.sev-alto .ar-badge    { background: #ffedd5; color: #9a3412; }
+  .alert-row.sev-medio .ar-badge   { background: #fef9c3; color: #854d0e; }
+  .alert-row .ar-spend { font-size: 13px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+  .alert-row .ar-spend small { display: block; font-size: 10px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 1px; }
+
+  .alert-row .ar-body { padding: 14px 20px 16px; }
+
+  .alert-row .ar-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .alert-row .ar-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
+  .alert-row .ar-kpi .lab { font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .alert-row .ar-kpi .val { font-size: 15px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.2; margin-top: 2px; }
+  .alert-row .ar-kpi .val.warn { color: #c2410c; }
+  .alert-row .ar-kpi .val.ok   { color: #15803d; }
+
+  .alert-row .ar-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .alert-row .ar-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; color: var(--text-muted); max-width: 100%; }
+  .alert-row .ar-chip b { color: var(--text); font-weight: 600; }
+  .alert-row .ar-chip .icon { opacity: 0.7; }
+  .alert-row .ar-chip-geo { max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .alert-row .ar-section { margin-bottom: 12px; }
+  .alert-row .ar-section:last-child { margin-bottom: 0; }
+  .alert-row .ar-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .alert-row .ar-section-body { font-size: 13px; line-height: 1.55; color: var(--text); padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+
+  .alert-row .ar-hist-line { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 12px; background: var(--bg-soft); border-radius: 8px; font-size: 12.5px; }
+  .alert-row .ar-hist-line .hi { color: var(--text-muted); }
+  .alert-row .ar-hist-line .hi b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .alert-row .ar-recos { list-style: none; padding: 0; margin: 0; counter-reset: reco; }
+  .alert-row .ar-recos li { counter-increment: reco; position: relative; padding: 10px 12px 10px 38px; background: var(--bg-soft); border-radius: 8px; font-size: 13px; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
+  .alert-row .ar-recos li::before { content: counter(reco); position: absolute; left: 10px; top: 10px; width: 20px; height: 20px; border-radius: 50%; background: var(--text); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .alert-row .ar-recos li:last-child { margin-bottom: 0; }
+
+  @media (max-width: 640px) {
+    .alert-row .ar-head { padding: 10px 12px 8px 16px; }
+    .alert-row .ar-body { padding: 12px 14px 14px; }
+    .alert-row .ar-name { font-size: 14px; }
+    .alert-row .ar-kpi .val { font-size: 14px; }
+    .alerts-toolbar .summary { font-size: 11.5px; }
+  }
 </style>
 </head>
 <body>
@@ -3169,71 +3220,146 @@
   })();
 
 
-  // ============================ ALERT 0 LEAD 2GG ============================
+  // ============================ ALERT 0 LEAD 2GG (UI v2) ============================
+  const ALERTS_STATE = { cea: [], medtech: [], date: "" };
+
   function fmtEurAlert(v) {
     if (v == null) return "—";
-    return (v.toFixed(2).replace(".", ",")) + " €";
+    var n = (Math.round(v * 100) / 100).toFixed(2);
+    var parts = n.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return parts.join(",") + " €";
   }
-  function renderAlertRow(a) {
-    const hist = a.hist || {};
-    const histLine = hist.leads > 0
-      ? `<b>${hist.leads}</b> lead negli ultimi 14gg (ultimo ${hist.last_lead_date}) · spesa ${fmtEurAlert(hist.spend)} · ${hist.days_active}gg attivi`
-      : `<b>0 lead</b> negli ultimi 14gg · spesa ${fmtEurAlert(hist.spend)} · ${hist.days_active}gg attivi`;
-    const ctr = a.ctr != null ? a.ctr.toFixed(2) + "%" : "—";
-    const freq = a.freq != null ? a.freq.toFixed(2) : "—";
-    const audSize = a.audience_size || "n.d.";
-    const geo = a.geo || "n.d.";
-    const recos = (a.recos || []).map(r => `<li>${r}</li>`).join("");
-    return `<div class="alert-row">
-      <div class="ar-head">
-        <div class="ar-name">${a.name}</div>
-        <div class="ar-spend">Budget 2gg: ${fmtEurAlert(a.spend_2d)}</div>
-      </div>
-      <div class="ar-kpi">
-        <div>CTR oggi <b>${ctr}</b></div>
-        <div>Freq <b>${freq}</b></div>
-        <div>Audience size <b>${audSize}</b></div>
-        <div>Geo <b style="font-weight:600;font-size:12.5px;">${geo}</b></div>
-      </div>
-      <div class="ar-hist">📈 Storico 14gg: ${histLine}</div>
-      <div class="ar-analysis"><span class="ar-analysis-label">📊 Analisi audience — perché non genera leads</span>${a.analysis || ""}</div>
-      <div class="ar-recos"><span class="ar-recos-label">🛠 Come media buyer cosa cambierei</span><ul>${recos}</ul></div>
-    </div>`;
+  function alertSeverity(a) {
+    var spend = a.spend_2d || 0;
+    var histLeads = (a.hist && a.hist.leads) || 0;
+    if (spend >= 40 || (histLeads >= 10 && spend >= 20)) return "critico";
+    if (spend >= 20 || histLeads >= 5) return "alto";
+    return "medio";
+  }
+  function sortAlerts(arr, mode) {
+    var SEV_ORDER = { critico: 0, alto: 1, medio: 2 };
+    var copy = arr.slice();
+    if (mode === "severity") copy.sort(function (x, y) { return SEV_ORDER[alertSeverity(x)] - SEV_ORDER[alertSeverity(y)] || (y.spend_2d || 0) - (x.spend_2d || 0); });
+    else if (mode === "hist") copy.sort(function (x, y) { return ((y.hist && y.hist.leads) || 0) - ((x.hist && x.hist.leads) || 0) || (y.spend_2d || 0) - (x.spend_2d || 0); });
+    else if (mode === "name") copy.sort(function (x, y) { return x.name.localeCompare(y.name, "it"); });
+    else copy.sort(function (x, y) { return (y.spend_2d || 0) - (x.spend_2d || 0); });
+    return copy;
+  }
+  function renderAlertRow(a, rank) {
+    var sev = alertSeverity(a);
+    var SEV_LABEL = { critico: "CRITICO", alto: "ALTO", medio: "MEDIO" };
+    var hist = a.hist || {};
+    var ctr = a.ctr != null ? a.ctr : null;
+    var freq = a.freq != null ? a.freq : null;
+    var audSize = a.audience_size || "n.d.";
+    var geo = a.geo || "n.d.";
+
+    var ctrClass = "";
+    if (ctr != null) { if (ctr < 1.0) ctrClass = "warn"; else if (ctr >= 1.5) ctrClass = "ok"; }
+    var freqClass = "";
+    if (freq != null && freq >= 2.5) freqClass = "warn";
+
+    var histLine = (hist.leads > 0)
+      ? '<div class="hi"><b>' + hist.leads + '</b> lead</div>' +
+        '<div class="hi">ultimo <b>' + (hist.last_lead_date || "—") + '</b></div>' +
+        '<div class="hi"><b>' + (hist.days_active || 0) + '</b> gg attivi</div>' +
+        '<div class="hi">spesa <b>' + fmtEurAlert(hist.spend) + '</b></div>'
+      : '<div class="hi"><b>0 lead</b> nei 14gg precedenti</div>' +
+        '<div class="hi"><b>' + (hist.days_active || 0) + '</b> gg attivi</div>' +
+        '<div class="hi">spesa <b>' + fmtEurAlert(hist.spend) + '</b></div>';
+
+    var recos = (a.recos || []).map(function (r) { return '<li>' + r + '</li>'; }).join("");
+
+    return '<div class="alert-row sev-' + sev + '">' +
+      '<div class="ar-head">' +
+        '<div class="ar-head-left">' +
+          '<span class="ar-rank">#' + rank + '</span>' +
+          '<span class="ar-name">' + a.name + '</span>' +
+          '<span class="ar-badge">' + SEV_LABEL[sev] + '</span>' +
+        '</div>' +
+        '<div class="ar-spend">' + fmtEurAlert(a.spend_2d) + '<small>budget 2gg</small></div>' +
+      '</div>' +
+      '<div class="ar-body">' +
+        '<div class="ar-kpi-grid">' +
+          '<div class="ar-kpi"><div class="lab">CTR oggi</div><div class="val ' + ctrClass + '">' + (ctr != null ? ctr.toFixed(2) + "%" : "—") + '</div></div>' +
+          '<div class="ar-kpi"><div class="lab">Frequenza</div><div class="val ' + freqClass + '">' + (freq != null ? freq.toFixed(2) : "—") + '</div></div>' +
+          '<div class="ar-kpi"><div class="lab">Audience</div><div class="val">' + audSize + '</div></div>' +
+          '<div class="ar-kpi"><div class="lab">Lead 14gg</div><div class="val">' + (hist.leads || 0) + '</div></div>' +
+        '</div>' +
+        '<div class="ar-chips">' +
+          '<span class="ar-chip ar-chip-geo" title="' + geo + '"><span class="icon">📍</span>Geo: <b>' + geo + '</b></span>' +
+        '</div>' +
+        '<div class="ar-section">' +
+          '<div class="ar-section-label">📈 Storico 14gg precedenti</div>' +
+          '<div class="ar-hist-line">' + histLine + '</div>' +
+        '</div>' +
+        '<div class="ar-section">' +
+          '<div class="ar-section-label">📊 Perché non genera leads</div>' +
+          '<div class="ar-section-body">' + (a.analysis || "") + '</div>' +
+        '</div>' +
+        '<div class="ar-section">' +
+          '<div class="ar-section-label">🛠 Cosa cambierei (come media buyer)</div>' +
+          '<ol class="ar-recos">' + recos + '</ol>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
   function renderAlertSection(scope, alerts, updatedAt) {
-    const list = document.getElementById(scope + "-alerts-list");
-    const pill = document.getElementById(scope + "-alerts-pill");
-    const up   = document.getElementById(scope + "-alerts-updated");
+    var list    = document.getElementById(scope + "-alerts-list");
+    var pill    = document.getElementById(scope + "-alerts-pill");
+    var up      = document.getElementById(scope + "-alerts-updated");
+    var toolbar = document.getElementById(scope + "-alerts-toolbar");
+    var summary = document.getElementById(scope + "-alerts-summary");
     if (!list || !pill) return;
     pill.textContent = String(alerts.length);
-    if (up && updatedAt) {
-      try { up.textContent = "snapshot " + updatedAt; } catch (e) {}
-    }
+    if (up && updatedAt) up.textContent = "snapshot " + updatedAt;
     if (alerts.length === 0) {
-      list.innerHTML = `<div class="alert-empty">✅ Nessuna entità con 0 lead 2gg consecutivi. Tutto OK.</div>`;
+      if (toolbar) toolbar.style.display = "none";
+      list.innerHTML = '<div class="alert-empty"><span class="em-icon">✅</span>Nessuna entità con 0 lead 2gg consecutivi.<br><span style="font-size:12px;color:#15803d;opacity:0.8;">Pipeline OK.</span></div>';
       return;
     }
-    list.innerHTML = alerts.map(renderAlertRow).join("");
+    var counts = { critico: 0, alto: 0, medio: 0 };
+    alerts.forEach(function (a) { counts[alertSeverity(a)]++; });
+    if (summary) summary.innerHTML =
+      '<div><span class="count">' + alerts.length + '</span> alert totali</div>' +
+      '<div><span class="sev sev-critico">' + counts.critico + ' critici</span></div>' +
+      '<div><span class="sev sev-alto">' + counts.alto + ' alti</span></div>' +
+      '<div><span class="sev sev-medio">' + counts.medio + ' medi</span></div>';
+    if (toolbar) toolbar.style.display = "flex";
+
+    var sortSel = document.getElementById(scope + "-alerts-sort");
+    var mode = sortSel ? sortSel.value : "spend";
+    var sorted = sortAlerts(alerts, mode);
+    list.innerHTML = sorted.map(function (a, i) { return renderAlertRow(a, i + 1); }).join("");
   }
+  document.addEventListener("change", function (e) {
+    var sel = e.target;
+    if (!sel || !sel.id) return;
+    if (sel.id === "cea-alerts-sort") renderAlertSection("cea", ALERTS_STATE.cea, ALERTS_STATE.date);
+    if (sel.id === "mt-alerts-sort")  renderAlertSection("mt",  ALERTS_STATE.medtech, ALERTS_STATE.date);
+  });
   (function loadAlerts() {
     fetch("alerts.json?ts=" + Date.now())
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(data => {
-        const date = data.date || "";
-        renderAlertSection("cea",     data.cea     || [], date);
-        renderAlertSection("medtech", data.medtech || [], date);
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (data) {
+        var date = data.date || "";
+        ALERTS_STATE.date    = date;
+        ALERTS_STATE.cea     = data.cea     || [];
+        ALERTS_STATE.medtech = data.medtech || [];
+        renderAlertSection("cea", ALERTS_STATE.cea,     date);
+        renderAlertSection("mt",  ALERTS_STATE.medtech, date);
       })
-      .catch(err => {
-        const msg = `<div class="alert-empty" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412;">⚠ Alert non disponibili (${err}). Riprova più tardi.</div>`;
-        const c = document.getElementById("cea-alerts-list");
-        const m = document.getElementById("medtech-alerts-list");
+      .catch(function (err) {
+        var msg = '<div class="alert-empty" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412;"><span class="em-icon">⚠</span>Alert non disponibili (' + err + '). Riprova più tardi.</div>';
+        var c = document.getElementById("cea-alerts-list");
+        var m = document.getElementById("mt-alerts-list");
         if (c) c.innerHTML = msg;
         if (m) m.innerHTML = msg;
-        const cp = document.getElementById("cea-alerts-pill");     if (cp) cp.textContent = "–";
-        const mp = document.getElementById("medtech-alerts-pill"); if (mp) mp.textContent = "–";
+        var cp = document.getElementById("cea-alerts-pill"); if (cp) cp.textContent = "–";
+        var mp = document.getElementById("mt-alerts-pill");  if (mp) mp.textContent = "–";
       });
   })();
-
 </script>
 </body>
 </html>
