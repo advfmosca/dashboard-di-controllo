@@ -9,17 +9,29 @@
       "geo": "45.7581,8.5587 +12km",
       "audience_size": "55K",
       "freq": 1.65,
+      "clicks_today": 44,
+      "impressions_today": 3586,
       "hist": {
         "leads": 2,
         "last_lead_date": "2026-05-15",
         "spend": 111.08,
         "days_active": 6
       },
-      "analysis": "CTR 1.23% in linea ma non brillante: l'audience clicca a fatica. Geo: 45.7581,8.5587 +12km · audience size ≈ 55K. Storico: 2 lead nei 14gg precedenti (ultimo il 2026-05-15) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🕐 Aveva generato 2 lead negli ultimi 14gg (ultimo 2026-05-15): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 44 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 42,
+        "geo_ristretta": 55,
+        "offerta_non_pertinente": 0
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈55K) e la frequenza è già 1.65: il bacino disponibile sta venendo saturato. Quando convertiva (2 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
     },
     {
       "name": "AG Farma",
@@ -29,18 +41,29 @@
       "geo": "39.3571,8.9997 +20km",
       "audience_size": "196K",
       "freq": 1.45,
+      "clicks_today": 74,
+      "impressions_today": 2325,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
         "spend": 9.7,
         "days_active": 1
       },
-      "analysis": "CTR 3.18% sopra benchmark: l'audience apre, ma non converte → problema post-click. Geo: 39.3571,8.9997 +20km · audience size ≈ 196K. Storico: 0 lead nei 14gg precedenti pur con 1gg attivi → l'audience non ha mai convertito stabilmente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "⏱ Campagna giovane (<3gg attivi nello storico): serve ancora qualche giorno per stabilizzare l'apprendimento. Riconsiderare entro 48–72h.",
-        "🧪 74 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 0,
+        "geo_ristretta": 18,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 3.18% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. L'offerta non ha ancora trovato un product-market fit con questo segmento.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
     },
     {
       "name": "Corporea Wellness Experience",
@@ -50,18 +73,29 @@
       "geo": "40.8398,14.2285 +3km",
       "audience_size": "418K",
       "freq": 1.44,
+      "clicks_today": 35,
+      "impressions_today": 859,
       "hist": {
         "leads": 11,
         "last_lead_date": "2026-05-26",
         "spend": 132.16,
         "days_active": 6
       },
-      "analysis": "CTR 4.07% sopra benchmark: l'audience apre, ma non converte → problema post-click. Geo: 40.8398,14.2285 +3km · audience size ≈ 418K. Storico: 11 lead nei 14gg precedenti (ultimo il 2026-05-26) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🕐 Aveva generato 11 lead negli ultimi 14gg (ultimo 2026-05-26): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 35 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 37,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "ad_fatigue",
+      "solution": {
+        "label": "Ad Fatigue",
+        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 11 lead nei 14gg precedenti (ultimo il 2026-05-26). Segnale tipico di saturazione recente della creative attuale.",
+        "steps": [
+          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
+          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
+          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
+        ]
+      }
     },
     {
       "name": "Centro Benesse",
@@ -71,17 +105,29 @@
       "geo": "45.4031,8.9197 +11km",
       "audience_size": "110K",
       "freq": 1.47,
+      "clicks_today": 21,
+      "impressions_today": 1782,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
         "spend": 12.62,
         "days_active": 1
       },
-      "analysis": "CTR 1.18% in linea ma non brillante: l'audience clicca a fatica. Geo: 45.4031,8.9197 +11km · audience size ≈ 110K. Storico: 0 lead nei 14gg precedenti pur con 1gg attivi → l'audience non ha mai convertito stabilmente.",
-      "recos": [
-        "⏱ Campagna giovane (<3gg attivi nello storico): serve ancora qualche giorno per stabilizzare l'apprendimento. Riconsiderare entro 48–72h.",
-        "🧪 21 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 0,
+        "geo_ristretta": 18,
+        "offerta_non_pertinente": 0
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈110K).",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
     },
     {
       "name": "Erresse Esthetique Ads",
@@ -91,16 +137,29 @@
       "geo": "46.0032,8.9312 +10km",
       "audience_size": "59K",
       "freq": 1.38,
+      "clicks_today": 12,
+      "impressions_today": 1182,
       "hist": {
         "leads": 8,
         "last_lead_date": "2026-05-26",
         "spend": 91.42,
         "days_active": 4
       },
-      "analysis": "CTR 1.02% in linea ma non brillante: l'audience clicca a fatica. Geo: 46.0032,8.9312 +10km · audience size ≈ 59K. Storico: 8 lead nei 14gg precedenti (ultimo il 2026-05-26) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🕐 Aveva generato 8 lead negli ultimi 14gg (ultimo 2026-05-26): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta."
-      ]
+      "causes": {
+        "ad_fatigue": 24,
+        "geo_ristretta": 35,
+        "offerta_non_pertinente": 0
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈59K): il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni. Quando convertiva (8 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
     },
     {
       "name": "ADV Solelù",
@@ -110,18 +169,29 @@
       "geo": "Francavilla Fontana+18km",
       "audience_size": "323K",
       "freq": 1.55,
+      "clicks_today": 49,
+      "impressions_today": 2867,
       "hist": {
         "leads": 20,
         "last_lead_date": "2026-05-24",
         "spend": 191.43,
         "days_active": 12
       },
-      "analysis": "CTR 1.71% sopra benchmark: l'audience apre, ma non converte → problema post-click. Geo: Francavilla Fontana+18km · audience size ≈ 323K. Storico: 20 lead nei 14gg precedenti (ultimo il 2026-05-24) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🕐 Aveva generato 20 lead negli ultimi 14gg (ultimo 2026-05-24): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 49 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 47,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "ad_fatigue",
+      "solution": {
+        "label": "Ad Fatigue",
+        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 20 lead nei 14gg precedenti (ultimo il 2026-05-24). Segnale tipico di saturazione recente della creative attuale.",
+        "steps": [
+          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
+          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
+          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
+        ]
+      }
     },
     {
       "name": "Andreea Francu Renzo Gestione",
@@ -131,18 +201,29 @@
       "geo": "Falconara Marittima+80km",
       "audience_size": "1.3M",
       "freq": 1.33,
+      "clicks_today": 20,
+      "impressions_today": 2620,
       "hist": {
         "leads": 5,
         "last_lead_date": "2026-05-26",
         "spend": 151.0,
         "days_active": 11
       },
-      "analysis": "CTR 0.76% sotto benchmark (≥1%): l'audience non sta rispondendo al messaggio — o creative debole o target sbagliato. Geo: Falconara Marittima+80km · audience size ≈ 1.3M. Storico: 5 lead nei 14gg precedenti (ultimo il 2026-05-26) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "📉 CTR < 1%: creative non aggancia. Rinnovare ad (nuovi hook, formato UGC, prima frase più diretta) — non toccare ancora il targeting.",
-        "🕐 Aveva generato 5 lead negli ultimi 14gg (ultimo 2026-05-26): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 20 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 35,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 57
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 0.76% sotto benchmark: il messaggio non aggancia. Il pubblico non riconosce l'offerta come rilevante per sé.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
     },
     {
       "name": "Centro Mességué ADS 2025",
@@ -152,19 +233,29 @@
       "geo": "IT",
       "audience_size": "40.7M",
       "freq": 1.14,
+      "clicks_today": 201,
+      "impressions_today": 3218,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
         "spend": 97.01,
         "days_active": 7
       },
-      "analysis": "CTR 6.25% sopra benchmark: l'audience apre, ma non converte → problema post-click. Frequenza 1.14: pubblico fresco, c'è ancora margine. Geo: IT · audience size ≈ 40.7M. Storico: 0 lead nei 14gg precedenti pur con 7gg attivi → l'audience non ha mai convertito stabilmente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🎚 Audience troppo ampia (≈40.7M) per il budget: restringere geo o aggiungere filtro interessi/comportamenti per concentrare il budget.",
-        "🚧 Mai generato lead negli ultimi 14gg pur essendo attivo: ripensare offerta o landing/form. Considerare pausa per evitare consumo budget improduttivo.",
-        "🧪 201 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 10,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 69
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 6.25% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
     },
     {
       "name": "Tyla Institute Estetica",
@@ -174,19 +265,29 @@
       "geo": "Lazio",
       "audience_size": "23.0M",
       "freq": 1.03,
+      "clicks_today": 139,
+      "impressions_today": 3625,
       "hist": {
         "leads": 9,
         "last_lead_date": "2026-05-26",
         "spend": 394.59,
         "days_active": 12
       },
-      "analysis": "CTR 3.83% sopra benchmark: l'audience apre, ma non converte → problema post-click. Frequenza 1.03: pubblico fresco, c'è ancora margine. Geo: Lazio · audience size ≈ 23.0M. Storico: 9 lead nei 14gg precedenti (ultimo il 2026-05-26) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🎚 Audience troppo ampia (≈23.0M) per il budget: restringere geo o aggiungere filtro interessi/comportamenti per concentrare il budget.",
-        "🕐 Aveva generato 9 lead negli ultimi 14gg (ultimo 2026-05-26): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 139 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 47,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 34
+      },
+      "top_cause": "ad_fatigue",
+      "solution": {
+        "label": "Ad Fatigue",
+        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 9 lead nei 14gg precedenti (ultimo il 2026-05-26). Segnale tipico di saturazione recente della creative attuale.",
+        "steps": [
+          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
+          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
+          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
+        ]
+      }
     },
     {
       "name": "aguaviva adv",
@@ -196,18 +297,29 @@
       "geo": "Cervia+30km",
       "audience_size": "165K",
       "freq": 1.07,
+      "clicks_today": 213,
+      "impressions_today": 5785,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
         "spend": 50.52,
         "days_active": 8
       },
-      "analysis": "CTR 3.68% sopra benchmark: l'audience apre, ma non converte → problema post-click. Frequenza 1.07: pubblico fresco, c'è ancora margine. Geo: Cervia+30km · audience size ≈ 165K. Storico: 0 lead nei 14gg precedenti pur con 8gg attivi → l'audience non ha mai convertito stabilmente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🚧 Mai generato lead negli ultimi 14gg pur essendo attivo: ripensare offerta o landing/form. Considerare pausa per evitare consumo budget improduttivo.",
-        "🧪 213 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 10,
+        "geo_ristretta": 18,
+        "offerta_non_pertinente": 57
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 3.68% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
     },
     {
       "name": "ADV CENTRO ESTETICO AMBRA",
@@ -217,18 +329,29 @@
       "geo": "42.4373,12.1099 +8km",
       "audience_size": "66K",
       "freq": 1.37,
+      "clicks_today": 27,
+      "impressions_today": 888,
       "hist": {
         "leads": 5,
         "last_lead_date": "2026-05-22",
         "spend": 75.31,
         "days_active": 12
       },
-      "analysis": "CTR 3.04% sopra benchmark: l'audience apre, ma non converte → problema post-click. Geo: 42.4373,12.1099 +8km · audience size ≈ 66K. Storico: 5 lead nei 14gg precedenti (ultimo il 2026-05-22) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🕐 Aveva generato 5 lead negli ultimi 14gg (ultimo 2026-05-22): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 27 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 47,
+        "geo_ristretta": 50,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈66K): il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni. Quando convertiva (5 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
     },
     {
       "name": "ADV - Farmacia Martelletto",
@@ -238,17 +361,29 @@
       "geo": "IT",
       "audience_size": "39.9M",
       "freq": 1.04,
+      "clicks_today": 12,
+      "impressions_today": 7755,
       "hist": {
         "leads": 17,
         "last_lead_date": "2026-05-26",
         "spend": 349.87,
         "days_active": 12
       },
-      "analysis": "CTR 0.15% sotto benchmark (≥1%): l'audience non sta rispondendo al messaggio — o creative debole o target sbagliato. Frequenza 1.04: pubblico fresco, c'è ancora margine. Geo: IT · audience size ≈ 39.9M. Storico: 17 lead nei 14gg precedenti (ultimo il 2026-05-26) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎚 Audience troppo ampia (≈39.9M) per il budget: restringere geo o aggiungere filtro interessi/comportamenti per concentrare il budget.",
-        "🕐 Aveva generato 17 lead negli ultimi 14gg (ultimo 2026-05-26): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta."
-      ]
+      "causes": {
+        "ad_fatigue": 35,
+        "geo_ristretta": 0,
+        "offerta_non_pertinente": 57
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 0.15% sotto benchmark: il messaggio non aggancia. Il pubblico non riconosce l'offerta come rilevante per sé.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
     },
     {
       "name": "Beauty Art",
@@ -258,18 +393,29 @@
       "geo": "",
       "audience_size": "90K",
       "freq": 1.02,
+      "clicks_today": 30,
+      "impressions_today": 1437,
       "hist": {
         "leads": 5,
         "last_lead_date": "2026-05-24",
         "spend": 99.44,
         "days_active": 12
       },
-      "analysis": "CTR 2.09% sopra benchmark: l'audience apre, ma non converte → problema post-click. Frequenza 1.02: pubblico fresco, c'è ancora margine. Geo: non specificato · audience size ≈ 90K. Storico: 5 lead nei 14gg precedenti (ultimo il 2026-05-24) → in passato l'audience convertiva, qualcosa è cambiato di recente.",
-      "recos": [
-        "🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.",
-        "🕐 Aveva generato 5 lead negli ultimi 14gg (ultimo 2026-05-24): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.",
-        "🧪 30 click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel."
-      ]
+      "causes": {
+        "ad_fatigue": 47,
+        "geo_ristretta": 50,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈90K): il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni. Quando convertiva (5 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
     }
   ],
   "medtech": []

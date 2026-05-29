@@ -419,73 +419,91 @@
   .aghc-card .rational.aud-narr.giallo .rat-label { color: #9a3412; }
   .aghc-card .rational.aud-narr .aud-headline { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
 
-  /* ============================ ALERT 0 LEAD 2GG (UI v2) ============================ */
+  /* ============================ ALERT 0 LEAD 2GG (UI v3 — diagnosi) ============================ */
   .alerts-updated { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 10px; }
-  .alerts-toolbar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-  .alerts-toolbar .summary { display: flex; gap: 8px 14px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); row-gap: 6px; }
-  .alerts-toolbar .summary .count { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; margin-right: 4px; }
-  .alerts-toolbar .summary .sev { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
-  .alerts-toolbar .summary .sev-critico { background: #fee2e2; color: #991b1b; }
-  .alerts-toolbar .summary .sev-alto    { background: #ffedd5; color: #9a3412; }
-  .alerts-toolbar .summary .sev-medio   { background: #fef9c3; color: #854d0e; }
+  .alert-card > h2 { flex-wrap: wrap; row-gap: 4px; padding: 11px 16px 10px; }
+  .alert-card > h2 .pill { margin-left: auto; }
+
+  .alerts-toolbar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 14px; flex-wrap: wrap; row-gap: 8px; }
+  .alerts-toolbar .summary { display: flex; gap: 8px 14px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
+  .alerts-toolbar .summary .count { font-size: 17px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .alerts-toolbar .summary .cause-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); }
+  .alerts-toolbar .summary .cause-tag b { color: var(--text); font-weight: 700; }
   .alerts-toolbar .sort-block { margin-left: auto; display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
   .alerts-toolbar select { font: inherit; font-size: 12px; padding: 5px 9px; border-radius: 7px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; }
 
-  .alert-empty { padding: 18px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; color: #065f46; font-size: 13.5px; text-align: center; }
-  .alert-empty .em-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .alert-empty { padding: 22px 18px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; color: #065f46; font-size: 14px; text-align: center; }
+  .alert-empty .em-icon { font-size: 26px; display: block; margin-bottom: 6px; }
 
-  .alert-row { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0; margin-bottom: 12px; overflow: hidden; position: relative; }
-  .alert-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--gray); }
+  /* === CARD ALERT === */
+  .alert-row { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0; margin-bottom: 14px; overflow: hidden; position: relative; }
+  .alert-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gray); }
   .alert-row.sev-critico::before { background: var(--red); }
   .alert-row.sev-alto::before    { background: var(--yellow); }
-  .alert-row.sev-medio::before   { background: #e8b900; }
+  .alert-row.sev-medio::before   { background: #d4d4d8; }
 
-  .alert-row .ar-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 12px 16px 10px 20px; border-bottom: 1px solid var(--border-soft); flex-wrap: wrap; row-gap: 8px; }
-  .alert-row .ar-head-left { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; flex-wrap: wrap; row-gap: 6px; }
+  /* header */
+  .alert-row .ar-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 18px 0 22px; flex-wrap: wrap; row-gap: 6px; }
+  .alert-row .ar-head-left { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex: 1 1 auto; flex-wrap: wrap; row-gap: 4px; }
   .alert-row .ar-rank { font-size: 11px; font-weight: 700; color: var(--text-dim); background: var(--bg-soft); padding: 3px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; flex-shrink: 0; }
-  .alert-row .ar-name { font-size: 15px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 100%; flex: 0 1 auto; }
-  .alert-row .ar-badge { font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
-  .alert-row.sev-critico .ar-badge { background: #fee2e2; color: #991b1b; }
-  .alert-row.sev-alto .ar-badge    { background: #ffedd5; color: #9a3412; }
-  .alert-row.sev-medio .ar-badge   { background: #fef9c3; color: #854d0e; }
-  .alert-row .ar-spend { font-size: 13px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; flex-shrink: 0; align-self: flex-start; }
+  .alert-row .ar-name { font-size: 16px; font-weight: 700; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 100%; }
+  .alert-row .ar-spend { font-size: 14px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; flex-shrink: 0; align-self: flex-start; }
   .alert-row .ar-spend small { display: block; font-size: 10px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 1px; }
 
-  .alert-row .ar-body { padding: 14px 20px 16px; }
+  /* stats row */
+  .alert-row .ar-stats { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 18px 0 22px; }
+  .alert-row .ar-stat { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-soft); border: 1px solid var(--border-soft); border-radius: 999px; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .alert-row .ar-stat b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .alert-row .ar-stat.warn b { color: #c2410c; }
+  .alert-row .ar-stat.ok b   { color: #15803d; }
+  .alert-row .ar-stat.has-icon { padding-left: 8px; }
+  .alert-row .ar-stat .ic { opacity: 0.7; font-size: 11px; }
+  .alert-row .ar-stat-geo { max-width: 320px; }
 
-  .alert-row .ar-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)); gap: 8px; margin-bottom: 12px; }
-  .alert-row .ar-kpi { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; }
-  .alert-row .ar-kpi .lab { font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
-  .alert-row .ar-kpi .val { font-size: 15px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.2; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .alert-row .ar-kpi .val.warn { color: #c2410c; }
-  .alert-row .ar-kpi .val.ok   { color: #15803d; }
+  /* body */
+  .alert-row .ar-body { padding: 14px 22px 16px; }
 
-  .alert-row .ar-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .alert-row .ar-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; color: var(--text-muted); max-width: 100%; }
-  .alert-row .ar-chip b { color: var(--text); font-weight: 600; }
-  .alert-row .ar-chip .icon { opacity: 0.7; }
-  .alert-row .ar-chip-geo { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  .alert-row .ar-section { margin-bottom: 12px; }
+  /* DIAGNOSI */
+  .alert-row .ar-section { margin-bottom: 14px; }
   .alert-row .ar-section:last-child { margin-bottom: 0; }
-  .alert-row .ar-section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-  .alert-row .ar-section-body { font-size: 13px; line-height: 1.55; color: var(--text); padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+  .alert-row .ar-section-label { font-size: 10.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 
-  .alert-row .ar-hist-line { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 12px; background: var(--bg-soft); border-radius: 8px; font-size: 12.5px; }
-  .alert-row .ar-hist-line .hi { color: var(--text-muted); }
-  .alert-row .ar-hist-line .hi b { color: var(--text); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .alert-row .ar-diag { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: var(--bg-soft); border-radius: 10px; border: 1px solid var(--border-soft); }
+  .alert-row .ar-cause { display: grid; grid-template-columns: 180px 1fr 42px; gap: 12px; align-items: center; }
+  .alert-row .ar-cause-name { font-size: 12.5px; color: var(--text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .alert-row .ar-cause.is-top .ar-cause-name { font-weight: 700; }
+  .alert-row .ar-cause-bar { height: 7px; background: #e8e8eb; border-radius: 999px; overflow: hidden; }
+  .alert-row .ar-cause-fill { height: 100%; background: linear-gradient(90deg, #a3a3a7 0%, #6b6b70 100%); border-radius: 999px; transition: width 600ms cubic-bezier(0.25, 0.1, 0.25, 1); }
+  .alert-row .ar-cause.is-top .ar-cause-fill { background: linear-gradient(90deg, #f59e0b 0%, #dc2626 100%); }
+  .alert-row .ar-cause-score { font-size: 12.5px; font-weight: 700; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .alert-row .ar-cause.is-top .ar-cause-score { color: #b91c1c; }
 
-  .alert-row .ar-recos { list-style: none; padding: 0; margin: 0; counter-reset: reco; }
-  .alert-row .ar-recos li { counter-increment: reco; position: relative; padding: 10px 14px 10px 40px; background: var(--bg-soft); border-radius: 8px; font-size: 13px; line-height: 1.5; margin-bottom: 6px; color: var(--text); min-height: 40px; }
-  .alert-row .ar-recos li::before { content: counter(reco); position: absolute; left: 10px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: var(--text); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .alert-row .ar-recos li:last-child { margin-bottom: 0; }
+  @media (max-width: 540px) {
+    .alert-row .ar-cause { grid-template-columns: 1fr 50px; grid-template-rows: auto auto; }
+    .alert-row .ar-cause-name { grid-column: 1 / 2; }
+    .alert-row .ar-cause-score { grid-column: 2 / 3; }
+    .alert-row .ar-cause-bar { grid-column: 1 / 3; grid-row: 2 / 3; }
+  }
 
-  .alert-card > h2 { flex-wrap: wrap; row-gap: 4px; padding: 11px 16px 10px; }
-  .alert-card > h2 .pill { margin-left: auto; }
-  .alert-card > h2 .alerts-updated { margin-left: 8px; }
+  /* SOLUZIONE */
+  .alert-row .ar-solution { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 16px; }
+  .alert-row .ar-solution-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .alert-row .ar-solution-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.06em; }
+  .alert-row .ar-solution-cause { font-size: 14px; font-weight: 700; color: #1e3a8a; }
+  .alert-row .ar-solution-intro { font-size: 13px; line-height: 1.55; color: #1f2937; margin: 0 0 12px; }
+  .alert-row .ar-solution-steps { list-style: none; padding: 0; margin: 0; counter-reset: step; }
+  .alert-row .ar-solution-steps li { counter-increment: step; position: relative; padding: 10px 12px 10px 40px; background: #fff; border: 1px solid #dbeafe; border-radius: 8px; font-size: 12.5px; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
+  .alert-row .ar-solution-steps li::before { content: counter(step); position: absolute; left: 10px; top: 9px; width: 22px; height: 22px; border-radius: 50%; background: #1d4ed8; color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .alert-row .ar-solution-steps li:last-child { margin-bottom: 0; }
 
   @media (max-width: 640px) {
-    .alert-row .ar-head { padding: 10px 12px 8px 16px; }
+    .alert-row .ar-head { padding: 12px 14px 0 18px; }
+    .alert-row .ar-stats { padding: 8px 14px 0 18px; }
+    .alert-row .ar-body { padding: 12px 16px 14px; }
+    .alert-row .ar-name { font-size: 14.5px; }
+    .alert-row .ar-spend { font-size: 13px; }
+    .alerts-toolbar .summary { font-size: 11.5px; }
+  }
     .alert-row .ar-body { padding: 12px 14px 14px; }
     .alert-row .ar-name { font-size: 14px; }
     .alert-row .ar-kpi .val { font-size: 14px; }
@@ -668,7 +686,9 @@
             <label for="mt-alerts-sort">Ordina:</label>
             <select id="mt-alerts-sort">
               <option value="spend">Budget bruciato 2gg</option>
-              <option value="severity">Gravità</option>
+              <option value="cause-fatigue">Ad Fatigue score</option>
+              <option value="cause-geo">Geo ristretta score</option>
+              <option value="cause-offerta">Offerta non pertinente score</option>
               <option value="hist">Storico 14gg</option>
               <option value="name">Nome (A→Z)</option>
             </select>
@@ -714,7 +734,9 @@
             <label for="cea-alerts-sort">Ordina:</label>
             <select id="cea-alerts-sort">
               <option value="spend">Budget bruciato 2gg</option>
-              <option value="severity">Gravità</option>
+              <option value="cause-fatigue">Ad Fatigue score</option>
+              <option value="cause-geo">Geo ristretta score</option>
+              <option value="cause-offerta">Offerta non pertinente score</option>
               <option value="hist">Storico 14gg</option>
               <option value="name">Nome (A→Z)</option>
             </select>
@@ -3248,8 +3270,13 @@
   })();
 
 
-  // ============================ ALERT 0 LEAD 2GG (UI v2) ============================
+  // ============================ ALERT 0 LEAD 2GG (UI v3 — diagnosi) ============================
   const ALERTS_STATE = { cea: [], medtech: [], date: "" };
+  const CAUSE_LABEL = {
+    ad_fatigue: "Ad Fatigue",
+    geo_ristretta: "Geo troppo ristretta",
+    offerta_non_pertinente: "Offerta non pertinente"
+  };
 
   function fmtEurAlert(v) {
     if (v == null) return "—";
@@ -3271,13 +3298,28 @@
     if (mode === "severity") copy.sort(function (x, y) { return SEV_ORDER[alertSeverity(x)] - SEV_ORDER[alertSeverity(y)] || (y.spend_2d || 0) - (x.spend_2d || 0); });
     else if (mode === "hist") copy.sort(function (x, y) { return ((y.hist && y.hist.leads) || 0) - ((x.hist && x.hist.leads) || 0) || (y.spend_2d || 0) - (x.spend_2d || 0); });
     else if (mode === "name") copy.sort(function (x, y) { return x.name.localeCompare(y.name, "it"); });
+    else if (mode === "cause-fatigue")  copy.sort(function (x, y) { return ((y.causes&&y.causes.ad_fatigue)||0) - ((x.causes&&x.causes.ad_fatigue)||0); });
+    else if (mode === "cause-geo")      copy.sort(function (x, y) { return ((y.causes&&y.causes.geo_ristretta)||0) - ((x.causes&&x.causes.geo_ristretta)||0); });
+    else if (mode === "cause-offerta")  copy.sort(function (x, y) { return ((y.causes&&y.causes.offerta_non_pertinente)||0) - ((x.causes&&x.causes.offerta_non_pertinente)||0); });
     else copy.sort(function (x, y) { return (y.spend_2d || 0) - (x.spend_2d || 0); });
     return copy;
   }
+
+  function renderCauseBar(key, score, isTop) {
+    var pct = Math.max(0, Math.min(100, score || 0));
+    return '<div class="ar-cause' + (isTop ? ' is-top' : '') + '">' +
+             '<div class="ar-cause-name">' + CAUSE_LABEL[key] + '</div>' +
+             '<div class="ar-cause-bar"><div class="ar-cause-fill" style="width:' + pct + '%"></div></div>' +
+             '<div class="ar-cause-score">' + pct + '%</div>' +
+           '</div>';
+  }
+
   function renderAlertRow(a, rank) {
     var sev = alertSeverity(a);
-    var SEV_LABEL = { critico: "CRITICO", alto: "ALTO", medio: "MEDIO" };
     var hist = a.hist || {};
+    var causes = a.causes || {};
+    var top = a.top_cause;
+    var sol = a.solution || {};
     var ctr = a.ctr != null ? a.ctr : null;
     var freq = a.freq != null ? a.freq : null;
     var audSize = a.audience_size || "n.d.";
@@ -3288,51 +3330,51 @@
     var freqClass = "";
     if (freq != null && freq >= 2.5) freqClass = "warn";
 
-    var histLine = (hist.leads > 0)
-      ? '<div class="hi"><b>' + hist.leads + '</b> lead</div>' +
-        '<div class="hi">ultimo <b>' + (hist.last_lead_date || "—") + '</b></div>' +
-        '<div class="hi"><b>' + (hist.days_active || 0) + '</b> gg attivi</div>' +
-        '<div class="hi">spesa <b>' + fmtEurAlert(hist.spend) + '</b></div>'
-      : '<div class="hi"><b>0 lead</b> nei 14gg precedenti</div>' +
-        '<div class="hi"><b>' + (hist.days_active || 0) + '</b> gg attivi</div>' +
-        '<div class="hi">spesa <b>' + fmtEurAlert(hist.spend) + '</b></div>';
+    var histChip = (hist.leads > 0)
+      ? '<span class="ar-stat has-icon"><span class="ic">📈</span><b>' + hist.leads + '</b> lead 14gg · ultimo ' + (hist.last_lead_date || "—") + '</span>'
+      : '<span class="ar-stat has-icon"><span class="ic">📈</span><b>0</b> lead 14gg · ' + (hist.days_active || 0) + 'gg attivi</span>';
 
-    var recos = (a.recos || []).map(function (r) { return '<li>' + r + '</li>'; }).join("");
+    var statsRow =
+      '<span class="ar-stat ' + ctrClass + '">CTR <b>' + (ctr != null ? ctr.toFixed(2) + "%" : "—") + '</b></span>' +
+      '<span class="ar-stat ' + freqClass + '">Freq <b>' + (freq != null ? freq.toFixed(2) : "—") + '</b></span>' +
+      '<span class="ar-stat">Audience <b>' + audSize + '</b></span>' +
+      '<span class="ar-stat ar-stat-geo has-icon" title="' + geo + '"><span class="ic">📍</span>' + geo + '</span>' +
+      histChip;
+
+    // Ordina cause per score desc per il render
+    var causeKeys = Object.keys(causes).sort(function (k1, k2) { return causes[k2] - causes[k1]; });
+    var causesHtml = causeKeys.map(function (k) { return renderCauseBar(k, causes[k], k === top); }).join("");
+
+    var stepsHtml = (sol.steps || []).map(function (s) { return '<li>' + s + '</li>'; }).join("");
 
     return '<div class="alert-row sev-' + sev + '">' +
       '<div class="ar-head">' +
         '<div class="ar-head-left">' +
           '<span class="ar-rank">#' + rank + '</span>' +
           '<span class="ar-name">' + a.name + '</span>' +
-          '<span class="ar-badge">' + SEV_LABEL[sev] + '</span>' +
         '</div>' +
         '<div class="ar-spend">' + fmtEurAlert(a.spend_2d) + '<small>budget 2gg</small></div>' +
       '</div>' +
+      '<div class="ar-stats">' + statsRow + '</div>' +
       '<div class="ar-body">' +
-        '<div class="ar-kpi-grid">' +
-          '<div class="ar-kpi"><div class="lab">CTR oggi</div><div class="val ' + ctrClass + '">' + (ctr != null ? ctr.toFixed(2) + "%" : "—") + '</div></div>' +
-          '<div class="ar-kpi"><div class="lab">Frequenza</div><div class="val ' + freqClass + '">' + (freq != null ? freq.toFixed(2) : "—") + '</div></div>' +
-          '<div class="ar-kpi"><div class="lab">Audience</div><div class="val">' + audSize + '</div></div>' +
-          '<div class="ar-kpi"><div class="lab">Lead 14gg</div><div class="val">' + (hist.leads || 0) + '</div></div>' +
-        '</div>' +
-        '<div class="ar-chips">' +
-          '<span class="ar-chip ar-chip-geo" title="' + geo + '"><span class="icon">📍</span>Geo: <b>' + geo + '</b></span>' +
+        '<div class="ar-section">' +
+          '<div class="ar-section-label">📊 Diagnosi probabile</div>' +
+          '<div class="ar-diag">' + causesHtml + '</div>' +
         '</div>' +
         '<div class="ar-section">' +
-          '<div class="ar-section-label">📈 Storico 14gg precedenti</div>' +
-          '<div class="ar-hist-line">' + histLine + '</div>' +
-        '</div>' +
-        '<div class="ar-section">' +
-          '<div class="ar-section-label">📊 Perché non genera leads</div>' +
-          '<div class="ar-section-body">' + (a.analysis || "") + '</div>' +
-        '</div>' +
-        '<div class="ar-section">' +
-          '<div class="ar-section-label">🛠 Cosa cambierei (come media buyer)</div>' +
-          '<ol class="ar-recos">' + recos + '</ol>' +
+          '<div class="ar-solution">' +
+            '<div class="ar-solution-head">' +
+              '<span class="ar-solution-tag">💡 Soluzione consigliata</span>' +
+              '<span class="ar-solution-cause">' + (sol.label || "—") + '</span>' +
+            '</div>' +
+            '<p class="ar-solution-intro">' + (sol.intro || "") + '</p>' +
+            '<ol class="ar-solution-steps">' + stepsHtml + '</ol>' +
+          '</div>' +
         '</div>' +
       '</div>' +
     '</div>';
   }
+
   function renderAlertSection(scope, alerts, updatedAt) {
     var list    = document.getElementById(scope + "-alerts-list");
     var pill    = document.getElementById(scope + "-alerts-pill");
@@ -3344,16 +3386,17 @@
     if (up && updatedAt) up.textContent = "snapshot " + updatedAt;
     if (alerts.length === 0) {
       if (toolbar) toolbar.style.display = "none";
-      list.innerHTML = '<div class="alert-empty"><span class="em-icon">✅</span>Nessuna entità con 0 lead 2gg consecutivi.<br><span style="font-size:12px;color:#15803d;opacity:0.8;">Pipeline OK.</span></div>';
+      list.innerHTML = '<div class="alert-empty"><span class="em-icon">✅</span>Nessuna entità con 0 lead 2gg consecutivi.<br><span style="font-size:12px;color:#15803d;opacity:0.85;">Pipeline OK.</span></div>';
       return;
     }
-    var counts = { critico: 0, alto: 0, medio: 0 };
-    alerts.forEach(function (a) { counts[alertSeverity(a)]++; });
+    // Conta cause principali
+    var causeCounts = { ad_fatigue: 0, geo_ristretta: 0, offerta_non_pertinente: 0 };
+    alerts.forEach(function (a) { if (causeCounts.hasOwnProperty(a.top_cause)) causeCounts[a.top_cause]++; });
     if (summary) summary.innerHTML =
       '<div><span class="count">' + alerts.length + '</span> alert totali</div>' +
-      '<div><span class="sev sev-critico">' + counts.critico + ' critici</span></div>' +
-      '<div><span class="sev sev-alto">' + counts.alto + ' alti</span></div>' +
-      '<div><span class="sev sev-medio">' + counts.medio + ' medi</span></div>';
+      '<div><span class="cause-tag">Ad Fatigue <b>' + causeCounts.ad_fatigue + '</b></span></div>' +
+      '<div><span class="cause-tag">Geo ristretta <b>' + causeCounts.geo_ristretta + '</b></span></div>' +
+      '<div><span class="cause-tag">Offerta non pertinente <b>' + causeCounts.offerta_non_pertinente + '</b></span></div>';
     if (toolbar) toolbar.style.display = "flex";
 
     var sortSel = document.getElementById(scope + "-alerts-sort");

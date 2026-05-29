@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 """
-Alert Zero-Leads — pipeline CEA / MED & TECH
+Alert Zero-Leads — pipeline CEA / MED & TECH (v3)
 
 Logica:
   Per ogni entry CEA + medtech: se oggi.lead_y == 0 AND ieri.lead_y == 0
   → genera alert con:
      · 2-day budget speso
-     · CTR (oggi)
-     · Audience (Target Geo + Audience Size)
-     · Lead storici nei 14gg precedenti (data ultimo lead + count)
-     · Analisi audience (perché non genera lead)
-     · Consigli media-buyer (cosa cambiare)
+     · CTR (oggi), Freq, Audience, Geo
+     · Storico 14gg precedenti la finestra (con ultimo lead)
+     · DIAGNOSI: score 0-100 per ciascuna delle 3 cause
+       (AD FATIGUE / GEO TROPPO RISTRETTA / OFFERTA NON PERTINENTE)
+     · SOLUZIONE per la causa con score più alto: intro + 3 step concreti
 
-Output: stampa il testo del messaggio Slack su stdout.
+Nota tecnica: FMM Consulting NON usa landing page esterne.
+Tutte le campagne usano Meta Lead Form (modulo Meta nativo).
+Le raccomandazioni NON devono mai citare landing, A/B test landing,
+collo di bottiglia post-click su landing, ecc.
 
 Uso:
   python3 alert_zero_leads.py <DATA_REPORT_YYYY-MM-DD>
@@ -25,8 +28,9 @@ REPO = Path("/tmp/dashboard-di-controllo")
 SNAP = REPO / "snapshots"
 
 DATA = sys.argv[1] if len(sys.argv) > 1 else "2026-05-28"
-LOOKBACK_DAYS = 14  # finestra storica per "ha generato conversioni in passato"
+LOOKBACK_DAYS = 14
 
+# ---------- helpers ----------
 def load_snap(date_iso):
     p = SNAP / f"{date_iso}.json"
     if not p.exists():
@@ -41,7 +45,6 @@ def fmt_eur(v):
     return (f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")) + " €"
 
 def parse_audience_size(s):
-    """'11.4M' -> 11_400_000 ; '257K' -> 257_000 ; '50' -> 50."""
     if not s: return None
     s = str(s).strip().upper().replace(" ", "")
     try:
@@ -52,8 +55,6 @@ def parse_audience_size(s):
         return None
 
 def historical_leads(name, project, today_iso, days=LOOKBACK_DAYS, skip=2):
-    """Cerca, nei `days` giorni precedenti (esclusi gli ultimi `skip` = oggi+ieri),
-       quante volte l'entity ha generato leads e quando è stato l'ultimo lead."""
     last_lead_date = None
     leads_total = 0
     spend_total = 0.0
@@ -71,7 +72,7 @@ def historical_leads(name, project, today_iso, days=LOOKBACK_DAYS, skip=2):
                 l = e.get("lead_y") or 0
                 leads_total += l
                 if l > 0 and last_lead_date is None:
-                    last_lead_date = d_iso  # primo trovato = il più recente (loop in ordine recente→vecchio)
+                    last_lead_date = d_iso
                 break
     return {
         "leads": leads_total,
@@ -80,81 +81,140 @@ def historical_leads(name, project, today_iso, days=LOOKBACK_DAYS, skip=2):
         "days_active": days_active,
     }
 
-def build_reco(entry_today, entry_yest, hist, project):
-    """Restituisce lista di 1–3 raccomandazioni media-buyer in base ai segnali."""
+# ---------- DIAGNOSI: 3 cause scorate ----------
+def compute_causes(entry_today, entry_yest, hist):
+    """Ritorna (scores_dict, top_cause).
+       scores in 0..100 per ad_fatigue / geo_ristretta / offerta_non_pertinente."""
     ctr = entry_today.get("ctr") or 0
     freq = entry_today.get("frequency") or 0
     aud_size = parse_audience_size(entry_today.get("audience_size"))
-    spend_2d = (entry_today.get("spend_y") or 0) + (entry_yest.get("spend_y") or 0)
-    impr_today = entry_today.get("impressions") or 0
+    days_active = hist.get("days_active") or 0
+    hist_leads = hist.get("leads") or 0
     clicks_today = entry_today.get("clicks") or 0
+    leads_today = entry_today.get("lead_y") or 0
 
-    recos = []
+    # ---- AD FATIGUE ----
+    fatigue = 0
+    if freq >= 2.5: fatigue += 45
+    elif freq >= 2.0: fatigue += 30
+    elif freq >= 1.6: fatigue += 18
+    if hist_leads >= 5 and days_active >= 5: fatigue += 25
+    elif hist_leads >= 2 and days_active >= 4: fatigue += 12
+    if days_active >= 7: fatigue += 10
+    if ctr >= 1.0 and leads_today == 0 and hist_leads > 0:
+        fatigue += 12  # ancora aggancia ma non converte più
+    fatigue = min(fatigue, 100)
 
-    # 1) Segnale CTR
-    if ctr and ctr < 1.0 and spend_2d > 15:
-        recos.append("📉 CTR < 1%: creative non aggancia. Rinnovare ad (nuovi hook, formato UGC, prima frase più diretta) — non toccare ancora il targeting.")
-    elif ctr and ctr >= 1.5 and (entry_today.get("lead_y") or 0) == 0:
-        recos.append("🎯 CTR sopra benchmark ma 0 lead: collo di bottiglia post-click. Audit modulo Meta (campi minimi), verifica pixel/CAPI, controllare offerta sulla landing.")
-
-    # 2) Segnale audience
+    # ---- GEO TROPPO RISTRETTA ----
+    geo_score = 0
     if aud_size is not None:
-        if aud_size < 50_000:
-            recos.append(f"🔭 Audience stretta (≈{entry_today.get('audience_size')}): ampliare geo +10–15 km o aggiungere 2–3 interessi correlati per ridare ossigeno all'asta.")
-        elif aud_size > 1_500_000 and spend_2d < 40:
-            recos.append(f"🎚 Audience troppo ampia (≈{entry_today.get('audience_size')}) per il budget: restringere geo o aggiungere filtro interessi/comportamenti per concentrare il budget.")
+        if aud_size < 50_000: geo_score += 55
+        elif aud_size < 100_000: geo_score += 35
+        elif aud_size < 200_000: geo_score += 18
+        if freq >= 1.5 and aud_size < 200_000: geo_score += 20
+        if freq >= 2.0 and aud_size < 500_000: geo_score += 15
+    if days_active >= 7 and hist_leads >= 3 and aud_size is not None and aud_size < 250_000:
+        geo_score += 15
+    geo_score = min(geo_score, 100)
 
-    # 3) Segnale frequenza
-    if freq and freq >= 2.5:
-        recos.append(f"♻️ Frequenza {freq:.2f}: pubblico saturo. Rotazione creative obbligatoria o pausa 48h e ripartenza con nuova creative.")
+    # ---- OFFERTA NON PERTINENTE ----
+    # NB: nessun riferimento a landing/modulo esterno.
+    # CTR molto basso → messaggio+offerta non aggancia il target
+    # CTR alto + 0 lead → l'audience apre ma l'offerta non chiude (promessa-realtà)
+    # storico 0 lead pur attivi → offerta non risuona su questo target
+    offerta = 0
+    if ctr < 0.8 and clicks_today >= 5: offerta += 45
+    elif ctr < 1.0 and clicks_today >= 5: offerta += 30
+    if hist_leads == 0 and days_active >= 5: offerta += 35
+    elif hist_leads == 0 and days_active >= 3: offerta += 18
+    if ctr >= 1.5 and leads_today == 0 and clicks_today >= 15: offerta += 22
+    if aud_size is not None and aud_size > 1_000_000 and leads_today == 0:
+        offerta += 12
+    offerta = min(offerta, 100)
 
-    # 4) Segnale storico
-    if hist["leads"] > 0:
-        recos.append(f"🕐 Aveva generato {hist['leads']} lead negli ultimi {LOOKBACK_DAYS}gg (ultimo {hist['last_lead_date']}): probabile fatica creativa / saturazione recente. Refresh creative + nuovo angolo offerta.")
-    elif hist["days_active"] >= 5:
-        recos.append("🚧 Mai generato lead negli ultimi 14gg pur essendo attivo: ripensare offerta o landing/form. Considerare pausa per evitare consumo budget improduttivo.")
-    elif hist["days_active"] <= 2:
-        recos.append("⏱ Campagna giovane (<3gg attivi nello storico): serve ancora qualche giorno per stabilizzare l'apprendimento. Riconsiderare entro 48–72h.")
+    scores = {
+        "ad_fatigue": fatigue,
+        "geo_ristretta": geo_score,
+        "offerta_non_pertinente": offerta,
+    }
+    # top_cause = max score; tie-breaker priorità ad_fatigue > offerta > geo
+    priority = ["ad_fatigue", "offerta_non_pertinente", "geo_ristretta"]
+    top = max(priority, key=lambda k: (scores[k], -priority.index(k)))
+    return scores, top
 
-    # 5) Segnale click ma nessun lead
-    if clicks_today >= 20 and (entry_today.get("lead_y") or 0) == 0:
-        recos.append(f"🧪 {clicks_today} click oggi senza un solo contatto: A/B test modulo Meta vs landing esterna per capire dove cade il funnel.")
+# ---------- SOLUZIONE per la top cause ----------
+def build_solution(top_cause, entry, hist):
+    freq = entry.get("frequency")
+    aud_size_str = entry.get("audience_size") or "n.d."
+    aud_size = parse_audience_size(aud_size_str)
+    ctr = entry.get("ctr") or 0
+    hist_leads = hist.get("leads", 0) or 0
+    last_lead = hist.get("last_lead_date")
+    days_active = hist.get("days_active", 0) or 0
 
-    if not recos:
-        recos.append("🔍 Quadro misto, nessun segnale forte: monitorare altre 24h, poi se ancora 0 lead pausare creative principale e provare variazione offerta.")
-    return recos[:4]
+    if top_cause == "ad_fatigue":
+        intro_parts = ["Il pubblico è stato esposto ripetutamente alla stessa creative"]
+        if freq and freq >= 1.6:
+            intro_parts.append(f"(frequenza {freq:.2f})")
+        if hist_leads > 0 and last_lead:
+            intro_parts.append(f"e ha smesso di rispondere dopo aver generato {hist_leads} lead nei 14gg precedenti (ultimo il {last_lead}). Segnale tipico di saturazione recente della creative attuale.")
+        elif days_active >= 5:
+            intro_parts.append("attiva ormai da diversi giorni senza più presa sull'audience.")
+        else:
+            intro_parts.append("e la creative non ha più presa sull'audience.")
+        return {
+            "label": "Ad Fatigue",
+            "intro": " ".join(intro_parts),
+            "steps": [
+                "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
+                "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
+                "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale",
+            ],
+        }
 
-def build_audience_analysis(entry_today, hist):
-    """Genera testo 'ANALISI AUDIENCE — perché non genera leads'."""
-    ctr = entry_today.get("ctr") or 0
-    freq = entry_today.get("frequency") or 0
-    impr = entry_today.get("impressions") or 0
-    reach = entry_today.get("reach") or 0
-    aud_label = entry_today.get("audience_size") or "n.d."
-    geo = entry_today.get("target_geo") or "non specificato"
+    if top_cause == "geo_ristretta":
+        sat_note = ""
+        if freq and freq >= 1.5 and aud_size and aud_size < 250_000:
+            sat_note = f" e la frequenza è già {freq:.2f}: il bacino disponibile sta venendo saturato"
+        elif aud_size and aud_size < 100_000:
+            sat_note = ": il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni"
+        else:
+            sat_note = ""
+        intro = f"L'audience size è ridotta (≈{aud_size_str}){sat_note}."
+        if hist_leads > 0:
+            intro += f" Quando convertiva ({hist_leads} lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito."
+        return {
+            "label": "Geo troppo ristretta",
+            "intro": intro,
+            "steps": [
+                "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+                "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+                "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva",
+            ],
+        }
 
-    bits = []
-    # CTR diagnosis
+    # offerta_non_pertinente
     if ctr < 1.0:
-        bits.append(f"CTR {ctr:.2f}% sotto benchmark (≥1%): l'audience non sta rispondendo al messaggio — o creative debole o target sbagliato.")
-    elif ctr < 1.5:
-        bits.append(f"CTR {ctr:.2f}% in linea ma non brillante: l'audience clicca a fatica.")
+        intro = f"CTR {ctr:.2f}% sotto benchmark: il messaggio non aggancia. Il pubblico non riconosce l'offerta come rilevante per sé."
+    elif ctr >= 1.5:
+        intro = f"CTR {ctr:.2f}% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere."
     else:
-        bits.append(f"CTR {ctr:.2f}% sopra benchmark: l'audience apre, ma non converte → problema post-click.")
-    # Freq diagnosis
-    if freq >= 2.5:
-        bits.append(f"Frequenza {freq:.2f}: il pubblico è già stato esposto più volte, segnale di saturazione/fatigue.")
-    elif freq <= 1.2:
-        bits.append(f"Frequenza {freq:.2f}: pubblico fresco, c'è ancora margine.")
-    # Geo
-    bits.append(f"Geo: {geo} · audience size ≈ {aud_label}.")
-    # Storico
-    if hist["leads"] > 0:
-        bits.append(f"Storico: {hist['leads']} lead nei {LOOKBACK_DAYS}gg precedenti (ultimo il {hist['last_lead_date']}) → in passato l'audience convertiva, qualcosa è cambiato di recente.")
-    else:
-        bits.append(f"Storico: 0 lead nei {LOOKBACK_DAYS}gg precedenti pur con {hist['days_active']}gg attivi → l'audience non ha mai convertito stabilmente.")
-    return " ".join(bits)
+        intro = f"Il pubblico non sta rispondendo: né con CTR (fermo a {ctr:.2f}%) né con conversioni."
+    if hist_leads == 0 and days_active >= 5:
+        intro += " Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico."
+    elif hist_leads == 0:
+        intro += " L'offerta non ha ancora trovato un product-market fit con questo segmento."
+    return {
+        "label": "Offerta non pertinente",
+        "intro": intro,
+        "steps": [
+            "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+            "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+            "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35",
+        ],
+    }
 
+# ---------- scan + format ----------
 def scan_project(today_snap, yest_snap, project, project_label, today_iso):
     today_entries = {e["name"]: e for e in (today_snap.get(project) or {}).get("entries") or []}
     yest_entries = {e["name"]: e for e in (yest_snap.get(project) or {}).get("entries") or []}
@@ -168,11 +228,10 @@ def scan_project(today_snap, yest_snap, project, project_label, today_iso):
             continue
         if (y.get("lead_y") or 0) > 0:
             continue
-        # 2 consecutive days of 0 leads
         spend_2d = round((t.get("spend_y") or 0) + (y.get("spend_y") or 0), 2)
         hist = historical_leads(name, project, today_iso)
-        analysis = build_audience_analysis(t, hist)
-        recos = build_reco(t, y, hist, project)
+        causes, top = compute_causes(t, y, hist)
+        solution = build_solution(top, t, hist)
         alerts.append({
             "name": name,
             "project": project_label,
@@ -181,30 +240,45 @@ def scan_project(today_snap, yest_snap, project, project_label, today_iso):
             "geo": t.get("target_geo"),
             "audience_size": t.get("audience_size"),
             "freq": t.get("frequency"),
+            "clicks_today": t.get("clicks"),
+            "impressions_today": t.get("impressions"),
             "hist": hist,
-            "analysis": analysis,
-            "recos": recos,
+            "causes": causes,
+            "top_cause": top,
+            "solution": solution,
         })
-    # ordina per spend 2gg desc (priorità a chi sta bruciando di più)
     alerts.sort(key=lambda a: -a["spend_2d"])
     return alerts
 
-def format_alert(a):
+CAUSE_LABEL = {
+    "ad_fatigue": "Ad Fatigue",
+    "geo_ristretta": "Geo troppo ristretta",
+    "offerta_non_pertinente": "Offerta non pertinente",
+}
+
+def format_alert_text(a):
+    """Output testo per Slack/markdown."""
     hist = a["hist"]
     if hist["leads"] > 0:
-        hist_line = f"📈 Storico {LOOKBACK_DAYS}gg: *{hist['leads']} lead* (ultimo {hist['last_lead_date']}) · spesa {fmt_eur(hist['spend'])} · {hist['days_active']}gg attivi"
+        hist_line = f"📈 Storico {LOOKBACK_DAYS}gg: *{hist['leads']} lead* (ultimo {hist['last_lead_date']}) · {hist['days_active']}gg attivi · spesa {fmt_eur(hist['spend'])}"
     else:
-        hist_line = f"📈 Storico {LOOKBACK_DAYS}gg: *0 lead* · spesa {fmt_eur(hist['spend'])} · {hist['days_active']}gg attivi"
+        hist_line = f"📈 Storico {LOOKBACK_DAYS}gg: *0 lead* · {hist['days_active']}gg attivi · spesa {fmt_eur(hist['spend'])}"
     ctr_str = f"{a['ctr']:.2f}%" if a['ctr'] is not None else "—"
     freq_str = f"{a['freq']:.2f}" if a['freq'] else "—"
-    reco_block = "\n".join(f"  • {r}" for r in a["recos"])
+    causes = a["causes"]
+    causes_block = "\n".join(
+        f"  • {CAUSE_LABEL[k]}: *{v}%*" + ("  ← causa principale" if k == a["top_cause"] else "")
+        for k, v in sorted(causes.items(), key=lambda x: -x[1])
+    )
+    sol = a["solution"]
+    steps = "\n".join(f"  {i+1}. {s}" for i, s in enumerate(sol["steps"]))
     return (
         f"🚨 *{a['name']}* ({a['project']}) — 2gg consecutivi a 0 lead\n"
-        f"💸 Budget speso 2gg: *{fmt_eur(a['spend_2d'])}*  ·  CTR oggi: *{ctr_str}*  ·  Freq: {freq_str}\n"
+        f"💸 Budget 2gg: *{fmt_eur(a['spend_2d'])}*  ·  CTR: *{ctr_str}*  ·  Freq: {freq_str}\n"
         f"🎯 Audience: {a['geo'] or 'n.d.'} · size {a['audience_size'] or 'n.d.'}\n"
         f"{hist_line}\n"
-        f"\n📊 *ANALISI AUDIENCE — PERCHÉ NON GENERA LEADS*\n{a['analysis']}\n"
-        f"\n🛠 *Come media buyer cosa cambierei*\n{reco_block}\n"
+        f"\n📊 *DIAGNOSI PROBABILE*\n{causes_block}\n"
+        f"\n💡 *SOLUZIONE CONSIGLIATA — {sol['label']}*\n{sol['intro']}\n{steps}\n"
     )
 
 def main():
@@ -222,37 +296,35 @@ def main():
     header = (f"⚠️ *Alert Zero-Leads 2gg — snapshot {today_iso}*\n"
               f"Entità con 0 lead in {yest_iso} *e* {today_iso}\n"
               f"\n— *CEA*: {len(cea_alerts)} alert  ·  *MED & TECH*: {len(mt_alerts)} alert —\n")
-
     blocks = [header]
     if cea_alerts:
         blocks.append("\n━━━━━━━━━━━━━━━━━━━━━\n*🏥 CEA*\n━━━━━━━━━━━━━━━━━━━━━\n")
         for a in cea_alerts:
-            blocks.append(format_alert(a))
+            blocks.append(format_alert_text(a))
             blocks.append("\n")
     if mt_alerts:
         blocks.append("\n━━━━━━━━━━━━━━━━━━━━━\n*🩺 MED & TECH*\n━━━━━━━━━━━━━━━━━━━━━\n")
         for a in mt_alerts:
-            blocks.append(format_alert(a))
+            blocks.append(format_alert_text(a))
             blocks.append("\n")
     if not cea_alerts and not mt_alerts:
         blocks.append("\n✅ Nessun cliente in stato 0-lead 2gg consecutivi.")
 
     full = "".join(blocks)
-    # Path di default: auto-detect (sandbox Cowork → /sessions/*/mnt/outputs/work; altrimenti /tmp).
+
+    # ---- Output paths (auto-detect sandbox/local) ----
     def _default_out():
         import glob as _g
         cands = _g.glob("/sessions/*/mnt/outputs/work")
-        if cands:
-            return cands[0] + "/_zero_leads_alert.md"
+        if cands: return cands[0] + "/_zero_leads_alert.md"
         return "/tmp/_zero_leads_alert.md"
     out_path = Path(os.environ.get("ALERT_OUT", _default_out()))
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(full, encoding="utf-8")
-    # JSON strutturato per altri consumer
     json_path = out_path.with_suffix(".json")
     payload = {"date": today_iso, "cea": cea_alerts, "medtech": mt_alerts}
     json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    # alerts.json nel repo dashboard (se presente) — la pipeline farà git add + push
+    # alerts.json nel repo dashboard (se presente)
     repo_alerts = Path("/tmp/dashboard-di-controllo/alerts.json")
     if repo_alerts.parent.exists():
         repo_alerts.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
