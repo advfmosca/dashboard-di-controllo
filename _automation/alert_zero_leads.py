@@ -282,46 +282,105 @@ def format_alert_text(a):
     )
 
 CAUSE_BRIEF = {
-    "ad_fatigue":            ("♻️", "AD FATIGUE",            "Pausare ad principale e attivare 2-3 varianti con hook diverso, cambiare formato (statico↔video UGC), refresh copy con nuovo angolo dell'offerta."),
-    "geo_ristretta":         ("🎯", "GEO TROPPO RISTRETTA", "Ampliare raggio geo +10/15 km o aggiungere comuni limitrofi, aggiungere 2-3 interessi correlati, avviare lookalike 1-3% sui lead già acquisiti."),
-    "offerta_non_pertinente":("🎁", "OFFERTA NON PERTINENTE","Rivedere offerta (prezzo, bundle, urgenza), testare 3 angoli del messaggio (emotional / razionale / social proof), verificare allineamento offerta-stagione-segmento."),
+    "ad_fatigue":            ("♻️", "AD FATIGUE"),
+    "geo_ristretta":         ("🎯", "GEO TROPPO RISTRETTA"),
+    "offerta_non_pertinente":("🎁", "OFFERTA NON PERTINENTE"),
 }
 
+def _fmt_it_date(iso):
+    if not iso: return "—"
+    y, m, d = iso.split("-")
+    return f"{d}/{m}/{y[2:]}"
+
+def per_client_op(a):
+    """Operazione personalizzata per cliente, linguaggio business plain (no jargon)."""
+    cause = a.get("top_cause")
+    ctr = a.get("ctr") or 0
+    freq = a.get("freq") or 0
+    aud_str = a.get("audience_size") or "n.d."
+    aud_int = parse_audience_size(aud_str)
+    hist = a.get("hist") or {}
+    hist_leads = hist.get("leads", 0) or 0
+    last_lead = hist.get("last_lead_date")
+    days_active = hist.get("days_active", 0) or 0
+
+    if cause == "ad_fatigue":
+        if freq >= 2.0:
+            return (f"il pubblico vede ormai troppe volte la stessa inserzione "
+                    f"(esposizione media {freq:.2f} volte a persona). Mettere in pausa l'inserzione principale e "
+                    f"caricare 2 nuove versioni con frasi di apertura diverse, "
+                    f"preferibilmente in formato video con esperienze di clienti reali.")
+        if hist_leads >= 8 and last_lead:
+            return (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni "
+                    f"(ultimo il {_fmt_it_date(last_lead)}), poi si è fermato. "
+                    f"Rinnovare la creatività principale con un nuovo punto di vista sull'offerta "
+                    f"e affiancare una variante video con testimonianza di una cliente reale.")
+        if hist_leads >= 2 and last_lead:
+            return (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. "
+                    f"Caricare 2 nuove varianti con frasi di apertura differenti e provare un nuovo formato visivo "
+                    f"(se ora è statico mettere video, e viceversa).")
+        return ("lo stesso messaggio sta perdendo efficacia. Caricare 2 nuove varianti con "
+                "frasi di apertura diverse e affiancare almeno una nuova creatività con un'esperienza concreta di un cliente.")
+
+    if cause == "geo_ristretta":
+        if aud_int is not None and aud_int < 70_000:
+            return (f"pubblico molto ristretto (≈{aud_str}). Ampliare il raggio della zona "
+                    f"di +15 km o aggiungere 2-3 comuni vicini, mantenendo lo stesso tipo di cliente ideale.")
+        if aud_int is not None and aud_int < 200_000:
+            return (f"pubblico ristretto (≈{aud_str}). Ampliare leggermente la zona e aggiungere "
+                    f"2 nuovi interessi correlati al servizio per aumentare il potenziale.")
+        return (f"il potenziale è limitato (≈{aud_str}). Ampliare la zona geografica e attivare in parallelo "
+                f"un pubblico simile a chi aveva già richiesto consulenza in passato.")
+
+    if cause == "offerta_non_pertinente":
+        if ctr >= 1.5:
+            return (f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma non completano il modulo di richiesta. "
+                    f"Rivedere la promessa dell'offerta: aggiungere una scadenza temporale "
+                    f"o un beneficio concreto già nel primo paragrafo (es. risultato visibile dopo X sedute).")
+        if ctr < 1.0:
+            return (f"l'inserzione fatica ad agganciare l'attenzione (tasso di clic {ctr:.2f}%). "
+                    f"Testare un nuovo approccio al messaggio: provare una nuova creatività basata su un'esperienza di "
+                    f"una cliente reale, con foto/risultato concreto al posto di promo astratta.")
+        if hist_leads == 0 and days_active >= 5:
+            return (f"in {days_active} giorni di attività non è mai arrivato un contatto. "
+                    f"Ripensare completamente l'offerta — prezzo di ingresso, pacchetto e momento dell'anno in cui si propone — "
+                    f"prima di continuare a spendere su questo pubblico.")
+        return ("risultati altalenanti senza un pattern chiaro. Testare un nuovo approccio al messaggio basato su prove concrete "
+                "ed esperienze di clienti reali invece che sul solo prezzo.")
+
+    return "Da rivalutare insieme."
+
 def build_morning_brief(project_label, alerts, dash_url, data_iso):
-    """Genera testo brief mattutino pronto per copia/incolla su Slack."""
-    # data in dd/mm/yyyy
+    """Brief mattutino pronto per copia/incolla su Slack — link daily + azione per cliente."""
     y, m, d = data_iso.split("-")
     data_it = f"{d}/{m}/{y}"
     if not alerts:
         return (
             f"🌅 *Brief operativo {project_label} — {data_it}*\n"
-            f"📊 Dashboard: {dash_url}\n\n"
-            f"✅ Nessun account in stato critico oggi. Tutte le campagne hanno generato lead nei 2gg precedenti — nessuna operazione correttiva richiesta."
+            f"📊 Dashboard del giorno: {dash_url}\n\n"
+            f"✅ Nessun account in stato critico oggi. Tutte le campagne hanno generato contatti nei 2 giorni precedenti — "
+            f"nessuna operazione correttiva richiesta."
         )
     by_cause = {"ad_fatigue": [], "geo_ristretta": [], "offerta_non_pertinente": []}
-    for a in alerts:
-        by_cause[a["top_cause"]].append(a)
+    for a in alerts: by_cause[a["top_cause"]].append(a)
     tot_burn = sum(a["spend_2d"] for a in alerts)
-
     lines = []
     lines.append(f"🌅 *Brief operativo {project_label} — {data_it}*")
-    lines.append(f"📊 Dashboard: {dash_url}")
+    lines.append(f"📊 Dashboard del giorno: {dash_url}")
     lines.append("")
-    lines.append(f"{len(alerts)} account attenzionati (2gg consecutivi a 0 lead) · budget bruciato totale *{fmt_eur(tot_burn)}*")
+    lines.append(f"{len(alerts)} account attenzionati (2 giorni consecutivi senza contatti) · budget speso totale *{fmt_eur(tot_burn)}*")
     lines.append("")
     for cause_key in ("ad_fatigue", "geo_ristretta", "offerta_non_pertinente"):
         bucket = by_cause[cause_key]
-        if not bucket:
-            continue
-        ico, name, op = CAUSE_BRIEF[cause_key]
+        if not bucket: continue
+        ico, name = CAUSE_BRIEF[cause_key]
         lines.append(f"{ico} *{name}* ({len(bucket)})")
         bucket.sort(key=lambda x: -x["spend_2d"])
         for a in bucket:
-            lines.append(f"  • {a['name']} — {fmt_eur(a['spend_2d'])}/2gg")
-        lines.append(f"  → *Operazione*: {op}")
+            op = per_client_op(a)
+            lines.append(f"  • *{a['name']}* (speso {fmt_eur(a['spend_2d'])}): {op}")
         lines.append("")
     return "\n".join(lines).rstrip()
-
 
 def main():
     today_iso = DATA
@@ -372,10 +431,10 @@ def main():
         repo_alerts.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # ===== BRIEF MATTUTINO Slack-ready (copia/incolla) =====
-    brief_cea = build_morning_brief("CEA", cea_alerts,
-                                    "https://advfmosca.github.io/dashboard-di-controllo/#cea", today_iso)
-    brief_mt  = build_morning_brief("MED & TECH", mt_alerts,
-                                    "https://advfmosca.github.io/dashboard-di-controllo/#medtech", today_iso)
+    dash_cea = f"https://advfmosca.github.io/dashboard-di-controllo/cea-daily-{today_iso}.html"
+    dash_mt  = f"https://advfmosca.github.io/med-tech-daily-check/med-tech-daily-{today_iso}.html"
+    brief_cea = build_morning_brief("CEA", cea_alerts, dash_cea, today_iso)
+    brief_mt  = build_morning_brief("MED & TECH", mt_alerts, dash_mt, today_iso)
     brief_dir = out_path.parent
     (brief_dir / "_brief_cea.md").write_text(brief_cea, encoding="utf-8")
     (brief_dir / "_brief_medtech.md").write_text(brief_mt, encoding="utf-8")
