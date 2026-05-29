@@ -431,7 +431,9 @@ def _cap_first(s):
     return (s[0].upper() + s[1:]) if s and s[0].islower() else s
 
 def build_morning_brief(project_label, alerts, dash_url, data_iso):
-    """Brief mattutino — niente emoji, formato leggibile (Slack↔WhatsApp)."""
+    """Brief operativo — cliente per cliente, solo modifiche da eseguire.
+       Niente raggruppamento per causa, niente diagnosi narrativa.
+       Ordinati per spesa decrescente."""
     y, m, d = data_iso.split("-")
     data_it = f"{d}/{m}/{y}"
     _proj_key = "cea" if project_label.upper().startswith("CEA") else "medtech"
@@ -444,9 +446,8 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
             f"nessuna operazione correttiva richiesta."
         )
 
-    by_cause = {"ad_fatigue": [], "geo_ristretta": [], "offerta_non_pertinente": []}
-    for a in alerts: by_cause[a["top_cause"]].append(a)
     tot_burn = sum(a["spend_2d"] for a in alerts)
+    ranked = sorted(alerts, key=lambda x: -x["spend_2d"])
 
     lines = []
     lines.append(f"*Brief operativo {project_label} — {data_it}*")
@@ -454,20 +455,10 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
     lines.append("")
     lines.append(f"{len(alerts)} account attenzionati (2 giorni consecutivi senza contatti) · budget speso totale *{fmt_eur(tot_burn)}*")
     lines.append("")
-    for cause_key in ("ad_fatigue", "geo_ristretta", "offerta_non_pertinente"):
-        bucket = by_cause[cause_key]
-        if not bucket: continue
-        _, name = CAUSE_BRIEF[cause_key]
-        lines.append(f"━━━━━━━━━━━━━━━━━━━")
-        lines.append(f"*{name}* ({len(bucket)})")
-        lines.append(f"━━━━━━━━━━━━━━━━━━━")
-        bucket.sort(key=lambda x: -x["spend_2d"])
-        for idx, a in enumerate(bucket):
-            op = per_client_op(a, idx, project=_proj_key, today_iso=data_iso)
-            lines.append("")
-            lines.append(f"*{a['name']}* — speso {fmt_eur(a['spend_2d'])}")
-            lines.append(f"{_cap_first(op['diagnosi'])}.")
-            lines.append(f"*Cosa faremo:* {op['azione']}.")
+    for idx, a in enumerate(ranked):
+        op = per_client_op(a, idx, project=_proj_key, today_iso=data_iso)
+        lines.append(f"*{a['name']}* — speso {fmt_eur(a['spend_2d'])}")
+        lines.append(f"*Cosa faremo:* {op['azione']}.")
         lines.append("")
     return "\n".join(lines).rstrip()
 
