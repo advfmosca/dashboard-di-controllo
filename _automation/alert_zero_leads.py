@@ -292,8 +292,19 @@ def _fmt_it_date(iso):
     y, m, d = iso.split("-")
     return f"{d}/{m}/{y[2:]}"
 
-def per_client_op(a):
-    """Operazione personalizzata per cliente, linguaggio business plain (no jargon)."""
+AD_FATIGUE_PROPOSTE = [
+    "ci basterebbe ricevere da voi un video di 30-60 secondi di una vostra cliente reale (volto + breve frase su cosa ha apprezzato del trattamento) per produrre una variante con testimonianza, che storicamente sblocca queste fasi di saturazione",
+    "fornendoci 1-2 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo), produrremo una variante con prova visiva che tipicamente alza i contatti del 20-30%",
+    "se ci date la possibilità di girare 1 breve reel in struttura (anche solo backstage di una seduta), produrremo una variante 'dietro le quinte' che spesso ribalta una campagna in saturazione",
+]
+OFFERTA_PROPOSTE = [
+    "fornendoci 1 foto prima/dopo di una cliente che ha completato il percorso (anche solo un dettaglio anonimo, es. addome o profilo), produrremo una variante creatività testimoniale che tipicamente alza i contatti del 20-30%",
+    "ci basterebbe ricevere un video di 30-60 secondi di una cliente reale che racconti il proprio risultato (volto + breve frase) per produrre una variante con prova sociale che spesso sblocca questo blocco",
+    "fornendoci 1-2 immagini di lavorazioni reali eseguite nel vostro studio (anche dettaglio macchinario + risultato visibile), produrremo una variante 'prima/durante/dopo' che dà al pubblico la prova concreta del valore",
+]
+
+def per_client_op(a, idx_in_group=0):
+    """Ritorna dict {action, proposta?} — perimetro contratto + eventuale proposta strategica extra."""
     cause = a.get("top_cause")
     ctr = a.get("ctr") or 0
     freq = a.get("freq") or 0
@@ -306,52 +317,54 @@ def per_client_op(a):
 
     if cause == "ad_fatigue":
         if freq >= 2.0:
-            return (f"il pubblico vede ormai troppe volte la stessa inserzione "
-                    f"(esposizione media {freq:.2f} volte a persona). Mettere in pausa l'inserzione principale e "
-                    f"caricare 2 nuove versioni con frasi di apertura diverse, "
-                    f"preferibilmente in formato video con esperienze di clienti reali.")
-        if hist_leads >= 8 and last_lead:
-            return (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni "
-                    f"(ultimo il {_fmt_it_date(last_lead)}), poi si è fermato. "
-                    f"Rinnovare la creatività principale con un nuovo punto di vista sull'offerta "
-                    f"e affiancare una variante video con testimonianza di una cliente reale.")
-        if hist_leads >= 2 and last_lead:
-            return (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. "
-                    f"Caricare 2 nuove varianti con frasi di apertura differenti e provare un nuovo formato visivo "
-                    f"(se ora è statico mettere video, e viceversa).")
-        return ("lo stesso messaggio sta perdendo efficacia. Caricare 2 nuove varianti con "
-                "frasi di apertura diverse e affiancare almeno una nuova creatività con un'esperienza concreta di un cliente.")
+            action = (f"il pubblico vede ormai troppe volte la stessa inserzione (esposizione media {freq:.2f} volte a persona). "
+                      f"Metteremo in pausa l'inserzione principale e produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura diverse")
+        elif hist_leads >= 8 and last_lead:
+            action = (f"aveva generato {hist_leads} contatti negli ultimi 14 giorni (ultimo il {_fmt_it_date(last_lead)}), poi si è fermato. "
+                      f"Rinnoveremo la creatività principale: produrremo 2 nuove grafiche + 1 nuovo video con un punto di vista diverso sull'offerta "
+                      f"(es. focus sul risultato concreto invece che sul prezzo)")
+        elif hist_leads >= 2 and last_lead:
+            action = (f"i {hist_leads} contatti recenti (ultimo il {_fmt_it_date(last_lead)}) si sono fermati. "
+                      f"Produrremo 2 nuove grafiche + 1 nuovo video con frasi di apertura differenti e un nuovo formato visivo")
+        else:
+            action = ("lo stesso messaggio sta perdendo efficacia. "
+                      "Produrremo 2 nuove grafiche + 1 nuovo video con un angolo del messaggio completamente nuovo")
+        return {"action": action, "proposta": AD_FATIGUE_PROPOSTE[idx_in_group % 3]}
 
     if cause == "geo_ristretta":
         if aud_int is not None and aud_int < 70_000:
-            return (f"pubblico molto ristretto (≈{aud_str}). Ampliare il raggio della zona "
-                    f"di +15 km o aggiungere 2-3 comuni vicini, mantenendo lo stesso tipo di cliente ideale.")
-        if aud_int is not None and aud_int < 200_000:
-            return (f"pubblico ristretto (≈{aud_str}). Ampliare leggermente la zona e aggiungere "
-                    f"2 nuovi interessi correlati al servizio per aumentare il potenziale.")
-        return (f"il potenziale è limitato (≈{aud_str}). Ampliare la zona geografica e attivare in parallelo "
-                f"un pubblico simile a chi aveva già richiesto consulenza in passato.")
+            action = (f"pubblico molto ristretto (≈{aud_str}). Amplieremo il raggio della zona di +15 km includendo i comuni vicini, "
+                      f"mantenendo lo stesso tipo di cliente ideale")
+        elif aud_int is not None and aud_int < 200_000:
+            action = (f"pubblico ristretto (≈{aud_str}). Amplieremo leggermente la zona e aggiungeremo 2 nuovi interessi correlati al servizio "
+                      f"per aumentare il potenziale")
+        else:
+            action = (f"potenziale limitato (≈{aud_str}). Amplieremo la zona geografica e attiveremo in parallelo un pubblico simile "
+                      f"a chi aveva già richiesto consulenza in passato")
+        return {"action": action, "proposta": None}
 
     if cause == "offerta_non_pertinente":
         if ctr >= 1.5:
-            return (f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma non completano il modulo di richiesta. "
-                    f"Rivedere la promessa dell'offerta: aggiungere una scadenza temporale "
-                    f"o un beneficio concreto già nel primo paragrafo (es. risultato visibile dopo X sedute).")
-        if ctr < 1.0:
-            return (f"l'inserzione fatica ad agganciare l'attenzione (tasso di clic {ctr:.2f}%). "
-                    f"Testare un nuovo approccio al messaggio: provare una nuova creatività basata su un'esperienza di "
-                    f"una cliente reale, con foto/risultato concreto al posto di promo astratta.")
-        if hist_leads == 0 and days_active >= 5:
-            return (f"in {days_active} giorni di attività non è mai arrivato un contatto. "
-                    f"Ripensare completamente l'offerta — prezzo di ingresso, pacchetto e momento dell'anno in cui si propone — "
-                    f"prima di continuare a spendere su questo pubblico.")
-        return ("risultati altalenanti senza un pattern chiaro. Testare un nuovo approccio al messaggio basato su prove concrete "
-                "ed esperienze di clienti reali invece che sul solo prezzo.")
+            action = (f"le persone cliccano l'inserzione (tasso di clic {ctr:.2f}%) ma non completano il modulo di richiesta. "
+                      f"Rivedremo la promessa dell'offerta: produrremo 2 nuove grafiche + 1 nuovo video con una scadenza temporale chiara "
+                      f"e un beneficio concreto già nel primo paragrafo (es. 'Risultato visibile dopo 3 sedute' invece di 'Promozione esclusiva')")
+        elif ctr < 1.0:
+            action = (f"l'inserzione fatica ad agganciare l'attenzione (tasso di clic {ctr:.2f}%). "
+                      f"Testeremo un nuovo approccio al messaggio: produrremo 2 nuove grafiche + 1 nuovo video con un angolo diverso, "
+                      f"basato su un risultato concreto invece che su una promozione astratta")
+        elif hist_leads == 0 and days_active >= 5:
+            action = (f"in {days_active} giorni di attività non è mai arrivato un contatto. "
+                      f"Ripenseremo completamente l'offerta — prezzo di ingresso, pacchetto e momento dell'anno in cui si propone — "
+                      f"e produrremo 2 nuove grafiche + 1 nuovo video sulla nuova proposta")
+        else:
+            action = ("risultati altalenanti. Produrremo 2 nuove grafiche + 1 nuovo video con un nuovo approccio al messaggio "
+                     "basato su prove concrete invece che sul solo prezzo")
+        return {"action": action, "proposta": OFFERTA_PROPOSTE[idx_in_group % 3]}
 
-    return "Da rivalutare insieme."
+    return {"action": "Da rivalutare insieme", "proposta": None}
 
 def build_morning_brief(project_label, alerts, dash_url, data_iso):
-    """Brief mattutino pronto per copia/incolla su Slack — link daily + azione per cliente."""
+    """Brief mattutino — Cosa faremo (perimetro contratto) + Proposta strategica (extra)."""
     y, m, d = data_iso.split("-")
     data_it = f"{d}/{m}/{y}"
     if not alerts:
@@ -376,9 +389,12 @@ def build_morning_brief(project_label, alerts, dash_url, data_iso):
         ico, name = CAUSE_BRIEF[cause_key]
         lines.append(f"{ico} *{name}* ({len(bucket)})")
         bucket.sort(key=lambda x: -x["spend_2d"])
-        for a in bucket:
-            op = per_client_op(a)
-            lines.append(f"  • *{a['name']}* (speso {fmt_eur(a['spend_2d'])}): {op}")
+        for idx, a in enumerate(bucket):
+            op = per_client_op(a, idx)
+            lines.append("")
+            lines.append(f"• *{a['name']}* (speso {fmt_eur(a['spend_2d'])}) — {op['action']}.")
+            if op['proposta']:
+                lines.append(f"   _Proposta strategica:_ {op['proposta']}.")
         lines.append("")
     return "\n".join(lines).rstrip()
 
