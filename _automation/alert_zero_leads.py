@@ -250,9 +250,16 @@ def main():
     out_path.write_text(full, encoding="utf-8")
     # JSON strutturato per altri consumer
     json_path = out_path.with_suffix(".json")
-    json_path.write_text(json.dumps({"date": today_iso, "cea": cea_alerts, "medtech": mt_alerts}, ensure_ascii=False, indent=2), encoding="utf-8")
+    payload = {"date": today_iso, "cea": cea_alerts, "medtech": mt_alerts}
+    json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    # alerts.json nel repo dashboard (se presente) — la pipeline farà git add + push
+    repo_alerts = Path("/tmp/dashboard-di-controllo/alerts.json")
+    if repo_alerts.parent.exists():
+        repo_alerts.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(full)
     print(f"\n📄 Salvato: {out_path}\n📄 JSON:    {json_path}")
+    if repo_alerts.parent.exists():
+        print(f"📄 Repo alerts.json: {repo_alerts}")
 
 if __name__ == "__main__":
     main()
