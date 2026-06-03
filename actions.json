@@ -1,69 +1,50 @@
 {
-  "generated_at": "2026-06-02T02:08:52.092566",
-  "reference_date": "2026-06-01",
+  "generated_at": "2026-06-03T02:09:03.768451",
+  "reference_date": "2026-06-02",
   "actions": [
     {
-      "type": "new_fermo",
+      "type": "high_spending",
       "priority": "high",
-      "title": "⚫ CIA ADV · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "1695132911866990",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1695132911866990",
-      "details": "Spending 0 ieri, media 7gg precedente 138,73 €. Da verificare.",
-      "reference_date": "2026-06-01",
-      "reference_date_label": "1 giu 2026"
+      "title": "🔴 Hotel Albatros NEW · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "517-405-1660",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660",
+      "details": "Spesa 87,43 € ieri vs media 7gg 64,36 € (+35,8%)",
+      "reference_date": "2026-06-02",
+      "reference_date_label": "2 giu 2026"
     },
     {
-      "type": "new_fermo",
+      "type": "high_spending",
       "priority": "high",
-      "title": "⚫ Lia Nunziante · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "404633425550941",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941",
-      "details": "Spending 0 ieri, media 7gg precedente 27,80 €. Da verificare.",
-      "reference_date": "2026-06-01",
-      "reference_date_label": "1 giu 2026"
+      "title": "🔴 Hotel Mauritius · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "678-286-7092",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=6782867092",
+      "details": "Spesa 68,92 € ieri vs media 7gg 42,96 € (+60,4%)",
+      "reference_date": "2026-06-02",
+      "reference_date_label": "2 giu 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hoy Hotels · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "690-064-1891",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=6900641891",
+      "details": "Spesa 61,58 € ieri vs media 7gg 34,28 € (+79,6%)",
+      "reference_date": "2026-06-02",
+      "reference_date_label": "2 giu 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 01/06/2026",
-      "details": "5 zero + 14 high",
-      "reference_date": "2026-06-01",
-      "reference_date_label": "1 giu 2026",
+      "title": "Alert spending — 02/06/2026",
+      "details": "3 zero + 17 high",
+      "reference_date": "2026-06-02",
+      "reference_date_label": "2 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 01/06/2026*\n*Top alert:*\n• :zap: CIA ADV (Meta) — 0,00 € (storico 138,73 €) · _Causa da verificare_\n• :zap: Lia Nunziante (Meta) — 0,00 € (storico 27,80 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 21,38 €) · _Causa da verificare_\n_+ 16 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-01|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 02/06/2026*\n*Top alert:*\n• :zap: CIA ADV (Meta) — 0,00 € (storico 118,54 €) · _Causa da verificare_\n• :zap: Lia Nunziante (Meta) — 0,00 € (storico 23,17 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 16,54 €) · _Causa da verificare_\n_+ 17 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-02|:link: Apri dashboard →>",
       "skip_if_quiet": false
-    },
-    {
-      "type": "bf_fermo",
-      "priority": "medium",
-      "title": "⚠️ Bee Family ARIANNA — fermo persistente",
-      "source": "Google",
-      "client_name": "ARIANNA",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
-      "details": "spend_y=0, prev7=90,14 €",
-      "reference_date": "2026-06-01",
-      "reference_date_label": "1 giu 2026",
-      "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — ARIANNA (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 90,14 €\n<https://ads.google.com/aw/campaigns?__c=7528945060|Apri account →>",
-      "skip_if_quiet": true,
-      "severity": "medium"
-    },
-    {
-      "type": "bf_fermo",
-      "priority": "medium",
-      "title": "⚠️ Bee Family H&V — fermo persistente",
-      "source": "Google",
-      "client_name": "H&V",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=8162271235",
-      "details": "spend_y=0, prev7=77,01 €",
-      "reference_date": "2026-06-01",
-      "reference_date_label": "1 giu 2026",
-      "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — H&V (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 77,01 €\n<https://ads.google.com/aw/campaigns?__c=8162271235|Apri account →>",
-      "skip_if_quiet": true,
-      "severity": "medium"
     }
   ]
 }
