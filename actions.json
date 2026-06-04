@@ -1,50 +1,65 @@
 {
-  "generated_at": "2026-06-03T02:09:03.768451",
-  "reference_date": "2026-06-02",
+  "generated_at": "2026-06-04T02:07:38.290568",
+  "reference_date": "2026-06-03",
   "actions": [
     {
       "type": "high_spending",
       "priority": "high",
-      "title": "🔴 Hotel Albatros NEW · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "517-405-1660",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660",
-      "details": "Spesa 87,43 € ieri vs media 7gg 64,36 € (+35,8%)",
-      "reference_date": "2026-06-02",
-      "reference_date_label": "2 giu 2026"
+      "title": "🔴 Ciccio + Sorriso ADV · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "421004342260012",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
+      "details": "Spesa 138,69 € ieri vs media 7gg 103,40 € (+34,1%)",
+      "reference_date": "2026-06-03",
+      "reference_date_label": "3 giu 2026"
     },
     {
       "type": "high_spending",
       "priority": "high",
-      "title": "🔴 Hotel Mauritius · spesa anomala alta",
+      "title": "🔴 Sardinia Family Villas · spesa anomala alta",
       "platform": "Google",
-      "account_id": "678-286-7092",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=6782867092",
-      "details": "Spesa 68,92 € ieri vs media 7gg 42,96 € (+60,4%)",
-      "reference_date": "2026-06-02",
-      "reference_date_label": "2 giu 2026"
+      "account_id": "705-314-5188",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
+      "details": "Spesa 98,33 € ieri vs media 7gg 73,48 € (+33,8%)",
+      "reference_date": "2026-06-03",
+      "reference_date_label": "3 giu 2026"
     },
     {
-      "type": "high_spending",
+      "type": "new_fermo",
       "priority": "high",
-      "title": "🔴 Hoy Hotels · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "690-064-1891",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=6900641891",
-      "details": "Spesa 61,58 € ieri vs media 7gg 34,28 € (+79,6%)",
-      "reference_date": "2026-06-02",
-      "reference_date_label": "2 giu 2026"
+      "title": "⚫ Rivamare · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1240912661421243",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243",
+      "details": "Spending 0 ieri, media 7gg precedente 8,92 €. Da verificare.",
+      "reference_date": "2026-06-03",
+      "reference_date_label": "3 giu 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 02/06/2026",
-      "details": "3 zero + 17 high",
-      "reference_date": "2026-06-02",
-      "reference_date_label": "2 giu 2026",
+      "title": "Alert spending — 03/06/2026",
+      "details": "4 zero + 11 high",
+      "reference_date": "2026-06-03",
+      "reference_date_label": "3 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 02/06/2026*\n*Top alert:*\n• :zap: CIA ADV (Meta) — 0,00 € (storico 118,54 €) · _Causa da verificare_\n• :zap: Lia Nunziante (Meta) — 0,00 € (storico 23,17 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 16,54 €) · _Causa da verificare_\n_+ 17 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-02|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 03/06/2026*\n*Top alert:*\n• :zap: CIA ADV (Meta) — 0,00 € (storico 98,26 €) · _Causa da verificare_\n• :zap: Lia Nunziante (Meta) — 0,00 € (storico 19,31 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 13,18 €) · _Causa da verificare_\n_+ 12 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-03|:link: Apri dashboard →>",
       "skip_if_quiet": false
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "high",
+      "title": "⚫ Bee Family RIVAMARE — nuovo fermo",
+      "source": "Meta",
+      "client_name": "RIVAMARE",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243",
+      "details": "spend_y=0, prev7=62,43 €",
+      "reference_date": "2026-06-03",
+      "reference_date_label": "3 giu 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚫ *Bee Family — RIVAMARE (Meta)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 62,43 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243|Apri account →>",
+      "skip_if_quiet": false,
+      "severity": "high"
     }
   ]
 }
