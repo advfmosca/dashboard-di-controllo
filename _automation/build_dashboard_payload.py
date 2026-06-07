@@ -35,7 +35,7 @@ if not os.path.isdir(_default_work):
     if cands:
         _default_work = cands[0]
 WORK = Path(os.environ.get("DASHBOARD_WORK_DIR", _default_work))
-REPO_DASH = Path("/tmp/dashboard-di-controllo")
+REPO_DASH = Path(os.environ.get("DASHBOARD_REPO_DIR", "/tmp/run-20260607-071428/dashboard-di-controllo"))
 DATA_JSON = REPO_DASH / "data.json"
 SNAP_DIR = REPO_DASH / "snapshots"
 SNAP_FILE = SNAP_DIR / f"{DATA_REPORT}.json"
@@ -306,7 +306,7 @@ def semaphore(spesa, lead_y, mean_leads, days_history):
 # -------- 3gg lookback (campagne corte) using local csv-daily-snapshots data.json --------
 def load_history_csv_snapshots():
     """Read the cumulative history from the csv-daily-snapshots repo."""
-    p = Path("/tmp/csv-daily-snapshots/data.json")
+    p = Path(os.environ.get("DASHBOARD_CSV_SNAPSHOTS_DIR", "/tmp/run-20260607-071428/csv-daily-snapshots")) / "data.json"
     if not p.exists():
         return {}
     return json.load(open(p)).get("history", {})
