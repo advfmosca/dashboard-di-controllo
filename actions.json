@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-09T02:09:14.502522",
-  "reference_date": "2026-06-08",
+  "generated_at": "2026-06-10T02:10:04.753056",
+  "reference_date": "2026-06-09",
   "actions": [
     {
       "type": "high_spending",
@@ -9,19 +9,52 @@
       "platform": "Meta",
       "account_id": "1234016965549263",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263",
-      "details": "Spesa 69,95 € ieri vs media 7gg 49,93 € (+40,1%)",
-      "reference_date": "2026-06-08",
-      "reference_date_label": "8 giu 2026"
+      "details": "Spesa 78,01 € ieri vs media 7gg 53,57 € (+45,6%)",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Bonadies · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "614-938-8109",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=6149388109",
+      "details": "Spesa 61,48 € ieri vs media 7gg 11,40 € (+439,3%)",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 ADV Helios - Rodi · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "1515205043021222",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
+      "details": "Spesa 55,40 € ieri vs media 7gg 21,33 € (+159,8%)",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Altafiumara | Account Pubblicitario · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1201395876543423",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1201395876543423",
+      "details": "Spending 0 ieri, media 7gg precedente 36,06 €. Da verificare.",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 08/06/2026",
-      "details": "4 zero + 13 high",
-      "reference_date": "2026-06-08",
-      "reference_date_label": "8 giu 2026",
+      "title": "Alert spending — 09/06/2026",
+      "details": "5 zero + 15 high",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 08/06/2026*\n*Top alert:*\n• :zap: La Carlina Srl (TikTok) — 0,00 € (storico 15,00 €) · _Causa da verificare_\n• :zap: Delta Blu ADV (Meta) — 0,00 € (storico 11,75 €) · _Causa da verificare_\n• :zap: Delta Blu Italia (Google) — 0,00 € (storico 11,26 €) · _Causa da verificare_\n_+ 14 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-08|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 09/06/2026*\n*Top alert:*\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 36,06 €) · _Causa da verificare_\n• :zap: La Carlina Srl (TikTok) — 0,00 € (storico 12,14 €) · _Causa da verificare_\n• :zap: Delta Blu Italia (Google) — 0,00 € (storico 7,26 €) · _Causa da verificare_\n_+ 17 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-09|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
@@ -31,11 +64,11 @@
       "source": "Meta",
       "client_name": "DELTA BLU",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=236880885374018",
-      "details": "spend_y=0, prev7=82,23 €",
-      "reference_date": "2026-06-08",
-      "reference_date_label": "8 giu 2026",
+      "details": "spend_y=0, prev7=50,24 €",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — DELTA BLU (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 82,23 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=236880885374018|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — DELTA BLU (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 50,24 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=236880885374018|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     },
@@ -46,11 +79,11 @@
       "source": "Google",
       "client_name": "DELTA BLU",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=6385524256",
-      "details": "spend_y=0, prev7=78,84 €",
-      "reference_date": "2026-06-08",
-      "reference_date_label": "8 giu 2026",
+      "details": "spend_y=0, prev7=50,79 €",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — DELTA BLU (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 78,84 €\n<https://ads.google.com/aw/campaigns?__c=6385524256|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — DELTA BLU (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 50,79 €\n<https://ads.google.com/aw/campaigns?__c=6385524256|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     },
@@ -61,11 +94,11 @@
       "source": "Meta",
       "client_name": "RIVAMARE",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243",
-      "details": "spend_y=0, prev7=62,43 €",
-      "reference_date": "2026-06-08",
-      "reference_date_label": "8 giu 2026",
+      "details": "spend_y=0, prev7=18,06 €",
+      "reference_date": "2026-06-09",
+      "reference_date_label": "9 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — RIVAMARE (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 62,43 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — RIVAMARE (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 18,06 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1240912661421243|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
