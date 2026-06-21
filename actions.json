@@ -1,17 +1,43 @@
 {
-  "generated_at": "2026-06-20T02:10:16.519299",
-  "reference_date": "2026-06-19",
+  "generated_at": "2026-06-21T02:08:47.045484",
+  "reference_date": "2026-06-20",
   "actions": [
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Hotel Albatros ADV · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "630436088886762",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
+      "details": "Spending 0 ieri, media 7gg precedente 37,24 €. Da verificare.",
+      "reference_date": "2026-06-20",
+      "reference_date_label": "20 giu 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 19/06/2026",
-      "details": "3 zero + 15 high",
-      "reference_date": "2026-06-19",
-      "reference_date_label": "19 giu 2026",
+      "title": "Alert spending — 20/06/2026",
+      "details": "4 zero + 15 high",
+      "reference_date": "2026-06-20",
+      "reference_date_label": "20 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 19/06/2026*\n*Top alert:*\n• :zap: Villa Giada Luxury Boutique Hotel (Meta) — 0,00 € (storico 41,51 €) · _Causa da verificare_\n• :zap: ADV Esthetique (Meta) — 0,00 € (storico 25,33 €) · _Causa da verificare_\n• :zap: HOY Village (Meta) — 0,00 € (storico 10,85 €) · _Causa da verificare_\n_+ 15 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-19|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 20/06/2026*\n*Top alert:*\n• :zap: Hotel Albatros ADV (Meta) — 0,00 € (storico 37,24 €) · _Causa da verificare_\n• :zap: Villa Giada Luxury Boutique Hotel (Meta) — 0,00 € (storico 32,24 €) · _Causa da verificare_\n• :zap: ADV Esthetique (Meta) — 0,00 € (storico 21,05 €) · _Causa da verificare_\n_+ 16 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-20|:link: Apri dashboard →>",
       "skip_if_quiet": false
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "high",
+      "title": "⚫ Bee Family ALBATROS — nuovo fermo",
+      "source": "Meta",
+      "client_name": "ALBATROS",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
+      "details": "spend_y=0, prev7=260,71 €",
+      "reference_date": "2026-06-20",
+      "reference_date_label": "20 giu 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚫ *Bee Family — ALBATROS (Meta)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 260,71 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762|Apri account →>",
+      "skip_if_quiet": false,
+      "severity": "high"
     },
     {
       "type": "bf_fermo",
@@ -20,11 +46,11 @@
       "source": "Meta",
       "client_name": "HOY VILLAGE",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263",
-      "details": "spend_y=0, prev7=75,98 €",
-      "reference_date": "2026-06-19",
-      "reference_date_label": "19 giu 2026",
+      "details": "spend_y=0, prev7=5,85 €",
+      "reference_date": "2026-06-20",
+      "reference_date_label": "20 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — HOY VILLAGE (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 75,98 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — HOY VILLAGE (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 5,85 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
