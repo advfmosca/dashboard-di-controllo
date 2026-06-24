@@ -1,38 +1,16 @@
 {
-  "generated_at": "2026-06-23T07:56:37.980769",
-  "reference_date": "2026-06-22",
+  "generated_at": "2026-06-24T02:10:17.001180",
+  "reference_date": "2026-06-23",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Ciccio + Sorriso ADV · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "421004342260012",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
-      "details": "Spesa 193,20 € ieri vs media 7gg 135,26 € (+42,8%)",
-      "reference_date": "2026-06-22",
-      "reference_date_label": "22 giu 2026"
-    },
-    {
-      "type": "new_fermo",
-      "priority": "high",
-      "title": "⚫ Magari Estates Hotel · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "1372615496521110",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
-      "details": "Spending 0 ieri, media 7gg precedente 39,19 €. Da verificare.",
-      "reference_date": "2026-06-22",
-      "reference_date_label": "22 giu 2026"
-    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 22/06/2026",
-      "details": "4 zero + 15 high",
-      "reference_date": "2026-06-22",
-      "reference_date_label": "22 giu 2026",
+      "title": "Alert spending — 23/06/2026",
+      "details": "4 zero + 11 high",
+      "reference_date": "2026-06-23",
+      "reference_date_label": "23 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 22/06/2026*\n*Top alert:*\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 39,19 €) · _Causa da verificare_\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 23,43 €) · _Causa da verificare_\n• :zap: Hotel Albatros ADV (Meta) — 0,00 € (storico 23,25 €) · _Causa da verificare_\n_+ 16 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-22|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 23/06/2026*\n*Top alert:*\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 31,69 €) · _Causa da verificare_\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 17,65 €) · _Causa da verificare_\n• :zap: Hotel Albatros ADV (Meta) — 0,00 € (storico 16,99 €) · _Causa da verificare_\n_+ 12 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-23|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
@@ -42,11 +20,11 @@
       "source": "Meta",
       "client_name": "ALBATROS",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
-      "details": "spend_y=0, prev7=162,74 €",
-      "reference_date": "2026-06-22",
-      "reference_date_label": "22 giu 2026",
+      "details": "spend_y=0, prev7=118,93 €",
+      "reference_date": "2026-06-23",
+      "reference_date_label": "23 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — ALBATROS (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 162,74 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — ALBATROS (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 118,93 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
