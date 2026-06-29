@@ -1,7 +1,29 @@
 {
-  "generated_at": "2026-06-28T02:10:50.318790",
-  "reference_date": "2026-06-27",
+  "generated_at": "2026-06-29T02:11:00.709973",
+  "reference_date": "2026-06-28",
   "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Sardinia Family Villas · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "705-314-5188",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
+      "details": "Spesa 133,20 € ieri vs media 7gg 69,68 € (+91,2%)",
+      "reference_date": "2026-06-28",
+      "reference_date_label": "28 giu 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 HOY Village · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "1234016965549263",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263",
+      "details": "Spesa 80,23 € ieri vs media 7gg 16,15 € (+396,7%)",
+      "reference_date": "2026-06-28",
+      "reference_date_label": "28 giu 2026"
+    },
     {
       "type": "high_spending",
       "priority": "high",
@@ -9,19 +31,19 @@
       "platform": "Meta",
       "account_id": "1372615496521110",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
-      "details": "Spesa 69,20 € ieri vs media 7gg 6,92 € (+899,6%)",
-      "reference_date": "2026-06-27",
-      "reference_date_label": "27 giu 2026"
+      "details": "Spesa 61,30 € ieri vs media 7gg 10,88 € (+463,6%)",
+      "reference_date": "2026-06-28",
+      "reference_date_label": "28 giu 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 27/06/2026",
-      "details": "2 zero + 17 high",
-      "reference_date": "2026-06-27",
-      "reference_date_label": "27 giu 2026",
+      "title": "Alert spending — 28/06/2026",
+      "details": "1 zero + 21 high",
+      "reference_date": "2026-06-28",
+      "reference_date_label": "28 giu 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 27/06/2026*\n*Top alert:*\n• :zap: Arianna Club Family (Google) — 0,00 € (storico 20,20 €) · _Causa da verificare_\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 0,53 €) · _Causa da verificare_\n• :fire: Hotel Cristallo NEW (Google) — 119,83 € (-5,9%)\n_+ 16 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-27|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 28/06/2026*\n*Top alert:*\n• :zap: Arianna Club Family (Google) — 0,00 € (storico 16,86 €) · _Causa da verificare_\n• :fire: BRORA ADV (Meta) — 134,56 € (+12,1%)\n• :fire: Sardinia Family Villas (Google) — 133,20 € (+91,2%)\n_+ 19 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-06-28|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
@@ -31,11 +53,11 @@
       "source": "Google",
       "client_name": "ARIANNA",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
-      "details": "spend_y=0, prev7=141,37 €",
-      "reference_date": "2026-06-27",
-      "reference_date_label": "27 giu 2026",
+      "details": "spend_y=0, prev7=118,03 €",
+      "reference_date": "2026-06-28",
+      "reference_date_label": "28 giu 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — ARIANNA (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 141,37 €\n<https://ads.google.com/aw/campaigns?__c=7528945060|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — ARIANNA (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 118,03 €\n<https://ads.google.com/aw/campaigns?__c=7528945060|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
