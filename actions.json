@@ -1,76 +1,17 @@
 {
-  "generated_at": "2026-07-10T04:10:42.287484",
-  "reference_date": "2026-07-09",
+  "generated_at": "2026-07-11T04:10:58.028425",
+  "reference_date": "2026-07-10",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Cristallo NEW · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "798-656-6211",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=7986566211",
-      "details": "Spesa 160,33 € ieri vs media 7gg 121,36 € (+32,1%)",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 El Cid Torre Pedrera · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "343-383-9480",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=3433839480",
-      "details": "Spesa 81,01 € ieri vs media 7gg 57,13 € (+41,8%)",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Adv_maison rosabianca · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "1172878457924302",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1172878457924302",
-      "details": "Spesa 80,78 € ieri vs media 7gg 16,05 € (+403,2%)",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Mauritius · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "678-286-7092",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=6782867092",
-      "details": "Spesa 50,37 € ieri vs media 7gg 34,39 € (+46,5%)",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026"
-    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 09/07/2026",
-      "details": "1 zero + 15 high",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026",
+      "title": "Alert spending — 10/07/2026",
+      "details": "0 zero + 14 high",
+      "reference_date": "2026-07-10",
+      "reference_date_label": "10 lug 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 09/07/2026*\n*Top alert:*\n• :zap: HOY Village (Meta) — 0,00 € (storico 1,37 €) · _Causa da verificare_\n• :fire: Hotel Cristallo NEW (Google) — 160,33 € (+32,1%)\n• :fire: Ciccio + Sorriso ADV (Meta) — 135,53 € (-13,2%)\n_+ 13 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-09|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 10/07/2026*\n*Top alert:*\n• :fire: Hotel Cristallo NEW (Google) — 126,34 € (+2,7%)\n• :fire: HOTEL E VILLAGGI PER FAMIGLIE - ADS (Meta) — 85,73 € (-13,0%)\n• :fire: Sardinia Family Villas (Google) — 78,57 € (-14,8%)\n_+ 11 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-10|:link: Apri dashboard →>",
       "skip_if_quiet": false
-    },
-    {
-      "type": "bf_fermo",
-      "priority": "medium",
-      "title": "⚠️ Bee Family HOY VILLAGE — fermo persistente",
-      "source": "Meta",
-      "client_name": "HOY VILLAGE",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263",
-      "details": "spend_y=0, prev7=9,60 €",
-      "reference_date": "2026-07-09",
-      "reference_date_label": "9 lug 2026",
-      "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — HOY VILLAGE (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 9,60 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1234016965549263|Apri account →>",
-      "skip_if_quiet": true,
-      "severity": "medium"
     }
   ]
 }
