@@ -1,17 +1,102 @@
 {
-  "generated_at": "2026-07-11T04:10:58.028425",
-  "reference_date": "2026-07-10",
+  "generated_at": "2026-07-12T04:09:35.868026",
+  "reference_date": "2026-07-11",
   "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Olimpic New · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "881-991-7013",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=8819917013",
+      "details": "Spesa 68,14 € ieri vs media 7gg 37,04 € (+84,0%)",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Hotel Teti · nuovo account fermo",
+      "platform": "Google",
+      "account_id": "277-207-6095",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=2772076095",
+      "details": "Spending 0 ieri, media 7gg precedente 27,78 €. Da verificare.",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Adv_Hotel Teti (nuovo) · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "408911445156468",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468",
+      "details": "Spending 0 ieri, media 7gg precedente 27,02 €. Da verificare.",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Adv_maison rosabianca · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1172878457924302",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1172878457924302",
+      "details": "Spending 0 ieri, media 7gg precedente 26,98 €. Da verificare.",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Villa Ermellina Siena · nuovo account fermo",
+      "platform": "TikTok",
+      "account_id": "7612666695502118929",
+      "ad_url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7612666695502118929",
+      "details": "Spending 0 ieri, media 7gg precedente 19,99 €. Da verificare.",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 10/07/2026",
-      "details": "0 zero + 14 high",
-      "reference_date": "2026-07-10",
-      "reference_date_label": "10 lug 2026",
+      "title": "Alert spending — 11/07/2026",
+      "details": "4 zero + 15 high",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 10/07/2026*\n*Top alert:*\n• :fire: Hotel Cristallo NEW (Google) — 126,34 € (+2,7%)\n• :fire: HOTEL E VILLAGGI PER FAMIGLIE - ADS (Meta) — 85,73 € (-13,0%)\n• :fire: Sardinia Family Villas (Google) — 78,57 € (-14,8%)\n_+ 11 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-10|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 11/07/2026*\n*Top alert:*\n• :zap: Hotel Teti (Google) — 0,00 € (storico 27,78 €) · _Causa da verificare_\n• :zap: Adv_Hotel Teti (nuovo) (Meta) — 0,00 € (storico 27,02 €) · _Causa da verificare_\n• :zap: Adv_maison rosabianca (Meta) — 0,00 € (storico 26,98 €) · _Causa da verificare_\n_+ 16 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-11|:link: Apri dashboard →>",
       "skip_if_quiet": false
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "high",
+      "title": "⚫ Bee Family TETI — nuovo fermo",
+      "source": "Meta",
+      "client_name": "TETI",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468",
+      "details": "spend_y=0, prev7=189,17 €",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚫ *Bee Family — TETI (Meta)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 189,17 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468|Apri account →>",
+      "skip_if_quiet": false,
+      "severity": "high"
+    },
+    {
+      "type": "bf_fermo",
+      "priority": "high",
+      "title": "⚫ Bee Family TETI — nuovo fermo",
+      "source": "Google",
+      "client_name": "TETI",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=2772076095",
+      "details": "spend_y=0, prev7=194,48 €",
+      "reference_date": "2026-07-11",
+      "reference_date_label": "11 lug 2026",
+      "slack_target": "U0B0P0N7A2U",
+      "slack_template": "⚫ *Bee Family — TETI (Google)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 194,48 €\n<https://ads.google.com/aw/campaigns?__c=2772076095|Apri account →>",
+      "skip_if_quiet": false,
+      "severity": "high"
     }
   ]
 }
