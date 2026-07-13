@@ -1,21 +1,53 @@
 {
-  "date": "2026-07-08",
+  "date": "2026-07-12",
   "cea": [
+    {
+      "name": "Leuce - Medicina Estetica",
+      "project": "CEA",
+      "spend_2d": 51.53,
+      "ctr": 1.42,
+      "geo": "",
+      "audience_size": "70K",
+      "freq": 1.6,
+      "clicks_today": 45,
+      "impressions_today": 3177,
+      "hist": {
+        "leads": 8,
+        "last_lead_date": "2026-07-10",
+        "spend": 235.49,
+        "days_active": 11
+      },
+      "causes": {
+        "ad_fatigue": 65,
+        "geo_ristretta": 70,
+        "offerta_non_pertinente": 0
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈70K) e la frequenza è già 1.60: il bacino disponibile sta venendo saturato. Quando convertiva (8 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
+    },
     {
       "name": "Fatima Nail Studio",
       "project": "CEA",
-      "spend_2d": 53.32,
-      "ctr": 1.72,
+      "spend_2d": 46.38,
+      "ctr": 1.74,
       "geo": "Salerno+30km",
-      "audience_size": "574K",
-      "freq": 1.45,
-      "clicks_today": 153,
-      "impressions_today": 8895,
+      "audience_size": "569K",
+      "freq": 1.27,
+      "clicks_today": 164,
+      "impressions_today": 9424,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
-        "spend": 131.5,
-        "days_active": 9
+        "spend": 229.4,
+        "days_active": 13
       },
       "causes": {
         "ad_fatigue": 10,
@@ -25,7 +57,7 @@
       "top_cause": "offerta_non_pertinente",
       "solution": {
         "label": "Offerta non pertinente",
-        "intro": "CTR 1.72% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "intro": "CTR 1.74% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
         "steps": [
           "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
           "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
@@ -34,179 +66,51 @@
       }
     },
     {
-      "name": "Nuove Sensazioni",
+      "name": "ADV FARMA 3D",
       "project": "CEA",
-      "spend_2d": 46.68,
-      "ctr": 1.35,
+      "spend_2d": 46.08,
+      "ctr": 2.16,
       "geo": "",
-      "audience_size": "69K",
-      "freq": 1.48,
-      "clicks_today": 60,
-      "impressions_today": 4458,
+      "audience_size": "175K",
+      "freq": 1.67,
+      "clicks_today": 45,
+      "impressions_today": 2083,
       "hist": {
-        "leads": 11,
-        "last_lead_date": "2026-07-04",
-        "spend": 323.8,
-        "days_active": 14
-      },
-      "causes": {
-        "ad_fatigue": 47,
-        "geo_ristretta": 50,
-        "offerta_non_pertinente": 0
-      },
-      "top_cause": "geo_ristretta",
-      "solution": {
-        "label": "Geo troppo ristretta",
-        "intro": "L'audience size è ridotta (≈69K): il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni. Quando convertiva (11 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
-        "steps": [
-          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
-          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
-          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
-        ]
-      }
-    },
-    {
-      "name": "ADV - Brera13 Beauty",
-      "project": "CEA",
-      "spend_2d": 46.58,
-      "ctr": 0.62,
-      "geo": "45.4808,9.1894 +1km",
-      "audience_size": "438K",
-      "freq": 1.25,
-      "clicks_today": 7,
-      "impressions_today": 1132,
-      "hist": {
-        "leads": 9,
-        "last_lead_date": "2026-07-06",
-        "spend": 143.15,
-        "days_active": 6
-      },
-      "causes": {
-        "ad_fatigue": 25,
-        "geo_ristretta": 0,
-        "offerta_non_pertinente": 45
-      },
-      "top_cause": "offerta_non_pertinente",
-      "solution": {
-        "label": "Offerta non pertinente",
-        "intro": "CTR 0.62% sotto benchmark: il messaggio non aggancia. Il pubblico non riconosce l'offerta come rilevante per sé.",
-        "steps": [
-          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
-          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
-          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
-        ]
-      }
-    },
-    {
-      "name": "Leuce - Medicina Estetica",
-      "project": "CEA",
-      "spend_2d": 43.17,
-      "ctr": 1.54,
-      "geo": "",
-      "audience_size": "69K",
-      "freq": 1.53,
-      "clicks_today": 39,
-      "impressions_today": 2533,
-      "hist": {
-        "leads": 7,
-        "last_lead_date": "2026-07-06",
-        "spend": 147.83,
-        "days_active": 7
-      },
-      "causes": {
-        "ad_fatigue": 47,
-        "geo_ristretta": 70,
-        "offerta_non_pertinente": 22
-      },
-      "top_cause": "geo_ristretta",
-      "solution": {
-        "label": "Geo troppo ristretta",
-        "intro": "L'audience size è ridotta (≈69K) e la frequenza è già 1.53: il bacino disponibile sta venendo saturato. Quando convertiva (7 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
-        "steps": [
-          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
-          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
-          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
-        ]
-      }
-    },
-    {
-      "name": "ADV CENTRO ESTETICO AMBRA",
-      "project": "CEA",
-      "spend_2d": 42.6,
-      "ctr": 1.53,
-      "geo": "42.4371,12.1099 +8km",
-      "audience_size": "26K",
-      "freq": 1.81,
-      "clicks_today": 46,
-      "impressions_today": 2997,
-      "hist": {
-        "leads": 4,
-        "last_lead_date": "2026-06-25",
-        "spend": 89.58,
-        "days_active": 5
-      },
-      "causes": {
-        "ad_fatigue": 42,
-        "geo_ristretta": 75,
-        "offerta_non_pertinente": 22
-      },
-      "top_cause": "geo_ristretta",
-      "solution": {
-        "label": "Geo troppo ristretta",
-        "intro": "L'audience size è ridotta (≈26K) e la frequenza è già 1.81: il bacino disponibile sta venendo saturato. Quando convertiva (4 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
-        "steps": [
-          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
-          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
-          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
-        ]
-      }
-    },
-    {
-      "name": "Gil Cagné",
-      "project": "CEA",
-      "spend_2d": 35.5,
-      "ctr": 3.18,
-      "geo": "IT",
-      "audience_size": "1K",
-      "freq": 1.81,
-      "clicks_today": 377,
-      "impressions_today": 11843,
-      "hist": {
-        "leads": 0,
-        "last_lead_date": null,
-        "spend": 95.79,
+        "leads": 12,
+        "last_lead_date": "2026-07-09",
+        "spend": 187.21,
         "days_active": 10
       },
       "causes": {
-        "ad_fatigue": 28,
-        "geo_ristretta": 75,
-        "offerta_non_pertinente": 57
+        "ad_fatigue": 65,
+        "geo_ristretta": 53,
+        "offerta_non_pertinente": 22
       },
-      "top_cause": "geo_ristretta",
+      "top_cause": "ad_fatigue",
       "solution": {
-        "label": "Geo troppo ristretta",
-        "intro": "L'audience size è ridotta (≈1K) e la frequenza è già 1.81: il bacino disponibile sta venendo saturato.",
+        "label": "Ad Fatigue",
+        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative (frequenza 1.67) e ha smesso di rispondere dopo aver generato 12 lead nei 14gg precedenti (ultimo il 2026-07-09). Segnale tipico di saturazione recente della creative attuale.",
         "steps": [
-          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
-          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
-          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
+          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
+          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
         ]
       }
     },
     {
       "name": "Centro Mességué ADS 2025",
       "project": "CEA",
-      "spend_2d": 29.46,
-      "ctr": 1.9,
+      "spend_2d": 44.54,
+      "ctr": 2.16,
       "geo": "IT",
       "audience_size": "9.5M",
-      "freq": 1.51,
+      "freq": 1.52,
       "clicks_today": 21,
-      "impressions_today": 1108,
+      "impressions_today": 972,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
-        "spend": 340.56,
+        "spend": 309.86,
         "days_active": 14
       },
       "causes": {
@@ -217,7 +121,71 @@
       "top_cause": "offerta_non_pertinente",
       "solution": {
         "label": "Offerta non pertinente",
-        "intro": "CTR 1.90% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "intro": "CTR 2.16% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "steps": [
+          "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
+          "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
+          "Verificare allineamento offerta-stagione e segmento: lo stesso prodotto può funzionare diversamente in maggio rispetto a gennaio e su over-45 rispetto a under-35"
+        ]
+      }
+    },
+    {
+      "name": "ADV CENTRO ESTETICO AMBRA",
+      "project": "CEA",
+      "spend_2d": 42.29,
+      "ctr": 1.57,
+      "geo": "42.4371,12.1099 +6km",
+      "audience_size": "22K",
+      "freq": 1.8,
+      "clicks_today": 63,
+      "impressions_today": 4004,
+      "hist": {
+        "leads": 1,
+        "last_lead_date": "2026-07-10",
+        "spend": 68.12,
+        "days_active": 4
+      },
+      "causes": {
+        "ad_fatigue": 30,
+        "geo_ristretta": 75,
+        "offerta_non_pertinente": 22
+      },
+      "top_cause": "geo_ristretta",
+      "solution": {
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈22K) e la frequenza è già 1.80: il bacino disponibile sta venendo saturato. Quando convertiva (1 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
+        "steps": [
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
+        ]
+      }
+    },
+    {
+      "name": "Gil Cagné",
+      "project": "CEA",
+      "spend_2d": 31.91,
+      "ctr": 3.07,
+      "geo": "IT",
+      "audience_size": "1K",
+      "freq": 1.36,
+      "clicks_today": 292,
+      "impressions_today": 9493,
+      "hist": {
+        "leads": 0,
+        "last_lead_date": null,
+        "spend": 122.43,
+        "days_active": 10
+      },
+      "causes": {
+        "ad_fatigue": 10,
+        "geo_ristretta": 55,
+        "offerta_non_pertinente": 57
+      },
+      "top_cause": "offerta_non_pertinente",
+      "solution": {
+        "label": "Offerta non pertinente",
+        "intro": "CTR 3.07% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
         "steps": [
           "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
           "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
@@ -228,28 +196,28 @@
     {
       "name": "Golden Beauty 2",
       "project": "CEA",
-      "spend_2d": 23.3,
-      "ctr": 2.09,
+      "spend_2d": 27.09,
+      "ctr": 1.39,
       "geo": "Foggia+17km",
-      "audience_size": "478K",
-      "freq": 1.34,
-      "clicks_today": 72,
-      "impressions_today": 3452,
+      "audience_size": "467K",
+      "freq": 1.11,
+      "clicks_today": 12,
+      "impressions_today": 864,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
-        "spend": 33.25,
-        "days_active": 2
+        "spend": 86.14,
+        "days_active": 6
       },
       "causes": {
         "ad_fatigue": 0,
         "geo_ristretta": 0,
-        "offerta_non_pertinente": 22
+        "offerta_non_pertinente": 35
       },
       "top_cause": "offerta_non_pertinente",
       "solution": {
         "label": "Offerta non pertinente",
-        "intro": "CTR 2.09% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. L'offerta non ha ancora trovato un product-market fit con questo segmento.",
+        "intro": "Il pubblico non sta rispondendo: né con CTR (fermo a 1.39%) né con conversioni. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
         "steps": [
           "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
           "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
@@ -258,83 +226,51 @@
       }
     },
     {
-      "name": "Dott.ssa Orsola Bruno AP",
-      "project": "CEA",
-      "spend_2d": 19.16,
-      "ctr": 3.38,
-      "geo": "IT",
-      "audience_size": "5.8M",
-      "freq": 1.04,
-      "clicks_today": 69,
-      "impressions_today": 2040,
-      "hist": {
-        "leads": 6,
-        "last_lead_date": "2026-06-27",
-        "spend": 270.02,
-        "days_active": 14
-      },
-      "causes": {
-        "ad_fatigue": 47,
-        "geo_ristretta": 0,
-        "offerta_non_pertinente": 34
-      },
-      "top_cause": "ad_fatigue",
-      "solution": {
-        "label": "Ad Fatigue",
-        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 6 lead nei 14gg precedenti (ultimo il 2026-06-27). Segnale tipico di saturazione recente della creative attuale.",
-        "steps": [
-          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
-          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
-          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
-        ]
-      }
-    },
-    {
       "name": "Beauty Art",
       "project": "CEA",
-      "spend_2d": 18.34,
-      "ctr": 1.08,
+      "spend_2d": 24.99,
+      "ctr": 0.8,
       "geo": "",
-      "audience_size": "156K",
-      "freq": 1.13,
-      "clicks_today": 29,
-      "impressions_today": 2678,
+      "audience_size": "61K",
+      "freq": 1.22,
+      "clicks_today": 33,
+      "impressions_today": 4132,
       "hist": {
-        "leads": 3,
-        "last_lead_date": "2026-07-03",
-        "spend": 86.58,
+        "leads": 7,
+        "last_lead_date": "2026-07-10",
+        "spend": 120.42,
         "days_active": 14
       },
       "causes": {
-        "ad_fatigue": 34,
-        "geo_ristretta": 33,
-        "offerta_non_pertinente": 0
+        "ad_fatigue": 35,
+        "geo_ristretta": 50,
+        "offerta_non_pertinente": 30
       },
-      "top_cause": "ad_fatigue",
+      "top_cause": "geo_ristretta",
       "solution": {
-        "label": "Ad Fatigue",
-        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 3 lead nei 14gg precedenti (ultimo il 2026-07-03). Segnale tipico di saturazione recente della creative attuale.",
+        "label": "Geo troppo ristretta",
+        "intro": "L'audience size è ridotta (≈61K): il bacino è troppo piccolo per sostenere il budget allocato senza saturare in pochi giorni. Quando convertiva (7 lead nei 14gg precedenti) il pubblico era ancora 'fresco' — ora il bacino utile si è esaurito.",
         "steps": [
-          "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
-          "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
-          "Refresh copy: nuovo angolo dell'offerta in apertura, riscrivere primo benefit del testo principale"
+          "Ampliare il raggio geo di +10-15 km o aggiungere 2-3 comuni limitrofi mantenendo il target ICP",
+          "Aggiungere 2-3 interessi correlati al servizio per ampliare il pubblico totale senza perdere rilevanza",
+          "Avviare in parallelo un lookalike 1-3% sui lead già acquisiti per scalare in modo simile al pubblico che convertiva"
         ]
       }
     },
     {
       "name": "ADV - Farmacia Martelletto",
       "project": "CEA",
-      "spend_2d": 9.56,
+      "spend_2d": 10.77,
       "ctr": 0.01,
       "geo": "IT",
-      "audience_size": "42.7M",
-      "freq": 1.06,
+      "audience_size": "41.0M",
+      "freq": 1.07,
       "clicks_today": 1,
-      "impressions_today": 9445,
+      "impressions_today": 13329,
       "hist": {
-        "leads": 11,
+        "leads": 7,
         "last_lead_date": "2026-07-06",
-        "spend": 364.12,
+        "spend": 305.55,
         "days_active": 14
       },
       "causes": {
@@ -345,7 +281,7 @@
       "top_cause": "ad_fatigue",
       "solution": {
         "label": "Ad Fatigue",
-        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 11 lead nei 14gg precedenti (ultimo il 2026-07-06). Segnale tipico di saturazione recente della creative attuale.",
+        "intro": "Il pubblico è stato esposto ripetutamente alla stessa creative e ha smesso di rispondere dopo aver generato 7 lead nei 14gg precedenti (ultimo il 2026-07-06). Segnale tipico di saturazione recente della creative attuale.",
         "steps": [
           "Pausare l'ad principale e attivare 2-3 varianti con hook iniziale diverso (problema vs prova sociale vs prima/dopo)",
           "Cambiare formato: se ora è statico passare a video UGC (o viceversa) per spezzare la pattern blindness",
@@ -356,18 +292,18 @@
     {
       "name": "aguaviva adv",
       "project": "CEA",
-      "spend_2d": 4.43,
-      "ctr": 5.07,
+      "spend_2d": 4.01,
+      "ctr": 2.86,
       "geo": "Cervia+30km",
-      "audience_size": "211K",
-      "freq": 1.0,
-      "clicks_today": 58,
-      "impressions_today": 1144,
+      "audience_size": "213K",
+      "freq": 1.01,
+      "clicks_today": 46,
+      "impressions_today": 1610,
       "hist": {
         "leads": 0,
         "last_lead_date": null,
-        "spend": 44.86,
-        "days_active": 8
+        "spend": 28.04,
+        "days_active": 9
       },
       "causes": {
         "ad_fatigue": 10,
@@ -377,7 +313,7 @@
       "top_cause": "offerta_non_pertinente",
       "solution": {
         "label": "Offerta non pertinente",
-        "intro": "CTR 5.07% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
+        "intro": "CTR 2.86% sopra benchmark — l'inserzione attira clic ma il Lead Form Meta non viene completato. La promessa nell'ad non viene percepita come abbastanza forte da chiudere. Lo storico conferma che l'offerta non ha mai convertito stabilmente su questo pubblico.",
         "steps": [
           "Rivedere offerta: cambiare prezzo di ingresso, costruire bundle, aggiungere leva di urgenza (scadenza promo, ultimi posti)",
           "Testare 2-3 nuovi angoli del messaggio: emotional (problema-soluzione personale), razionale (numero/risultato), social proof (testimonianza con nome+città)",
