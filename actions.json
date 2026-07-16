@@ -1,16 +1,27 @@
 {
-  "generated_at": "2026-07-15T04:37:16.325792",
-  "reference_date": "2026-07-14",
+  "generated_at": "2026-07-16T04:09:07.776156",
+  "reference_date": "2026-07-15",
   "actions": [
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ ADS - Adèsso Hotel · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1312718426033158",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158",
+      "details": "Spending 0 ieri, media 7gg precedente 4,51 €. Da verificare.",
+      "reference_date": "2026-07-15",
+      "reference_date_label": "15 lug 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 14/07/2026",
-      "details": "4 zero + 12 high",
-      "reference_date": "2026-07-14",
-      "reference_date_label": "14 lug 2026",
+      "title": "Alert spending — 15/07/2026",
+      "details": "5 zero + 9 high",
+      "reference_date": "2026-07-15",
+      "reference_date_label": "15 lug 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 14/07/2026*\n*Top alert:*\n• :zap: Adv_maison rosabianca (Meta) — 0,00 € (storico 21,78 €) · _Causa da verificare_\n• :zap: Ferdys Account Pubblicitario (Meta) — 0,00 € (storico 14,95 €) · _Causa da verificare_\n• :zap: Adv_Hotel Teti (nuovo) (Meta) — 0,00 € (storico 13,74 €) · _Causa da verificare_\n_+ 13 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-14|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 15/07/2026*\n*Top alert:*\n• :zap: Adv_maison rosabianca (Meta) — 0,00 € (storico 21,78 €) · _Causa da verificare_\n• :zap: Ferdys Account Pubblicitario (Meta) — 0,00 € (storico 11,94 €) · _Causa da verificare_\n• :zap: Adv_Hotel Teti (nuovo) (Meta) — 0,00 € (storico 9,42 €) · _Causa da verificare_\n_+ 11 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-15|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
@@ -20,11 +31,11 @@
       "source": "Meta",
       "client_name": "TETI",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468",
-      "details": "spend_y=0, prev7=96,20 €",
-      "reference_date": "2026-07-14",
-      "reference_date_label": "14 lug 2026",
+      "details": "spend_y=0, prev7=65,96 €",
+      "reference_date": "2026-07-15",
+      "reference_date_label": "15 lug 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — TETI (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 96,20 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — TETI (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 65,96 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     },
@@ -35,11 +46,11 @@
       "source": "Google",
       "client_name": "TETI",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=2772076095",
-      "details": "spend_y=0, prev7=91,17 €",
-      "reference_date": "2026-07-14",
-      "reference_date_label": "14 lug 2026",
+      "details": "spend_y=0, prev7=62,78 €",
+      "reference_date": "2026-07-15",
+      "reference_date_label": "15 lug 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — TETI (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 91,17 €\n<https://ads.google.com/aw/campaigns?__c=2772076095|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — TETI (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 62,78 €\n<https://ads.google.com/aw/campaigns?__c=2772076095|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
