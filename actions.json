@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T04:10:31.393006",
-  "reference_date": "2026-07-20",
+  "generated_at": "2026-07-22T04:10:37.715463",
+  "reference_date": "2026-07-21",
   "actions": [
     {
       "type": "high_spending",
@@ -9,19 +9,41 @@
       "platform": "Google",
       "account_id": "752-894-5060",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
-      "details": "Spesa 164,91 € ieri vs media 7gg 32,86 € (+401,8%)",
-      "reference_date": "2026-07-20",
-      "reference_date_label": "20 lug 2026"
+      "details": "Spesa 153,57 € ieri vs media 7gg 56,42 € (+172,2%)",
+      "reference_date": "2026-07-21",
+      "reference_date_label": "21 lug 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Albatros NEW · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "517-405-1660",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660",
+      "details": "Spesa 72,92 € ieri vs media 7gg 50,46 € (+44,5%)",
+      "reference_date": "2026-07-21",
+      "reference_date_label": "21 lug 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Altafiumara | Account Pubblicitario · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1201395876543423",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1201395876543423",
+      "details": "Spending 0 ieri, media 7gg precedente 26,58 €. Da verificare.",
+      "reference_date": "2026-07-21",
+      "reference_date_label": "21 lug 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 20/07/2026",
-      "details": "1 zero + 9 high",
-      "reference_date": "2026-07-20",
-      "reference_date_label": "20 lug 2026",
+      "title": "Alert spending — 21/07/2026",
+      "details": "2 zero + 11 high",
+      "reference_date": "2026-07-21",
+      "reference_date_label": "21 lug 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 20/07/2026*\n*Top alert:*\n• :zap: ADS - Adèsso Hotel (Meta) — 0,00 € (storico 0,91 €) · _Causa da verificare_\n• :fire: Ciccio + Sorriso ADV (Meta) — 279,64 € (+14,2%)\n• :fire: Arianna Club Family (Google) — 164,91 € (+401,8%)\n_+ 7 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-20|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 21/07/2026*\n*Top alert:*\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 26,58 €) · _Causa da verificare_\n• :zap: ADS - Adèsso Hotel (Meta) — 0,00 € (storico 0,48 €) · _Causa da verificare_\n• :fire: Ciccio + Sorriso ADV (Meta) — 304,44 € (+15,8%)\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-21|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
