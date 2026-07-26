@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-25T04:11:10.250117",
-  "reference_date": "2026-07-24",
+  "generated_at": "2026-07-26T04:11:09.678834",
+  "reference_date": "2026-07-25",
   "actions": [
     {
       "type": "high_spending",
@@ -9,9 +9,9 @@
       "platform": "Meta",
       "account_id": "630436088886762",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
-      "details": "Spesa 67,82 € ieri vs media 7gg 44,63 € (+52,0%)",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026"
+      "details": "Spesa 65,97 € ieri vs media 7gg 49,56 € (+33,1%)",
+      "reference_date": "2026-07-25",
+      "reference_date_label": "25 lug 2026"
     },
     {
       "type": "high_spending",
@@ -20,46 +20,35 @@
       "platform": "Meta",
       "account_id": "404633425550941",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941",
-      "details": "Spesa 56,45 € ieri vs media 7gg 31,88 € (+77,0%)",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026"
-    },
-    {
-      "type": "new_fermo",
-      "priority": "high",
-      "title": "⚫ Arianna Club Family · nuovo account fermo",
-      "platform": "Google",
-      "account_id": "752-894-5060",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
-      "details": "Spending 0 ieri, media 7gg precedente 105,35 €. Da verificare.",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026"
+      "details": "Spesa 54,31 € ieri vs media 7gg 36,17 € (+50,1%)",
+      "reference_date": "2026-07-25",
+      "reference_date_label": "25 lug 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 24/07/2026",
-      "details": "3 zero + 10 high",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026",
+      "title": "Alert spending — 25/07/2026",
+      "details": "3 zero + 14 high",
+      "reference_date": "2026-07-25",
+      "reference_date_label": "25 lug 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 24/07/2026*\n*Top alert:*\n• :zap: Arianna Club Family (Google) — 0,00 € (storico 105,35 €) · _Causa da verificare_\n• :zap: Hotel Cirillo- Adv (Meta) — 0,00 € (storico 14,38 €) · _Causa da verificare_\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 13,71 €) · _Causa da verificare_\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-24|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 25/07/2026*\n*Top alert:*\n• :zap: Arianna Club Family (Google) — 0,00 € (storico 104,86 €) · _Causa da verificare_\n• :zap: Hotel Cirillo- Adv (Meta) — 0,00 € (storico 11,80 €) · _Causa da verificare_\n• :zap: Altafiumara | Account Pubblicitario (Meta) — 0,00 € (storico 9,61 €) · _Causa da verificare_\n_+ 14 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-07-25|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
       "type": "bf_fermo",
-      "priority": "high",
-      "title": "⚫ Bee Family ARIANNA — nuovo fermo",
+      "priority": "medium",
+      "title": "⚠️ Bee Family ARIANNA — fermo persistente",
       "source": "Google",
       "client_name": "ARIANNA",
       "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
-      "details": "spend_y=0, prev7=737,45 €",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026",
+      "details": "spend_y=0, prev7=734,02 €",
+      "reference_date": "2026-07-25",
+      "reference_date_label": "25 lug 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚫ *Bee Family — ARIANNA (Google)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 737,45 €\n<https://ads.google.com/aw/campaigns?__c=7528945060|Apri account →>",
-      "skip_if_quiet": false,
-      "severity": "high"
+      "slack_template": "⚠️ *Bee Family — ARIANNA (Google)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 734,02 €\n<https://ads.google.com/aw/campaigns?__c=7528945060|Apri account →>",
+      "skip_if_quiet": true,
+      "severity": "medium"
     },
     {
       "type": "bf_fermo",
@@ -68,11 +57,11 @@
       "source": "Meta",
       "client_name": "CIRILLO",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=432856047384850",
-      "details": "spend_y=0, prev7=100,67 €",
-      "reference_date": "2026-07-24",
-      "reference_date_label": "24 lug 2026",
+      "details": "spend_y=0, prev7=82,61 €",
+      "reference_date": "2026-07-25",
+      "reference_date_label": "25 lug 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — CIRILLO (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 100,67 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=432856047384850|Apri account →>",
+      "slack_template": "⚠️ *Bee Family — CIRILLO (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 82,61 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=432856047384850|Apri account →>",
       "skip_if_quiet": true,
       "severity": "medium"
     }
