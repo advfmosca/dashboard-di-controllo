@@ -488,23 +488,34 @@ function buildAGHCCardHTML(item, idPrefix) {
     ? `<div class="trend"><span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span><span>${escapeHtml(item.trend_label || "")}</span>${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}</div>`
     : "";
   let budgetBlock = "";
-  if (item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) {
-    const b = item.budget;
-    const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
-    const residuo = (b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null;
-    const pctVal = b.budget_pct;
-    let barWidth = pctVal != null ? Math.min(100, pctVal) : 0;
-    budgetBlock = `<div class="budget">
-      <div class="row">
-        <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
-        <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
-      </div>
-      <div class="row" style="margin-top:4px">
-        <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
-        ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
-      </div>
-      ${pctVal != null ? `<div class="bar"><div class="fill" style="width:${barWidth}%"></div></div>` : ''}
-    </div>`;
+  // v2: supporta piu' strutture per card (account Meta condiviso). Fallback al budget singolo.
+  const _bstructs = (Array.isArray(item.budget_structures) && item.budget_structures.length)
+    ? item.budget_structures
+    : ((item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) ? [item.budget] : []);
+  if (_bstructs.length) {
+    const _yr = (item.budget && item.budget.year) || (_bstructs[0] && _bstructs[0].year) || "2026";
+    const _multi = _bstructs.length > 1;
+    const _rows = _bstructs.map(b => {
+      if (b.budget_annuale == null || b.budget_annuale <= 0) return "";
+      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
+      const residuo = (b.residuo != null) ? b.residuo
+        : ((b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null);
+      const pctVal = b.budget_pct;
+      const barWidth = pctVal != null ? Math.min(100, pctVal) : 0;
+      const fillCls = pctVal == null ? "" : (pctVal >= 90 ? " danger" : (pctVal >= 70 ? " warn" : ""));
+      const title = (_multi && b.name) ? `<div class="lbl" style="font-weight:700;letter-spacing:.3px;margin-bottom:3px">${escapeHtml(b.name)}</div>` : "";
+      return `${title}
+        <div class="row">
+          <div><div class="lbl">Budget approvato (${_yr})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
+          <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
+        </div>
+        <div class="row" style="margin-top:4px">
+          <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
+          ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
+        </div>
+        ${pctVal != null ? `<div class="bar"><div class="fill${fillCls}" style="width:${barWidth}%"></div></div>` : ''}`;
+    }).filter(Boolean).join('<div style="height:1px;background:var(--border);margin:9px 0"></div>');
+    if (_rows) budgetBlock = `<div class="budget">${_rows}</div>`;
   }
   const chartBlock = `<div class="mini-chart-wrap">
     <div class="mc-title"><span>Andamento spesa (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span></span></div>

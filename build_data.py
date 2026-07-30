@@ -929,16 +929,42 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                     van_lpv_y = v["lpv"]
                     van_eng_y = v.get("page_eng", 0)
 
-        # ===== Budget approvato + Speso YTD =====
+        # ===== Budget approvato + Speso YTD (v2: ytd_spent autorevole + split per struttura) =====
         budget_info = budgets_clients.get(mid, {}) if isinstance(budgets_clients, dict) else {}
+
+        def _live_ytd():
+            v = ytd_by_account.get(mid, 0)
+            for tt_id in info["tiktok_ids"]:
+                v += ytd_by_account.get(tt_id, 0)
+            return v
+
+        def _mk_budget(bi, name=None):
+            ba = bi.get("budget_annuale")
+            if "ytd_spent" in bi:                      # valore autorevole gen->mese chiuso (aggiornato a fine mese)
+                ys = round(float(bi.get("ytd_spent") or 0), 2)
+            else:                                      # retrocompat: seed + finestra live
+                ys = round((bi.get("ytd_seed") or 0) + _live_ytd(), 2)
+            pct = (ys / ba * 100) if ba and ba > 0 else None
+            return {
+                "year": target_year,
+                "name": name,
+                "budget_annuale": ba,
+                "ytd_spent": ys,
+                "residuo": round(ba - ys, 2) if ba is not None else None,
+                "budget_pct": round(pct, 1) if pct is not None else None,
+            }
+
+        _structures = budget_info.get("structures") if isinstance(budget_info, dict) else None
+        if _structures:
+            budget_obj = None
+            budget_structures = [_mk_budget(s, s.get("name")) for s in _structures]
+        else:
+            budget_obj = _mk_budget(budget_info) if budget_info else {
+                "year": target_year, "name": None, "budget_annuale": None,
+                "ytd_spent": 0, "residuo": None, "budget_pct": None,
+            }
+            budget_structures = None
         budget_annuale = budget_info.get("budget_annuale")
-        ytd_seed = budget_info.get("ytd_seed") or 0
-        ytd_spent_from_data = ytd_by_account.get(mid, 0)
-        # Aggiungi anche eventuali TikTok ids dello stesso cliente
-        for tt_id in info["tiktok_ids"]:
-            ytd_spent_from_data += ytd_by_account.get(tt_id, 0)
-        ytd_spent = round(ytd_seed + ytd_spent_from_data, 2)
-        budget_pct = (ytd_spent / budget_annuale * 100) if budget_annuale and budget_annuale > 0 else None
 
         # ===== Rational descrittivo argomentato con vanity inline =====
         rational = _build_aghc_rational(
@@ -996,13 +1022,8 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
                 "lpv_y": van_lpv_y,
                 "page_eng_y": van_eng_y,
             },
-            "budget": {
-                "year": target_year,
-                "budget_annuale": budget_annuale,
-                "ytd_seed": ytd_seed if ytd_seed else None,
-                "ytd_spent": ytd_spent,
-                "budget_pct": round(budget_pct, 1) if budget_pct is not None else None,
-            },
+            "budget": budget_obj,
+            "budget_structures": budget_structures,
             # Liste campagne attive sulla window (Meta + TikTok), usate dalla vista
             # cliente per il blocco "Campagne attive" con Target + Grandezza Pubblico
             # per singola campagna (target/audience da client_display_names.json o

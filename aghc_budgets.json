@@ -1,86 +1,117 @@
 {
-  "_README": "Budget annuali AGHC importati dal report mensile (https://github.com/advfmosca/report-aghc-monthly _scripts/anagrafica.py). ytd_seed = spending cumulativo gen-apr 2026 importato da _data/data-2026-04.json. Quando arriva un nuovo report mensile aggiorna ytd_seed sommando gen → mese chiuso.",
-  "_source": "report-aghc-monthly anagrafica.py + data-2026-04.json (importati il 18/05/2026)",
+  "_README": "Budget annuali AGHC 2026 = importi APPROVATI in fase di strategy (deck Canva). ytd_spent = spesa reale cumulata Meta+TikTok gen->ultimo mese chiuso (Windsor). AGGIORNAMENTO MENSILE: a fine mese sostituire ytd_spent di ogni struttura col nuovo cumulato gen->mese. 'structures' spezza un account Meta condiviso in piu' strutture, ognuna con budget e speso propri. build_data.py usa ytd_spent come valore autorevole (niente doppio conteggio con la finestra live).",
+  "_source": "Strategy Canva 2026 + spesa Windsor gen-lug 2026 (estratti 30/07/2026).",
   "year": 2026,
   "clients": {
     "1312718426033158": {
       "name": "ACCENTODI + ADESSO",
       "budget_annuale": 4800,
-      "ytd_seed": 1694.77,
-      "_note": "2400 ACCENTODI + 2400 ADESSO. Seed = somma spending gen-apr 2026"
+      "ytd_spent": 2492.92,
+      "_note": "Non in strategy 2026: budget invariato da anagrafica."
     },
     "1201395876543423": {
       "name": "ALTAFIUMARA",
       "budget_annuale": 23000,
-      "ytd_seed": 1799.55
+      "ytd_spent": 4164.22
     },
     "1489903155429629": {
       "name": "CASTELLO",
-      "budget_annuale": 14400,
-      "ytd_seed": 1617.90
+      "budget_annuale": 8000,
+      "ytd_spent": 3414.41
     },
     "911357333863123": {
       "name": "DELLA PIANA",
-      "budget_annuale": 14000,
-      "ytd_seed": 1349.34
+      "budget_annuale": 17000,
+      "ytd_spent": 4863.85,
+      "_note": "Meta 2577.97 + TikTok 2285.88."
     },
     "1528485957725509": {
-      "name": "HANNAH + HANNAH TERRACES",
-      "budget_annuale": 16200,
-      "ytd_seed": 2991.67,
-      "_note": "9000 HANNAH + 7200 HANNAH TERRACES. Seed = somma spending gen-apr"
+      "name": "HANNAH",
+      "structures": [
+        {
+          "name": "HANNAH",
+          "budget_annuale": 9000,
+          "ytd_spent": 4302.82,
+          "campaign_note": "campagne 'Hannah Hotels Collection'"
+        },
+        {
+          "name": "PUNTEBIANCHE",
+          "budget_annuale": 11100,
+          "ytd_spent": 638.75,
+          "campaign_note": "campagna 'Puntebianche - AON'"
+        }
+      ],
+      "_note": "Account condiviso. Hannah Terraces esclusa (non fa piu' ADV)."
     },
     "217115315497718": {
       "name": "HEMANAIRE",
       "budget_annuale": 15000,
-      "ytd_seed": 2584.57
+      "ytd_spent": 3798.47,
+      "_note": "Account CW CM 2020 - AP = Hemanaire."
     },
     "4666471140299701": {
       "name": "LIVATA",
-      "budget_annuale": 15000,
-      "ytd_seed": 0.00
+      "budget_annuale": 20000,
+      "ytd_spent": 0.0,
+      "_note": "Nuova apertura, 0 a fine luglio."
     },
     "687349689221880": {
       "name": "LUNETTA",
       "budget_annuale": 18000,
-      "ytd_seed": 3023.48
+      "ytd_spent": 8434.64,
+      "_note": "Meta 5032.74 + TikTok 3401.90."
     },
     "1372615496521110": {
       "name": "MAGARI ESTATES",
       "budget_annuale": 24600,
-      "ytd_seed": 1857.15
+      "ytd_spent": 4006.12
     },
     "821188209852436": {
-      "name": "MARCELLA ROYAL + TERRAZZA FLAVIA",
-      "budget_annuale": 21900,
-      "ytd_seed": 2488.06,
-      "_note": "14400 MARCELLA ROYAL + 7500 TERRAZZA FLAVIA. Seed = somma spending gen-apr"
+      "name": "MARCELLA ROYAL",
+      "structures": [
+        {
+          "name": "MARCELLA ROYAL",
+          "budget_annuale": 14400,
+          "ytd_spent": 3082.93,
+          "campaign_note": "Meta 'Marcella Royal - AON' 2313.03 + TikTok 769.90"
+        },
+        {
+          "name": "TERRAZZA FLAVIA",
+          "budget_annuale": 7500,
+          "ytd_spent": 2650.2,
+          "campaign_note": "Meta 'Terrazza Flavia - AON'"
+        }
+      ],
+      "_note": "Account condiviso Marcella + Terrazza Flavia."
     },
     "1432341844596179": {
       "name": "MARE",
-      "budget_annuale": 15000,
-      "ytd_seed": 4992.43
+      "budget_annuale": 14400,
+      "ytd_spent": 7875.14,
+      "_note": "Meta 3669.26 + TikTok 4205.88."
     },
     "752450855779035": {
       "name": "MONTEMAGNO",
-      "budget_annuale": null,
-      "ytd_seed": 632.97,
-      "_note": "Budget annuale TBD. Seed = somma spending gen-apr"
+      "budget_annuale": 22000,
+      "ytd_spent": 4209.3,
+      "_note": "Piano da Q2 2026."
     },
     "30233607946222961": {
       "name": "VILLA ERMELLINA",
-      "budget_annuale": 16400,
-      "ytd_seed": 3746.00
+      "budget_annuale": 18400,
+      "ytd_spent": 6806.42,
+      "_note": "Meta 4675.90 + TikTok 2130.52."
     },
     "1849759899186169": {
       "name": "VILLA GIADA",
       "budget_annuale": 21600,
-      "ytd_seed": 1844.62
+      "ytd_spent": 6828.17,
+      "_note": "Meta 5382.34 + TikTok 1445.83."
     },
     "1353024533007038": {
       "name": "VILLA MILIANI",
-      "budget_annuale": 6600,
-      "ytd_seed": 3335.83
+      "budget_annuale": 12000,
+      "ytd_spent": 5496.38
     }
   }
 }
