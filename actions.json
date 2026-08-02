@@ -1,5 +1,83 @@
 {
-  "generated_at": "2026-08-02T17:22:46.154833",
+  "generated_at": "2026-08-02T17:23:17.497590",
   "reference_date": "2026-08-01",
-  "actions": []
+  "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Albatros ADV · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "630436088886762",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
+      "details": "Spesa 120,61 € ieri vs media 7gg 29,54 € (+308,3%)",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 BeeFamily 2 · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "1506205527775161",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1506205527775161",
+      "details": "Spesa 91,25 € ieri vs media 7gg 49,49 € (+84,4%)",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Sogno · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "737254889441352",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=737254889441352",
+      "details": "Spesa 68,98 € ieri vs media 7gg 12,41 € (+455,8%)",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Adv_Hotel Teti (nuovo) · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "408911445156468",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=408911445156468",
+      "details": "Spesa 51,87 € ieri vs media 7gg 14,36 € (+261,1%)",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Arianna Club Family · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "752-894-5060",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=7528945060",
+      "details": "Spesa 51,78 € ieri vs media 7gg 18,34 € (+182,4%)",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ Lia Nunziante · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "404633425550941",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941",
+      "details": "Spending 0 ieri, media 7gg precedente 52,73 €. Da verificare.",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026"
+    },
+    {
+      "type": "spending_anomaly",
+      "priority": "high",
+      "title": "Alert spending — 01/08/2026",
+      "details": "2 zero + 19 high",
+      "reference_date": "2026-08-01",
+      "reference_date_label": "1 ago 2026",
+      "slack_target": "C0B2RE5KSHG",
+      "slack_template": ":rotating_light: *Check spending — 01/08/2026*\n*Top alert:*\n• :zap: Lia Nunziante (Meta) — 0,00 € (storico 52,73 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 26,30 €) · _Causa da verificare_\n• :fire: Ciccio + Sorriso ADV (Meta) — 297,97 € (-0,6%)\n_+ 18 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-08-01|:link: Apri dashboard →>",
+      "skip_if_quiet": false
+    }
+  ]
 }
