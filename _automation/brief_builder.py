@@ -3,22 +3,15 @@ brief_builder.py — single source of truth per data-brief.json
 
 Endpoint light (~1-2 KB) usato da:
 - fmm-morning-brief (08:30) — health emoji + top critici + link deep
-- semaforo-v2-drift-monitor (post 09:15) — kpi+_meta v2 di CEA/MedTech
 
 Storia:
 - 2026-05-22 (P3): nato per token-saving del Morning Brief (vs data.json ~400 KB)
-- 2026-05-24: esteso con `kpi` + `_meta` per cea/medtech, così il drift monitor
-  non deve più fare fetch del data.json (che WebFetch tronca a ~88 KB).
 
 CRITICO: il payload DEVE restare ben sotto i 50 KB. Niente entries[], niente
 series[], niente rationals HTML. Solo contatori aggregati + meta.
 
 Chiamato da:
-- build_data.py (refresh-dashboard-data, 06:34) — dopo aver scritto data.json
-- _automation/build_dashboard_payload.py (dashboard-csv-update, 09:15) — dopo
-  aver mergiato CEA+MedTech dai CSV di Alfredo.
-
-Senza la chiamata da csv-update, data-brief.json restava 24h indietro su cea/medtech.
+- build_data.py (refresh-dashboard-data) — dopo aver scritto data.json
 """
 
 import json
@@ -47,7 +40,7 @@ def _slim(d, allowed):
 
 
 def _section_summary(section, entries_key):
-    """Costruisce il sommario per una sezione (cea|medtech|beefamily) dato
+    """Costruisce il sommario per una sezione (beefamily|aghc) dato
     il nome del campo entries (entries / cards)."""
     section = section or {}
     entries = section.get(entries_key, []) or []
@@ -77,8 +70,6 @@ def build_brief_payload(data):
     # _section_summary già produce la chiave corretta (entries_count o cards_count)
     bf_summary  = _section_summary(data.get("beefamily"), "entries")
     ag_summary  = _section_summary(data.get("aghc"),      "cards")
-    mt_summary  = _section_summary(data.get("medtech"),   "entries")
-    cea_summary = _section_summary(data.get("cea"),       "entries")
 
     return {
         "reference_date": data.get("reference_date"),
@@ -94,8 +85,6 @@ def build_brief_payload(data):
         },
         "beefamily": bf_summary,
         "aghc": ag_summary,
-        "medtech": mt_summary,
-        "cea": cea_summary,
         "other_roster": {
             "total_count": other_obj.get("total_count", 0),
             "total_spend_window": other_obj.get("total_spend_window", 0),

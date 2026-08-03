@@ -9,7 +9,7 @@ Legge i 4 dataset Windsor raw e scrive:
 
 Usage:
   python3 build_data.py --meta meta.json --google google.json \
-    --tiktok tiktok.json --medtech medtech.json \
+    --tiktok tiktok.json \
     --workspace "/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo"
 """
 
@@ -71,15 +71,8 @@ AGHC = [
     {"name": "VILLA MILIANI",   "meta_id": "1353024533007038",  "tiktok_id": None},
 ]
 
-MEDTECH_META_ACCOUNT = "533672775128363"
-MEDTECH_FILTER = re.compile(r"Total Lift|Total Sculpt", re.IGNORECASE)
-
+# Account esclusi dal report spending / other_roster (id storici non più attivi).
 EXCLUDED_SPENDING = {"1576344015714351", "533672775128363"}
-
-# CEA Meta ids — placeholder. CEA è alimentato dai CSV di Alfredo, non da Windsor.
-# In linea generale gli account CEA NON compaiono nei rows Meta di Windsor (non sono connessi),
-# quindi non finiscono in other_roster. Tenuto come set vuoto per esclusione esplicita.
-CEA_META_IDS: set = set()
 
 # Slack targets per le azioni slack auto-generate (assorbiti da fmm-dashboard legacy).
 SLACK_CHANNEL_ANOMALIE_SPENDING = "C0B2RE5KSHG"  # #anomalie-spending
@@ -155,7 +148,6 @@ def build_daily_map(rows, is_meta_with_leads=False):
         if is_meta_with_leads:
             # actions_lead è già il TOTALE di tutti gli eventi "Lead" (pixel website + onsite leadgen + offline).
             # Per gli hotel BF questo cattura i "Contatti acquisiti sul sito web" tracciati via Pixel/CAPI.
-            # Per Med & Tech (Instant Forms) actions_lead coincide con actions_onsite_conversion_lead_grouped.
             contatti = int(r.get("actions_lead") or 0)
             if contatti:
                 e["contatti_daily"][d] = e["contatti_daily"].get(d, 0) + contatti
@@ -237,7 +229,7 @@ def daily_series(daily, ref_iso, days):
 
 def status_account(spend_y, contatti_y, prev7_spend, prev7_contatti, project_type="hotel"):
     """
-    project_type: 'hotel' (BF + AGHC) | 'leadgen' (Med & Tech)
+    project_type: 'hotel' (BF + AGHC) | 'leadgen' (campagne a lead)
     Hotel: status su anomalia spending; contatti informativi.
     Leadgen: status su CPL (Cost Per Contatto).
     """
@@ -322,23 +314,6 @@ def recap_beefamily_slack(kpi, entries, yesterday):
         f"{kpi['actives']} account attivi su {kpi['total']} · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {grays} NERO",
         f"Spending: {fmt_eur(kpi['total_spend'])} · Contatti: {kpi['total_contatti']} · CPL medio: {fmt_eur(kpi['cpc_y']) if kpi['cpc_y'] else '—'}",
         f"Dashboard cliente: {PAGES_URL}beefamily.html",
-    ]
-    return "\n".join(lines)
-
-def recap_medtech_slack(kpi, entries, yesterday):
-    """Replica del messaggio della scheduled task med-tech-daily-total-lift-sculpt.
-    Niente emoji (inoltrato su WhatsApp), niente landing/copy esterno, solo moduli Lead Ad."""
-    reds   = sum(1 for e in entries if e.get("status", {}).get("color") == "red")
-    yellows= sum(1 for e in entries if e.get("status", {}).get("color") == "yellow")
-    greens = sum(1 for e in entries if e.get("status", {}).get("color") == "green")
-    # "NERO" della scheduled task = campagna ferma → mappato sul color "black" (fallback su "gray" per retro-compat)
-    blacks = sum(1 for e in entries if e.get("status", {}).get("color") in ("black", "gray"))
-    lines = [
-        "Med & Tech —",
-        f"Daily Check del {date_slash(yesterday)}",
-        f"{kpi['actives']} campagne attive · {reds} ROSSO · {yellows} GIALLO · {greens} VERDE · {blacks} NERO",
-        f"Apri Report Storico: https://advfmosca.github.io/med-tech-daily-check/",
-        f"Apri dashboard: {PAGES_URL}#medtech",
     ]
     return "\n".join(lines)
 
@@ -1026,8 +1001,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             "budget_structures": budget_structures,
             # Liste campagne attive sulla window (Meta + TikTok), usate dalla vista
             # cliente per il blocco "Campagne attive" con Target + Grandezza Pubblico
-            # per singola campagna (target/audience da client_display_names.json o
-            # mtcea_clients_meta.json a livello campagna).
+            # per singola campagna (target/audience da client_display_names.json).
             "meta_campaigns": aghc_meta_camps_by_aid.get(mid, []),
             "tiktok_campaigns": [
                 c for tt_id in info["tiktok_ids"]
@@ -1043,7 +1017,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
 
 # ============================ BUILD ============================
 
-def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_date=None, vanity_rows=None, budgets_config=None):
+def build(meta_rows, google_rows, tiktok_rows, now_dt=None, ref_date=None, vanity_rows=None, budgets_config=None):
     now = now_dt or datetime.now()
     today = now.date()
     yesterday = ref_date if ref_date is not None else today - timedelta(days=1)
@@ -1125,10 +1099,6 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
     bf_google_s, bf_google_n = project_spend(google_rows, bf_google_ids)
     aghc_meta_s, aghc_meta_n = project_spend(meta_rows, aghc_meta_ids)
     aghc_tt_s, aghc_tt_n = project_spend(tiktok_rows, aghc_tt_ids)
-
-    # NOTA: Med & Tech NON viene più calcolato da Windsor. La TAB Med & Tech è
-    # alimentata esclusivamente dai CSV di Alfredo via _automation/build_dashboard_payload.py
-    # che aggiunge anche "Med & Tech" e "CEA" a overview.projects quando popolato.
 
     proj_data = [
         {"name": "BeeFamily",   "spend": round(bf_meta_s + bf_google_s, 2), "accounts": bf_meta_n + bf_google_n},
@@ -1350,15 +1320,9 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
         "recap": recap_aghc_slack(aghc_cards, yesterday),
     }
 
-    # NOTA: data["medtech"] e data["cea"] vengono popolati ESCLUSIVAMENTE dal
-    # connettore _automation/build_dashboard_payload.py (CSV di Alfredo).
-    # build_data.py non legge più raw/medtech.json. Tuttavia, se esistono già
-    # nel data.json precedente, li PRESERVA (importante per evitare di
-    # cancellarli accidentalmente quando si rilancia build_data.py).
-
     # ============= OTHER ROSTER (assorbe fmm-discover-other-accounts) =============
-    # Account Meta visibili nel dataset Windsor che NON appartengono a BF/AGHC/medtech/CEA.
-    exclude_other = set(bf_meta_ids) | set(aghc_meta_ids) | {MEDTECH_META_ACCOUNT} | set(CEA_META_IDS) | set(EXCLUDED_SPENDING)
+    # Account Meta visibili nel dataset Windsor che NON appartengono a BF/AGHC.
+    exclude_other = set(bf_meta_ids) | set(aghc_meta_ids) | set(EXCLUDED_SPENDING)
     out["other_roster"] = _build_other_roster(
         meta_rows=meta_rows,
         meta_map=meta_map,
@@ -1372,7 +1336,7 @@ def build(meta_rows, google_rows, tiktok_rows, medtech_rows, now_dt=None, ref_da
 
 def _build_other_roster(meta_rows, meta_map, exclude_ids, y_iso, window_days=15):
     """Lista account Meta visibili in Windsor (meta_rows) che NON sono in
-    BeeFamily / AGHC / Med&Tech / CEA / EXCLUDED. Per ciascuno calcola lo
+    BeeFamily / AGHC / EXCLUDED. Per ciascuno calcola lo
     spend_window_15d (somma su `window_days` precedenti a y_iso incluso) e
     spend_y (spend di reference_date).
 
@@ -1421,142 +1385,6 @@ def _build_other_roster(meta_rows, meta_map, exclude_ids, y_iso, window_days=15)
     }
 
 
-def preserve_csv_sections(out, workspace):
-    """Re-inietta in `out` le sezioni `cea`, `medtech` e overview.projects(CEA/Med&Tech)
-    scritte da dashboard-csv-update / build_dashboard_payload.py.
-
-    Strategia in due passaggi (modificata 2026-05-22 per non lasciare mai le card vuote):
-
-      PASS 1 — FRESH:
-        Cerca le sezioni cea/medtech in:
-          1) snapshots/<reference_date>.json   (autoritativo per il giorno specifico)
-          2) data.json                          (se _meta.reference_date coincide con out.reference_date)
-        Se trova una sezione "fresh" la usa così com'è.
-
-      PASS 2 — STALE FALLBACK (introdotto 2026-05-22):
-        Se al termine del PASS 1 una sezione è ancora vuota (= dashboard-csv-update
-        non è ancora girato per il giorno corrente — tipico tra 06:30 e 09:15),
-        scansiona snapshots/*.json in ordine cronologico decrescente e usa la
-        sezione più recente disponibile, marcandola con `_meta.stale = true` +
-        `_meta.stale_from = "<DATA>"`.
-        Risultato: tra 06:30 e 09:15 le card mostrano i dati del giorno precedente
-        (esplicitamente etichettati come stale) invece di apparire vuote.
-
-    Background regression evitate:
-      - 2026-05-20: rebuild Windsor + stash pop sovrascrivevano col giorno sbagliato →
-        fix b7d488d con `_meta.reference_date` rigoroso.
-      - 2026-05-22: dopo il fix b7d488d, ogni mattina alle 06:30 cea+medtech restavano
-        vuoti finché dashboard-csv-update (09:15) non arrivava → questo fallback
-        STALE copre quella finestra mantenendo coerenza temporale tramite il marker.
-    """
-    import os as _os
-    ref_date = out.get("reference_date")
-
-    def _is_fresh(section, expected_ref, container_ref):
-        """Sezione fresca se _meta.reference_date == expected_ref.
-        Backward-compat: se manca _meta, accetta match su container.reference_date."""
-        if not isinstance(section, dict) or not expected_ref:
-            return False
-        meta_ref = (section.get("_meta") or {}).get("reference_date")
-        if meta_ref == expected_ref:
-            return True
-        if meta_ref is None and container_ref == expected_ref:
-            return True
-        return False
-
-    def _load_json(path):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return None
-
-    # ============ PASS 1 — FRESH (giorno corrente) ============
-    candidates = []
-    if ref_date:
-        snap_path = _os.path.join(workspace, "snapshots", f"{ref_date}.json")
-        if _os.path.exists(snap_path):
-            candidates.append(("snapshots/" + ref_date + ".json", snap_path))
-    data_json = _os.path.join(workspace, "data.json")
-    if _os.path.exists(data_json):
-        candidates.append(("data.json", data_json))
-
-    cea_taken = False
-    medtech_taken = False
-    overview_src = None
-
-    for label, path in candidates:
-        prev = _load_json(path)
-        if prev is None:
-            continue
-        prev_ref = prev.get("reference_date")
-        if not cea_taken:
-            cea_sec = prev.get("cea") or {}
-            if cea_sec.get("entries") and _is_fresh(cea_sec, ref_date, prev_ref):
-                out["cea"] = cea_sec
-                cea_taken = True
-        if not medtech_taken:
-            mt_sec = prev.get("medtech") or {}
-            if mt_sec.get("entries") and _is_fresh(mt_sec, ref_date, prev_ref):
-                out["medtech"] = mt_sec
-                medtech_taken = True
-        if overview_src is None and prev.get("overview", {}).get("projects") and prev_ref == ref_date:
-            overview_src = prev
-        if cea_taken and medtech_taken and overview_src is not None:
-            break
-
-    # ============ PASS 2 — STALE FALLBACK (giorno precedente più recente) ============
-    if not cea_taken or not medtech_taken:
-        snap_dir = _os.path.join(workspace, "snapshots")
-        snap_files = []
-        if _os.path.isdir(snap_dir):
-            for fname in _os.listdir(snap_dir):
-                # Solo file YYYY-MM-DD.json (esclude index.json)
-                if re.match(r"^\d{4}-\d{2}-\d{2}\.json$", fname):
-                    iso = fname[:-5]  # rimuove .json
-                    if iso != ref_date:
-                        snap_files.append((iso, _os.path.join(snap_dir, fname)))
-            snap_files.sort(key=lambda x: x[0], reverse=True)
-
-        for iso_date, snap_path in snap_files:
-            if cea_taken and medtech_taken:
-                break
-            prev = _load_json(snap_path)
-            if prev is None:
-                continue
-            if not cea_taken:
-                cea_sec = prev.get("cea") or {}
-                if cea_sec.get("entries"):
-                    sec = dict(cea_sec)
-                    meta = dict(sec.get("_meta") or {})
-                    meta["stale"] = True
-                    meta["stale_from"] = iso_date
-                    sec["_meta"] = meta
-                    out["cea"] = sec
-                    cea_taken = True
-            if not medtech_taken:
-                mt_sec = prev.get("medtech") or {}
-                if mt_sec.get("entries"):
-                    sec = dict(mt_sec)
-                    meta = dict(sec.get("_meta") or {})
-                    meta["stale"] = True
-                    meta["stale_from"] = iso_date
-                    sec["_meta"] = meta
-                    out["medtech"] = sec
-                    medtech_taken = True
-
-    # Aggiungi Med & Tech + CEA in overview.projects (dal source più affidabile)
-    if overview_src is not None and "overview" in out and "projects" in out["overview"]:
-        prev_projects = overview_src.get("overview", {}).get("projects", [])
-        existing_names = {p["name"] for p in out["overview"]["projects"]}
-        for p in prev_projects:
-            if p.get("name") in ("Med & Tech", "CEA") and p["name"] not in existing_names:
-                out["overview"]["projects"].append(p)
-        tot = sum(p.get("spend", 0) for p in out["overview"]["projects"]) or 1
-        for p in out["overview"]["projects"]:
-            p["pct"] = round((p.get("spend", 0) or 0) / tot * 100, 2)
-    return out
-
 def _clean_sp(r):
     return {
         "platform": r["platform"],
@@ -1569,144 +1397,6 @@ def _clean_sp(r):
         "ad_url": r.get("ad_url"),
     }
 
-def _medtech_status(spend_y, lead_y, cpl_mean_3d):
-    """
-    Med & Tech: campagne brevi (≈14 giorni) → ottimizzazione giornaliera, soglia media 3gg.
-    - NERO: spend ieri == 0 (campagna ferma)
-    - ROSSO: 0 lead pur con spending OPPURE CPL ieri > 1.5x media 3gg
-    - GIALLO: CPL ieri tra 1.0x e 1.5x media 3gg
-    - VERDE: CPL ieri ≤ media 3gg
-    """
-    if spend_y == 0:
-        return {"color": "black", "label": "NERO",
-                "reason": "Nessuna spesa ieri sulla campagna"}
-    if lead_y == 0:
-        return {"color": "red", "label": "ROSSO",
-                "reason": f"Spesi {fmt_eur(spend_y)} ieri senza generare lead via modulo Lead Ad"}
-    cpl_y = spend_y / lead_y
-    if cpl_mean_3d is None or cpl_mean_3d == 0:
-        return {"color": "green", "label": "VERDE",
-                "reason": f"Spesi {fmt_eur(spend_y)} con {lead_y} lead (CPL {fmt_eur(cpl_y)})"}
-    ratio = cpl_y / cpl_mean_3d
-    delta_pct = (ratio - 1) * 100
-    if ratio > 1.5:
-        return {"color": "red", "label": "ROSSO",
-                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, oltre la soglia +50%)"}
-    if ratio > 1.0:
-        return {"color": "yellow", "label": "GIALLO",
-                "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, lieve crescita)"}
-    return {"color": "green", "label": "VERDE",
-            "reason": f"CPL ieri {fmt_eur(cpl_y)} contro media 3gg {fmt_eur(cpl_mean_3d)} ({fmt_pct(delta_pct)}, in linea o sotto)"}
-
-
-def _build_medtech(rows, y_iso, yesterday):
-    """
-    Tab Med & Tech allineata alla scheduled task med-tech-daily-total-lift-sculpt:
-    - Solo moduli Lead Ad (Instant Forms) — niente landing page
-    - Stati semaforici NERO/ROSSO/GIALLO/VERDE
-    - Trend 3gg di CPL
-    """
-    camp_map = {}
-    for r in rows:
-        camp = r.get("campaign")
-        if not camp or not MEDTECH_FILTER.search(camp):
-            continue
-        if camp not in camp_map:
-            camp_map[camp] = {"daily": {}, "lead_daily": {}, "status": r.get("campaign_effective_status")}
-        e = camp_map[camp]
-        d = r.get("date")
-        e["daily"][d] = e["daily"].get(d, 0) + float(r.get("spend") or 0)
-        # Med & Tech usa SOLO Instant Forms → actions_onsite_conversion_lead_grouped è il dato canonico
-        ld = int(r.get("actions_onsite_conversion_lead_grouped") or r.get("actions_lead") or 0)
-        if ld:
-            e["lead_daily"][d] = e["lead_daily"].get(d, 0) + ld
-        if r.get("campaign_effective_status"):
-            e["status"] = r["campaign_effective_status"]
-
-    # Helper: media CPL ultimi 7gg per una campagna (esclude eventuali giorni a 0 lead)
-    def cpl_mean_3d(daily, lead_daily, ref_iso):
-        ref = parse_iso(ref_iso)
-        cpls = []
-        for i in range(1, 4):
-            d = iso(ref - timedelta(days=i))
-            s = daily.get(d, 0)
-            l = lead_daily.get(d, 0)
-            if l > 0 and s > 0:
-                cpls.append(s / l)
-        return sum(cpls) / len(cpls) if cpls else None
-
-    # Helper: trend 3gg ultimi (CPL giornaliero degli ultimi 3 giorni esclusi vuoti)
-    def cpl_trend_3d(daily, lead_daily, ref_iso):
-        ref = parse_iso(ref_iso)
-        series = []
-        for i in range(2, -1, -1):
-            d = iso(ref - timedelta(days=i))
-            s = daily.get(d, 0)
-            l = lead_daily.get(d, 0)
-            cpl = (s / l) if l > 0 else None
-            series.append({"date": d, "cpl": (round(cpl, 2) if cpl is not None else None)})
-        return series
-
-    entries = []
-    for k, e in camp_map.items():
-        spend_y = round(e["daily"].get(y_iso, 0), 2)
-        lead_y = int(e["lead_daily"].get(y_iso, 0))
-        cpl_y = (spend_y / lead_y) if lead_y > 0 else None
-        cpl_mean = cpl_mean_3d(e["daily"], e["lead_daily"], y_iso)
-        status = _medtech_status(spend_y, lead_y, cpl_mean)
-        trend = cpl_trend_3d(e["daily"], e["lead_daily"], y_iso)
-        prev7_spend, _ = sum_prev_window(e["daily"], y_iso, 7)
-        prev7_lead, _ = sum_prev_window(e["lead_daily"], y_iso, 7)
-        entries.append({
-            "name": k,
-            "source": e.get("status") or "",
-            "spend_y": spend_y,
-            "lead_y": lead_y,
-            "contatti_y": lead_y,  # alias backward-compat con UI esistente
-            "cpl_y": round(cpl_y, 2) if cpl_y is not None else None,
-            "cpl_mean_3d": round(cpl_mean, 2) if cpl_mean is not None else None,
-            "trend_3d": trend,
-            "prev7_spend": round(prev7_spend, 2),
-            "prev7_lead": int(prev7_lead),
-            "prev7_contatti": int(prev7_lead),
-            "status": status,
-            "ad_url": url_meta(MEDTECH_META_ACCOUNT),
-        })
-
-    # Sort: ROSSO -> GIALLO -> VERDE -> NERO, entro stesso colore spend desc
-    pri = lambda e: {"red": 0, "yellow": 1, "green": 2, "black": 3}.get(e["status"]["color"], 4)
-    entries.sort(key=lambda e: (pri(e), -e["spend_y"]))
-
-    # KPI aggregati: campagne attive (status != NERO) + totali del giorno
-    actives = sum(1 for e in entries if e["status"]["color"] != "black")
-    n_rosso = sum(1 for e in entries if e["status"]["color"] == "red")
-    n_giallo = sum(1 for e in entries if e["status"]["color"] == "yellow")
-    n_verde = sum(1 for e in entries if e["status"]["color"] == "green")
-    n_nero = sum(1 for e in entries if e["status"]["color"] == "black")
-    tot_spend = round(sum(e["spend_y"] for e in entries), 2)
-    tot_lead = sum(e["lead_y"] for e in entries)
-    cpl_agg = round(tot_spend / tot_lead, 2) if tot_lead > 0 else None
-
-    return {
-        "kpi": {
-            "actives": actives,
-            "total": len(entries),
-            "total_spend": tot_spend,
-            "total_contatti": tot_lead,
-            "total_lead": tot_lead,
-            "cpc_y": cpl_agg,
-            "cpl_y": cpl_agg,
-            "rosso": n_rosso,
-            "giallo": n_giallo,
-            "verde": n_verde,
-            "nero": n_nero,
-        },
-        "entries": entries,
-        "recap": recap_medtech_slack({"actives": actives, "total": len(entries),
-                                       "total_spend": tot_spend, "total_contatti": tot_lead,
-                                       "cpc_y": cpl_agg, "cpc_mean": None}, entries, yesterday),
-    }
-
 # ============================ MAIN ============================
 
 def main():
@@ -1714,7 +1404,6 @@ def main():
     ap.add_argument("--meta", required=True)
     ap.add_argument("--google", required=True)
     ap.add_argument("--tiktok", required=True)
-    ap.add_argument("--medtech", default=None, help="OPZIONALE: dal 2026-05-19 Med & Tech non passa più da Windsor, è popolato dal connettore CSV di Alfredo")
     ap.add_argument("--workspace", required=True, help="Path workspace (Dashboard di Controllo)")
     ap.add_argument("--aghc-vanity", default=None, help="Path opzionale a JSON con vanity metrics (impressions/clicks/landing_page_view) per AGHC")
     ap.add_argument("--aghc-budgets", default=None, help="Path opzionale a aghc_budgets.json con budget_annuale + ytd_seed per ogni meta_id")
@@ -1733,7 +1422,6 @@ def main():
     meta = load(args.meta)
     google = load(args.google)
     tiktok = load(args.tiktok)
-    medtech = load(args.medtech)  # Tollerato vuoto: Med & Tech ora viene da CSV di Alfredo
 
     ref_date = parse_iso(args.ref_date) if args.ref_date else None
     vanity_rows = load(args.aghc_vanity) if args.aghc_vanity and os.path.exists(args.aghc_vanity) else None
@@ -1752,15 +1440,11 @@ def main():
                 owners_map = owners_raw.get("meta_id_to_slack_user") or owners_raw
         except Exception as _e:
             owners_map = {}
-    data = build(meta, google, tiktok, medtech, ref_date=ref_date, vanity_rows=vanity_rows, budgets_config=budgets_config)
+    data = build(meta, google, tiktok, ref_date=ref_date, vanity_rows=vanity_rows, budgets_config=budgets_config)
 
     workspace = args.workspace
     snap_dir = os.path.join(workspace, "snapshots")
     os.makedirs(snap_dir, exist_ok=True)
-
-    # Preserve cea/medtech eventualmente popolati da dashboard-csv-update
-    # (build_data.py non li costruisce, ma non deve nemmeno cancellarli)
-    data = preserve_csv_sections(data, workspace)
 
     # Write latest
     latest_path = os.path.join(workspace, "data.json")
@@ -1773,12 +1457,8 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     # ============ Brief payload light (token-saving P3 — 2026-05-22) ============
-    # Endpoint dedicato a fmm-morning-brief + semaforo-v2-drift-monitor.
-    # Logica centralizzata in _automation/brief_builder.py (2026-05-24):
-    # ora include anche kpi+_meta v2 per cea/medtech (drift monitor leggeva
-    # data.json ~400 KB e WebFetch tagliava a 88 KB prima di arrivare a quelle sezioni).
-    # Stesso modulo viene chiamato anche da _automation/build_dashboard_payload.py
-    # dopo il merge dei CSV di Alfredo, così il brief resta fresh per cea/medtech.
+    # Endpoint dedicato a fmm-morning-brief. Logica centralizzata in
+    # _automation/brief_builder.py.
     import sys as _sys
     _automation_dir = os.path.join(workspace, "_automation")
     if _automation_dir not in _sys.path:
@@ -1988,11 +1668,6 @@ def main():
     print(f"  beefamily entries = {len(data['beefamily']['entries'])}, alerts = {bf_alerts}")
     aghc_alerts = sum(1 for c in data['aghc']['cards'] if c['status']['color'] in ('red','yellow'))
     print(f"  aghc cards = {len(data['aghc']['cards'])}, alerts = {aghc_alerts}")
-    if 'medtech' in data:
-        mt_alerts = sum(1 for e in data['medtech']['entries'] if e['status']['color'] in ('red','yellow'))
-        print(f"  medtech entries = {len(data['medtech']['entries'])}, alerts = {mt_alerts}")
-    else:
-        print(f"  medtech: alimentato da CSV di Alfredo (build_data.py non lo gestisce più)")
     if 'other_roster' in data:
         otr = data['other_roster']
         print(f"  other_roster = {otr.get('total_count', 0)} account · spend_window_15d totale {otr.get('total_spend_window', 0)} €")

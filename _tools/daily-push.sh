@@ -6,9 +6,8 @@
 #      → in caso di conflitto vince SEMPRE la versione locale (filesystem),
 #        perché è quella che contiene sia i dati freschi sia le eventuali
 #        modifiche fatte da Claude direttamente sul workspace.
-#   2. Rigenera tutte le pagine cea-daily-*.html dagli snapshot disponibili.
-#   3. Rimuove eventuali lock di git lasciati orfani.
-#   4. Stage di tutto, commit "Daily refresh — YYYY-MM-DD", push.
+#   2. Rimuove eventuali lock di git lasciati orfani.
+#   3. Stage di tutto, commit "Daily refresh — YYYY-MM-DD", push.
 #
 # Idempotente: se non c'è nulla da committare, il commit/push viene saltato.
 # Se è già allineato a remote, il pull --rebase non fa nulla.
@@ -16,7 +15,7 @@
 # Uso:
 #   bash _tools/daily-push.sh
 # Oppure tramite alias zsh:
-#   alias dash-push='bash ~/"Desktop/Dashboard di Controllo/_tools/daily-push.sh"'
+#   alias dash-push='bash ~/"Desktop/COWORK FMM/Dashboard di Controllo/_tools/daily-push.sh"'
 
 set -uo pipefail
 
@@ -84,26 +83,6 @@ if [ "$STASHED" = "1" ]; then
     done < <(git status --porcelain | grep -E '^(UU|AA|UA|AU|DU|UD) ')
     git stash drop 2>&1 | tail -1 || true
   fi
-fi
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Step 2 — rigenera pagine CEA daily
-# ──────────────────────────────────────────────────────────────────────────────
-CEA_DATES=$(ls snapshots/2026-*.json 2>/dev/null | sed -E 's|snapshots/||;s|\.json||' | sort -u | tail -30 | tr '\n' ' ')
-if [ -n "$CEA_DATES" ] && [ -f "_automation/generate_cea_daily_pages.py" ]; then
-  echo "→ Rigenero pagine CEA daily per: $CEA_DATES"
-  python3 _automation/generate_cea_daily_pages.py $CEA_DATES 2>&1 | tail -8 || true
-fi
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Step 2b — applica branding + search + filtri semafori al repo med-tech-daily-check
-#           (in background, non blocca il push principale se fallisce)
-# ──────────────────────────────────────────────────────────────────────────────
-if [ -f "_tools/apply-medtech-patch.sh" ]; then
-  echo "→ Applico branding/search/filtri al repo med-tech-daily-check…"
-  bash _tools/apply-medtech-patch.sh 2>&1 | tail -25 || echo "  (apply-medtech-patch.sh fallito — non blocca il push principale)"
-else
-  echo "  (apply-medtech-patch.sh non trovato — skip)"
 fi
 
 # ──────────────────────────────────────────────────────────────────────────────

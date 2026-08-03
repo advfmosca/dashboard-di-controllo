@@ -317,29 +317,6 @@ function extractDailyForClient(snap, clientName) {
       }
     }
   }
-  // Med & Tech / CEA: il match avviene SIA sul nome campagna completo SIA sul cliente
-  // estratto (auto-estrazione su ' - '), perche' nella vista cliente passiamo solo
-  // il nome cliente pulito.
-  if (!touched) {
-    for (const e of (snap.medtech && snap.medtech.entries) || []) {
-      const eClient = (typeof extractMTCEAClient === "function") ? extractMTCEAClient(e.name) : e.name;
-      if (normalize(e.name) === key || normalize(eClient) === key) {
-        const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
-        add(e.spend_y, l, e.impressions, e.clicks);
-        touched = true;
-      }
-    }
-  }
-  if (!touched) {
-    for (const e of (snap.cea && snap.cea.entries) || []) {
-      const eClient = (typeof extractMTCEAClient === "function") ? extractMTCEAClient(e.name) : e.name;
-      if (normalize(e.name) === key || normalize(eClient) === key) {
-        const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
-        add(e.spend_y, l, e.impressions, e.clicks);
-        touched = true;
-      }
-    }
-  }
   if (!touched) return empty;
   const cpl = (leads != null && leads > 0 && spend != null) ? (spend / leads) : null;
   return { spend, leads, impressions, clicks, reach, page_engagement, cpl };
@@ -550,206 +527,6 @@ function buildAGHCCardHTML(item, idPrefix) {
   return `<div class="aghc-card single-card ${statusColor}">${header}${aghcVanityRow}${trendBlock}${budgetBlock}${chartBlock}${rationalBlock}</div>${legend}`;
 }
 
-// ===== Helper card Med & Tech / CEA (vista cliente — campagne corte ~14gg) =====
-function extractMTCEAClient(campaignName) {
-  if (!campaignName) return "";
-  const parts = String(campaignName).split(' - ').map(p => p.trim()).filter(Boolean);
-  return parts.length > 1 ? parts[parts.length - 1] : campaignName;
-}
-function _fmtIntIT(n) {
-  if (n == null) return "—";
-  return Math.round(Number(n)).toLocaleString("it-IT");
-}
-function buildMTCEARational(entry, clientName, projectLabel, series7d) {
-  // Rational stile AGHC/BF per la vista cliente: 3 paragrafi argomentati,
-  // tono discorsivo e professionale. La pagina la legge il cliente stesso,
-  // quindi NON menzioniamo il suo nome (no "La campagna di DOTT. X") ma
-  // parliamo dell'attività in modo diretto.
-  const win = (series7d || []).filter(p => p.spend != null);
-  const winSpend = win.reduce((a, p) => a + (Number(p.spend) || 0), 0);
-  const winLeads = win.reduce((a, p) => a + (Number(p.leads) || 0), 0);
-  const winCpl = (winLeads > 0) ? (winSpend / winLeads) : null;
-  const daysActive = win.filter(p => (p.spend || 0) > 0).length;
-  const avgDaily = winSpend / Math.max(daysActive, 1);
-
-  // =====================================================================
-  // P1 — Contesto: stato dell'attività, ritmo, fase
-  // =====================================================================
-  let p1;
-  if (daysActive === 0) {
-    p1 = `In questo periodo l'attività promozionale non risulta ancora in erogazione: nessun consumo di budget è stato registrato nei giorni monitorati. La campagna è in attesa di partire oppure è stata temporaneamente sospesa.`;
-  } else if (daysActive <= 3) {
-    p1 = `L'attività si trova nella sua fase iniziale di erogazione: nei giorni monitorati abbiamo registrato ${daysActive} ${daysActive === 1 ? 'giornata effettiva' : 'giornate effettive'} di attività, con un investimento complessivo di <strong>${fmtEUR(winSpend)}</strong> distribuito a un ritmo medio di <strong>${fmtEUR(avgDaily)} al giorno</strong>. I primi giorni di una campagna pubblicitaria sono fisiologicamente dedicati all'apprendimento: il sistema studia il pubblico, valuta la risposta alle creatività e calibra gradualmente la distribuzione.`;
-  } else {
-    p1 = `L'attività è in piena erogazione: nell'ultima settimana sono state coperte <strong>${daysActive} giornate effettive</strong>, per un investimento complessivo di <strong>${fmtEUR(winSpend)}</strong> distribuito a un ritmo medio di <strong>${fmtEUR(avgDaily)} al giorno</strong>. La cadenza è quella prevista dal piano media concordato e garantisce una presenza costante nelle aste pubblicitarie del segmento.`;
-  }
-
-  // =====================================================================
-  // P2 — Lettura risultati: contatti, CPL, efficienza vs benchmark
-  // =====================================================================
-  let p2;
-  if (winLeads === 0 && winSpend > 0) {
-    p2 = `Sul fronte conversioni, in questo arco temporale l'attività non ha ancora generato richieste qualificate. Per le campagne di breve durata come questa è normale che i primi contatti arrivino tra il terzo e il quarto giorno di erogazione, una volta superata la fase di apprendimento iniziale. Il sistema sta ancora calibrando creatività, segmenti di pubblico e momenti di esposizione: i prossimi giorni saranno determinanti per leggere il rendimento reale.`;
-  } else if (winLeads > 0 && winCpl != null) {
-    const efficiency = winCpl < 8 ? "estremamente contenuto, in zona ottimale per il settore di riferimento" :
-                       winCpl < 18 ? "perfettamente in linea con il benchmark di settore" :
-                       winCpl < 35 ? "leggermente sopra il benchmark di riferimento, ma ancora dentro la tolleranza fisiologica delle campagne brevi" :
-                       "sopra il benchmark di riferimento e da consolidare nei prossimi giorni con un'azione mirata su creatività e segmentazione";
-    p2 = `Sul fronte risultati l'attività ha generato in questa finestra <strong>${_fmtIntIT(winLeads)} ${winLeads === 1 ? 'contatto qualificato' : 'contatti qualificati'}</strong>, a un costo medio di <strong>${fmtEUR(winCpl)} per contatto</strong>. Si tratta di un valore ${efficiency}, considerando che l'investimento medio quotidiano è stato di ${fmtEUR(avgDaily)}. Il numero di contatti raccolti fotografa il tasso di risposta del pubblico raggiunto alle creatività attualmente in distribuzione.`;
-  } else {
-    p2 = `Sul fronte risultati l'attività si trova in fase di avvio: i primi contatti diretti sono attesi nei prossimi giorni di erogazione, una volta consolidato l'apprendimento del sistema sul pubblico più reattivo.`;
-  }
-
-  // =====================================================================
-  // P3 — Visualizzazioni & Frequenza (introdotto 2026-05-22)
-  //      Inserito solo quando entry ha impressions/reach/frequency valorizzati.
-  //      Tono divulgativo: spiega cosa significano i due numeri al cliente.
-  // =====================================================================
-  let pFreq = "";
-  const impr = entry && entry.impressions;
-  const reach = entry && entry.reach;
-  const freq  = entry && entry.frequency;
-  if (impr != null && freq != null) {
-    const freqStr = Number(freq).toFixed(2).replace(".", ",");
-    const imprStr = _fmtIntIT(impr);
-    const reachTxt = reach ? `ed è arrivato a circa <strong>${_fmtIntIT(reach)} persone diverse</strong>` : "";
-    pFreq = `Sul fronte visibilità il messaggio è stato mostrato complessivamente <strong>${imprStr} volte</strong>${reachTxt ? " " + reachTxt : ""}. Questo significa che <strong>ogni persona, in media, ha visto la sponsorizzata ${freqStr} volte</strong>: ` +
-      (Number(freq) <= 1.5
-        ? `il pubblico è ancora largamente "fresco", il messaggio sta entrando in contatto per la prima volta con la maggior parte delle persone.`
-        : Number(freq) <= 2.5
-        ? `un livello di esposizione adeguato per fissare il ricordo del messaggio senza diventare invadente.`
-        : Number(freq) <= 3.5
-        ? `un livello di esposizione che stiamo monitorando con attenzione, perché oltre una certa quota di ripetizioni il messaggio inizia a perdere efficacia e diventa utile introdurre nuove creatività per mantenere fresca l'attenzione del pubblico.`
-        : `un livello di esposizione elevato: il pubblico ha visto più volte lo stesso messaggio e potrebbe iniziare a perdere reattività. Per questa ragione stiamo preparando il refresh delle creatività in modo da rinnovare l'attenzione del pubblico.`);
-  }
-
-  // =====================================================================
-  // P4 — Prospettiva: cosa sta avvenendo dietro le quinte, monitoraggio
-  // =====================================================================
-  const p3 = `Nei giorni a seguire l'attenzione resterà concentrata sull'ottimizzazione del costo per contatto e sul mantenimento della qualità delle richieste in arrivo. È utile ricordare che, nelle campagne pubblicitarie a durata limitata, il dato si stabilizza tipicamente dopo i primi quattro-cinque giorni di erogazione: prima di quel momento le oscillazioni quotidiane sono fisiologiche e non rappresentano un segnale di scarsa performance. Continuiamo a monitorare l'andamento quotidiano per intervenire tempestivamente — su creatività, segmentazione o offerta — qualora le metriche dovessero discostarsi dai parametri attesi.`;
-
-  const pFreqHtml = pFreq ? `<p>${pFreq}</p>` : "";
-  return `<p>${p1}</p><p>${p2}</p>${pFreqHtml}<p>${p3}</p>`;
-}
-
-function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
-  const clientName = extractMTCEAClient(entry.name);
-  const statusColor = (entry.status && entry.status.color) || "gray";
-  const badgeCls = projectLabel === "Med & Tech" ? "medtech" : "cea";
-  const badgeLbl = projectLabel === "Med & Tech" ? "MED & TECH" : "CEA";
-  const header = `<div class="header-row">
-    <span class="proj-badge ${badgeCls}">${badgeLbl}</span>
-    <div class="name">${escapeHtml(clientName)}</div>
-  </div>`;
-  // Vanity row passata da 3 a 5 colonne (2026-05-22): aggiunte Visualizzazioni + Frequenza
-  // dell'ultimo giorno disponibile (entry.impressions / entry.frequency). Mostra "—" se assenti.
-  const _fmtIntCl = (n) => (n != null) ? Math.round(Number(n)).toLocaleString("it-IT") : "—";
-  const _fmtFreq  = (f) => (f != null) ? Number(f).toFixed(2).replace(".", ",") : "—";
-  const vRow = `<div class="aghc-vanity-row" id="${idPrefix}-vrow">
-    <div class="av-item"><div class="av-lbl">Budget 7gg</div><div class="av-val" id="${idPrefix}-v-spend">—</div></div>
-    <div class="av-item"><div class="av-lbl">Contatti generati 7gg</div><div class="av-val" id="${idPrefix}-v-leads">—</div></div>
-    <div class="av-item"><div class="av-lbl">Costo per contatto 7gg</div><div class="av-val" id="${idPrefix}-v-cpl">—</div></div>
-    <div class="av-item"><div class="av-lbl">Visualizzazioni <span class="info-icon" title="Numero totale di volte in cui la sponsorizzata è stata mostrata. Una stessa persona può vederla più volte.">i</span></div><div class="av-val">${_fmtIntCl(entry.impressions)}</div></div>
-    <div class="av-item"><div class="av-lbl">Frequenza <span class="info-icon" title="Numero di volte che ogni cliente ha visto la sponsorizzata.">i</span></div><div class="av-val">${_fmtFreq(entry.frequency)}</div></div>
-  </div>`;
-  const chartBlock = `<div class="mini-chart-wrap">
-    <div class="mc-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Contatti</span></span></div>
-    <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
-    <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
-      <button type="button" class="nav-btn" id="${idPrefix}-prev">←</button>
-      <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
-      <button type="button" class="nav-btn" id="${idPrefix}-next">→</button>
-    </div>
-    <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
-  </div>`;
-  const rationalBlock = `<div class="rational" id="${idPrefix}-rat"><span class="muted small">Calcolo dell'analisi in corso…</span></div>`;
-  // SEMAPHORE_V2: audience_narrative — diagnosi audience × CTR × frequenza, solo per rosse/gialle
-  const _an = entry.audience_narrative;
-  const audienceBlock = _an
-    ? `<div class="rational ${_an.code}">
-        <span class="rat-label">Analisi audience — perché non genera lead</span>
-        <span class="aud-headline">${escapeHtml(_an.label)}</span>
-        ${_an.text}
-      </div>`
-    : "";
-  const legend = `<div class="kpi-legend">
-    <h3>Cosa significano questi numeri</h3>
-    <dl>
-      <dt>Budget 7gg</dt>
-      <dd>Quanto è stato investito sulla campagna negli ultimi 7 giorni di attività.</dd>
-      <dt>Contatti generati 7gg</dt>
-      <dd>Il numero di richieste/lead raccolti nello stesso periodo attraverso le creatività attive.</dd>
-      <dt>Costo per contatto 7gg</dt>
-      <dd>L'investimento medio sostenuto per ottenere un singolo contatto qualificato. Più il valore è contenuto, più la campagna sta lavorando in modo efficiente sul pubblico.</dd>
-      <dt>Visualizzazioni</dt>
-      <dd>Numero totale di volte in cui la sponsorizzata è stata mostrata. Una stessa persona può vederla più volte: per questo il valore è normalmente più alto del numero di persone raggiunte.</dd>
-      <dt>Frequenza</dt>
-      <dd><strong>Numero di volte che ogni cliente ha visto la sponsorizzata.</strong> Quando il valore è basso, il messaggio sta raggiungendo pubblico fresco; quando sale sopra una certa soglia, il pubblico inizia a saturarsi e diventa utile introdurre nuove creatività per non perdere efficacia.</dd>
-      <dt>Andamento spesa &amp; contatti (7gg)</dt>
-      <dd>Il grafico riporta giorno per giorno la spesa (linea nera) e i contatti arrivati (linea blu). Cliccando un punto o usando le frecce è possibile visualizzare i dettagli del singolo giorno.</dd>
-    </dl>
-  </div>`;
-  // SEMAPHORE_V2: ordine card = header → vRow (vanity 7gg+freq) → chart → rational (CPL) → audienceBlock (diagnosi)
-  return `<div class="aghc-card single-card ${statusColor}">${header}${vRow}${chartBlock}${rationalBlock}${audienceBlock}</div>${legend}`;
-}
-
-function wireMTCEASeries(entry, idPrefix, projectLabel) {
-  const clientName = extractMTCEAClient(entry.name);
-  loadDailySeries15d(clientName).then(fullSeries => {
-    const series = fullSeries.slice(-7);
-    const chartRoot = document.getElementById(`${idPrefix}-chart`);
-    const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
-    const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
-    const labelEl   = document.getElementById(`${idPrefix}-day-label`);
-    const prevBtn   = document.getElementById(`${idPrefix}-prev`);
-    const nextBtn   = document.getElementById(`${idPrefix}-next`);
-    let selIdx = -1;
-    for (let i = series.length - 1; i >= 0; i--) {
-      if (series[i].spend != null) { selIdx = i; break; }
-    }
-    if (selIdx < 0) selIdx = series.length - 1;
-    const hasAnySpend = series.some(p => p.spend != null);
-
-    const winSpend = series.reduce((a, p) => a + (Number(p.spend) || 0), 0);
-    const winLeads = series.reduce((a, p) => a + (Number(p.leads) || 0), 0);
-    const winCpl = winLeads > 0 ? winSpend / winLeads : null;
-    const elS = document.getElementById(`${idPrefix}-v-spend`);
-    const elL = document.getElementById(`${idPrefix}-v-leads`);
-    const elC = document.getElementById(`${idPrefix}-v-cpl`);
-    if (elS) elS.textContent = winSpend > 0 ? fmtEURcompact(winSpend) : "—";
-    if (elL) elL.textContent = winLeads > 0 ? _fmtIntIT(winLeads) : "0";
-    if (elC) elC.textContent = winCpl != null ? fmtEUR(winCpl) : "—";
-
-    const ratRoot = document.getElementById(`${idPrefix}-rat`);
-    if (ratRoot) ratRoot.innerHTML = buildMTCEARational(entry, clientName, projectLabel, series);
-
-    if (!hasAnySpend) {
-      if (chartRoot) chartRoot.innerHTML = "";
-      const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
-      if (wrap) wrap.style.display = "none";
-      return;
-    }
-    function update() {
-      if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
-      if (navRoot) navRoot.style.display = "";
-      if (kpiRoot) kpiRoot.style.display = "";
-      if (labelEl) {
-        const d = series[selIdx] && series[selIdx].date;
-        labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
-      }
-      if (kpiRoot) renderDayPanel(kpiRoot, series, selIdx, 'bf');
-      if (prevBtn) prevBtn.disabled = selIdx <= 0;
-      if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
-    }
-    update();
-    if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
-    if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
-  }).catch(err => {
-    const chartRoot = document.getElementById(`${idPrefix}-chart`);
-    if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie</div>`;
-  });
-}
-
 function buildBFCardHTML(item, idPrefix) {
   const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
   const statusColor = (item.status && item.status.color) || "gray";
@@ -875,15 +652,6 @@ function normalizeBFItem(c) {
   };
 }
 
-// Mapping opzionale {clientName: {target, audience_size, campaigns: {name: {target, audience_size}}}} per MT/CEA
-// Caricato in parallelo al data.json; fallback a oggetto vuoto se 404.
-let MTCEA_META = {};
-function loadMtCeaMeta() {
-  return fetchJson("mtcea_clients_meta.json")
-    .then(j => { MTCEA_META = j || {}; })
-    .catch(() => { MTCEA_META = {}; });
-}
-
 // Override nomi ufficiali AGHC/BeeFamily (vista cliente): { aghc: {INTERNAL: "Official"}, beefamily: {...} }
 let DISPLAY_NAMES = { aghc: {}, beefamily: {} };
 function loadDisplayNames() {
@@ -902,33 +670,16 @@ function officialName(internalName, project) {
   return internalName;
 }
 
-// Risolve target + grandezza pubblico per una singola campagna, con fallback al livello cliente.
-// Sorgenti, in ordine:
-//   1. campaign.target / campaign.audience_size (se presenti direttamente sull'oggetto)
-//   2. MTCEA_META[clientName].campaigns[campaignName].{target, audience_size}
-//   3. MTCEA_META[clientName].{target, audience_size}  (default a livello cliente)
-//   4. clientLevelTarget / clientLevelAudienceSize (es. da entry.target_geo da CSV Alfredo)
-function resolveCampaignMeta(campaign, clientName, clientLevelTarget, clientLevelAudienceSize) {
-  const cMeta = (MTCEA_META[clientName] || {});
-  const perCamp = (cMeta.campaigns && campaign && campaign.name) ? (cMeta.campaigns[campaign.name] || {}) : {};
-  const target = (campaign && campaign.target) || perCamp.target || cMeta.target || clientLevelTarget || null;
-  const audSize = (campaign && campaign.audience_size) || perCamp.audience_size || cMeta.audience_size || clientLevelAudienceSize || null;
-  return { target, audience_size: audSize };
-}
-
 // Renderizza il blocco "Campagne attive" con UNA card per campagna.
 // `campaigns` = array di {name, spend, lead, cpl, active, platform?}
-// `clientName` serve per il lookup nel mapping mtcea_clients_meta.json.
-// `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. CSV Alfredo target_geo).
+// `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. target_geo).
 // `showTargetAudience` (default true): se false, omette il blocco Target/Pubblico
 //   (richiesto per BeeFamily dove non gestiamo target/pubblico geografico per campagna).
 function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, clientLevelAudienceSize, showTargetAudience) {
   if (!campaigns || campaigns.length === 0) return "";
   if (showTargetAudience === undefined) showTargetAudience = true;
   const cardsHtml = campaigns.map(c => {
-    const meta = showTargetAudience
-      ? resolveCampaignMeta(c, clientName, clientLevelTarget, clientLevelAudienceSize)
-      : { target: null, audience_size: null };
+    const meta = { target: null, audience_size: null };
     const plat = c.platform || "Meta";
     const platCls = plat.toLowerCase();
     const kpiBits = [];
@@ -961,7 +712,6 @@ function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, cli
 // Per ogni progetto può avere strutture diverse:
 //   - BeeFamily: meta_campaigns[] + google_campaigns[]
 //   - AGHC: meta_campaigns[] + tiktok_campaigns[]  (popolati da build_data.py)
-//   - CEA / MedTech: campaigns[]  (popolati da _automation/build_dashboard_payload.py)
 // Restituisce [] se non ci sono campagne note (caller usa fallback singolo).
 function extractCampaignsFromEntry(entry, project) {
   if (!entry) return [];
@@ -974,10 +724,6 @@ function extractCampaignsFromEntry(entry, project) {
   pushAll(entry.meta_campaigns,   "Meta");
   pushAll(entry.google_campaigns, "Google");
   pushAll(entry.tiktok_campaigns, "TikTok");
-  if (entry.campaigns && Array.isArray(entry.campaigns)) {
-    // Campagne CEA/MedTech: platform default Meta (Alfredo's CSV è solo Meta)
-    pushAll(entry.campaigns, "Meta");
-  }
   return out;
 }
 
@@ -997,13 +743,12 @@ if (!clienteName) {
   document.getElementById("hdr-name").textContent = "Cliente non specificato";
   showError("Parametro 'name' mancante nella URL. Esempio: cliente.html?name=Lunetta");
 } else {
-  // Carico in parallelo: meta overrides + display names override + data/snapshot del giorno.
-  const metaPromise = loadMtCeaMeta();
+  // Carico in parallelo: display names override + data/snapshot del giorno.
   const namesPromise = loadDisplayNames();
   const dataPromise = dateParam
     ? fetchJson("snapshots/" + dateParam + ".json")
     : fetchJson("data.json");
-  Promise.all([metaPromise, namesPromise, dataPromise]).then(([, , d]) => {
+  Promise.all([namesPromise, dataPromise]).then(([, d]) => {
     const refDate = d.reference_date || dateParam || "";
     if (refDate) {
       const dl = document.getElementById("hdr-date");
@@ -1011,8 +756,7 @@ if (!clienteName) {
       dl.textContent = "Dati al " + fullDateLabelIT(refDate);
     }
     const key = normalize(clienteName);
-    // Cerca in: AGHC.cards, BeeFamily.cards, medtech.entries, cea.entries.
-    // Per MT/CEA confrontiamo SIA sul nome campagna completo SIA sul cliente estratto.
+    // Cerca in: AGHC.cards, BeeFamily.cards.
     let found = null, project = null;
     for (const c of (d.aghc && d.aghc.cards) || []) {
       if (normalize(c.name) === key) { found = c; project = "AGHC"; break; }
@@ -1020,22 +764,6 @@ if (!clienteName) {
     if (!found) {
       for (const c of (d.beefamily && d.beefamily.cards) || []) {
         if (normalize(c.name) === key) { found = c; project = "BeeFamily"; break; }
-      }
-    }
-    if (!found) {
-      for (const e of (d.medtech && d.medtech.entries) || []) {
-        const eClient = extractMTCEAClient(e.name);
-        if (normalize(e.name) === key || normalize(eClient) === key) {
-          found = e; project = "Med & Tech"; break;
-        }
-      }
-    }
-    if (!found) {
-      for (const e of (d.cea && d.cea.entries) || []) {
-        const eClient = extractMTCEAClient(e.name);
-        if (normalize(e.name) === key || normalize(eClient) === key) {
-          found = e; project = "CEA"; break;
-        }
       }
     }
     if (!found) {
@@ -1049,11 +777,8 @@ if (!clienteName) {
     const idPrefix = "vc";
 
     // Funzione comune: renderizza il blocco "Campagne attive" sopra alla card.
-    // Per AGHC/BeeFamily il nome usato nel mapping target/audience è quello UFFICIALE
-    // (è la stessa chiave che il marketing manager riconosce). Per CEA/MedTech è
-    // il nome cliente estratto.
+    // Per BeeFamily il nome usato nel mapping è quello UFFICIALE.
     // `showTargetAudience` controlla se rendere il blocco Target/Pubblico:
-    //   - CEA / MedTech: true (target gestito per singola campagna)
     //   - BeeFamily: false (non gestiamo target geografico per le campagne BF)
     //   - AGHC: non chiamato affatto (vedi blocco AGHC sotto — sezione rimossa)
     function renderCampaignsBlock(entry, projectLabel, displayName, showTargetAudience) {
@@ -1061,38 +786,16 @@ if (!clienteName) {
       const campaigns = extractCampaignsFromEntry(entry, projectLabel);
       let list = campaigns;
       if (!list.length) {
-        // Med & Tech: il `entry.name` ha il pattern "Open Day - Total Lift - <CLIENTE>",
-        // quindi possiamo estrarre la parte "Open Day - Total Lift" come campagna anche
-        // senza il campo `campaigns[]`. Per CEA invece `entry.name` è solo il nome
-        // del cliente: NON va mai usato come nome campagna (era il bug originale).
-        const parts = String(entry.name || "").split(' - ').map(p => p.trim()).filter(Boolean);
-        if (projectLabel === "Med & Tech" && parts.length > 1) {
-          list = [{
-            name: parts.slice(0, -1).join(' - '),
-            platform: "Meta",
-            spend: entry.spend_y,
-            lead:  entry.contatti_y != null ? entry.contatti_y : entry.lead_y,
-            cpl:   entry.cpl_y,
-          }];
-        } else if (projectLabel === "CEA" || projectLabel === "Med & Tech") {
-          // Placeholder onesto: il nome reale arriverà al prossimo sync CSV.
-          list = [{
-            name: "Nome campagna in aggiornamento — disponibile al prossimo sync",
-            platform: "Meta",
-            _placeholder: true,
-          }];
-        } else {
-          // BeeFamily / AGHC senza campaigns[]: usa il displayName ufficiale come fallback.
-          list = [{
-            name: displayName || entry.name || "—",
-            platform: "Meta",
-            spend: entry.spend_y,
-            lead:  entry.contatti_y != null ? entry.contatti_y : entry.lead_y,
-            cpl:   entry.cpl_y,
-          }];
-        }
+        // BeeFamily senza campaigns[]: usa il displayName ufficiale come fallback.
+        list = [{
+          name: displayName || entry.name || "—",
+          platform: "Meta",
+          spend: entry.spend_y,
+          lead:  entry.contatti_y != null ? entry.contatti_y : entry.lead_y,
+          cpl:   entry.cpl_y,
+        }];
       }
-      const lookupKey = displayName || extractMTCEAClient(entry.name || "");
+      const lookupKey = displayName || entry.name || "";
       const clientTarget = entry.target_geo || null;
       const clientAud    = entry.audience_size || null;
       metaRoot.innerHTML = buildCampaignsSectionHTML(list, lookupKey, clientTarget, clientAud, showTargetAudience);
@@ -1120,13 +823,6 @@ if (!clienteName) {
       item.name = officialDisplayName;
       root.innerHTML = buildBFCardHTML(item, idPrefix);
       wireSeries({ ...item, name: found.name }, idPrefix, 'bf');
-    } else {
-      // Med & Tech / CEA — blocco completo con Target + Pubblico per campagna
-      const clientShort = extractMTCEAClient(found.name);
-      document.getElementById("hdr-name").textContent = clientShort;
-      renderCampaignsBlock(found, project, clientShort, /* showTargetAudience */ true);
-      root.innerHTML = buildMTCEACardHTML(found, idPrefix, project);
-      wireMTCEASeries(found, idPrefix, project);
     }
   }).catch(err => {
     document.getElementById("hdr-name").textContent = clienteName;
