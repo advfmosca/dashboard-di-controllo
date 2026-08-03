@@ -11,7 +11,7 @@ CRITICO: il payload DEVE restare ben sotto i 50 KB. Niente entries[], niente
 series[], niente rationals HTML. Solo contatori aggregati + meta.
 
 Chiamato da:
-- build_data.py (refresh-dashboard-data) — dopo aver scritto data.json
+- build_data.py (refresh-dashboard-data, 06:34) — dopo aver scritto data.json
 """
 
 import json

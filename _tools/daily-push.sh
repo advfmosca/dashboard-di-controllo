@@ -15,7 +15,7 @@
 # Uso:
 #   bash _tools/daily-push.sh
 # Oppure tramite alias zsh:
-#   alias dash-push='bash ~/"Desktop/COWORK FMM/Dashboard di Controllo/_tools/daily-push.sh"'
+#   alias dash-push='bash ~/"Desktop/Dashboard di Controllo/_tools/daily-push.sh"'
 
 set -uo pipefail
 

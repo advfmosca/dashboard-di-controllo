@@ -21,9 +21,7 @@ mkdir -p "$BACKUP_DIR"
 # Lista scheduled task da backuppare (modifica liberamente per aggiungerne altre)
 TASKS=(
   refresh-dashboard-data
-  dashboard-csv-update
   fmm-morning-brief
-  med-tech-daily-total-lift-sculpt
   fmm-discover-other-accounts
   alert-spending-anomalie-windsor
   daily-check-beefamily

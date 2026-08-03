@@ -12,7 +12,7 @@ Hostata su **GitHub Pages**, aggiornata automaticamente ogni mattina da una sche
 1. **`index.html`** — single-page responsive (desktop + mobile) con 4 tab. Legge i dati da `data.json`.
 2. **`data.json`** — snapshot precomputato dei dati di ieri (KPI, alert, status, recap). Viene rigenerato ogni giorno.
 3. **`build_data.py`** — aggregator Python che trasforma i 3 dataset Windsor (Meta, Google, TikTok) in `data.json`.
-4. **Scheduled task Cowork** (`refresh-dashboard-data`) — esegue Windsor MCP → build_data.py → git commit/push.
+4. **Scheduled task Cowork** — esegue Windsor MCP → build_data.py → git commit/push.
 
 ## Tab
 
@@ -65,7 +65,7 @@ git add data.json && git commit -m "manual refresh" && git push
 
 ## Esclusioni
 
-- `1576344015714351` (Color HolidayAds) e `533672775128363` sono **esclusi dal check spending alert** generico (cadenza/budget irregolari, account storici non più attivi).
+- `1576344015714351` (Color HolidayAds) e `533672775128363` sono **esclusi dal check spending alert** generico (cadenza/budget irregolari).
 
 ## Author
 

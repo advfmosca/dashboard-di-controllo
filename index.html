@@ -396,7 +396,7 @@
     .copy-feedback { text-align: center; }
   }
 
-  /* SEMAPHORE_V2: mini-tag diagnostico audience nelle card */
+  /* SEMAPHORE_V2: mini-tag diagnostico audience */
   .aghc-card .aud-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; letter-spacing: .02em; line-height: 1.4; }
   .aghc-card .aud-tag.rosso  { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
   .aghc-card .aud-tag.giallo { background: #fffbeb; color: #9a3412; border: 1px solid #fde68a; }
@@ -808,7 +808,6 @@
   // ============================ RENDER ============================
   function renderOverview(d) {
     const ov = d.overview || {};
-
     document.getElementById("ov-spend").textContent = fmtEUR(ov.total_spend);
     document.getElementById("ov-acc").textContent = ov.active_accounts != null ? ov.active_accounts : "–";
     document.getElementById("ov-acc-tot").textContent = ov.total_accounts != null ? ov.total_accounts : "–";
@@ -840,7 +839,7 @@
   //   1. AGHC cards  → progetto "AGHC"        (Meta + opt. TikTok)
   //   2. BF cards    → progetto "BeeFamily"   (Meta + Google raggruppati)
   //   3. BF entries  → progetto "BeeFamily"   (account singoli non-card)
-  //   4. Spending zero/high + other_roster → progetto "Altri" (solo nome+spend+link)
+  //   6. Spending zero/high + other_roster → progetto "Altri" (solo nome+spend+link)
   let SEARCH_INDEX = [];
   let SUG_FOCUS = -1;
   const SNAP_CACHE = {};        // { "YYYY-MM-DD": snapJson | null | Promise }
@@ -951,7 +950,7 @@
       });
     }
 
-    // 3) Spending alerts (zero + high) → arricchiscono le card esistenti con alert_spesa
+    // 5) Spending alerts (zero + high) → arricchiscono le card esistenti con alert_spesa
     function attachSpendAlert(arr, kind) {
       for (const r of (arr || [])) {
         const k = normalize(r.account_name);
@@ -962,7 +961,7 @@
           item.alert_spesa = item.alert_spesa || { kind, reason: spendAlertReason(r, kind) };
           item.ad_urls = Object.assign({}, item.ad_urls || {}, adUrls);
         } else {
-          // Account "Altri" — non in BF/AGHC
+          // Account "Altri" — non collegato ad alcun progetto
           add({
             id: "sp-" + (r.account_id || normalize(r.account_name)),
             name: r.account_name,
@@ -1142,7 +1141,6 @@
       }
     }
 
-    // 3) Other roster (solo spend_y)
     if (!touched) {
       for (const a of (snap.other_roster && snap.other_roster.accounts) || []) {
         if (normalize(a.account_name) === key) { add(a.spend_y, null, null, null); touched = true; break; }
@@ -1327,7 +1325,6 @@
   // Sorgenti del segnale:
   //   1. status.color del giorno corrente (red/yellow/green/gray)
   //   2. days_active sui 7gg → se < 3 → "learning" (campagna troppo giovane per ottimizzare)
-  //   3. Il CTR medio 7gg può rifinire il tier quando disponibile
   function assessPerformance(item, series) {
     const daysActive = series.filter(p => p.spend != null && p.spend > 0).length;
     // Primo giorno della finestra con spesa = "start visible" (può essere precedente, non lo sappiamo)
@@ -1345,7 +1342,6 @@
     // Override learning se troppo giovane
     if (daysActive < 3) tier = "learning";
 
-    // CTR signal (medio ultimi 7gg) — attualmente non usato dai progetti rimasti
     let ctrAvg = null;
 
     // CPL signal: confronto ultimi 3gg vs media precedente
@@ -1488,7 +1484,6 @@
   // Helper card BeeFamily — stessa filosofia di buildAGHCCardHTML/wireAGHCSeries
   // ma con riga KPI 15gg specifica BF (Budget/Contatti/CPL) e niente budget annuale.
   // ============================================================================
-
   function buildBFCardHTML(item, idPrefix) {
     const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
     const statusColor = (item.status && item.status.color) || "gray";
@@ -1816,7 +1811,6 @@
       return;
     }
 
-    const pk = projectKey(item.project);
     const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
     const statusColor = (item.status && item.status.color) || "gray";
 
@@ -1941,10 +1935,6 @@
     // Rational tecnico (BF + AGHC) — dettaglio dopo il blocco performance
     const rationalBlock = item.rational ? `<div class="rational">${item.rational}</div>` : "";
 
-    // Performance eval breve — se già presente nel feed
-    const perfBlock = item.performance_eval
-      ? `<div class="rational"><span class="rat-label">Performance (analisi rapida)</span>${escapeHtml(item.performance_eval)}</div>` : "";
-
     // Footer con status + link account
     const ad = item.ad_urls || {};
     const links = [
@@ -1966,7 +1956,6 @@
       ${chartBlock}
       ${performanceBlock}
       ${rationalBlock}
-      ${perfBlock}
       ${footer}
     </div>`;
 
@@ -2607,6 +2596,7 @@
 
     sel.addEventListener("change", () => setOpenEnabled(sel.value));
   })();
+
 
 </script>
 </body>
