@@ -73,6 +73,7 @@
   .chan.inactive{background:#fcfcfd;}
   footer.f{margin-top:26px;font-size:11px;color:var(--text-dim);text-align:center;line-height:1.6;}
   footer.f a{color:var(--text-muted);}
+  .mtdwarn{margin:-8px 0 16px;padding:9px 13px;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;color:#9a3412;font-size:12px;font-weight:600;}
   .loading{padding:60px 0;text-align:center;color:var(--text-dim);}
 </style>
 </head>
@@ -83,7 +84,7 @@
       <img class="brand-logo" src="assets/fmm-logo.svg" alt="FMM" />
       <div class="title-text">
         <h1>AGHC — Dashboard di Controllo</h1>
-        <div class="sub">Performance pubblicitarie · tutte le strutture attive · Meta &amp; TikTok</div>
+        <div class="sub">Performance pubblicitarie · report mensile bloccato · tutte le strutture attive · Meta &amp; TikTok</div>
       </div>
     </div>
     <div class="stamp" id="stamp"></div>
@@ -91,7 +92,7 @@
 
   <div class="period-bar" id="periodBar"></div>
   <div class="legend">
-    <b>Confronto:</b> ogni KPI mostra il valore del periodo corrente, la variazione % vs il periodo precedente di pari durata e (in piccolo) il valore precedente.
+    <b>Confronto:</b> ogni KPI mostra il valore del periodo corrente, la variazione % vs il MESE precedente e (in piccolo) il valore del mese precedente.
     Le variazioni sui costi (Spesa, CPC, CPM) sono in <span style="color:#991b1b;font-weight:700">rosso</span> se in aumento; i volumi (Copertura, Impression, Click) sono in <span style="color:#14532d;font-weight:700">verde</span> se in crescita.
   </div>
 
@@ -146,16 +147,21 @@ function totKpi(label,kind,m){
 
 function render(data){
   document.getElementById("stamp").innerHTML =
-    'Finestra <b>'+data.window_days+' giorni</b><br/>agg. '+data.generated_at;
+    'Report <b>mensile</b> · dati bloccati<br/>agg. '+data.generated_at;
   document.getElementById("genfoot").textContent =
-    'Generato il '+data.generated_at+' · finestra '+data.window_days+'gg · '+data.current_window.label;
+    'Generato il '+data.generated_at+' · '+data.current_window.label+(data.current_window.through_label||'')+' vs '+data.previous_window.label;
 
   document.getElementById("periodBar").innerHTML =
-      '<span class="plabel">Periodo corrente</span>'
-    + '<span class="pcur">'+data.current_window.label+'</span>'
-    + '<span class="pprev">vs precedente: '+data.previous_window.label+'</span>'
+      '<span class="plabel">Mese corrente</span>'
+    + '<span class="pcur">'+data.current_window.label+(data.current_window.through_label||'')+'</span>'
+    + '<span class="pprev">vs '+data.previous_window.label+'</span>'
     + '<span class="spacer"></span>'
-    + '<span class="wdays">'+data.window_days+' giorni</span>';
+    + '<span class="wdays">MENSILE · BLOCCATO</span>';
+  if(data.current_window.partial){
+    const w=document.createElement('div'); w.className='mtdwarn';
+    w.textContent='⚠️ '+data.current_window.label+' è il mese in corso'+(data.current_window.through_label||'')+': confronto parziale (MTD) vs '+data.previous_window.label+' completo. A mese chiuso il dato si blocca.';
+    document.getElementById("periodBar").insertAdjacentElement('afterend', w);
+  }
 
   // Totali
   const tm=data.totals.meta, tt=data.totals.tiktok;
