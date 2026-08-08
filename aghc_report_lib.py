@@ -45,3 +45,30 @@ def bucket(rows, account, camp):
 
 def dpct(c,p): return round((c-p)/p*100.0,0) if p else None
 def cell(c,p): return {"cur":int(round(c)),"prev":int(round(p)),"delta":dpct(c,p)}
+
+# Keyword sul NOME CAMPAGNA per mappare le righe CSV al cliente (backfill storico da CSV Ads Manager).
+# exclude: keyword che escludono la riga da quel cliente (disambigua account condivisi).
+KEYWORDS = [
+ ("Altafiumara Resort",       ["altafiumara"], []),
+ ("Hotel Castello",           ["castello"], []),
+ ("Hotel Della Piana",        ["della piana","piana"], []),
+ ("Hannah Hotels",            ["hannah"], ["terraces","puntebianche"]),
+ ("Puntebianche Resort",      ["puntebianche"], []),
+ ("Hemanaire",                ["hemanaire"], []),
+ ("Hotel Lunetta",            ["lunetta"], []),
+ ("Magari Estates",           ["magari"], []),
+ ("Marcella Royal Hotel",     ["marcella"], []),
+ ("Terrazza Flavia",          ["terrazza"], []),
+ ("Mare Hotel",               ["mare"], []),
+ ("Tenuta Montemagno Relais", ["montemagno"], []),
+ ("Villa Ermellina",          ["ermellina"], []),
+ ("Villa Giada",              ["giada"], []),
+ ("Villa Miliani",            ["miliani"], []),
+]
+
+def match_client(campaign_name):
+    c=(campaign_name or "").lower()
+    for name,inc,exc in KEYWORDS:
+        if any(k in c for k in inc) and not any(x in c for x in exc):
+            return name
+    return None
