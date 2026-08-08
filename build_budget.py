@@ -1,25 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-build_budget.py - Modulo budget AGHC: programmato annuale -> quarter -> mensile,
-confronto con lo speso REALE e RICALIBRAZIONE per atterrare sull'annuale a fine anno.
+build_budget.py - Modulo budget AGHC (anchor = BUDGET OPERATIVO MENSILE / run-rate).
 
-Logica (mandato Francesco 2026-08-08): "considerando lo spending ad oggi rispetto al
-programmato, arrivare alla spesa programmata a fine anno".
-- Annuale = target autorevole (aghc_roster.json).
-- Mesi CHIUSI (fino ad as_of) -> speso REALE (bloccato).
-- Residuo = annuale - reale_YTD(chiusi). Distribuito sui mesi rimanenti secondo pesi
-  stagionali (default: pesi in aghc_budget_weights.json; se assenti -> uniforme) e
-  RINORMALIZZATO così che il piano annuo = annuale esatto.
-- Per ogni struttura: passo (pace) vs pro-rata lineare, proiezione a fine anno al ritmo
-  attuale, piano mensile ricalibrato, split per quarter, stato semaforico.
+Mandato Francesco 2026-08-08: il "programmato" si ancora al budget operativo mensile
+reale (stile PED), non al tetto annuale delle strategie. La ricalibrazione riporta i
+mesi successivi sull'annuale OPERATIVO tenendo conto dello speso ad oggi.
 
-Input:  aghc_roster.json, aghc_actuals_monthly.json, [aghc_budget_weights.json]
+Modello per struttura:
+- annual_strategy   = tetto approvato in strategy (aghc_roster.json) — solo riferimento.
+- operating_monthly = stima del budget mensile operativo = media degli ultimi <=3 mesi
+                      CHIUSI con spesa (fallback: media mesi attivi; poi 0). Override
+                      possibile in aghc_budget_ops.json {"operating_monthly": {name: val}}.
+- operating_annual  = operating_monthly * 12  (target realistico dell'anno).
+- monthly_real[12]  = speso reale (mesi chiusi bloccati).
+- monthly_plan[12]  = reale nei mesi chiusi + operating_monthly nei mesi rimanenti (baseline).
+- monthly_recal[12] = reale nei mesi chiusi + forward ricalibrato nei mesi rimanenti, dove
+                      forward = (operating_annual - ytd_real) / mesi_rimanenti  (>=0),
+                      così l'anno chiude sull'operating_annual recuperando over/under.
+- pace vs pro-rata operativo (operating_monthly * mesi_chiusi), proiezione a fine anno.
+
+Input:  aghc_roster.json, aghc_actuals_monthly.json, [aghc_budget_ops.json]
 Output: aghc_budget.json
 Uso:    python3 build_budget.py --as-of-month 2026-07 --workspace .
 """
 import argparse, json, os
-from datetime import date, datetime
+from datetime import datetime
 
 MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"]
 
@@ -30,68 +36,72 @@ def load(ws, p, req=True):
         return None
     return json.load(open(fp, encoding="utf-8"))
 
-def r2(x): return round(x + 0.0, 2)
+def r2(x): return round(float(x) + 0.0, 2)
+
+def est_operating_monthly(real, as_of):
+    """Media ultimi <=3 mesi CHIUSI con spesa > 0."""
+    closed = real[:as_of]
+    tail = closed[-3:] if len(closed) >= 3 else closed
+    nz = [v for v in tail if v and v > 0]
+    if nz:
+        return sum(nz) / len(nz)
+    nz_all = [v for v in closed if v and v > 0]
+    return (sum(nz_all) / len(nz_all)) if nz_all else 0.0
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workspace", default=".")
-    ap.add_argument("--as-of-month", required=True, help="YYYY-MM ultimo mese CHIUSO (reale bloccato)")
-    ap.add_argument("--pace-tol", type=float, default=8.0, help="tolleranza %% pro-rata per stato on-track")
+    ap.add_argument("--as-of-month", required=True, help="YYYY-MM ultimo mese CHIUSO")
+    ap.add_argument("--pace-tol", type=float, default=10.0)
     args = ap.parse_args()
     ws = args.workspace
 
     roster = {s["name"]: s for s in load(ws, "aghc_roster.json")["structures"]}
     actuals = {s["name"]: s for s in load(ws, "aghc_actuals_monthly.json")["structures"]}
-    weights_cfg = load(ws, "aghc_budget_weights.json", req=False) or {}
-    wmap = weights_cfg.get("weights", {})  # {name: [12 pesi]} opzionale
+    ops_cfg = (load(ws, "aghc_budget_ops.json", req=False) or {}).get("operating_monthly", {})
 
     ay, am = map(int, args.as_of_month.split("-"))
-    as_of = am  # numero mese chiuso (1..12)
-    remaining_idx = list(range(as_of, 12))  # indici 0-based dei mesi da pianificare (as_of..11)
+    as_of = am
+    rem = list(range(as_of, 12))  # mesi da pianificare (0-based)
 
-    out = {"schema_version": 1, "year": ay, "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+    out = {"schema_version": 2, "year": ay, "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+           "anchor": "operating_monthly",
            "as_of_month": args.as_of_month, "as_of_label": MESI[as_of-1] + " " + str(ay),
-           "method": "Mesi chiusi = speso reale (bloccato). Residuo annuale distribuito sui mesi rimanenti (pesi stagionali, default uniforme) e rinormalizzato per chiudere sull'annuale.",
+           "method": ("Programmato ancorato al budget operativo mensile (run-rate, media ultimi 3 mesi chiusi o override). "
+                      "Annuale strategia = solo tetto di riferimento. Ricalibrazione: i mesi rimanenti chiudono sull'annuale operativo recuperando over/under."),
            "structures": [], "totals": {}}
 
-    T = {"annual":0.0,"ytd_real":0.0,"residual":0.0,"proj":0.0,
-         "q_plan":[0,0,0,0],"q_real":[0,0,0,0],"m_plan":[0.0]*12,"m_real":[0.0]*12}
+    T = {"strategy":0.0,"op_annual":0.0,"ytd":0.0,"proj":0.0,
+         "m_real":[0.0]*12,"m_plan":[0.0]*12,"m_recal":[0.0]*12,"q_plan":[0,0,0,0],"q_real":[0,0,0,0]}
 
     for name, s in roster.items():
-        annual = float(s["budget_annuale"])
+        strat = float(s["budget_annuale"])
         a = actuals.get(name, {})
-        real = list(a.get("monthly", {}).get("total", [0.0]*12))
-        real = [float(x or 0) for x in (real + [0.0]*12)[:12]]
-        ytd_real = sum(real[:as_of])                 # mesi chiusi
-        residual = max(annual - ytd_real, 0.0)
-        over_annual = ytd_real > annual
+        real = [float(x or 0) for x in (list(a.get("monthly", {}).get("total", [])) + [0.0]*12)[:12]]
+        ytd = sum(real[:as_of])
 
-        # pesi per i mesi rimanenti
-        w = wmap.get(name)
-        if w and len(w) == 12:
-            rw = [max(float(w[i]), 0.0) for i in remaining_idx]
-        else:
-            rw = [1.0]*len(remaining_idx)   # uniforme
-        sw = sum(rw) or 1.0
-        plan = list(real)  # mesi chiusi = reale
-        for k, i in enumerate(remaining_idx):
-            plan[i] = r2(residual * rw[k] / sw)
-        # aggiusta arrotondamento sull'ultimo mese
-        drift = r2(annual - (sum(plan[:as_of]) + sum(plan[i] for i in remaining_idx)))
-        if remaining_idx:
-            plan[remaining_idx[-1]] = r2(plan[remaining_idx[-1]] + drift)
+        op_m = float(ops_cfg[name]) if name in ops_cfg else est_operating_monthly(real, as_of)
+        op_annual = op_m * 12.0
 
-        # pace vs pro-rata lineare
-        prorata = annual * as_of / 12.0
-        pace_delta = ytd_real - prorata
-        pace_pct = (pace_delta / prorata * 100.0) if prorata else None
-        # proiezione a fine anno al ritmo YTD
-        proj = ytd_real / as_of * 12.0 if as_of else 0.0
-        # forward mensile consigliato (media sui mesi rimanenti)
-        fwd_monthly = r2(residual / len(remaining_idx)) if remaining_idx else 0.0
+        # baseline plan: reale nei chiusi + operating nei rimanenti
+        plan = list(real)
+        for i in rem: plan[i] = r2(op_m)
+        # recal: reale nei chiusi + forward per chiudere su op_annual
+        residual = op_annual - ytd
+        fwd = max(residual / len(rem), 0.0) if rem else 0.0
+        recal = list(real)
+        for i in rem: recal[i] = r2(fwd)
+        if rem:
+            drift = r2(op_annual - (ytd + sum(recal[i] for i in rem)))
+            recal[rem[-1]] = r2(max(recal[rem[-1]] + drift, 0.0))
 
-        if over_annual:
-            status = "over"
+        prorata_op = op_m * as_of
+        pace_delta = ytd - prorata_op
+        pace_pct = (pace_delta / prorata_op * 100.0) if prorata_op else None
+        proj = ytd / as_of * 12.0 if as_of else 0.0
+
+        if op_m == 0:
+            status = "inactive"
         elif pace_pct is None:
             status = "na"
         elif pace_pct > args.pace_tol:
@@ -101,44 +111,47 @@ def main():
         else:
             status = "on_track"
 
-        def qsum(v, q): return r2(sum(v[q*3:q*3+3]))
-        q_plan = [qsum(plan, q) for q in range(4)]
-        q_real = [qsum(real, q) for q in range(4)]
-
+        def q(v, i): return r2(sum(v[i*3:i*3+3]))
         out["structures"].append({
-            "name": name, "annual": r2(annual), "has_tiktok": a.get("has_tiktok", False),
-            "ytd_real": r2(ytd_real), "ytd_meta": r2(a.get("ytd_meta", 0)), "ytd_tiktok": r2(a.get("ytd_tiktok", 0)),
-            "residual": r2(residual), "prorata_to_date": r2(prorata),
-            "pace_delta": r2(pace_delta), "pace_pct": (r2(pace_pct) if pace_pct is not None else None),
-            "projection_year_end": r2(proj), "projection_delta": r2(proj - annual),
-            "fwd_monthly": fwd_monthly, "remaining_months": len(remaining_idx),
+            "name": name, "has_tiktok": a.get("has_tiktok", False),
+            "annual_strategy": r2(strat),
+            "operating_monthly": r2(op_m), "operating_annual": r2(op_annual),
+            "operating_source": ("override" if name in ops_cfg else "run-rate"),
+            "ytd_real": r2(ytd), "ytd_meta": r2(a.get("ytd_meta", 0)), "ytd_tiktok": r2(a.get("ytd_tiktok", 0)),
+            "prorata_operating": r2(prorata_op), "pace_delta": r2(pace_delta),
+            "pace_pct": (r2(pace_pct) if pace_pct is not None else None),
+            "projection_year_end": r2(proj),
+            "fwd_recal_monthly": r2(fwd), "remaining_months": len(rem),
+            "utilizzo_tetto_pct": (r2(op_annual / strat * 100.0) if strat else None),
             "status": status,
             "monthly_real": [r2(x) for x in real],
             "monthly_plan": [r2(x) for x in plan],
-            "quarter_plan": q_plan, "quarter_real": q_real,
+            "monthly_recal": [r2(x) for x in recal],
+            "quarter_plan": [q(plan, i) for i in range(4)],
+            "quarter_real": [q(real, i) for i in range(4)],
         })
-
-        T["annual"]+=annual; T["ytd_real"]+=ytd_real; T["residual"]+=residual; T["proj"]+=proj
-        for i in range(12): T["m_plan"][i]+=plan[i]; T["m_real"][i]+=real[i]
-        for q in range(4): T["q_plan"][q]+=q_plan[q]; T["q_real"][q]+=q_real[q]
+        T["strategy"]+=strat; T["op_annual"]+=op_annual; T["ytd"]+=ytd; T["proj"]+=proj
+        for i in range(12): T["m_real"][i]+=real[i]; T["m_plan"][i]+=plan[i]; T["m_recal"][i]+=recal[i]
+        for i in range(4): T["q_plan"][i]+=q(plan,i); T["q_real"][i]+=q(real,i)
 
     out["totals"] = {
-        "annual": r2(T["annual"]), "ytd_real": r2(T["ytd_real"]), "residual": r2(T["residual"]),
-        "prorata_to_date": r2(T["annual"]*as_of/12.0),
-        "projection_year_end": r2(T["proj"]), "projection_delta": r2(T["proj"]-T["annual"]),
-        "monthly_plan": [r2(x) for x in T["m_plan"]], "monthly_real": [r2(x) for x in T["m_real"]],
+        "annual_strategy": r2(T["strategy"]), "operating_annual": r2(T["op_annual"]),
+        "ytd_real": r2(T["ytd"]), "prorata_operating": r2(sum(x for x in T["m_plan"][:as_of]) if False else T["op_annual"]*as_of/12.0),
+        "projection_year_end": r2(T["proj"]),
+        "monthly_real": [r2(x) for x in T["m_real"]], "monthly_plan": [r2(x) for x in T["m_plan"]],
+        "monthly_recal": [r2(x) for x in T["m_recal"]],
         "quarter_plan": [r2(x) for x in T["q_plan"]], "quarter_real": [r2(x) for x in T["q_real"]],
     }
-
     with open(os.path.join(ws, "aghc_budget.json"), "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
-    print("OK -> aghc_budget.json  (as_of %s)" % out["as_of_label"])
-    t=out["totals"]
-    print("  Portfolio annuale %.0f € | reale YTD %.0f € (pro-rata %.0f) | residuo %.0f | proiezione fine anno %.0f (%+.0f)" % (
-        t["annual"], t["ytd_real"], t["prorata_to_date"], t["residual"], t["projection_year_end"], t["projection_delta"]))
-    for s in out["structures"][:4]:
-        print("  - %-32s ann %6.0f | YTD %6.0f | pace %s | fwd/mese %6.0f | %s" % (
-            s["name"], s["annual"], s["ytd_real"], (("%+.0f%%"%s["pace_pct"]) if s["pace_pct"] is not None else "n/d"), s["fwd_monthly"], s["status"]))
+    t = out["totals"]
+    print("OK -> aghc_budget.json (anchor run-rate, as_of %s)" % out["as_of_label"])
+    print("  Portfolio: operativo annuo %.0f € | reale YTD %.0f € | proiezione fine anno %.0f € | tetto strategie %.0f €" % (
+        t["operating_annual"], t["ytd_real"], t["projection_year_end"], t["annual_strategy"]))
+    for s in out["structures"][:5]:
+        print("  - %-30s op/mese %6.0f | YTD %6.0f | pace %s | recal/mese %6.0f | %s" % (
+            s["name"], s["operating_monthly"], s["ytd_real"],
+            (("%+.0f%%"%s["pace_pct"]) if s["pace_pct"] is not None else "n/d"), s["fwd_recal_monthly"], s["status"]))
 
 if __name__ == "__main__":
     main()
