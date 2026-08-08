@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1c1c1e" />
+<meta name="version" content="2026-08-08-aghc-unica" />
+<title>AGHC — Dashboard di Controllo</title>
+<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg" />
+<style>
+  :root{color-scheme:light;--bg:#fff;--bg-soft:#fafafa;--bg-card:#fff;--border:#ececef;--border-soft:#f4f4f5;--text:#1c1c1e;--text-muted:#6b6b70;--text-dim:#8a8a90;--red:#d93025;--green:#1e8e3e;--gray:#9a9aa0;--blue:#0866FF;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);}
+  body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.45;}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 20px 60px;}
+  header.h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+  header.h .title-block{display:flex;align-items:center;gap:12px;}
+  header.h .brand-logo{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:block;}
+  header.h .title-text{display:flex;flex-direction:column;}
+  header.h h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-0.01em;}
+  header.h .sub{font-size:12px;color:var(--text-muted);margin-top:3px;}
+  header.h .stamp{font-size:11px;color:var(--text-dim);text-align:right;}
+  header.h .stamp b{color:var(--text);font-weight:600;}
+  .period-bar{display:flex;align-items:center;gap:12px;margin:0 0 16px;padding:11px 15px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;flex-wrap:wrap;}
+  .period-bar .plabel{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:700;}
+  .period-bar .pcur{font-size:13px;font-weight:700;color:var(--text);}
+  .period-bar .pprev{font-size:12px;color:var(--text-dim);}
+  .period-bar .spacer{flex:1;}
+  .period-bar .wdays{font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;background:#1c1c1e;color:#fff;}
+  .legend{font-size:11.5px;color:var(--text-dim);margin:-6px 0 16px;}
+  .legend b{color:var(--text-muted);}
+  h2.block{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin:22px 0 10px;}
+  .totgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+  @media(max-width:720px){.totgrid{grid-template-columns:1fr;}}
+  .totcard{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .totcard>h3{margin:0;padding:10px 15px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-soft);background:var(--bg-soft);}
+  .totcard .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;}
+  .totcard .kpi{padding:12px 15px;border-right:1px solid var(--border-soft);border-top:1px solid var(--border-soft);}
+  .kpi .label{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:600;margin-bottom:5px;}
+  .kpi .value{font-size:20px;font-weight:700;line-height:1.05;color:#0f0f10;font-variant-numeric:tabular-nums;}
+  .kpi .prev{font-size:10.5px;color:var(--text-dim);margin-top:3px;font-variant-numeric:tabular-nums;}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;margin-top:5px;font-variant-numeric:tabular-nums;}
+  .chip.good{background:#d1fadf;color:#14532d;}
+  .chip.bad{background:#fee2e2;color:#991b1b;}
+  .chip.flat{background:#eee;color:#555;}
+  .structs{display:flex;flex-direction:column;gap:14px;}
+  .struct{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .struct>.sh{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--bg-soft);border-bottom:1px solid var(--border-soft);}
+  .struct>.sh .sname{font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  .struct>.sh .tags{margin-left:auto;display:flex;gap:6px;}
+  .tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;}
+  .tag.meta{background:#e7f0ff;color:#0b57d0;}
+  .tag.tiktok{background:#111;color:#fff;}
+  .chan-row{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  @media(max-width:760px){.chan-row{grid-template-columns:1fr;}}
+  .chan{padding:12px 16px;}
+  .chan + .chan{border-left:1px solid var(--border-soft);}
+  @media(max-width:760px){.chan + .chan{border-left:0;border-top:1px solid var(--border-soft);}}
+  .chan .chead{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .plogo{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;flex-shrink:0;}
+  .plogo.meta{background:#0866FF;color:#fff;font-weight:800;font-size:13px;}
+  .plogo.tiktok{background:#000;color:#fff;font-weight:800;font-size:13px;}
+  .chan .cname{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);}
+  .chan a.mgr{margin-left:auto;font-size:11px;color:var(--blue);text-decoration:none;}
+  .chan a.mgr:hover{text-decoration:underline;}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:9px;}
+  .mcell{background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:9px;padding:9px 10px;}
+  .mcell .mlab{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);font-weight:600;margin-bottom:4px;}
+  .mcell .mval{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;color:#0f0f10;line-height:1.05;}
+  .mcell .mprev{font-size:10px;color:var(--text-dim);margin-top:2px;font-variant-numeric:tabular-nums;}
+  .mcell .chip{font-size:10px;padding:0 6px;margin-top:4px;}
+  .chan .note{font-size:11.5px;color:var(--text-dim);font-style:italic;padding:6px 2px;}
+  .chan.inactive{background:#fcfcfd;}
+  footer.f{margin-top:26px;font-size:11px;color:var(--text-dim);text-align:center;line-height:1.6;}
+  footer.f a{color:var(--text-muted);}
+  .loading{padding:60px 0;text-align:center;color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="h">
+    <div class="title-block">
+      <img class="brand-logo" src="assets/fmm-logo.svg" alt="FMM" />
+      <div class="title-text">
+        <h1>AGHC — Dashboard di Controllo</h1>
+        <div class="sub">Performance pubblicitarie · tutte le strutture attive · Meta &amp; TikTok</div>
+      </div>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <div class="period-bar" id="periodBar"></div>
+  <div class="legend">
+    <b>Confronto:</b> ogni KPI mostra il valore del periodo corrente, la variazione % vs il periodo precedente di pari durata e (in piccolo) il valore precedente.
+    Le variazioni sui costi (Spesa, CPC, CPM) sono in <span style="color:#991b1b;font-weight:700">rosso</span> se in aumento; i volumi (Copertura, Impression, Click) sono in <span style="color:#14532d;font-weight:700">verde</span> se in crescita.
+  </div>
+
+  <h2 class="block">Totale portfolio</h2>
+  <div class="totgrid" id="totals"></div>
+
+  <h2 class="block">Strutture</h2>
+  <div class="structs" id="structs"><div class="loading">Caricamento dati…</div></div>
+
+  <footer class="f">
+    Dashboard di Controllo — FMM Consulting / AGHC · dati Meta &amp; TikTok via Windsor.ai<br/>
+    <span id="genfoot"></span>
+  </footer>
+</div>
+
+<script>
+const METRIC_DEFS = {
+  meta:   [["spend","Spesa","eur"],["reach","Copertura","int"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]],
+  tiktok: [["spend","Spesa","eur"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]]
+};
+// true = un aumento è "buono" (verde). Costi -> false.
+const GOOD_UP = {spend:false,cpc:false,cpm:false,reach:true,impressions:true,clicks:true,ctr:true};
+
+function fmtInt(n){ if(n===null||n===undefined) return "—"; return Math.round(n).toLocaleString("it-IT"); }
+function fmtEur(n,dec){ if(n===null||n===undefined) return "—"; return n.toLocaleString("it-IT",{minimumFractionDigits:dec,maximumFractionDigits:dec})+" €"; }
+function fmtVal(v,kind){ if(v===null||v===undefined) return "—"; if(kind==="eur") return fmtEur(v,2); if(kind==="eur4") return fmtEur(v,3); return fmtInt(v); }
+function fmtPct(p){ if(p===null||p===undefined) return "n/d"; const s=p>=0?"+":""; return s+p.toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1})+"%"; }
+
+function chip(metricKey, delta){
+  if(delta===null||delta===undefined) return '<span class="chip flat">n/d</span>';
+  const goodUp = GOOD_UP[metricKey];
+  const isGood = (delta>=0)===goodUp;
+  if(Math.abs(delta)<0.05) return '<span class="chip flat">'+fmtPct(delta)+'</span>';
+  return '<span class="chip '+(isGood?"good":"bad")+'">'+fmtPct(delta)+'</span>';
+}
+
+function mcell(key,label,kind,m){
+  const d = m[key] || {};
+  return '<div class="mcell"><div class="mlab">'+label+'</div>'
+       + '<div class="mval">'+fmtVal(d.cur,kind)+'</div>'
+       + chip(key,d.delta)
+       + '<div class="mprev">prec. '+fmtVal(d.prev,kind)+'</div></div>';
+}
+
+function totKpi(label,kind,m){
+  const d = m || {};
+  return '<div class="kpi"><div class="label">'+label+'</div>'
+       + '<div class="value">'+fmtVal(d.cur,kind)+'</div>'
+       + chip(label==="Spesa"?"spend":(label==="Copertura"?"reach":(label==="Impression"?"impressions":"clicks")), d.delta)
+       + '<div class="prev">prec. '+fmtVal(d.prev,kind)+'</div></div>';
+}
+
+function render(data){
+  document.getElementById("stamp").innerHTML =
+    'Finestra <b>'+data.window_days+' giorni</b><br/>agg. '+data.generated_at;
+  document.getElementById("genfoot").textContent =
+    'Generato il '+data.generated_at+' · finestra '+data.window_days+'gg · '+data.current_window.label;
+
+  document.getElementById("periodBar").innerHTML =
+      '<span class="plabel">Periodo corrente</span>'
+    + '<span class="pcur">'+data.current_window.label+'</span>'
+    + '<span class="pprev">vs precedente: '+data.previous_window.label+'</span>'
+    + '<span class="spacer"></span>'
+    + '<span class="wdays">'+data.window_days+' giorni</span>';
+
+  // Totali
+  const tm=data.totals.meta, tt=data.totals.tiktok;
+  document.getElementById("totals").innerHTML =
+      '<div class="totcard"><h3><span class="plogo meta">f</span> Meta (Facebook &amp; Instagram)</h3>'
+    + '<div class="kpis">'+totKpi("Spesa","eur",tm.spend)+totKpi("Copertura","int",tm.reach)+totKpi("Impression","int",tm.impressions)+totKpi("Click","int",tm.clicks)+'</div></div>'
+    + '<div class="totcard"><h3><span class="plogo tiktok">t</span> TikTok</h3>'
+    + '<div class="kpis">'+totKpi("Spesa","eur",tt.spend)+totKpi("Impression","int",tt.impressions)+totKpi("Click","int",tt.clicks)+'</div></div>';
+
+  // Strutture
+  let html="";
+  data.structures.forEach(s=>{
+    const meta=s.channels.meta, tt=s.channels.tiktok;
+    let tags="";
+    if(meta && meta.available!==false) tags+='<span class="tag meta">Meta</span>';
+    if(tt) tags+='<span class="tag tiktok">TikTok</span>';
+
+    let chans="";
+    // Meta
+    chans += '<div class="chan'+((meta&&meta.active)?"":" inactive")+'">'
+           + '<div class="chead"><span class="plogo meta">f</span><span class="cname">Meta</span>'
+           + (meta&&meta.url?'<a class="mgr" href="'+meta.url+'" target="_blank" rel="noopener">Ads Manager ↗</a>':'')+'</div>';
+    if(!meta || meta.available===false){
+      chans += '<div class="note">Account non collegato a Windsor: dati non disponibili.</div>';
+    } else if(!meta.active){
+      chans += '<div class="note">Nessuna erogazione nel periodo.</div>';
+    } else {
+      chans += '<div class="mgrid">'+METRIC_DEFS.meta.map(d=>mcell(d[0],d[1],d[2],meta.metrics)).join("")+'</div>';
+    }
+    chans += '</div>';
+    // TikTok (solo se struttura ha TikTok)
+    if(tt){
+      chans += '<div class="chan'+(tt.active?"":" inactive")+'">'
+             + '<div class="chead"><span class="plogo tiktok">t</span><span class="cname">TikTok</span>'
+             + (tt.url?'<a class="mgr" href="'+tt.url+'" target="_blank" rel="noopener">TikTok Ads ↗</a>':'')+'</div>';
+      if(!tt.active){
+        chans += '<div class="note">Nessuna erogazione nel periodo.</div>';
+      } else {
+        chans += '<div class="mgrid">'+METRIC_DEFS.tiktok.map(d=>mcell(d[0],d[1],d[2],tt.metrics)).join("")+'</div>';
+      }
+      chans += '</div>';
+    } else {
+      chans += '<div class="chan inactive"><div class="chead"><span class="plogo tiktok" style="opacity:.35">t</span><span class="cname" style="opacity:.6">TikTok</span></div><div class="note">Canale non attivo per questa struttura.</div></div>';
+    }
+
+    html += '<div class="struct"><div class="sh"><span class="sname">'+s.name+'</span><span class="tags">'+tags+'</span></div>'
+          + '<div class="chan-row">'+chans+'</div></div>';
+  });
+  document.getElementById("structs").innerHTML = html;
+}
+
+fetch("aghc_data.json?v="+Date.now())
+  .then(r=>r.json()).then(render)
+  .catch(e=>{document.getElementById("structs").innerHTML='<div class="loading">Errore nel caricamento di aghc_data.json</div>';console.error(e);});
+</script>
+</body>
+</html>
