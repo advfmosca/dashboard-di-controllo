@@ -1,13 +1,14 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-08-08 20:02",
-  "comparison": "MoM",
+  "schema_version": 2,
+  "generated_at": "2026-08-08 20:11",
+  "comparison": "MOM",
   "month_label": "Luglio 2026",
   "prev_label": "Giugno 2026",
+  "yoy_fallbacks": 0,
   "clients": [
     {
       "name": "Altafiumara Resort",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -64,11 +65,11 @@
           "delta": -37.0
         }
       },
-      "rational": "Il mese registra una ricalibrazione del budget (-37%) e una spesa complessiva di 458,42 €. L'attività mantiene un presidio qualificato, con un'ampia efficienza per euro investito: con 458,42 € l'algoritmo Meta ha generato oltre 5.899 clic verso le destinazioni del brand. Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
+      "rational": "Il mese registra una ricalibrazione del budget (-37%) e una spesa complessiva di 458,42 €. L'attività mantiene un presidio qualificato, con ampia efficienza per euro investito: con 458,42 € l'algoritmo Meta ha generato oltre 5.899 clic verso le destinazioni del brand. Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
     },
     {
       "name": "Hotel Castello",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -129,7 +130,7 @@
     },
     {
       "name": "Hotel Della Piana",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -208,7 +209,7 @@
     },
     {
       "name": "Hannah Hotels",
-      "channels": "campagna",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -269,7 +270,7 @@
     },
     {
       "name": "Puntebianche Resort",
-      "channels": "campagna",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -330,7 +331,7 @@
     },
     {
       "name": "Hemanaire",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -391,7 +392,7 @@
     },
     {
       "name": "Hotel Lunetta",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -470,7 +471,7 @@
     },
     {
       "name": "Magari Estates",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -531,7 +532,7 @@
     },
     {
       "name": "Marcella Royal Hotel",
-      "channels": "campagna",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -591,11 +592,11 @@
       "tiktok": {
         "available": false
       },
-      "rational": "Il mese registra una ricalibrazione del budget (-12%) e una spesa complessiva di 309,16 €. Sul fronte engagement le interazioni su Meta crescono del +62% (140.881) e la copertura sale del +40%, segnale di un pubblico sempre più coinvolto e in target. Il canale TikTok ha contribuito con 0 visualizzazioni (-100%), ampliando la copertura su un pubblico più giovane e complementare. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
+      "rational": "Il mese registra una ricalibrazione del budget (-12%) e una spesa complessiva di 309,16 €. Sul fronte engagement le interazioni su Meta crescono del +62% (140.881) e la copertura sale del +40%, segnale di un pubblico sempre più coinvolto e in target. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
     },
     {
       "name": "Terrazza Flavia",
-      "channels": "campagna",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -656,7 +657,7 @@
     },
     {
       "name": "Mare Hotel",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -735,7 +736,7 @@
     },
     {
       "name": "Tenuta Montemagno Relais",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -796,7 +797,7 @@
     },
     {
       "name": "Villa Ermellina",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -875,7 +876,7 @@
     },
     {
       "name": "Villa Giada",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
@@ -950,11 +951,11 @@
           "delta": 3.0
         }
       },
-      "rational": "Il mese registra una ricalibrazione del budget (-18%) e una spesa complessiva di 924,40 €. L'attività mantiene un presidio qualificato, con un'ampia efficienza per euro investito: con 924,40 € l'algoritmo Meta ha generato oltre 6.358 clic verso le destinazioni del brand. Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore. Il canale TikTok ha contribuito con 3.088.927 visualizzazioni (+9%), ampliando la copertura su un pubblico più giovane e complementare. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
+      "rational": "Il mese registra una ricalibrazione del budget (-18%) e una spesa complessiva di 924,40 €. L'attività mantiene un presidio qualificato, con ampia efficienza per euro investito: con 924,40 € l'algoritmo Meta ha generato oltre 6.358 clic verso le destinazioni del brand. Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore. Il canale TikTok ha contribuito con 3.088.927 visualizzazioni (+9%), ampliando la copertura su un pubblico più giovane e complementare. Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale."
     },
     {
       "name": "Villa Miliani",
-      "channels": "account",
+      "comparison_used": "mom",
       "meta": {
         "available": true,
         "reach": {
