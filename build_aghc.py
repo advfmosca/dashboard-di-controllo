@@ -51,6 +51,7 @@ def build_metrics(cur, prev, kind):
     c_clk,   p_clk   = num(cur.get("clicks")), num(prev.get("clicks"))
     c_imp,   p_imp   = num(cur.get("impressions")), num(prev.get("impressions"))
     c_reach, p_reach = num(cur.get("reach")), num(prev.get("reach"))
+    c_eng,   p_eng   = num(cur.get("actions_page_engagement")), num(prev.get("actions_page_engagement"))
     def cpc(s,c): return (s/c) if c else None
     def cpm(s,i): return (s/i*1000.0) if i else None
     def ctr(c,i): return (c/i*100.0) if i else None
@@ -65,6 +66,7 @@ def build_metrics(cur, prev, kind):
     }
     if kind == "meta":
         m["reach"] = {"cur": int(c_reach), "prev": int(p_reach), "delta": delta_pct(c_reach,p_reach)}
+        m["interazioni"] = {"cur": int(c_eng), "prev": int(p_eng), "delta": delta_pct(c_eng,p_eng)}
         m["ctr"]   = {"cur": ctr(c_clk,c_imp), "prev": ctr(p_clk,p_imp),
                       "delta": delta_pct(ctr(c_clk,c_imp) or 0, ctr(p_clk,p_imp) or 0) if (c_imp and p_imp) else None}
     return m
@@ -81,6 +83,11 @@ def main():
     ap.add_argument("--current-month", required=True, help="YYYY-MM del mese corrente")
     ap.add_argument("--prev-month", required=True, help="YYYY-MM del mese precedente")
     ap.add_argument("--current-through", default=None, help="YYYY-MM-DD ultimo giorno con dati nel mese corrente (per MTD)")
+    ap.add_argument("--meta-cur", default="raw/aghc_meta_current.json")
+    ap.add_argument("--meta-prev", default="raw/aghc_meta_prev.json")
+    ap.add_argument("--tt-cur", default="raw/aghc_tiktok_current.json")
+    ap.add_argument("--tt-prev", default="raw/aghc_tiktok_prev.json")
+    ap.add_argument("--out", default="aghc_data.json")
     args = ap.parse_args()
     ws = args.workspace
 
@@ -97,13 +104,13 @@ def main():
 
     roster = load_roster(ws)
     raw = os.path.join(ws, "raw")
-    meta_cur = load_rows(os.path.join(raw,"aghc_meta_current.json"))
-    meta_prev = load_rows(os.path.join(raw,"aghc_meta_prev.json"))
-    tt_cur = load_rows(os.path.join(raw,"aghc_tiktok_current.json"))
-    tt_prev = load_rows(os.path.join(raw,"aghc_tiktok_prev.json"))
+    meta_cur = load_rows(os.path.join(ws, args.meta_cur))
+    meta_prev = load_rows(os.path.join(ws, args.meta_prev))
+    tt_cur = load_rows(os.path.join(ws, args.tt_cur))
+    tt_prev = load_rows(os.path.join(ws, args.tt_prev))
 
     structures = []
-    tot = {"meta":{"c_spend":0,"p_spend":0,"c_imp":0,"p_imp":0,"c_clk":0,"p_clk":0,"c_reach":0,"p_reach":0},
+    tot = {"meta":{"c_spend":0,"p_spend":0,"c_imp":0,"p_imp":0,"c_clk":0,"p_clk":0,"c_reach":0,"p_reach":0,"c_eng":0,"p_eng":0},
            "tiktok":{"c_spend":0,"p_spend":0,"c_imp":0,"p_imp":0,"c_clk":0,"p_clk":0}}
     for s in roster:
         entry = {"name": s["name"], "channels": {}, "notes": []}
@@ -120,6 +127,7 @@ def main():
             tot["meta"]["c_imp"]+=num(mc.get("impressions")); tot["meta"]["p_imp"]+=num(mp.get("impressions"))
             tot["meta"]["c_clk"]+=num(mc.get("clicks")); tot["meta"]["p_clk"]+=num(mp.get("clicks"))
             tot["meta"]["c_reach"]+=num(mc.get("reach")); tot["meta"]["p_reach"]+=num(mp.get("reach"))
+            tot["meta"]["c_eng"]+=num(mc.get("actions_page_engagement")); tot["meta"]["p_eng"]+=num(mp.get("actions_page_engagement"))
         tid = s.get("tiktok_id")
         if tid:
             tc, tp = tt_cur.get(tid,{}), tt_prev.get(tid,{})
@@ -137,7 +145,9 @@ def main():
         b = {"spend":{"cur":round(t["c_spend"],2),"prev":round(t["p_spend"],2),"delta":delta_pct(t["c_spend"],t["p_spend"])},
              "impressions":{"cur":int(t["c_imp"]),"prev":int(t["p_imp"]),"delta":delta_pct(t["c_imp"],t["p_imp"])},
              "clicks":{"cur":int(t["c_clk"]),"prev":int(t["p_clk"]),"delta":delta_pct(t["c_clk"],t["p_clk"])}}
-        if kind=="meta": b["reach"]={"cur":int(t["c_reach"]),"prev":int(t["p_reach"]),"delta":delta_pct(t["c_reach"],t["p_reach"])}
+        if kind=="meta":
+            b["reach"]={"cur":int(t["c_reach"]),"prev":int(t["p_reach"]),"delta":delta_pct(t["c_reach"],t["p_reach"])}
+            b["interazioni"]={"cur":int(t["c_eng"]),"prev":int(t["p_eng"]),"delta":delta_pct(t["c_eng"],t["p_eng"])}
         return b
 
     out = {
@@ -150,11 +160,11 @@ def main():
         "totals": {"meta": totals_block(tot["meta"],"meta"), "tiktok": totals_block(tot["tiktok"],"tiktok")},
         "structures": structures,
     }
-    with open(os.path.join(ws,"aghc_data.json"),"w",encoding="utf-8") as f:
+    with open(os.path.join(ws,args.out),"w",encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     n_meta = sum(1 for s in structures if s["channels"].get("meta",{}).get("active"))
     n_tt = sum(1 for s in structures if s["channels"].get("tiktok",{}).get("active"))
-    print("OK -> aghc_data.json")
+    print("OK -> " + args.out)
     print("  corrente:", out["current_window"]["label"] + through_label, "| precedente:", out["previous_window"]["label"], "| partial:", partial)
     print("  strutture:", len(structures), "| Meta attivi:", n_meta, "| TikTok attivi:", n_tt)
     print("  Meta spesa %.2f (prec %.2f) | TikTok spesa %.2f (prec %.2f)" % (

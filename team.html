@@ -160,7 +160,7 @@ function renderClient(name){
   var b=BUDBY[name];
   var v=document.getElementById("view");
   var meta=s.channels.meta, tt=s.channels.tt||s.channels.tiktok;
-  var html='<h2 class="block">'+name+' — KPI '+DATA.current_window.label+(DATA.current_window.through_label||'')+' vs '+DATA.previous_window.label+'</h2><div class="totgrid">';
+  var html='<div style="display:flex;align-items:center;gap:10px;margin:22px 0 10px;flex-wrap:wrap;"><h2 class="block" style="margin:0;">'+name+' — KPI '+DATA.current_window.label+(DATA.current_window.through_label||'')+' vs '+DATA.previous_window.label+'</h2><a href="report-cliente.html?c='+encodeURIComponent(name)+'" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;font-weight:800;color:#0866FF;text-decoration:none;">📄 Report cliente (PDF) ↗</a></div><div class="totgrid">';
   // Meta
   html+='<div class="card"><h3><span class="plogo meta">f</span> Meta</h3>';
   if(!meta||meta.available===false){html+='<div class="note">Account non collegato a Windsor.</div>';}
