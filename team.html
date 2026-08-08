@@ -67,7 +67,7 @@
   .mcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
   .bars{position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;}
   .bar{width:9px;border-radius:3px 3px 0 0;}
-  .bar.real{background:#1e8e3e;} .bar.recal{background:#C9A24B;} .bar.future-real{background:#cfe6d6;}
+  .bar.real{background:#1e8e3e;} .bar.recal{background:#C9A24B;} .bar.plan{background:#e8dcc0;}
   .mlab{font-size:9.5px;color:var(--dim);margin-top:4px;}
   .mlab.cur{color:var(--navy);font-weight:800;}
   .qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px;}
@@ -120,41 +120,41 @@ function totKpi(label,kind,m,mk){var x=m||{};return '<div class="kpi"><div class
 
 function budgetModule(b){
   if(!b){return '<div class="note">Nessun dato budget per questa struttura.</div>';}
-  var util=b.utilizzo_tetto_pct;
-  var pReal=b.operating_annual? Math.min(b.ytd_real/b.operating_annual*100,100):0;
-  var pProj=b.operating_annual? Math.min(b.projection_year_end/b.operating_annual*100,100):0;
-  var maxv=Math.max.apply(null,b.monthly_real.concat(b.monthly_recal).concat([1]));
+  var maxv=Math.max.apply(null,b.monthly_plan.concat(b.monthly_real).concat(b.monthly_recal).concat([1]));
   var months="";
   for(var i=0;i<12;i++){
-    var real=b.monthly_real[i], recal=b.monthly_recal[i], closed=i<ASOF;
-    var bars="";
-    if(closed){ bars='<div class="bar real" style="height:'+(real/maxv*100)+'%" title="'+MESI[i]+' reale '+fEur(real,0)+'"></div>'; }
-    else { bars='<div class="bar recal" style="height:'+(recal/maxv*100)+'%" title="'+MESI[i]+' ricalibrato '+fEur(recal,0)+'"></div>'; }
-    months+='<div class="mcol"><div class="bars">'+bars+'</div><div class="mlab'+(i===ASOF?" cur":"")+'">'+MESI[i]+'</div></div>';
+    var plan=b.monthly_plan[i], real=b.monthly_real[i], recal=b.monthly_recal[i], closed=i<ASOF;
+    var valBar = closed
+      ? '<div class="bar real" style="height:'+(real/maxv*100)+'%" title="'+MESI[i]+' reale '+fEur(real)+'"></div>'
+      : '<div class="bar recal" style="height:'+(recal/maxv*100)+'%" title="'+MESI[i]+' ricalibrato '+fEur(recal)+'"></div>';
+    var planBar='<div class="bar plan" style="height:'+(plan/maxv*100)+'%" title="'+MESI[i]+' programmato '+fEur(plan)+'"></div>';
+    months+='<div class="mcol"><div class="bars">'+planBar+valBar+'</div><div class="mlab'+(i===ASOF?" cur":"")+'">'+MESI[i]+'</div></div>';
   }
   var q="";
-  for(var k=0;k<4;k++){q+='<div class="q"><div class="ql">Q'+(k+1)+'</div><div class="qp">'+fEur(b.quarter_plan[k],0)+'</div><div class="qr">reale '+fEur(b.quarter_real[k],0)+'</div></div>';}
-  var paceCls=b.status;
-  var recalTxt='Da <b>'+MESI[ASOF]+'</b>: consigliati <b>'+fEur(b.fwd_recal_monthly,0)+'/mese</b> sui '+b.remaining_months+' mesi rimanenti per chiudere l\'anno operativo a <b>'+fEur(b.operating_annual,0)+'</b>. '
-    +'Tetto strategia <b>'+fEur(b.annual_strategy,0)+'</b>'+(util!=null?' (utilizzo '+util.toLocaleString("it-IT",{maximumFractionDigits:0})+'%)':'')+'. '
-    +'Al ritmo attuale la proiezione a fine anno è <b>'+fEur(b.projection_year_end,0)+'</b>.';
+  for(var k=0;k<4;k++){q+='<div class="q"><div class="ql">Q'+(k+1)+'</div><div class="qp">'+fEur(b.quarter_plan[k])+'</div><div class="qr">reale '+fEur(b.quarter_real[k])+'</div></div>';}
+  var pReal=b.annual? Math.min(b.ytd_real/b.annual*100,100):0;
+  var pProj=b.annual? Math.min(b.projection_year_end/b.annual*100,100):0;
+  var chan = b.has_tiktok
+    ? 'Split canali: <b>Meta</b> '+fEur(b.channel_annual.meta)+' (80%) · <b>TikTok</b> '+fEur(b.channel_annual.tiktok)+' (20%)'
+    : 'Canale: <b>Meta</b> '+fEur(b.channel_annual.meta)+' (100%)';
+  var recalTxt='Da <b>'+MESI[ASOF]+'</b>: verso l\'annuale programmato <b>'+fEur(b.annual)+'</b>, con <b>'+fEur(b.ytd_real)+'</b> già speso, restano <b>'+fEur(b.residual)+'</b> da distribuire sui mesi rimanenti secondo i pesi stagionali (≈ <b>'+fEur(b.fwd_recal_monthly)+'/mese</b>). Al ritmo attuale la proiezione a fine anno è <b>'+fEur(b.projection_year_end)+'</b>.';
   return ''
   + '<div class="stat4">'
-  +   '<div class="stat"><div class="l">Operativo mensile</div><div class="v">'+fEur(b.operating_monthly,0)+'</div><div class="s">'+(b.operating_source==="override"?"impostato":"stima run-rate")+'</div></div>'
-  +   '<div class="stat"><div class="l">Operativo annuo</div><div class="v">'+fEur(b.operating_annual,0)+'</div><div class="s">target realistico</div></div>'
-  +   '<div class="stat"><div class="l">Speso YTD ('+MESI[ASOF-1]+')</div><div class="v">'+fEur(b.ytd_real,0)+'</div><div class="s">Meta '+fEur(b.ytd_meta,0)+' · TT '+fEur(b.ytd_tiktok,0)+'</div></div>'
-  +   '<div class="stat"><div class="l">Passo vs programma</div><div class="v"><span class="pace '+paceCls+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span></div><div class="s">vs pro-rata '+fEur(b.prorata_operating,0)+'</div></div>'
+  +   '<div class="stat"><div class="l">Programmato annuo</div><div class="v">'+fEur(b.annual)+'</div><div class="s">pesi stagionali AGHC</div></div>'
+  +   '<div class="stat"><div class="l">Speso YTD ('+MESI[ASOF-1]+')</div><div class="v">'+fEur(b.ytd_real)+'</div><div class="s">Meta '+fEur(b.ytd_meta)+' · TT '+fEur(b.ytd_tiktok)+'</div></div>'
+  +   '<div class="stat"><div class="l">Passo vs programmato</div><div class="v"><span class="pace '+b.status+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span></div><div class="s">reale '+fEur(b.ytd_real)+' vs prog. '+fEur(b.plan_to_date)+'</div></div>'
+  +   '<div class="stat"><div class="l">Proiezione fine anno</div><div class="v">'+fEur(b.projection_year_end)+'</div><div class="s">al ritmo attuale</div></div>'
   + '</div>'
   + '<div class="budgetbody">'
-  +   '<div class="plegend"><span><span class="swatch" style="background:#1e8e3e"></span>Reale (mesi chiusi)</span><span><span class="swatch" style="background:#C9A24B"></span>Ricalibrato (mesi rimanenti)</span><span><span class="swatch" style="background:#1F2A44"></span>Proiezione fine anno</span></div>'
+  +   '<div class="plegend"><span>'+chan+'</span></div>'
+  +   '<div class="plegend"><span><span class="swatch" style="background:#e8dcc0"></span>Programmato</span><span><span class="swatch" style="background:#1e8e3e"></span>Reale (mesi chiusi)</span><span><span class="swatch" style="background:#C9A24B"></span>Ricalibrato (mesi rimanenti)</span></div>'
   +   '<div class="progress"><div class="real" style="width:'+pReal+'%"></div><div class="proj" style="left:'+pProj+'%"></div></div>'
-  +   '<div class="plegend"><span>Speso '+fEur(b.ytd_real,0)+' / operativo '+fEur(b.operating_annual,0)+'</span></div>'
+  +   '<div class="plegend"><span>Speso '+fEur(b.ytd_real)+' / annuale '+fEur(b.annual)+' · barra nera = proiezione fine anno</span></div>'
   +   '<div class="months">'+months+'</div>'
   +   '<div class="qgrid">'+q+'</div>'
   +   '<div class="recalnote">'+recalTxt+'</div>'
   + '</div>';
 }
-
 function renderClient(name){
   var s=DATA.structures.find(function(x){return x.name===name;});
   var b=BUDBY[name];
@@ -188,21 +188,21 @@ function renderAll(){
   // budget portfolio
   html+='<h2 class="block">Budget portfolio '+BUD.year+' (as of '+BUD.as_of_label+')</h2>';
   html+='<div class="card"><div class="stat4">'
-   +'<div class="stat"><div class="l">Operativo annuo</div><div class="v">'+fEur(T.operating_annual,0)+'</div><div class="s">target realistico</div></div>'
-   +'<div class="stat"><div class="l">Speso YTD</div><div class="v">'+fEur(T.ytd_real,0)+'</div></div>'
-   +'<div class="stat"><div class="l">Proiezione fine anno</div><div class="v">'+fEur(T.projection_year_end,0)+'</div><div class="s">al ritmo attuale</div></div>'
-   +'<div class="stat"><div class="l">Tetto strategie</div><div class="v">'+fEur(T.annual_strategy,0)+'</div><div class="s">riferimento</div></div>'
+   +'<div class="stat"><div class="l">Programmato annuo</div><div class="v">'+fEur(T.annual)+'</div><div class="s">pesi stagionali</div></div>'
+   +'<div class="stat"><div class="l">Programmato a '+BUD.as_of_label+'</div><div class="v">'+fEur(T.plan_to_date)+'</div></div>'
+   +'<div class="stat"><div class="l">Speso YTD</div><div class="v">'+fEur(T.ytd_real)+'</div></div>'
+   +'<div class="stat"><div class="l">Proiezione fine anno</div><div class="v">'+fEur(T.projection_year_end)+'</div><div class="s">al ritmo attuale</div></div>'
    +'</div></div>';
   // table
-  html+='<h2 class="block">Clienti · clicca per il dettaglio</h2><div class="card"><table><thead><tr><th>Struttura</th><th>Canali</th><th class="num">Op/mese</th><th class="num">Speso YTD</th><th>Passo</th><th class="num">Utilizzo tetto</th></tr></thead><tbody>';
+  html+='<h2 class="block">Clienti · clicca per il dettaglio</h2><div class="card"><table><thead><tr><th>Struttura</th><th>Canali</th><th class="num">Programmato annuo</th><th class="num">Speso YTD</th><th>Passo</th><th class="num">% annuale</th></tr></thead><tbody>';
   BUD.structures.forEach(function(b){
-    var util=b.utilizzo_tetto_pct||0;
+    var pct=b.annual? Math.min(b.ytd_real/b.annual*100,100):0;
     html+='<tr data-name="'+b.name.replace(/"/g,"&quot;")+'"><td><b>'+b.name+'</b></td>'
       +'<td>'+(b.has_tiktok?"Meta + TikTok":"Meta")+'</td>'
-      +'<td class="num">'+fEur(b.operating_monthly,0)+'</td>'
-      +'<td class="num">'+fEur(b.ytd_real,0)+'</td>'
+      +'<td class="num">'+fEur(b.annual)+'</td>'
+      +'<td class="num">'+fEur(b.ytd_real)+'</td>'
       +'<td><span class="pace '+b.status+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span></td>'
-      +'<td class="num"><div class="mini" title="'+util.toFixed(0)+'% del tetto strategia"><div class="f" style="width:'+Math.min(util,100)+'%"></div></div></td></tr>';
+      +'<td class="num"><div class="mini" title="'+pct.toFixed(0)+'% dell\'annuale speso"><div class="f" style="width:'+pct+'%"></div></div></td></tr>';
   });
   html+='</tbody></table></div>';
   v.innerHTML=html;
