@@ -6,49 +6,45 @@
 <title>AGHC — Report Cliente</title>
 <link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg"/>
 <style>
-  :root{--navy:#1F2A44;--navy2:#2c3a5c;--gold:#C9A24B;--ink:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--line:#e7e8ee;--soft:#f6f7f9;--green:#1e8e3e;--bg:#eceef3;}
+  :root{--navy:#1F2A44;--navy2:#2c3a5c;--gold:#C9A24B;--ink:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--line:#e7e8ee;--soft:#f7f8fa;--green:#1e8e3e;--rust:#b0642a;--bg:#eceef3;--ig:#E1306C;--fb:#0866FF;}
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
-  .controls{max-width:900px;margin:16px auto 8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 14px;}
+  .controls{max-width:940px;margin:16px auto 8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 14px;}
   .controls label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
-  .controls select{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border:1px solid #ccd0da;border-radius:9px;background:#fff;cursor:pointer;min-width:240px;}
+  .controls select{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border:1px solid #ccd0da;border-radius:9px;background:#fff;cursor:pointer;min-width:230px;}
   .controls .sp{flex:1;}
   .btn{font:inherit;font-size:13px;font-weight:700;padding:9px 16px;border-radius:9px;border:0;background:var(--navy);color:#fff;cursor:pointer;}
   .btn:hover{background:var(--navy2);}
-  /* Report sheet A4 */
-  .sheet{max-width:900px;margin:10px auto 40px;background:#fff;box-shadow:0 6px 30px rgba(20,30,60,.12);border-radius:6px;overflow:hidden;}
+  .sheet{max-width:940px;margin:10px auto 40px;background:#fff;box-shadow:0 6px 30px rgba(20,30,60,.12);border-radius:6px;overflow:hidden;}
   .band{background:var(--navy);color:#fff;padding:26px 34px;position:relative;}
   .band:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--gold);}
   .band .kick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;}
   .band h1{margin:6px 0 2px;font-size:30px;font-weight:800;letter-spacing:-.01em;}
   .band .month{font-size:14px;color:#c7cede;font-weight:600;}
   .band .logo{position:absolute;top:24px;right:30px;width:40px;height:40px;border-radius:50%;background:#fff;padding:4px;}
-  .body{padding:26px 34px 10px;}
-  .sec-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:8px 0 12px;display:flex;align-items:center;gap:9px;}
-  .sec-title .pl{display:inline-flex;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:12px;align-items:center;justify-content:center;}
+  .body{padding:24px 34px 8px;}
+  .chan-h{font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:20px 0 10px;display:flex;align-items:center;gap:9px;}
+  .chan-h .pl{display:inline-flex;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:12px;align-items:center;justify-content:center;}
   .pl.meta{background:#0866FF;} .pl.tiktok{background:#000;}
-  .kgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px;}
-  .kgrid.tt{grid-template-columns:repeat(3,1fr);}
-  @media(max-width:680px){.kgrid,.kgrid.tt{grid-template-columns:repeat(2,1fr);}}
-  .k{border:1px solid var(--line);border-radius:11px;padding:13px 14px;background:var(--soft);}
-  .k .kl{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;}
-  .k .kv{font-size:23px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15;margin-top:5px;}
-  .k .kd{font-size:11px;font-weight:700;margin-top:4px;}
-  .k .kd.up{color:var(--green);} .k .kd.down{color:#b0642a;} .k .kd.flat{color:var(--dim);}
-  .k .kd small{color:var(--dim);font-weight:600;}
-  .narr{border-left:3px solid var(--gold);background:#faf7ef;border-radius:0 10px 10px 0;padding:14px 18px;margin:6px 0 20px;font-size:14px;line-height:1.6;color:#3f4657;}
-  .narr b{color:var(--ink);}
-  .foot{border-top:1px solid var(--line);padding:16px 34px 26px;color:var(--dim);font-size:10.5px;line-height:1.5;}
+  .kpi-block{margin-bottom:14px;}
+  .kpi-name{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin:0 0 5px;}
+  table.t{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:2px;}
+  table.t th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;text-align:right;padding:5px 10px;border-bottom:1px solid var(--line);}
+  table.t th:first-child{text-align:left;}
+  table.t td{padding:6px 10px;border-bottom:1px solid var(--soft);text-align:right;font-variant-numeric:tabular-nums;}
+  table.t td:first-child{text-align:left;font-weight:600;}
+  .plat{display:inline-flex;align-items:center;gap:7px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .dot.ig{background:var(--ig);} .dot.fb{background:var(--fb);}
+  .cf{font-weight:800;} .cf.up{color:var(--green);} .cf.down{color:var(--rust);} .cf.flat{color:var(--dim);}
+  .budget-row td{background:var(--soft);font-weight:700;}
+  .narr{border-left:3px solid var(--gold);background:#faf7ef;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0 18px;font-size:13.5px;line-height:1.6;color:#3f4657;}
+  .foot{border-top:1px solid var(--line);padding:14px 34px 26px;color:var(--dim);font-size:10.5px;line-height:1.5;}
   .foot .cr{color:var(--muted);font-weight:700;margin-bottom:5px;}
-  .none{color:var(--dim);font-style:italic;padding:6px 0 18px;}
-  @media print{
-    @page{size:A4;margin:12mm;}
-    body{background:#fff;}
-    .controls{display:none;}
-    .sheet{box-shadow:none;margin:0;max-width:100%;border-radius:0;}
-    .band{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-    .k,.narr,.pl{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  }
+  .none{color:var(--dim);font-style:italic;padding:8px 0 16px;}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;}
+  @media(max-width:680px){.cols{grid-template-columns:1fr;}}
+  @media print{@page{size:A4;margin:11mm;}body{background:#fff;}.controls{display:none;}.sheet{box-shadow:none;margin:0;max-width:100%;border-radius:0;}.band,.budget-row td,.narr,.pl,.dot{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.kpi-block{break-inside:avoid;}}
 </style>
 </head>
 <body>
@@ -62,71 +58,55 @@
 <script>
 let REP=null;
 function fInt(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
-function fEur(n){return n==null?"—":Math.round(n).toLocaleString("it-IT")+" €";}
-function dChip(delta,goodUp){
-  if(delta==null) return '<div class="kd flat">— <small>vs mese prec.</small></div>';
-  var up=delta>=0, good=(up===goodUp), s=(up?"+":"")+delta.toLocaleString("it-IT",{maximumFractionDigits:0})+"%";
-  var cls=Math.abs(delta)<1?"flat":(good?"up":"down");
-  return '<div class="kd '+cls+'">'+(up?"▲":"▼")+" "+s+' <small>vs mese prec.</small></div>';
+function fEur(n){return n==null?"—":n.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";}
+function cf(delta,goodUp){
+  if(delta==null) return '<span class="cf flat">n/d</span>';
+  var up=delta>=0,good=(up===goodUp),s=(up?"+":"")+delta.toLocaleString("it-IT",{maximumFractionDigits:0})+"%";
+  return '<span class="cf '+(Math.abs(delta)<1?"flat":(good?"up":"down"))+'">'+s+'</span>';
 }
-function kpi(label,val,eur,delta,goodUp){
-  return '<div class="k"><div class="kl">'+label+'</div><div class="kv">'+(eur?fEur(val):fInt(val))+'</div>'+dChip(delta,goodUp)+'</div>';
+function kpiBlock(title,tbl,isEur){
+  function row(lbl,dotcls,c){return '<tr><td><span class="plat"><span class="dot '+dotcls+'"></span>'+lbl+'</span></td><td>'+(isEur?fEur(c.cur):fInt(c.cur))+'</td><td>'+(isEur?fEur(c.prev):fInt(c.prev))+'</td><td>'+cf(c.delta,true)+'</td></tr>';}
+  return '<div class="kpi-block"><div class="kpi-name">'+title+'</div>'
+    +'<table class="t"><thead><tr><th>Piattaforma</th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead><tbody>'
+    +row("Instagram","ig",tbl.ig)+row("Facebook","fb",tbl.fb)+'</tbody></table></div>';
 }
-function narrative(name,meta,tt,month){
-  if(!meta||!meta.active){return 'Nel mese di '+month+' il presidio pubblicitario di <b>'+name+'</b> è stato pianificato in continuità con la strategia di visibilità del brand.';}
-  var m=meta.metrics;
-  var reach=m.reach.cur, impr=m.impressions.cur, inter=m.interazioni?m.interazioni.cur:null;
-  var parts=[];
-  parts.push('Nel mese di <b>'+month+'</b> le campagne di <b>'+name+'</b> hanno raggiunto <b>'+fInt(reach)+'</b> utenti unici, generando <b>'+fInt(impr)+'</b> visualizzazioni complessive'+(inter!=null?' e <b>'+fInt(inter)+'</b> interazioni con i contenuti':'')+'.');
-  if(tt&&tt.active){parts.push('Il canale <b>TikTok</b> ha ampliato la copertura con ulteriori <b>'+fInt(tt.metrics.impressions.cur)+'</b> visualizzazioni, intercettando un pubblico più giovane e complementare a Meta.');}
-  var rd=m.reach.delta;
-  if(rd!=null&&rd>=3){parts.push('La copertura è in <b>crescita del '+Math.round(rd)+'%</b> rispetto al mese precedente, a conferma di un posizionamento sempre più solido.');}
-  else{parts.push('L\'attività ha mantenuto una presenza costante e qualitativa, consolidando la notorietà del brand presso il pubblico in target.');}
-  return parts.join(' ');
+function budgetBlock(b){
+  return '<div class="kpi-block"><div class="kpi-name">Budget</div><table class="t"><thead><tr><th>&nbsp;</th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead><tbody>'
+    +'<tr class="budget-row"><td>Totale</td><td>'+fEur(b.cur)+'</td><td>'+fEur(b.prev)+'</td><td>'+cf(b.delta,true)+'</td></tr></tbody></table></div>';
+}
+function ttBlock(t){
+  function row(lbl,c,isEur){return '<tr><td>'+lbl+'</td><td>'+(isEur?fEur(c.cur):fInt(c.cur))+'</td><td>'+(isEur?fEur(c.prev):fInt(c.prev))+'</td><td>'+cf(c.delta,true)+'</td></tr>';}
+  return '<table class="t"><thead><tr><th>KPI</th><th>Periodo Attuale</th><th>Periodo Precedente</th><th>Confronto</th></tr></thead><tbody>'
+    +row("Visualizzazioni",t.impressions,false)+row("Click",t.clicks,false)
+    +'<tr class="budget-row"><td>Budget</td><td>'+fEur(t.budget.cur)+'</td><td>'+fEur(t.budget.prev)+'</td><td>'+cf(t.budget.delta,true)+'</td></tr></tbody></table>';
 }
 function render(name){
-  var s=REP.structures.find(function(x){return x.name===name;});
-  var month=REP.current_window.label;
-  var meta=s.channels.meta, tt=s.channels.tt||s.channels.tiktok;
+  var c=REP.clients.find(function(x){return x.name===name;});
   var h='';
-  h+='<div class="band"><img class="logo" src="assets/fmm-logo.svg" alt="AG"/><div class="kick">Report Mensile Advertising</div><h1>'+name+'</h1><div class="month">'+month+' · Meta '+(tt?'& TikTok ':'')+'· a cura di AG Hotel Consulting</div></div>';
+  h+='<div class="band"><img class="logo" src="assets/fmm-logo.svg" alt="AG"/><div class="kick">Report Mensile Advertising · '+REP.comparison+'</div><h1>'+name+'</h1><div class="month">'+REP.month_label+'  vs  '+REP.prev_label+' · a cura di AG Hotel Consulting</div></div>';
   h+='<div class="body">';
-  // Meta
-  h+='<div class="sec-title"><span class="pl meta">f</span> Meta · Facebook &amp; Instagram</div>';
-  if(!meta||meta.available===false){h+='<p class="none">Dati Meta non disponibili per questa struttura.</p>';}
-  else if(!meta.active){h+='<p class="none">Nessuna erogazione nel mese.</p>';}
-  else{var m=meta.metrics;
-    h+='<div class="kgrid">'
-      +kpi("Copertura",m.reach.cur,false,m.reach.delta,true)
-      +kpi("Visualizzazioni",m.impressions.cur,false,m.impressions.delta,true)
-      +kpi("Interazioni",m.interazioni?m.interazioni.cur:null,false,m.interazioni?m.interazioni.delta:null,true)
-      +kpi("Click",m.clicks.cur,false,m.clicks.delta,true)
-      +kpi("Investimento",m.spend.cur,true,m.spend.delta,true)
+  if(!c.meta||!c.meta.available){h+='<p class="none">Nessuna erogazione Meta nel mese per questa struttura.</p>';}
+  else{
+    var m=c.meta;
+    h+='<div class="chan-h"><span class="pl meta">f</span> Meta · Facebook &amp; Instagram</div>';
+    h+='<div class="cols">'
+      +'<div>'+kpiBlock("Account Raggiunti",m.reach,false)+kpiBlock("Visualizzazioni",m.impressions,false)+'</div>'
+      +'<div>'+kpiBlock("Interazioni",m.engagement,false)+kpiBlock("Clicks",m.clicks,false)+'</div>'
       +'</div>';
+    h+=budgetBlock(m.budget);
   }
-  // TikTok
-  if(tt){
-    h+='<div class="sec-title"><span class="pl tiktok">t</span> TikTok</div>';
-    if(!tt.active){h+='<p class="none">Nessuna erogazione nel mese.</p>';}
-    else{var t=tt.metrics;
-      h+='<div class="kgrid tt">'
-        +kpi("Visualizzazioni",t.impressions.cur,false,t.impressions.delta,true)
-        +kpi("Click",t.clicks.cur,false,t.clicks.delta,true)
-        +kpi("Investimento",t.spend.cur,true,t.spend.delta,true)
-        +'</div>';
-    }
-  }
-  h+='<div class="sec-title">Lettura del mese</div><div class="narr">'+narrative(name,meta,tt,month)+'</div>';
+  if(c.tiktok&&c.tiktok.available){h+='<div class="chan-h"><span class="pl tiktok">t</span> TikTok</div>'+ttBlock(c.tiktok);}
+  if(c.rational){h+='<div class="chan-h">Lettura del mese</div><div class="narr">'+c.rational+'</div>';}
   h+='</div>';
   h+='<div class="foot"><div class="cr">AG Hotel Consulting · in collaborazione con FMM Consulting</div>'
-    +'Le metriche relative a Copertura, Visualizzazioni, Interazioni e Budget possono essere soggette a variazioni in quanto influenzate dalla finestra di attribuzione, che può estendersi oltre la data di chiusura della reportistica. Dati Meta e TikTok · fonte Windsor.ai.</div>';
+    +'Le metriche relative a Copertura, Visualizzazioni, Interazioni e Budget possono essere soggette a variazioni in quanto influenzate dalla finestra di attribuzione, che può estendersi oltre la data di chiusura della reportistica. Interazioni = Interazione con la Pagina. Confronto '+REP.comparison+'. Dati Meta e TikTok · fonte Windsor.ai.</div>';
   document.getElementById("sheet").innerHTML=h;
 }
 function boot(){
   var sel=document.getElementById("sel");
-  REP.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
-  var params=new URLSearchParams(location.search);
-  var c=params.get("c"); if(!c||!REP.structures.find(function(s){return s.name===c;})){c=REP.structures.find(function(s){return s.channels.meta&&s.channels.meta.active;}).name;}
+  REP.clients.forEach(function(c){var o=document.createElement("option");o.value=c.name;o.textContent=c.name;sel.appendChild(o);});
+  var p=new URLSearchParams(location.search),c=p.get("c");
+  if(!c||!REP.clients.find(function(x){return x.name===c;})){c=(REP.clients.find(function(x){return x.meta&&x.meta.available;})||REP.clients[0]).name;}
   sel.value=c; render(c);
   sel.addEventListener("change",function(){render(sel.value);var u=new URL(location);u.searchParams.set("c",sel.value);history.replaceState(null,"",u);});
 }
