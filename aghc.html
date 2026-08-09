@@ -50,7 +50,10 @@
   .kc .chip{font-size:9.5px;padding:0 6px;margin-top:4px;}
   .kc .yoyline{font-size:9px;}
   .chartwrap{position:relative;height:190px;margin:4px 0 8px;}
-  .chart-note{font-size:11px;color:var(--dim);margin-bottom:8px;}
+  .chart-note{font-size:11px;color:var(--dim);margin:0 0 6px;}
+  .metricsel{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
+  .metricsel button{font:inherit;font-size:11px;font-weight:700;padding:3px 11px;border-radius:999px;border:1px solid #dfe2ea;background:#fff;color:var(--muted);cursor:pointer;}
+  .metricsel button.on{background:var(--gold);color:#3f3212;border-color:var(--gold);}
   .signals{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);border-top:1px solid var(--bsoft);padding-top:10px;}
   .signals b{color:var(--text);} .signals .z{color:var(--red);}
   .note{font-size:11.5px;color:var(--dim);font-style:italic;}
@@ -99,28 +102,37 @@ function signals(struct,ch){
   else { if(na.meta!=null)parts.push(seg('Meta',na.meta)); if(na.tiktok!=null)parts.push(seg('TikTok',na.tiktok)); }
   return '<div class="signals"><span>Finestra <b>'+na.window+' gg</b></span>'+parts.join('')+'</div>';
 }
-function drawChart(canvasId,struct,ch){
-  if(typeof Chart==='undefined')return; var el=document.getElementById(canvasId); if(!el)return;
-  var day=struct.daily; if(!day||!day.dates){return;}
-  var ser = ch==='meta'?day.meta : ch==='tiktok'?day.tiktok : day.both; if(!ser){return;}
-  if(CH[canvasId]){CH[canvasId].destroy();}
-  var labels=day.dates.map(function(d){return d.slice(8)+'/'+d.slice(5,7);});
-  CH[canvasId]=new Chart(el,{data:{labels:labels,datasets:[
-      {type:'bar',label:'Spesa €',data:ser.spend,backgroundColor:'#1F2A44',yAxisID:'y',order:2,borderRadius:2},
-      {type:'line',label:'Impression',data:ser.impressions,borderColor:'#C9A24B',backgroundColor:'#C9A24B',yAxisID:'y1',tension:.3,pointRadius:0,borderWidth:2,order:1}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}},
-      scales:{y:{position:'left',ticks:{font:{size:9},callback:function(v){return v+'€';}},grid:{display:false}},
-              y1:{position:'right',ticks:{font:{size:9},callback:function(v){return (v/1000).toFixed(0)+'k';}},grid:{display:false}},
+const METRICS=[["spend","Spesa","eur"],["reach","Copertura","int"],["impressions","Impression","int"],["clicks","Click","int"],["interazioni","Interazioni","int"]];
+function seriesFor(struct,ch){var d=struct.daily; if(!d||!d.dates)return null; return ch==="meta"?d.meta:ch==="tiktok"?d.tiktok:d.both;}
+function metricButtons(idx,struct,ch,active){
+  var ser=seriesFor(struct,ch); if(!ser)return "";
+  return METRICS.filter(function(m){return ser[m[0]]!=null;}).map(function(m){
+    return '<button class="'+(m[0]===active?"on":"")+'" onclick="setMetric('+idx+',\''+m[0]+'\')">'+m[1]+'</button>';}).join("");
+}
+function drawChart(idx,metric){
+  if(typeof Chart==='undefined')return; var struct=D.structures[idx]; var card=document.getElementById('struct_'+idx);
+  var ch=(card&&card.dataset.ch)||'both'; var ser=seriesFor(struct,ch);
+  var el=document.getElementById('chart_'+idx); if(!el||!ser||!ser[metric]){if(CH['chart_'+idx]){CH['chart_'+idx].destroy();delete CH['chart_'+idx];}return;}
+  var def=METRICS.filter(function(m){return m[0]===metric;})[0]||["spend","Spesa","eur"]; var isEur=def[2]==="eur";
+  var labels=struct.daily.dates.map(function(d){return d.slice(8)+'/'+d.slice(5,7);});
+  if(CH['chart_'+idx]){CH['chart_'+idx].destroy();}
+  CH['chart_'+idx]=new Chart(el,{type:'bar',data:{labels:labels,datasets:[{label:def[1],data:ser[metric],backgroundColor:'#1F2A44',borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return def[1]+': '+(isEur?(c.parsed.y.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'):c.parsed.y.toLocaleString('it-IT'));}}}},
+      scales:{y:{ticks:{font:{size:9},callback:function(v){return isEur?(v+'€'):(v>=1000?(v/1000).toFixed(0)+'k':v);}},grid:{color:'#f0f1f5'}},
               x:{ticks:{font:{size:8},maxRotation:0,autoSkip:true,maxTicksLimit:10},grid:{display:false}}}}});
 }
+function setMetric(idx,metric){
+  var card=document.getElementById('struct_'+idx);
+  card.querySelectorAll('.metricsel button').forEach(function(b){b.classList.toggle('on',b.textContent===({spend:"Spesa",reach:"Copertura",impressions:"Impression",clicks:"Click",interazioni:"Interazioni"})[metric]);});
+  drawChart(idx,metric);
+}
 function setChannel(idx,ch){
-  var struct=D.structures[idx]; var card=document.getElementById('struct_'+idx);
+  var struct=D.structures[idx]; var card=document.getElementById('struct_'+idx); card.dataset.ch=ch;
   card.querySelectorAll('.toggle button').forEach(function(b){b.classList.toggle('on',b.dataset.ch===ch);});
   card.querySelector('.kstrip').innerHTML=kstrip(struct,ch);
   card.querySelector('.signals-wrap').innerHTML=signals(struct,ch);
-  drawChart('chart_'+idx,struct,ch);
+  card.querySelector('.metricsel').innerHTML=metricButtons(idx,struct,ch,'spend');
+  drawChart(idx,'spend');
 }
 function render(data){
   D=data;
@@ -138,7 +150,7 @@ function render(data){
     if(meta&&meta.yoy) tags+='<span class="tag yoy">YoY Meta</span>';
     tags+='<span class="tag meta">Meta</span>'+(hasTT?'<span class="tag tiktok">TikTok</span>':'');
     var alerts=(s.alerts||[]).map(function(a){return '<span class="alert '+a.level+'">'+(a.level==='red'?'⛔':'⚠️')+' '+a.text+'</span>';}).join('');
-    html+='<div class="struct" id="struct_'+idx+'"><div class="sh"><span class="sname">'+s.name+'</span>'+tags
+    html+='<div class="struct" id="struct_'+idx+'" data-ch="both"><div class="sh"><span class="sname">'+s.name+'</span>'+tags
       +'<span class="toggle">'
       +'<button data-ch="both" class="on" onclick="setChannel('+idx+',\'both\')">Entrambe</button>'
       +'<button data-ch="meta" onclick="setChannel('+idx+',\'meta\')">Meta</button>'
@@ -147,13 +159,14 @@ function render(data){
       +'<div class="sbody">'
       +(alerts?'<div class="alerts">'+alerts+'</div>':'')
       +'<div class="kstrip">'+kstrip(s,'both')+'</div>'
-      +'<div class="chart-note">Andamento giornaliero (spesa · impression) — ultimi '+((s.daily&&s.daily.dates)?s.daily.dates.length:0)+' giorni</div>'
+      +'<div class="chart-note">Andamento giornaliero — ultimi '+((s.daily&&s.daily.dates)?s.daily.dates.length:0)+' giorni · scegli la metrica</div>'
+      +'<div class="metricsel">'+metricButtons(idx,s,'both','spend')+'</div>'
       +'<div class="chartwrap"><canvas id="chart_'+idx+'"></canvas></div>'
       +'<div class="signals-wrap">'+signals(s,'both')+'</div>'
       +'</div></div>';
   });
   document.getElementById("structs").innerHTML=html;
-  data.structures.forEach(function(s,idx){drawChart('chart_'+idx,s,'both');});
+  data.structures.forEach(function(s,idx){drawChart(idx,'spend');});
 }
 fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}).then(render)
  .catch(function(e){document.getElementById("structs").innerHTML='<div class="loading">Errore caricamento aghc_data.json</div>';console.error(e);});

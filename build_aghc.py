@@ -70,10 +70,14 @@ def yoy_block(cur,yoy,kind):
 
 def sum_dict(a,b,keys): return {k:num(a.get(k))+num(b.get(k)) for k in keys}
 
-def daily_series(rows):
-    return {"spend":[round(num(r.get("spend")),2) for r in rows],
-            "impressions":[int(num(r.get("impressions"))) for r in rows],
-            "clicks":[int(num(r.get("clicks"))) for r in rows]}
+def daily_series(rows, meta=False):
+    s={"spend":[round(num(r.get("spend")),2) for r in rows],
+       "impressions":[int(num(r.get("impressions"))) for r in rows],
+       "clicks":[int(num(r.get("clicks"))) for r in rows]}
+    if meta:
+        s["reach"]=[int(num(r.get("reach"))) for r in rows]
+        s["interazioni"]=[int(num(r.get("actions_page_engagement"))) for r in rows]
+    return s
 def nonactivity(rows): return sum(1 for r in rows if num(r.get("spend"))==0)
 
 def active(c,p): return (num(c.get("spend"))+num(p.get("spend"))+num(c.get("impressions"))+num(p.get("impressions")))>0
@@ -127,10 +131,12 @@ def main():
         ma,ta=align(mrows),align(trows)
         both_rows=[{"date":dates[i],"spend":round(num(ma[i].get("spend"))+num(ta[i].get("spend")),2),
                     "impressions":int(num(ma[i].get("impressions"))+num(ta[i].get("impressions"))),
-                    "clicks":int(num(ma[i].get("clicks"))+num(ta[i].get("clicks")))} for i in range(len(dates))]
+                    "clicks":int(num(ma[i].get("clicks"))+num(ta[i].get("clicks"))),
+                    "reach":int(num(ma[i].get("reach"))),
+                    "actions_page_engagement":int(num(ma[i].get("actions_page_engagement")))} for i in range(len(dates))]
         if dates:
-            e["daily"]={"dates":dates,"meta":daily_series(ma) if mrows else None,
-                        "tiktok":daily_series(ta) if trows else None,"both":daily_series(both_rows)}
+            e["daily"]={"dates":dates,"meta":daily_series(ma,meta=True) if mrows else None,
+                        "tiktok":daily_series(ta) if trows else None,"both":daily_series(both_rows,meta=True)}
             e["nonactivity"]={"meta":(nonactivity(mrows) if mrows else None),
                               "tiktok":(nonactivity(trows) if trows else None),"window":len(dates)}
         # ALERT
