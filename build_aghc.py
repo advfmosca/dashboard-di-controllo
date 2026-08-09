@@ -143,8 +143,11 @@ def main():
                 blk["yoy"]=yoy_block(mc,my,"meta"); blk["yoy_label"]=yoy_l
             e["channels"]["meta"]=blk
             for k in TM: TM[k]+=num(mc.get(k)); TMp[k]+=num(mp.get(k))
+        def _tt(d):
+            if d and "engagements" in d: d=dict(d); d["clicks"]=d.get("engagements")
+            return d
         if tt:
-            tc,tp=tac.get(tt,{}),tap.get(tt,{})
+            tc,tp=_tt(tac.get(tt,{})),_tt(tap.get(tt,{}))
             e["channels"]["tiktok"]={"available":True,"active":active(tc,tp),"url":url_tt(tt),"metrics":metrics(tc,tp,"tiktok"),"mom_label":mom_l}
             if active(tc,tp):
                 for k in TT: TT[k]+=num(tc.get(k)); TTp[k]+=num(tp.get(k))
