@@ -68,8 +68,6 @@
 <div class="wrap">
   <header class="h"><img src="assets/fmm-logo.svg" alt="AGHC"/><div><h1>AGHC — Dashboard di Controllo</h1><div class="sub">Tutte le strutture attive · Meta &amp; TikTok</div></div><div class="stamp" id="stamp"></div></header>
   <div class="monthbar" id="monthbar"></div>
-  <h2 class="block">Totale portfolio</h2>
-  <div class="totgrid" id="totals"></div>
   <h2 class="block">Strutture</h2>
   <div class="structs" id="structs"><div class="loading">Caricamento dati…</div></div>
   <footer class="f" id="foot"></footer>
@@ -133,7 +131,7 @@ function setChannel(idx,ch){
   drawChart(idx,'spend');
 }
 function budgetBlock(idx,name){
-  var b=BUDX[name]; if(!b)return "";
+  var b=(D.structures[idx]||{}).budget; if(!b)return "";
   var yr=(D&&D.current_label)?D.current_label.split(" ").pop():"";
   var pace='<span class="pace '+b.status+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span>';
   var note='Da <b>'+BMESI[ASOF]+'</b>: verso l’annuale <b>'+fEur0(b.annual)+'</b>, con <b>'+fEur0(b.ytd_real)+'</b> gia speso, restano <b>'+fEur0(b.residual)+'</b> sui mesi rimanenti (circa <b>'+fEur0(b.fwd_recal_monthly)+'/mese</b>). Proiezione fine anno al ritmo attuale: <b>'+fEur0(b.projection_year_end)+'</b>.';
@@ -145,7 +143,7 @@ function budgetBlock(idx,name){
     +'</div><div class="bchart"><canvas id="budget_'+idx+'"></canvas></div><div class="bnote">'+note+'</div></div>';
 }
 function drawBudget(idx,name){
-  if(typeof Chart==='undefined')return; var b=BUDX[name]; if(!b)return; var el=document.getElementById('budget_'+idx); if(!el)return;
+  if(typeof Chart==='undefined')return; var b=(D.structures[idx]||{}).budget; if(!b)return; var el=document.getElementById('budget_'+idx); if(!el)return;
   var bars=[],cols=[]; for(var i=0;i<12;i++){bars.push(i<ASOF?b.monthly_real[i]:b.monthly_recal[i]); cols.push(i<ASOF?'#1e8e3e':'#C9A24B');}
   if(CH['budget_'+idx]){CH['budget_'+idx].destroy();}
   CH['budget_'+idx]=new Chart(el,{data:{labels:BMESI,datasets:[
@@ -160,10 +158,7 @@ function render(data){
   document.getElementById("stamp").innerHTML='agg. '+data.generated_at;
   document.getElementById("monthbar").innerHTML='<span class="m">'+data.current_label+'</span><span class="note">Mese vs Mese sempre presente · YoY sul Meta dove previsto · budget previsto vs speso con ricalibrazione</span>';
   document.getElementById("foot").textContent='Dashboard di Controllo — FMM Consulting / AGHC · dati Meta & TikTok via Windsor.ai';
-  var tm=data.totals.meta,tt=data.totals.tiktok,cl=data.totals.compare_label;
-  document.getElementById("totals").innerHTML=
-    '<div class="card"><h3><span class="plogo meta">f</span> Meta<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'+totKpi("Spesa","eur","spend",tm.spend)+totKpi("Copertura","int","reach",tm.reach)+totKpi("Impression","int","impressions",tm.impressions)+totKpi("Interazioni","int","interazioni",tm.interazioni)+totKpi("Click","int","clicks",tm.clicks)+'</div></div>'
-   +'<div class="card"><h3><span class="plogo tiktok">t</span> TikTok<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'+totKpi("Spesa","eur","spend",tt.spend)+totKpi("Impression","int","impressions",tt.impressions)+totKpi("Click","int","clicks",tt.clicks)+'</div></div>';
+
   var html="";
   data.structures.forEach(function(s,idx){
     var meta=s.channels.meta,tt=s.channels.tiktok,hasTT=!!tt;
@@ -184,8 +179,8 @@ function render(data){
   document.getElementById("structs").innerHTML=html;
   data.structures.forEach(function(s,idx){drawChart(idx,'spend');drawBudget(idx,s.name);});
 }
-Promise.all([fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_budget.json?v="+Date.now()).then(function(r){return r.json();})])
- .then(function(a){var bud=a[1];BUDX={};bud.structures.forEach(function(b){BUDX[b.name]=b;});ASOF=parseInt(bud.as_of_month.split("-")[1],10);render(a[0]);})
+fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();})
+ .then(function(d){ASOF=parseInt(d.as_of_month.split("-")[1],10);render(d);})
  .catch(function(e){document.getElementById("structs").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script>
 </body>
