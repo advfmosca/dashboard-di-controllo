@@ -62,6 +62,7 @@
   .bchart{position:relative;height:170px;margin:2px 0 6px;}
   .bnote{font-size:11.5px;color:#5b4a1f;background:#f6f3ea;border:1px solid #ece2c8;border-radius:8px;padding:9px 12px;margin-top:8px;line-height:1.5;} .bnote b{color:#3f3212;}
   .note{font-size:11.5px;color:var(--dim);font-style:italic;} footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;} .loading{padding:60px 0;text-align:center;color:var(--dim);}
+.dwrap{display:flex;gap:26px;flex-wrap:wrap;margin-top:4px;}.dcol{flex:1;min-width:280px;}.dcol h4{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--navy);}.dsub{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin:9px 0 3px;}.drow{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12px;}.drow .dl{width:78px;color:var(--text);}.drow .dbar{flex:1;background:#eef0f5;height:11px;border-radius:6px;overflow:hidden;}.drow .dbar i{display:block;height:100%;border-radius:6px;}.drow .dp{width:46px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted);}.demoh{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px;}
 </style>
 </head>
 <body>
@@ -153,6 +154,10 @@ function drawBudget(idx,name){
       plugins:{legend:{labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toLocaleString('it-IT',{maximumFractionDigits:0})+' €';}}}},
       scales:{y:{ticks:{font:{size:9},callback:function(v){return (v>=1000?(v/1000).toFixed(0)+'k':v)+'€';}},grid:{color:'#f0f1f5'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
 }
+var DEMO={};
+function demoBar(items,accent){return (items||[]).map(function(x){return '<div class="drow"><span class="dl">'+x.label+'</span><span class="dbar"><i style="width:'+Math.max(2,x.pct)+'%;background:'+accent+'"></i></span><span class="dp">'+x.pct.toLocaleString("it-IT")+'%</span></div>';}).join("");}
+function demoCol(title,blk,accent){if(!blk)return '';return '<div class="dcol"><h4>'+title+'</h4><div class="dsub">Fasce d\'età</div>'+demoBar(blk.age,accent)+'<div class="dsub">Sesso</div>'+demoBar(blk.gender,accent)+'<div class="dsub">Provenienza</div>'+demoBar(blk.geo,accent)+'</div>';}
+function demoHtml(name){var d=DEMO[name];if(!d||(!d.meta&&!d.tiktok))return '';return '<div class="demoh">Demografiche pubblico</div><div class="dwrap">'+demoCol("Meta",d.meta,"#1F2A44")+demoCol("TikTok",d.tiktok,"#C9A24B")+'</div>';}
 function render(data){
   D=data;
   document.getElementById("stamp").innerHTML='agg. '+data.generated_at;
@@ -173,14 +178,14 @@ function render(data){
       +'<div class="metricsel">'+metricButtons(idx,s,'both','spend')+'</div>'
       +'<div class="chartwrap"><canvas id="chart_'+idx+'"></canvas></div>'
       +'<div class="signals-wrap">'+signals(s,'both')+'</div>'
-      +budgetBlock(idx,s.name)
+      +budgetBlock(idx,s.name)+demoHtml(s.name)
       +'</div></div>';
   });
   document.getElementById("structs").innerHTML=html;
   data.structures.forEach(function(s,idx){drawChart(idx,'spend');drawBudget(idx,s.name);});
 }
-fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();})
- .then(function(d){ASOF=parseInt(d.as_of_month.split("-")[1],10);render(d);})
+Promise.all([fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_demographics.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})])
+ .then(function(a){var d=a[0];DEMO={};(a[1].structures||[]).forEach(function(x){DEMO[x.name]=x;});ASOF=parseInt(d.as_of_month.split("-")[1],10);render(d);})
  .catch(function(e){document.getElementById("structs").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script>
 </body>

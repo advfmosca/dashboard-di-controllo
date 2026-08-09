@@ -40,6 +40,7 @@ thead th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacin
 tbody td{padding:9px 12px;border-bottom:1px solid var(--bsoft);}tbody tr{cursor:pointer;}tbody tr:hover{background:var(--soft);}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
 footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;}.loading{padding:60px 0;text-align:center;color:var(--dim);}
+.dwrap{display:flex;gap:26px;flex-wrap:wrap;}.dcol{flex:1;min-width:280px;}.dcol h4{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--navy);}.dsub{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin:9px 0 3px;}.drow{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12px;}.drow .dl{width:78px;color:var(--text);}.drow .dbar{flex:1;background:#eef0f5;height:11px;border-radius:6px;overflow:hidden;}.drow .dbar i{display:block;height:100%;border-radius:6px;}.drow .dp{width:46px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted);}
 </style></head><body>
 <div class="wrap">
 <header class="h"><div class="logomark">AGH</div><div><h1>AGHC — Dashboard Team</h1><div class="sub">Ultimo mese, storico e lettura del mese · per struttura</div></div><div class="stamp" id="stamp"></div></header>
@@ -49,7 +50,7 @@ footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;}.loa
 <footer class="f" id="foot"></footer>
 </div>
 <script>
-var HIST=null, BUD={}, CH={};
+var HIST=null, BUD={}, CH={}, DEMO={};
 var KDEF=[["spend","Investimento","eur","combined"],["reach","Copertura","int","meta"],["impressions","Visualizzazioni","int","combined"],["interazioni","Interazioni","int","meta"],["clicks","Click","int","combined"]];
 var GOOD={spend:true,reach:true,impressions:true,interazioni:true,clicks:true};
 function fI(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
@@ -60,6 +61,9 @@ function dpc(c,p){return p?(c-p)/p*100:null;}
 function chip(d){if(d==null)return '<span class="chip flat">n/d</span>';return '<span class="chip '+(Math.abs(d)<1?"flat":(d>=0?"good":"bad"))+'">'+fP(d)+'</span>';}
 function ser(s,ch,k){var S=s.series;return (S[ch]&&S[ch][k])?S[ch][k]:S.combined[k];}
 function val(s,ch,k,i){var a=ser(s,ch,k);return a?a[i]:0;}
+function demoBar(items,accent){return (items||[]).map(function(x){return '<div class="drow"><span class="dl">'+x.label+'</span><span class="dbar"><i style="width:'+Math.max(2,x.pct)+'%;background:'+accent+'"></i></span><span class="dp">'+x.pct.toLocaleString("it-IT")+'%</span></div>';}).join("");}
+function demoCol(title,blk,accent){if(!blk)return '';return '<div class="dcol"><h4>'+title+'</h4><div class="dsub">Fasce d\'età</div>'+demoBar(blk.age,accent)+'<div class="dsub">Sesso</div>'+demoBar(blk.gender,accent)+'<div class="dsub">Provenienza</div>'+demoBar(blk.geo,accent)+'</div>';}
+function demoHtml(name){var d=DEMO[name];if(!d||(!d.meta&&!d.tiktok))return '';return '<h2 class="block">Demografiche pubblico · '+HIST.as_of_label+'</h2><div class="card"><div class="dwrap">'+demoCol("Meta",d.meta,"#1F4E57")+demoCol("TikTok",d.tiktok,"#E0733C")+'</div></div>';}
 function renderClient(name){
   var s=HIST.structures.find(function(x){return x.name===name;});var i=HIST.as_of_idx;var v=document.getElementById("view");
   var khtml=KDEF.map(function(d){var cur=val(s,d[3],d[0],i),prev=val(s,d[3],d[0],i-1);
@@ -75,7 +79,7 @@ function renderClient(name){
     +'<div class="kpis">'+khtml+'</div>'
     +'<h2 class="block">Storico mensile</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div></div>'
     +'<h2 class="block">Lettura del mese</h2><div class="narr">'+s.rational+'</div>'
-    +bhtml;
+    +bhtml+demoHtml(name);
   var msel=document.getElementById("msel");
   msel.innerHTML=KDEF.map(function(d,k){return '<button class="'+(k===0?"on":"")+'" data-k="'+d[0]+'" data-ch="'+d[3]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");
   Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist(s,btn.dataset.k,btn.dataset.ch,btn.dataset.fmt);});});
@@ -105,7 +109,7 @@ function boot(){
   sel.addEventListener("change",function(){sel.value==="__all__"?renderAll():renderClient(sel.value);});
   renderAll();
 }
-Promise.all([fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();})])
- .then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});boot();})
+Promise.all([fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_demographics.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})])
+ .then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMO={};(a[2].structures||[]).forEach(function(s){DEMO[s.name]=s;});boot();})
  .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script></body></html>
