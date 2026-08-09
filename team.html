@@ -1,229 +1,110 @@
 <!doctype html>
-<html lang="it">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#1F2A44" />
-<meta name="version" content="2026-08-08-team" />
-<title>AGHC — Dashboard Team</title>
-<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg" />
+<html lang="it"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#1F2A44"/><title>AGHC — Dashboard Team</title>
+<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root{--bg:#fff;--bg-soft:#f7f8fa;--border:#e7e8ee;--border-soft:#f0f1f5;--text:#1F2A44;--muted:#6b6b70;--dim:#9096a6;--navy:#1F2A44;--gold:#C9A24B;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:1180px;margin:0 auto;padding:18px 20px 70px;}
-  header.h{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
-  header.h img{width:44px;height:44px;border-radius:50%;}
-  header.h h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.01em;}
-  header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;}
-  header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;}
-  .period-bar{display:flex;align-items:center;gap:12px;margin:0 0 8px;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;flex-wrap:wrap;}
-  .period-bar .plabel{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;}
-  .period-bar .pcur{font-size:13px;font-weight:800;}
-  .period-bar .pprev{font-size:12px;color:var(--dim);}
-  .period-bar .spacer{flex:1;}
-  .period-bar .badge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;background:var(--navy);color:#fff;}
-  .mtdwarn{margin:0 0 14px;padding:8px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;color:#9a3412;font-size:11.5px;font-weight:600;}
-  .toolbar{display:flex;align-items:center;gap:10px;margin:6px 0 18px;flex-wrap:wrap;}
-  .toolbar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
-  .toolbar select{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:9px;border:1px solid #d2d4dd;background:#fff;color:var(--text);cursor:pointer;min-width:260px;}
-  h2.block{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px;}
-  .totgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  @media(max-width:720px){.totgrid{grid-template-columns:1fr;}}
-  .card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
-  .card>h3{margin:0;padding:10px 15px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-soft);background:var(--bg-soft);}
-  .plogo{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:13px;}
-  .plogo.meta{background:#0866FF;} .plogo.tiktok{background:#000;}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));}
-  .kpi{padding:12px 15px;border-right:1px solid var(--border-soft);border-top:1px solid var(--border-soft);}
-  .kpi .label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin-bottom:5px;}
-  .kpi .value{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;}
-  .kpi .prev{font-size:10px;color:var(--dim);margin-top:3px;}
-  .chip{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;margin-top:5px;font-variant-numeric:tabular-nums;}
-  .chip.good{background:#d1fadf;color:#14532d;} .chip.bad{background:#fee2e2;color:#991b1b;} .chip.flat{background:#eceff1;color:#555;}
-  /* client table */
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  thead th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--border);}
-  tbody td{padding:9px 12px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
-  tbody tr{cursor:pointer;} tbody tr:hover{background:var(--bg-soft);}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
-  .pace{font-weight:800;font-size:11px;padding:2px 8px;border-radius:999px;}
-  .pace.over{background:#fee2e2;color:#991b1b;} .pace.under{background:#e0edff;color:#0b57d0;} .pace.on_track{background:#d1fadf;color:#14532d;} .pace.inactive,.pace.na{background:#eceff1;color:#607;}
-  .mini{height:7px;background:#edeef2;border-radius:999px;overflow:hidden;min-width:80px;}
-  .mini .f{height:100%;background:linear-gradient(90deg,var(--gold),#e0c179);}
-  /* budget module */
-  .stat4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
-  .stat{padding:13px 15px;border-right:1px solid var(--border-soft);border-top:1px solid var(--border-soft);}
-  .stat .l{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin-bottom:5px;}
-  .stat .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;}
-  .stat .s{font-size:10.5px;color:var(--dim);margin-top:3px;}
-  .budgetbody{padding:14px 16px;}
-  .progress{margin:6px 0 4px;height:14px;background:#edeef2;border-radius:999px;position:relative;overflow:hidden;}
-  .progress .real{height:100%;background:linear-gradient(90deg,#1e8e3e,#34a853);}
-  .progress .proj{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy);}
-  .plegend{font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin:8px 0 2px;}
-  .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle;}
-  .months{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;align-items:end;height:120px;margin:14px 0 4px;}
-  .mcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
-  .bars{position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;}
-  .bar{width:9px;border-radius:3px 3px 0 0;}
-  .bar.real{background:#1e8e3e;} .bar.recal{background:#C9A24B;} .bar.plan{background:#e8dcc0;}
-  .mlab{font-size:9.5px;color:var(--dim);margin-top:4px;}
-  .mlab.cur{color:var(--navy);font-weight:800;}
-  .qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px;}
-  .q{background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:9px;padding:9px 11px;}
-  .q .ql{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;}
-  .q .qp{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;}
-  .q .qr{font-size:10.5px;color:var(--dim);}
-  .recalnote{margin-top:12px;padding:10px 13px;border-radius:9px;background:#f6f3ea;border:1px solid #ece2c8;font-size:12.5px;color:#5b4a1f;line-height:1.5;}
-  .recalnote b{color:#3f3212;}
-  .note{font-size:11.5px;color:var(--dim);font-style:italic;padding:8px 2px;}
-  footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;line-height:1.6;}
-  .loading{padding:60px 0;text-align:center;color:var(--dim);}
-</style>
-</head>
-<body>
+:root{--bg:#fff;--soft:#f7f8fa;--bsoft:#f0f1f5;--border:#e7e8ee;--text:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--navy:#1F2A44;--gold:#C9A24B;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
+*{box-sizing:border-box;}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 20px 60px;}
+header.h{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+header.h img{width:44px;height:44px;border-radius:50%;}header.h h1{margin:0;font-size:20px;font-weight:800;}header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;}header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;}
+.monthbar{display:flex;align-items:baseline;gap:12px;margin:2px 0 16px;padding-bottom:12px;border-bottom:2px solid var(--gold);flex-wrap:wrap;}
+.monthbar .m{font-size:24px;font-weight:800;color:var(--navy);}.monthbar .note{font-size:12px;color:var(--muted);}
+.toolbar{display:flex;align-items:center;gap:10px;margin:0 0 18px;flex-wrap:wrap;}
+.toolbar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+.toolbar select{font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:9px;border:1px solid #d2d4dd;background:#fff;cursor:pointer;min-width:260px;}
+h2.block{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:20px 0 10px;}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.kpi{background:var(--soft);border:1px solid var(--bsoft);border-radius:11px;padding:12px 15px;}
+.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;}
+.kpi .v{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:4px;}
+.kpi .p{font-size:10px;color:var(--dim);margin-top:3px;}
+.chip{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;margin-top:4px;}
+.chip.good{background:#d1fadf;color:#14532d;}.chip.bad{background:#fee2e2;color:#991b1b;}.chip.flat{background:#eceff1;color:#555;}
+.card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px 16px;margin-top:12px;}
+.metricsel{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 10px;}
+.metricsel button{font:inherit;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;border:1px solid #dfe2ea;background:#fff;color:var(--muted);cursor:pointer;}
+.metricsel button.on{background:var(--gold);color:#3f3212;border-color:var(--gold);}
+.chartwrap{position:relative;height:230px;}
+.narr{border-left:3px solid var(--gold);background:#faf7ef;border-radius:0 10px 10px 0;padding:14px 18px;font-size:14px;line-height:1.65;color:#3a4152;}
+.narr b{color:var(--navy);}
+.bstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;}
+.bstat{background:var(--soft);border:1px solid var(--bsoft);border-radius:9px;padding:9px 12px;}
+.bstat .bl{font-size:9.5px;text-transform:uppercase;color:var(--muted);font-weight:700;}.bstat .bv{font-size:17px;font-weight:800;margin-top:3px;}.bstat .bs{font-size:9.5px;color:var(--dim);margin-top:2px;}
+.pace{font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px;}.pace.under{background:#e0edff;color:#0b57d0;}.pace.on_track{background:#d1fadf;color:#14532d;}.pace.over{background:#fee2e2;color:#991b1b;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--border);}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--bsoft);}tbody tr{cursor:pointer;}tbody tr:hover{background:var(--soft);}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;}.loading{padding:60px 0;text-align:center;color:var(--dim);}
+</style></head><body>
 <div class="wrap">
-  <header class="h">
-    <img src="assets/fmm-logo.svg" alt="AGHC"/>
-    <div>
-      <h1>AGHC — Dashboard Team</h1>
-      <div class="sub">Tutti i clienti · KPI mensili + budget programmato/reale · Meta &amp; TikTok</div>
-    </div>
-    <div class="stamp" id="stamp"></div>
-  </header>
-  <div class="period-bar" id="periodBar"></div>
-  <div class="toolbar">
-    <label for="clientSel">Cliente</label>
-    <select id="clientSel"><option value="__all__">Tutti i clienti (overview)</option></select>
-  </div>
-  <div id="view"><div class="loading">Caricamento dati…</div></div>
-  <footer class="f" id="foot"></footer>
+<header class="h"><img src="assets/fmm-logo.svg" alt="AGHC"/><div><h1>AGHC — Dashboard Team</h1><div class="sub">Ultimo mese, storico e lettura del mese · per struttura</div></div><div class="stamp" id="stamp"></div></header>
+<div class="monthbar" id="monthbar"></div>
+<div class="toolbar"><label for="sel">Struttura</label><select id="sel"><option value="__all__">Tutte (panoramica)</option></select></div>
+<div id="view"><div class="loading">Caricamento dati…</div></div>
+<footer class="f" id="foot"></footer>
 </div>
 <script>
-const MESI=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
-let DATA=null, BUD=null, BUDBY={}, ASOF=7;
-
-function fInt(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
-function fEur(n,d){return n==null?"—":n.toLocaleString("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d})+" €";}
-function fVal(v,k){if(v==null)return "—";if(k==="eur")return fEur(v,2);if(k==="eur0")return fEur(v,0);if(k==="eur4")return fEur(v,3);return fInt(v);}
-function fPct(p){if(p==null)return "n/d";return (p>=0?"+":"")+p.toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1})+"%";}
-const GOOD_UP={spend:false,cpc:false,cpm:false,reach:true,impressions:true,clicks:true,ctr:true};
-function chip(k,d){if(d==null)return '<span class="chip flat">n/d</span>';const g=(d>=0)===GOOD_UP[k];if(Math.abs(d)<0.05)return '<span class="chip flat">'+fPct(d)+'</span>';return '<span class="chip '+(g?"good":"bad")+'">'+fPct(d)+'</span>';}
-
-const MDEF={meta:[["spend","Spesa","eur"],["reach","Copertura","int"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]],
-            tiktok:[["spend","Spesa","eur"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]]};
-
-function kpiCells(defs,m){return defs.map(function(d){var x=m[d[0]]||{};return '<div class="kpi"><div class="label">'+d[1]+'</div><div class="value">'+fVal(x.cur,d[2])+'</div>'+chip(d[0],x.delta)+'<div class="prev">prec. '+fVal(x.prev,d[2])+'</div></div>';}).join("");}
-
-function totKpi(label,kind,m,mk){var x=m||{};return '<div class="kpi"><div class="label">'+label+'</div><div class="value">'+fVal(x.cur,kind)+'</div>'+chip(mk,x.delta)+'<div class="prev">prec. '+fVal(x.prev,kind)+'</div></div>';}
-
-function budgetModule(b){
-  if(!b){return '<div class="note">Nessun dato budget per questa struttura.</div>';}
-  var maxv=Math.max.apply(null,b.monthly_plan.concat(b.monthly_real).concat(b.monthly_recal).concat([1]));
-  var months="";
-  for(var i=0;i<12;i++){
-    var plan=b.monthly_plan[i], real=b.monthly_real[i], recal=b.monthly_recal[i], closed=i<ASOF;
-    var valBar = closed
-      ? '<div class="bar real" style="height:'+(real/maxv*100)+'%" title="'+MESI[i]+' reale '+fEur(real)+'"></div>'
-      : '<div class="bar recal" style="height:'+(recal/maxv*100)+'%" title="'+MESI[i]+' ricalibrato '+fEur(recal)+'"></div>';
-    var planBar='<div class="bar plan" style="height:'+(plan/maxv*100)+'%" title="'+MESI[i]+' programmato '+fEur(plan)+'"></div>';
-    months+='<div class="mcol"><div class="bars">'+planBar+valBar+'</div><div class="mlab'+(i===ASOF?" cur":"")+'">'+MESI[i]+'</div></div>';
-  }
-  var q="";
-  for(var k=0;k<4;k++){q+='<div class="q"><div class="ql">Q'+(k+1)+'</div><div class="qp">'+fEur(b.quarter_plan[k])+'</div><div class="qr">reale '+fEur(b.quarter_real[k])+'</div></div>';}
-  var pReal=b.annual? Math.min(b.ytd_real/b.annual*100,100):0;
-  var pProj=b.annual? Math.min(b.projection_year_end/b.annual*100,100):0;
-  var chan = b.has_tiktok
-    ? 'Split canali: <b>Meta</b> '+fEur(b.channel_annual.meta)+' (80%) · <b>TikTok</b> '+fEur(b.channel_annual.tiktok)+' (20%)'
-    : 'Canale: <b>Meta</b> '+fEur(b.channel_annual.meta)+' (100%)';
-  var recalTxt='Da <b>'+MESI[ASOF]+'</b>: verso l\'annuale programmato <b>'+fEur(b.annual)+'</b>, con <b>'+fEur(b.ytd_real)+'</b> già speso, restano <b>'+fEur(b.residual)+'</b> da distribuire sui mesi rimanenti secondo i pesi stagionali (≈ <b>'+fEur(b.fwd_recal_monthly)+'/mese</b>). Al ritmo attuale la proiezione a fine anno è <b>'+fEur(b.projection_year_end)+'</b>.';
-  return ''
-  + '<div class="stat4">'
-  +   '<div class="stat"><div class="l">Programmato annuo</div><div class="v">'+fEur(b.annual)+'</div><div class="s">pesi stagionali AGHC</div></div>'
-  +   '<div class="stat"><div class="l">Speso YTD ('+MESI[ASOF-1]+')</div><div class="v">'+fEur(b.ytd_real)+'</div><div class="s">Meta '+fEur(b.ytd_meta)+' · TT '+fEur(b.ytd_tiktok)+'</div></div>'
-  +   '<div class="stat"><div class="l">Passo vs programmato</div><div class="v"><span class="pace '+b.status+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span></div><div class="s">reale '+fEur(b.ytd_real)+' vs prog. '+fEur(b.plan_to_date)+'</div></div>'
-  +   '<div class="stat"><div class="l">Proiezione fine anno</div><div class="v">'+fEur(b.projection_year_end)+'</div><div class="s">al ritmo attuale</div></div>'
-  + '</div>'
-  + '<div class="budgetbody">'
-  +   '<div class="plegend"><span>'+chan+'</span></div>'
-  +   '<div class="plegend"><span><span class="swatch" style="background:#e8dcc0"></span>Programmato</span><span><span class="swatch" style="background:#1e8e3e"></span>Reale (mesi chiusi)</span><span><span class="swatch" style="background:#C9A24B"></span>Ricalibrato (mesi rimanenti)</span></div>'
-  +   '<div class="progress"><div class="real" style="width:'+pReal+'%"></div><div class="proj" style="left:'+pProj+'%"></div></div>'
-  +   '<div class="plegend"><span>Speso '+fEur(b.ytd_real)+' / annuale '+fEur(b.annual)+' · barra nera = proiezione fine anno</span></div>'
-  +   '<div class="months">'+months+'</div>'
-  +   '<div class="qgrid">'+q+'</div>'
-  +   '<div class="recalnote">'+recalTxt+'</div>'
-  + '</div>';
-}
+var HIST=null, BUD={}, CH={};
+var KDEF=[["spend","Investimento","eur","combined"],["reach","Copertura","int","meta"],["impressions","Visualizzazioni","int","combined"],["interazioni","Interazioni","int","meta"],["clicks","Click","int","combined"]];
+var GOOD={spend:true,reach:true,impressions:true,interazioni:true,clicks:true};
+function fI(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
+function fE(n){return n==null?"—":Math.round(n).toLocaleString("it-IT")+" €";}
+function fV(v,k){return k==="eur"?fE(v):fI(v);}
+function fP(p){return p==null?"n/d":(p>=0?"+":"")+p.toLocaleString("it-IT",{maximumFractionDigits:0})+"%";}
+function dpc(c,p){return p?(c-p)/p*100:null;}
+function chip(d){if(d==null)return '<span class="chip flat">n/d</span>';return '<span class="chip '+(Math.abs(d)<1?"flat":(d>=0?"good":"bad"))+'">'+fP(d)+'</span>';}
+function ser(s,ch,k){var S=s.series;return (S[ch]&&S[ch][k])?S[ch][k]:S.combined[k];}
+function val(s,ch,k,i){var a=ser(s,ch,k);return a?a[i]:0;}
 function renderClient(name){
-  var s=DATA.structures.find(function(x){return x.name===name;});
-  var b=BUDBY[name];
-  var v=document.getElementById("view");
-  var meta=s.channels.meta, tt=s.channels.tt||s.channels.tiktok;
-  var html='<div style="display:flex;align-items:center;gap:10px;margin:22px 0 10px;flex-wrap:wrap;"><h2 class="block" style="margin:0;">'+name+' — KPI '+DATA.current_label+''+' vs '+DATA.mom_label+'</h2><a href="report-cliente.html?c='+encodeURIComponent(name)+'" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;font-weight:800;color:#0866FF;text-decoration:none;">📄 Report cliente (PDF) ↗</a></div><div class="totgrid">';
-  // Meta
-  html+='<div class="card"><h3><span class="plogo meta">f</span> Meta</h3>';
-  if(!meta||meta.available===false){html+='<div class="note">Account non collegato a Windsor.</div>';}
-  else if(!meta.active){html+='<div class="note">Nessuna erogazione nel periodo.</div>';}
-  else{html+='<div class="kpis">'+kpiCells(MDEF.meta,meta.metrics)+'</div>';}
-  html+='</div>';
-  // TikTok
-  html+='<div class="card"><h3><span class="plogo tiktok">t</span> TikTok</h3>';
-  if(!tt){html+='<div class="note">Canale non attivo per questa struttura.</div>';}
-  else if(!tt.active){html+='<div class="note">Nessuna erogazione nel periodo.</div>';}
-  else{html+='<div class="kpis">'+kpiCells(MDEF.tiktok,tt.metrics)+'</div>';}
-  html+='</div></div>';
-  // Budget
-  html+='<h2 class="block">Budget '+BUD.year+' — programmato / reale / ricalibrazione</h2>';
-  html+='<div class="card"><h3>💶 Budget &amp; ricalibrazione · '+name+'</h3>'+budgetModule(b)+'</div>';
-  v.innerHTML=html;
+  var s=HIST.structures.find(function(x){return x.name===name;});var i=HIST.as_of_idx;var v=document.getElementById("view");
+  var khtml=KDEF.map(function(d){var cur=val(s,d[3],d[0],i),prev=val(s,d[3],d[0],i-1);
+    return '<div class="kpi"><div class="l">'+d[1]+(d[3]==="meta"?' · Meta':'')+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+HIST.prev_label+': '+fV(prev,d[2])+'</div></div>';}).join("");
+  var b=BUD[name];
+  var bhtml=b?('<div class="card"><h2 class="block" style="margin:0 0 10px">Budget '+(HIST.as_of_month.split("-")[0])+'</h2><div class="bstats">'
+    +'<div class="bstat"><div class="bl">Programmato annuo</div><div class="bv">'+fE(b.annual)+'</div></div>'
+    +'<div class="bstat"><div class="bl">Speso YTD</div><div class="bv">'+fE(b.ytd_real)+'</div></div>'
+    +'<div class="bstat"><div class="bl">Proiezione fine anno</div><div class="bv">'+fE(b.projection_year_end)+'</div></div>'
+    +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
+    +'</div></div>'):'';
+  v.innerHTML='<h2 class="block">'+name+' — Ultimo mese: '+HIST.as_of_label+' (vs '+HIST.prev_label+')</h2>'
+    +'<div class="kpis">'+khtml+'</div>'
+    +'<h2 class="block">Storico mensile</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div></div>'
+    +'<h2 class="block">Lettura del mese</h2><div class="narr">'+s.rational+'</div>'
+    +bhtml;
+  var msel=document.getElementById("msel");
+  msel.innerHTML=KDEF.map(function(d,k){return '<button class="'+(k===0?"on":"")+'" data-k="'+d[0]+'" data-ch="'+d[3]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");
+  Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist(s,btn.dataset.k,btn.dataset.ch,btn.dataset.fmt);});});
+  drawHist(s,"spend","combined","eur");
 }
-
+function drawHist(s,k,ch,fmt){
+  if(typeof Chart==="undefined")return;var el=document.getElementById("hist");if(!el)return;var data=ser(s,ch,k);
+  if(CH.hist)CH.hist.destroy();
+  var i=HIST.as_of_idx;var cols=data.map(function(_,j){return j===i?"#C9A24B":"#1F2A44";});
+  CH.hist=new Chart(el,{type:"bar",data:{labels:HIST.month_labels,datasets:[{data:data,backgroundColor:cols,borderRadius:3}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return (fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT"));}}}},
+     scales:{y:{ticks:{font:{size:9},callback:function(v){return fmt==="eur"?(v>=1000?(v/1000).toFixed(0)+"k€":v+"€"):(v>=1000?(v/1000).toFixed(0)+"k":v);}},grid:{color:"#f0f1f5"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
+}
 function renderAll(){
-  var v=document.getElementById("view");
-  var tm=DATA.totals.meta, tt=DATA.totals.tiktok, T=BUD.totals;
-  var html='<h2 class="block">Totale portfolio — KPI '+DATA.current_label+''+' vs '+DATA.mom_label+'</h2><div class="totgrid">';
-  html+='<div class="card"><h3><span class="plogo meta">f</span> Meta</h3><div class="kpis">'+totKpi("Spesa","eur",tm.spend,"spend")+totKpi("Copertura","int",tm.reach,"reach")+totKpi("Impression","int",tm.impressions,"impressions")+totKpi("Click","int",tm.clicks,"clicks")+'</div></div>';
-  html+='<div class="card"><h3><span class="plogo tiktok">t</span> TikTok</h3><div class="kpis">'+totKpi("Spesa","eur",tt.spend,"spend")+totKpi("Impression","int",tt.impressions,"impressions")+totKpi("Click","int",tt.clicks,"clicks")+'</div></div></div>';
-  // budget portfolio
-  html+='<h2 class="block">Budget portfolio '+BUD.year+' (as of '+BUD.as_of_label+')</h2>';
-  html+='<div class="card"><div class="stat4">'
-   +'<div class="stat"><div class="l">Programmato annuo</div><div class="v">'+fEur(T.annual)+'</div><div class="s">pesi stagionali</div></div>'
-   +'<div class="stat"><div class="l">Programmato a '+BUD.as_of_label+'</div><div class="v">'+fEur(T.plan_to_date)+'</div></div>'
-   +'<div class="stat"><div class="l">Speso YTD</div><div class="v">'+fEur(T.ytd_real)+'</div></div>'
-   +'<div class="stat"><div class="l">Proiezione fine anno</div><div class="v">'+fEur(T.projection_year_end)+'</div><div class="s">al ritmo attuale</div></div>'
-   +'</div></div>';
-  // table
-  html+='<h2 class="block">Clienti · clicca per il dettaglio</h2><div class="card"><table><thead><tr><th>Struttura</th><th>Canali</th><th class="num">Programmato annuo</th><th class="num">Speso YTD</th><th>Passo</th><th class="num">% annuale</th></tr></thead><tbody>';
-  BUD.structures.forEach(function(b){
-    var pct=b.annual? Math.min(b.ytd_real/b.annual*100,100):0;
-    html+='<tr data-name="'+b.name.replace(/"/g,"&quot;")+'"><td><b>'+b.name+'</b></td>'
-      +'<td>'+(b.has_tiktok?"Meta + TikTok":"Meta")+'</td>'
-      +'<td class="num">'+fEur(b.annual)+'</td>'
-      +'<td class="num">'+fEur(b.ytd_real)+'</td>'
-      +'<td><span class="pace '+b.status+'">'+(b.pace_pct!=null?fPct(b.pace_pct):b.status)+'</span></td>'
-      +'<td class="num"><div class="mini" title="'+pct.toFixed(0)+'% dell\'annuale speso"><div class="f" style="width:'+pct+'%"></div></div></td></tr>';
-  });
-  html+='</tbody></table></div>';
-  v.innerHTML=html;
-  Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var n=tr.getAttribute("data-name");document.getElementById("clientSel").value=n;renderClient(n);window.scrollTo({top:0,behavior:"smooth"});});});
+  var v=document.getElementById("view");var i=HIST.as_of_idx;
+  var rows=HIST.structures.map(function(s){var sp=s.series.combined.spend[i],re=s.series.meta.reach[i],inr=s.series.meta.interazioni[i],b=BUD[s.name];
+    return '<tr data-name="'+s.name.replace(/"/g,"&quot;")+'"><td><b>'+s.name+'</b></td><td class="num">'+fE(sp)+'</td><td class="num">'+fI(re)+'</td><td class="num">'+fI(inr)+'</td><td>'+(b?'<span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span>':'—')+'</td></tr>';}).join("");
+  v.innerHTML='<h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><table><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura</th><th class="num">Interazioni</th><th>Passo budget</th></tr></thead><tbody>'+rows+'</tbody></table></div><p style="font-size:12px;color:var(--dim);margin-top:8px">Clicca una struttura per ultimo mese, storico e lettura del mese.</p>';
+  Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var nloc=tr.getAttribute("data-name");document.getElementById("sel").value=nloc;renderClient(nloc);window.scrollTo({top:0,behavior:"smooth"});});});
 }
-
 function boot(){
-  document.getElementById("stamp").innerHTML='Report <b>mensile</b> · dati bloccati<br/>KPI agg. '+DATA.generated_at+' · budget agg. '+BUD.generated_at;
-  var pb=document.getElementById("periodBar");
-  pb.innerHTML='<span class="plabel">Mese corrente</span><span class="pcur">'+DATA.current_label+''+'</span><span class="pprev">vs '+DATA.mom_label+'</span><span class="spacer"></span><span class="badge">MENSILE · BLOCCATO</span>';
-  if(false){var w=document.createElement("div");w.className="mtdwarn";w.textContent='⚠️ '+DATA.current_label+' è il mese in corso'+''+': confronto KPI parziale (MTD) vs '+DATA.mom_label+' completo.';pb.insertAdjacentElement("afterend",w);}
-  ASOF=parseInt(BUD.as_of_month.split("-")[1],10);
-  var sel=document.getElementById("clientSel");
-  DATA.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
-  sel.addEventListener("change",function(){if(sel.value==="__all__")renderAll();else renderClient(sel.value);});
-  document.getElementById("foot").textContent='Dashboard di Controllo — FMM Consulting / AGHC · dati Meta & TikTok via Windsor.ai · budget ancorato al run-rate operativo';
+  document.getElementById("stamp").innerHTML="agg. "+HIST.generated_at;
+  document.getElementById("monthbar").innerHTML='<span class="m">'+HIST.as_of_label+'</span><span class="note">ultimo mese chiuso · storico 12 mesi · lettura del mese argomentata</span>';
+  document.getElementById("foot").textContent="Dashboard di Controllo — FMM Consulting / AGHC · dati Meta & TikTok via Windsor.ai";
+  var sel=document.getElementById("sel");
+  HIST.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
+  sel.addEventListener("change",function(){sel.value==="__all__"?renderAll():renderClient(sel.value);});
   renderAll();
 }
-Promise.all([fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_budget.json?v="+Date.now()).then(function(r){return r.json();})])
- .then(function(a){DATA=a[0];BUD=a[1];BUDBY={};BUD.structures.forEach(function(b){BUDBY[b.name]=b;});boot();})
- .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore nel caricamento dei dati.</div>';console.error(e);});
-</script>
-</body>
-</html>
+Promise.all([fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();})])
+ .then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});boot();})
+ .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
+</script></body></html>
