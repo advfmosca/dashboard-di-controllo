@@ -4,10 +4,11 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>AGHC — Report Cliente</title>
-<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg"/>
+
 <style>
-  :root{--navy:#1F2A44;--navy2:#2c3a5c;--gold:#C9A24B;--ink:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--line:#e7e8ee;--soft:#f7f8fa;--green:#1e8e3e;--rust:#b0642a;--bg:#eceef3;--ig:#E1306C;--fb:#0866FF;}
+  :root{--navy:#1F4E57;--navy2:#2a5f69;--gold:#E0733C;--ink:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--line:#e7e8ee;--soft:#f7f8fa;--green:#1e8e3e;--rust:#b0642a;--bg:#eceef3;--ig:#E1306C;--fb:#0866FF;}
   *{box-sizing:border-box;}
+  .logomark{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.03em;font-family:Georgia,'Times New Roman',serif;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
   .controls{max-width:940px;margin:16px auto 8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:0 14px;}
   .controls label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
@@ -21,7 +22,7 @@
   .band .kick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;}
   .band h1{margin:6px 0 2px;font-size:30px;font-weight:800;letter-spacing:-.01em;}
   .band .month{font-size:14px;color:#c7cede;font-weight:600;}
-  .band .logo{position:absolute;top:24px;right:30px;width:40px;height:40px;border-radius:50%;background:#fff;padding:4px;}
+  .band .logomark{position:absolute;top:22px;right:30px;background:#fff;color:var(--navy);}
   .body{padding:24px 34px 8px;}
   .chan-h{font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:20px 0 10px;display:flex;align-items:center;gap:9px;}
   .chan-h .pl{display:inline-flex;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:12px;align-items:center;justify-content:center;}
@@ -83,7 +84,7 @@ function ttBlock(t){
 function render(name){
   var c=REP.clients.find(function(x){return x.name===name;});
   var h='';
-  h+='<div class="band"><img class="logo" src="assets/fmm-logo.svg" alt="AG"/><div class="kick">Report Mensile Advertising · '+REP.comparison+'</div><h1>'+name+'</h1><div class="month">'+REP.month_label+'  vs  '+REP.prev_label+' · a cura di AG Hotel Consulting</div></div>';
+  h+='<div class="band"><div class="logomark">AGH</div><div class="kick">Report Mensile Advertising · '+REP.comparison+'</div><h1>'+name+'</h1><div class="month">'+REP.month_label+'  vs  '+REP.prev_label+' · AG Hotel Consulting</div></div>';
   h+='<div class="body">';
   if(!c.meta||!c.meta.available){h+='<p class="none">Nessuna erogazione Meta nel mese per questa struttura.</p>';}
   else{
@@ -98,8 +99,8 @@ function render(name){
   if(c.tiktok&&c.tiktok.available){h+='<div class="chan-h"><span class="pl tiktok">t</span> TikTok</div>'+ttBlock(c.tiktok);}
   if(c.rational){h+='<div class="chan-h">Lettura del mese</div><div class="narr">'+c.rational+'</div>';}
   h+='</div>';
-  h+='<div class="foot"><div class="cr">AG Hotel Consulting · in collaborazione con FMM Consulting</div>'
-    +'Le metriche relative a Copertura, Visualizzazioni, Interazioni e Budget possono essere soggette a variazioni in quanto influenzate dalla finestra di attribuzione, che può estendersi oltre la data di chiusura della reportistica. Interazioni = Interazione con la Pagina. Confronto '+REP.comparison+'. Dati Meta e TikTok · fonte Windsor.ai.</div>';
+  h+='<div class="foot"><div class="cr">AG Hotel Consulting</div>'
+    +'Le metriche relative a Copertura, Visualizzazioni, Interazioni e Budget possono essere soggette a variazioni in quanto influenzate dalla finestra di attribuzione, che può estendersi oltre la data di chiusura della reportistica. Interazioni = Interazione con la Pagina. Confronto '+REP.comparison+'. Dati Meta e TikTok.</div>';
   document.getElementById("sheet").innerHTML=h;
 }
 function boot(){

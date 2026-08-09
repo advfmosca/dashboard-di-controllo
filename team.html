@@ -2,11 +2,12 @@
 <html lang="it"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#1F2A44"/><title>AGHC — Dashboard Team</title>
-<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg"/>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#fff;--soft:#f7f8fa;--bsoft:#f0f1f5;--border:#e7e8ee;--text:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--navy:#1F2A44;--gold:#C9A24B;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
-*{box-sizing:border-box;}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
+:root{--bg:#fff;--soft:#f7f8fa;--bsoft:#f0f1f5;--border:#e7e8ee;--text:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--navy:#1F4E57;--gold:#E0733C;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
+*{box-sizing:border-box;}
+  .logomark{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.03em;font-family:Georgia,'Times New Roman',serif;}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
 .wrap{max-width:1080px;margin:0 auto;padding:18px 20px 60px;}
 header.h{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
 header.h img{width:44px;height:44px;border-radius:50%;}header.h h1{margin:0;font-size:20px;font-weight:800;}header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;}header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;}
@@ -41,7 +42,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
 footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;}.loading{padding:60px 0;text-align:center;color:var(--dim);}
 </style></head><body>
 <div class="wrap">
-<header class="h"><img src="assets/fmm-logo.svg" alt="AGHC"/><div><h1>AGHC — Dashboard Team</h1><div class="sub">Ultimo mese, storico e lettura del mese · per struttura</div></div><div class="stamp" id="stamp"></div></header>
+<header class="h"><div class="logomark">AGH</div><div><h1>AGHC — Dashboard Team</h1><div class="sub">Ultimo mese, storico e lettura del mese · per struttura</div></div><div class="stamp" id="stamp"></div></header>
 <div class="monthbar" id="monthbar"></div>
 <div class="toolbar"><label for="sel">Struttura</label><select id="sel"><option value="__all__">Tutte (panoramica)</option></select></div>
 <div id="view"><div class="loading">Caricamento dati…</div></div>
@@ -98,7 +99,7 @@ function renderAll(){
 function boot(){
   document.getElementById("stamp").innerHTML="agg. "+HIST.generated_at;
   document.getElementById("monthbar").innerHTML='<span class="m">'+HIST.as_of_label+'</span><span class="note">ultimo mese chiuso · storico 12 mesi · lettura del mese argomentata</span>';
-  document.getElementById("foot").textContent="Dashboard di Controllo — FMM Consulting / AGHC · dati Meta & TikTok via Windsor.ai";
+  document.getElementById("foot").textContent="AG Hotel Consulting · dati Meta & TikTok";
   var sel=document.getElementById("sel");
   HIST.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
   sel.addEventListener("change",function(){sel.value==="__all__"?renderAll():renderClient(sel.value);});
