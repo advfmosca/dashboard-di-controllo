@@ -160,7 +160,7 @@ function renderClient(name){
   var b=BUDBY[name];
   var v=document.getElementById("view");
   var meta=s.channels.meta, tt=s.channels.tt||s.channels.tiktok;
-  var html='<div style="display:flex;align-items:center;gap:10px;margin:22px 0 10px;flex-wrap:wrap;"><h2 class="block" style="margin:0;">'+name+' — KPI '+DATA.current_window.label+(DATA.current_window.through_label||'')+' vs '+DATA.previous_window.label+'</h2><a href="report-cliente.html?c='+encodeURIComponent(name)+'" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;font-weight:800;color:#0866FF;text-decoration:none;">📄 Report cliente (PDF) ↗</a></div><div class="totgrid">';
+  var html='<div style="display:flex;align-items:center;gap:10px;margin:22px 0 10px;flex-wrap:wrap;"><h2 class="block" style="margin:0;">'+name+' — KPI '+DATA.current_label+''+' vs '+DATA.mom_label+'</h2><a href="report-cliente.html?c='+encodeURIComponent(name)+'" target="_blank" rel="noopener" style="margin-left:auto;font-size:12px;font-weight:800;color:#0866FF;text-decoration:none;">📄 Report cliente (PDF) ↗</a></div><div class="totgrid">';
   // Meta
   html+='<div class="card"><h3><span class="plogo meta">f</span> Meta</h3>';
   if(!meta||meta.available===false){html+='<div class="note">Account non collegato a Windsor.</div>';}
@@ -182,7 +182,7 @@ function renderClient(name){
 function renderAll(){
   var v=document.getElementById("view");
   var tm=DATA.totals.meta, tt=DATA.totals.tiktok, T=BUD.totals;
-  var html='<h2 class="block">Totale portfolio — KPI '+DATA.current_window.label+(DATA.current_window.through_label||'')+' vs '+DATA.previous_window.label+'</h2><div class="totgrid">';
+  var html='<h2 class="block">Totale portfolio — KPI '+DATA.current_label+''+' vs '+DATA.mom_label+'</h2><div class="totgrid">';
   html+='<div class="card"><h3><span class="plogo meta">f</span> Meta</h3><div class="kpis">'+totKpi("Spesa","eur",tm.spend,"spend")+totKpi("Copertura","int",tm.reach,"reach")+totKpi("Impression","int",tm.impressions,"impressions")+totKpi("Click","int",tm.clicks,"clicks")+'</div></div>';
   html+='<div class="card"><h3><span class="plogo tiktok">t</span> TikTok</h3><div class="kpis">'+totKpi("Spesa","eur",tt.spend,"spend")+totKpi("Impression","int",tt.impressions,"impressions")+totKpi("Click","int",tt.clicks,"clicks")+'</div></div></div>';
   // budget portfolio
@@ -212,8 +212,8 @@ function renderAll(){
 function boot(){
   document.getElementById("stamp").innerHTML='Report <b>mensile</b> · dati bloccati<br/>KPI agg. '+DATA.generated_at+' · budget agg. '+BUD.generated_at;
   var pb=document.getElementById("periodBar");
-  pb.innerHTML='<span class="plabel">Mese corrente</span><span class="pcur">'+DATA.current_window.label+(DATA.current_window.through_label||'')+'</span><span class="pprev">vs '+DATA.previous_window.label+'</span><span class="spacer"></span><span class="badge">MENSILE · BLOCCATO</span>';
-  if(DATA.current_window.partial){var w=document.createElement("div");w.className="mtdwarn";w.textContent='⚠️ '+DATA.current_window.label+' è il mese in corso'+(DATA.current_window.through_label||'')+': confronto KPI parziale (MTD) vs '+DATA.previous_window.label+' completo.';pb.insertAdjacentElement("afterend",w);}
+  pb.innerHTML='<span class="plabel">Mese corrente</span><span class="pcur">'+DATA.current_label+''+'</span><span class="pprev">vs '+DATA.mom_label+'</span><span class="spacer"></span><span class="badge">MENSILE · BLOCCATO</span>';
+  if(false){var w=document.createElement("div");w.className="mtdwarn";w.textContent='⚠️ '+DATA.current_label+' è il mese in corso'+''+': confronto KPI parziale (MTD) vs '+DATA.mom_label+' completo.';pb.insertAdjacentElement("afterend",w);}
   ASOF=parseInt(BUD.as_of_month.split("-")[1],10);
   var sel=document.getElementById("clientSel");
   DATA.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});

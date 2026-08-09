@@ -1,7 +1,6 @@
 {
-  "schema_version": 3,
-  "period_mode": "month_per_structure",
-  "generated_at": "2026-08-09 20:27",
+  "schema_version": 4,
+  "generated_at": "2026-08-09 20:40",
   "current_label": "Agosto 2026",
   "mom_label": "Luglio 2026",
   "yoy_label": "Agosto 2025",
@@ -21,6 +20,16 @@
         "cur": 23966,
         "prev": 75029,
         "delta": -68.05768436204667
+      },
+      "cpc": {
+        "cur": 0.10831260953016772,
+        "prev": 0.14071265777232803,
+        "delta": -23.02568138154517
+      },
+      "cpm": {
+        "cur": 0.7487645681728761,
+        "prev": 0.8774922850299618,
+        "delta": -14.669954260930092
       },
       "reach": {
         "cur": 2556186,
@@ -48,6 +57,16 @@
         "cur": 3971,
         "prev": 11685,
         "delta": -66.01626016260163
+      },
+      "cpc": {
+        "cur": 0.22148577184588264,
+        "prev": 0.2918254172015404,
+        "delta": -24.10333069346041
+      },
+      "cpm": {
+        "cur": 0.1842938291363699,
+        "prev": 0.2052660007140409,
+        "delta": -10.21707029158114
       }
     },
     "compare_label": "Luglio 2026"
@@ -58,14 +77,53 @@
       "channels": {
         "meta": {
           "available": false,
-          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158",
-          "compare": "yoy",
-          "compare_label": "Agosto 2025"
+          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 0.0,
+              "prev": 0.0,
+              "delta": null
+            },
+            "impressions": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "clicks": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "cpc": {
+              "cur": null,
+              "prev": null,
+              "delta": null
+            },
+            "cpm": {
+              "cur": null,
+              "prev": null,
+              "delta": null
+            },
+            "reach": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": [
-        "Account Meta non collegato a Windsor."
-      ]
+      "daily": {},
+      "nonactivity": {},
+      "alerts": []
     },
     {
       "name": "Altafiumara Resort",
@@ -74,8 +132,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1201395876543423",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 207.85,
@@ -112,10 +168,63 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 207.85,
+              "prev": 458.42,
+              "delta": -54.65948257056847
+            },
+            "impressions": {
+              "cur": 217685,
+              "prev": 468783,
+              "delta": -53.56380244164144
+            },
+            "clicks": {
+              "cur": 4174,
+              "prev": 5899,
+              "delta": -29.24224444821156
+            },
+            "cpc": {
+              "cur": 0.049796358409199805,
+              "prev": 0.07771147652144432,
+              "delta": -35.921487226589235
+            },
+            "cpm": {
+              "cur": 0.9548200381284885,
+              "prev": 0.9778938229415316,
+              "delta": -2.3595388652355465
+            },
+            "reach": {
+              "cur": 197026,
+              "prev": 330375,
+              "delta": -40.36292092319334
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -55% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -40% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Hotel Castello",
@@ -124,8 +233,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1489903155429629",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 156.28,
@@ -162,10 +269,63 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 156.28,
+              "prev": 615.35,
+              "delta": -74.60307142276753
+            },
+            "impressions": {
+              "cur": 100815,
+              "prev": 355631,
+              "delta": -71.65179638445467
+            },
+            "clicks": {
+              "cur": 976,
+              "prev": 3180,
+              "delta": -69.30817610062893
+            },
+            "cpc": {
+              "cur": 0.16012295081967212,
+              "prev": 0.19350628930817612,
+              "delta": -17.251810578279468
+            },
+            "cpm": {
+              "cur": 1.5501661459108267,
+              "prev": 1.7303047259659592,
+              "delta": -10.410800904133716
+            },
+            "reach": {
+              "cur": 71128,
+              "prev": 198628,
+              "delta": -64.1903457719959
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -75% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -64% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Hotel Della Piana",
@@ -174,52 +334,72 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=911357333863123",
-          "compare": "yoy",
-          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 154.71,
+              "prev": 616.06,
+              "delta": -74.88718631302145
+            },
+            "impressions": {
+              "cur": 203097,
+              "prev": 736151,
+              "delta": -72.41095916462791
+            },
+            "clicks": {
+              "cur": 2251,
+              "prev": 5532,
+              "delta": -59.30947216196674
+            },
+            "cpc": {
+              "cur": 0.06872945357618837,
+              "prev": 0.11136297903109182,
+              "delta": -38.28339168531083
+            },
+            "cpm": {
+              "cur": 0.7617542356607927,
+              "prev": 0.836866349431027,
+              "delta": -8.975401367410926
+            },
+            "reach": {
+              "cur": 159077,
+              "prev": 391972,
+              "delta": -59.41623381261927
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "yoy": {
+            "spend": {
               "prev": 344.18,
               "delta": -55.04968330524726
             },
             "impressions": {
-              "cur": 203097,
               "prev": 429814,
               "delta": -52.74770016797964
             },
             "clicks": {
-              "cur": 2251,
               "prev": 9204,
               "delta": -75.54324206866579
             },
-            "cpc": {
-              "cur": 0.06872945357618837,
-              "prev": 0.03739461103867884,
-              "delta": 83.79507545913118
-            },
-            "cpm": {
-              "cur": 0.7617542356607927,
-              "prev": 0.8007649820620082,
-              "delta": -4.871684860739158
-            },
             "reach": {
-              "cur": 159077,
               "prev": 203614,
               "delta": -21.873250365888396
             },
             "interazioni": {
-              "cur": 0,
               "prev": 76099,
               "delta": -100.0
             }
-          }
+          },
+          "yoy_label": "Agosto 2025"
         },
         "tiktok": {
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7504967007843319824",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.93,
@@ -246,10 +426,63 @@
               "prev": 0.25298362855094536,
               "delta": -18.601349276823587
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 314.64,
+              "prev": 1236.07,
+              "delta": -74.5451309391863
+            },
+            "impressions": {
+              "cur": 979738,
+              "prev": 3186942,
+              "delta": -69.25773986473554
+            },
+            "clicks": {
+              "cur": 3358,
+              "prev": 8768,
+              "delta": -61.70164233576643
+            },
+            "cpc": {
+              "cur": 0.0936986301369863,
+              "prev": 0.14097513686131385,
+              "delta": -33.535350826320844
+            },
+            "cpm": {
+              "cur": 0.32114708217911314,
+              "prev": 0.38785456403034635,
+              "delta": -17.199096784642688
+            },
+            "reach": {
+              "cur": 159077,
+              "prev": 391972,
+              "delta": -59.41623381261927
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -75% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -59% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Hannah Hotels Collection",
@@ -258,48 +491,122 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1528485957725509",
-          "compare": "yoy",
-          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 331.3,
+              "prev": 1229.04,
+              "delta": -73.0440018225607
+            },
+            "impressions": {
+              "cur": 412984,
+              "prev": 1320142,
+              "delta": -68.71669865817465
+            },
+            "clicks": {
+              "cur": 6056,
+              "prev": 15363,
+              "delta": -60.580615765150036
+            },
+            "cpc": {
+              "cur": 0.054706076618229856,
+              "prev": 0.08,
+              "delta": -31.61740422721268
+            },
+            "cpm": {
+              "cur": 0.8022102551188425,
+              "prev": 0.930990757054923,
+              "delta": -13.83262948210808
+            },
+            "reach": {
+              "cur": 305868,
+              "prev": 713645,
+              "delta": -57.14003461104611
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "yoy": {
+            "spend": {
               "prev": 767.42,
               "delta": -56.829376351932446
             },
             "impressions": {
-              "cur": 412984,
               "prev": 722295,
               "delta": -42.823361645864914
             },
             "clicks": {
-              "cur": 6056,
               "prev": 5282,
               "delta": 14.653540325634228
             },
-            "cpc": {
-              "cur": 0.054706076618229856,
-              "prev": 0.14528966300643695,
-              "delta": -62.34689000840608
-            },
-            "cpm": {
-              "cur": 0.8022102551188425,
-              "prev": 1.062474473726109,
-              "delta": -24.49604437973151
-            },
             "reach": {
-              "cur": 305868,
               "prev": 327720,
               "delta": -6.667887220798242
             },
             "interazioni": {
-              "cur": 0,
               "prev": 330862,
               "delta": -100.0
             }
-          }
+          },
+          "yoy_label": "Agosto 2025"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 331.3,
+              "prev": 1229.04,
+              "delta": -73.0440018225607
+            },
+            "impressions": {
+              "cur": 412984,
+              "prev": 1320142,
+              "delta": -68.71669865817465
+            },
+            "clicks": {
+              "cur": 6056,
+              "prev": 15363,
+              "delta": -60.580615765150036
+            },
+            "cpc": {
+              "cur": 0.054706076618229856,
+              "prev": 0.08,
+              "delta": -31.61740422721268
+            },
+            "cpm": {
+              "cur": 0.8022102551188425,
+              "prev": 0.930990757054923,
+              "delta": -13.83262948210808
+            },
+            "reach": {
+              "cur": 305868,
+              "prev": 713645,
+              "delta": -57.14003461104611
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -73% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -57% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Hemanaire",
@@ -308,8 +615,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 202.05,
@@ -346,24 +651,116 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 202.05,
+              "prev": 775.19,
+              "delta": -73.9354222835692
+            },
+            "impressions": {
+              "cur": 511526,
+              "prev": 1582648,
+              "delta": -67.67910489255982
+            },
+            "clicks": {
+              "cur": 487,
+              "prev": 1062,
+              "delta": -54.143126177024484
+            },
+            "cpc": {
+              "cur": 0.4148870636550308,
+              "prev": 0.7299340866290019,
+              "delta": -43.161023542403456
+            },
+            "cpm": {
+              "cur": 0.3949945848304876,
+              "prev": 0.4898056927377408,
+              "delta": -19.35688157834834
+            },
+            "reach": {
+              "cur": 378122,
+              "prev": 691553,
+              "delta": -45.32277352567338
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -74% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -45% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Livata",
       "channels": {
         "meta": {
           "available": false,
-          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
-          "compare": "mom",
-          "compare_label": "Luglio 2026"
+          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 0.0,
+              "prev": 0.0,
+              "delta": null
+            },
+            "impressions": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "clicks": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "cpc": {
+              "cur": null,
+              "prev": null,
+              "delta": null
+            },
+            "cpm": {
+              "cur": null,
+              "prev": null,
+              "delta": null
+            },
+            "reach": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": [
-        "Account Meta non collegato a Windsor."
-      ]
+      "daily": {},
+      "nonactivity": {},
+      "alerts": []
     },
     {
       "name": "Hotel Lunetta",
@@ -372,52 +769,72 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=687349689221880",
-          "compare": "yoy",
-          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 256.07,
+              "prev": 935.39,
+              "delta": -72.62425298538577
+            },
+            "impressions": {
+              "cur": 132945,
+              "prev": 525081,
+              "delta": -74.68104920955054
+            },
+            "clicks": {
+              "cur": 577,
+              "prev": 8920,
+              "delta": -93.53139013452915
+            },
+            "cpc": {
+              "cur": 0.4437954939341421,
+              "prev": 0.10486434977578475,
+              "delta": 323.2091219590275
+            },
+            "cpm": {
+              "cur": 1.9261348678024748,
+              "prev": 1.7814203903778656,
+              "delta": 8.123544459593454
+            },
+            "reach": {
+              "cur": 95120,
+              "prev": 311724,
+              "delta": -69.48582720611823
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "yoy": {
+            "spend": {
               "prev": 612.53,
               "delta": -58.1947006677224
             },
             "impressions": {
-              "cur": 132945,
               "prev": 527647,
               "delta": -74.8041777931079
             },
             "clicks": {
-              "cur": 577,
               "prev": 3891,
               "delta": -85.17090722179388
             },
-            "cpc": {
-              "cur": 0.4437954939341421,
-              "prev": 0.15742225648933436,
-              "delta": 181.9140722736432
-            },
-            "cpm": {
-              "cur": 1.9261348678024748,
-              "prev": 1.1608708094616287,
-              "delta": 65.92155234704788
-            },
             "reach": {
-              "cur": 95120,
               "prev": 296315,
               "delta": -67.89902637396014
             },
             "interazioni": {
-              "cur": 0,
               "prev": 218484,
               "delta": -100.0
             }
-          }
+          },
+          "yoy_label": "Agosto 2025"
         },
         "tiktok": {
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498330316248203280",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 239.86,
@@ -444,10 +861,67 @@
               "prev": 0.24859852255461834,
               "delta": -14.890583691759222
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 495.93,
+              "prev": 1865.41,
+              "delta": -73.4144236387711
+            },
+            "impressions": {
+              "cur": 1266602,
+              "prev": 4266133,
+              "delta": -70.31030209325401
+            },
+            "clicks": {
+              "cur": 2383,
+              "prev": 14257,
+              "delta": -83.28540366135934
+            },
+            "cpc": {
+              "cur": 0.20811162400335712,
+              "prev": 0.13084169180051902,
+              "delta": 59.056047915249884
+            },
+            "cpm": {
+              "cur": 0.3915436735454389,
+              "prev": 0.4372601604310039,
+              "delta": -10.455214314631963
+            },
+            "reach": {
+              "cur": 95120,
+              "prev": 311724,
+              "delta": -69.48582720611823
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -73% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -69% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "CPC Meta +323% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Magari Estates",
@@ -456,8 +930,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 0.0,
@@ -494,10 +966,63 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 0.0,
+              "prev": 1096.21,
+              "delta": -100.0
+            },
+            "impressions": {
+              "cur": 0,
+              "prev": 1690060,
+              "delta": -100.0
+            },
+            "clicks": {
+              "cur": 0,
+              "prev": 7947,
+              "delta": -100.0
+            },
+            "cpc": {
+              "cur": null,
+              "prev": 0.1379401031835913,
+              "delta": null
+            },
+            "cpm": {
+              "cur": null,
+              "prev": 0.6486219424162456,
+              "delta": null
+            },
+            "reach": {
+              "cur": 0,
+              "prev": 608310,
+              "delta": -100.0
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -100% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -100% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Marcella Royal + Terrazza Flavia",
@@ -506,52 +1031,72 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=821188209852436",
-          "compare": "yoy",
-          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 159.35,
+              "prev": 618.17,
+              "delta": -74.22230130870149
+            },
+            "impressions": {
+              "cur": 156883,
+              "prev": 519279,
+              "delta": -69.7883026272967
+            },
+            "clicks": {
+              "cur": 1786,
+              "prev": 3714,
+              "delta": -51.91168551427033
+            },
+            "cpc": {
+              "cur": 0.08922172452407615,
+              "prev": 0.16644318793753365,
+              "delta": -46.395087939819334
+            },
+            "cpm": {
+              "cur": 1.015725094497173,
+              "prev": 1.1904390510688858,
+              "delta": -14.676430214116259
+            },
+            "reach": {
+              "cur": 115101,
+              "prev": 282084,
+              "delta": -59.19619687752584
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "yoy": {
+            "spend": {
               "prev": 852.64,
               "delta": -81.31098705197974
             },
             "impressions": {
-              "cur": 156883,
               "prev": 1074124,
               "delta": -85.39433063594147
             },
             "clicks": {
-              "cur": 1786,
               "prev": 23179,
               "delta": -92.29474955778937
             },
-            "cpc": {
-              "cur": 0.08922172452407615,
-              "prev": 0.036785020924112344,
-              "delta": 142.5490655779181
-            },
-            "cpm": {
-              "cur": 1.015725094497173,
-              "prev": 0.7938003433495574,
-              "delta": 27.957250586611167
-            },
             "reach": {
-              "cur": 115101,
               "prev": 477000,
               "delta": -75.86981132075472
             },
             "interazioni": {
-              "cur": 0,
               "prev": 217957,
               "delta": -100.0
             }
-          }
+          },
+          "yoy_label": "Agosto 2025"
         },
         "tiktok": {
           "available": true,
           "active": false,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7499093699838607377",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 0.0,
@@ -578,10 +1123,63 @@
               "prev": null,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 159.35,
+              "prev": 618.17,
+              "delta": -74.22230130870149
+            },
+            "impressions": {
+              "cur": 156883,
+              "prev": 519279,
+              "delta": -69.7883026272967
+            },
+            "clicks": {
+              "cur": 1786,
+              "prev": 3714,
+              "delta": -51.91168551427033
+            },
+            "cpc": {
+              "cur": 0.08922172452407615,
+              "prev": 0.16644318793753365,
+              "delta": -46.395087939819334
+            },
+            "cpm": {
+              "cur": 1.015725094497173,
+              "prev": 1.1904390510688858,
+              "delta": -14.676430214116259
+            },
+            "reach": {
+              "cur": 115101,
+              "prev": 282084,
+              "delta": -59.19619687752584
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -74% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -59% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Mare Hotel",
@@ -590,8 +1188,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1432341844596179",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 117.44,
@@ -628,14 +1224,13 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
         },
         "tiktok": {
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498679494010667009",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.95,
@@ -662,10 +1257,59 @@
               "prev": 0.25316962242200847,
               "delta": -15.736522523260522
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 277.39,
+              "prev": 959.66,
+              "delta": -71.09497113561054
+            },
+            "impressions": {
+              "cur": 951665,
+              "prev": 2870575,
+              "delta": -66.84758280135513
+            },
+            "clicks": {
+              "cur": 2406,
+              "prev": 5571,
+              "delta": -56.81206246634356
+            },
+            "cpc": {
+              "cur": 0.11529093931837073,
+              "prev": 0.17225991742954588,
+              "delta": -33.071522941183
+            },
+            "cpm": {
+              "cur": 0.2914786190518722,
+              "prev": 0.3343093282704685,
+              "delta": -12.811700301687262
+            },
+            "reach": {
+              "cur": 125620,
+              "prev": 184274,
+              "delta": -31.829775226022118
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -65% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Tenuta Montemagno Relais",
@@ -674,8 +1318,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=752450855779035",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 453.84,
@@ -712,10 +1354,59 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 453.84,
+              "prev": 1845.25,
+              "delta": -75.40495867768595
+            },
+            "impressions": {
+              "cur": 308969,
+              "prev": 1038105,
+              "delta": -70.23721107209772
+            },
+            "clicks": {
+              "cur": 503,
+              "prev": 2274,
+              "delta": -77.88038698328936
+            },
+            "cpc": {
+              "cur": 0.9022664015904572,
+              "prev": 0.8114555848724714,
+              "delta": 11.191101325928727
+            },
+            "cpm": {
+              "cur": 1.4688852279678544,
+              "prev": 1.7775176884804522,
+              "delta": -17.3631161317128
+            },
+            "reach": {
+              "cur": 143411,
+              "prev": 223636,
+              "delta": -35.873025809798065
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -75% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Villa Ermellina",
@@ -724,8 +1415,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=30233607946222961",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 157.35,
@@ -762,14 +1451,13 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
         },
         "tiktok": {
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7612666695502118929",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.85,
@@ -796,10 +1484,394 @@
               "prev": 0.12697090914750883,
               "delta": 1.8989900887328683
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 317.2,
+              "prev": 1105.1,
+              "delta": -71.296715229391
+            },
+            "impressions": {
+              "cur": 2057459,
+              "prev": 6985591,
+              "delta": -70.54710188443613
+            },
+            "clicks": {
+              "cur": 1215,
+              "prev": 3461,
+              "delta": -64.89453915053453
+            },
+            "cpc": {
+              "cur": 0.2610699588477366,
+              "prev": 0.31930078012135216,
+              "delta": -18.236980583475116
+            },
+            "cpm": {
+              "cur": 0.1541707513977192,
+              "prev": 0.15819706593185887,
+              "delta": -2.5451259227993077
+            },
+            "reach": {
+              "cur": 723493,
+              "prev": 1236752,
+              "delta": -41.500559530124065
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {
+        "dates": [
+          "2026-07-10",
+          "2026-07-11",
+          "2026-07-12",
+          "2026-07-13",
+          "2026-07-14",
+          "2026-07-15",
+          "2026-07-16",
+          "2026-07-17",
+          "2026-07-18",
+          "2026-07-19",
+          "2026-07-20",
+          "2026-07-21",
+          "2026-07-22",
+          "2026-07-23",
+          "2026-07-24",
+          "2026-07-25",
+          "2026-07-26",
+          "2026-07-27",
+          "2026-07-28",
+          "2026-07-29",
+          "2026-07-30",
+          "2026-07-31",
+          "2026-08-01",
+          "2026-08-02",
+          "2026-08-03",
+          "2026-08-04",
+          "2026-08-05",
+          "2026-08-06",
+          "2026-08-07",
+          "2026-08-08"
+        ],
+        "meta": {
+          "spend": [
+            21.33,
+            36.12,
+            16.19,
+            11.98,
+            14.45,
+            7.9,
+            13.7,
+            16.59,
+            35.68,
+            16.18,
+            11.78,
+            13.79,
+            7.96,
+            13.47,
+            17.08,
+            35.41,
+            14.72,
+            10.13,
+            10.35,
+            7.64,
+            12.03,
+            12.13,
+            18.96,
+            12.11,
+            12.37,
+            16.33,
+            13.6,
+            16.24,
+            24.09,
+            43.76
+          ],
+          "impressions": [
+            74508,
+            124476,
+            63706,
+            49288,
+            58225,
+            37114,
+            60107,
+            61931,
+            135376,
+            62597,
+            52652,
+            61474,
+            36087,
+            60782,
+            67269,
+            133390,
+            60322,
+            47630,
+            49695,
+            37433,
+            57950,
+            59468,
+            96265,
+            67222,
+            70961,
+            90802,
+            74534,
+            86706,
+            108766,
+            227753
+          ],
+          "clicks": [
+            138,
+            218,
+            124,
+            93,
+            83,
+            49,
+            99,
+            118,
+            236,
+            109,
+            92,
+            105,
+            43,
+            73,
+            127,
+            232,
+            74,
+            78,
+            82,
+            45,
+            96,
+            96,
+            122,
+            87,
+            75,
+            131,
+            96,
+            130,
+            181,
+            400
+          ]
+        },
+        "tiktok": {
+          "spend": [
+            19.98,
+            19.91,
+            20.04,
+            20.04,
+            20.03,
+            20.03,
+            20.01,
+            19.92,
+            19.93,
+            20.04,
+            20.05,
+            20.03,
+            20.01,
+            20.01,
+            19.97,
+            19.89,
+            20.05,
+            20.06,
+            20.02,
+            20.02,
+            20.0,
+            19.95,
+            19.85,
+            20.06,
+            20.04,
+            20.04,
+            20.04,
+            20.02,
+            19.93,
+            19.87
+          ],
+          "impressions": [
+            170890,
+            196152,
+            199621,
+            184581,
+            162274,
+            148171,
+            115888,
+            121458,
+            175316,
+            170771,
+            160695,
+            153114,
+            131240,
+            112774,
+            128817,
+            175425,
+            179098,
+            158577,
+            150057,
+            132101,
+            113522,
+            126429,
+            183212,
+            179282,
+            162999,
+            150201,
+            137071,
+            118529,
+            131365,
+            172832
+          ],
+          "clicks": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "both": {
+          "spend": [
+            41.31,
+            56.03,
+            36.23,
+            32.02,
+            34.48,
+            27.93,
+            33.71,
+            36.51,
+            55.61,
+            36.22,
+            31.83,
+            33.82,
+            27.97,
+            33.48,
+            37.05,
+            55.3,
+            34.77,
+            30.19,
+            30.37,
+            27.66,
+            32.03,
+            32.08,
+            38.81,
+            32.17,
+            32.41,
+            36.37,
+            33.64,
+            36.26,
+            44.02,
+            63.63
+          ],
+          "impressions": [
+            245398,
+            320628,
+            263327,
+            233869,
+            220499,
+            185285,
+            175995,
+            183389,
+            310692,
+            233368,
+            213347,
+            214588,
+            167327,
+            173556,
+            196086,
+            308815,
+            239420,
+            206207,
+            199752,
+            169534,
+            171472,
+            185897,
+            279477,
+            246504,
+            233960,
+            241003,
+            211605,
+            205235,
+            240131,
+            400585
+          ],
+          "clicks": [
+            138,
+            218,
+            124,
+            93,
+            83,
+            49,
+            99,
+            118,
+            236,
+            109,
+            92,
+            105,
+            43,
+            73,
+            127,
+            232,
+            74,
+            78,
+            82,
+            45,
+            96,
+            96,
+            122,
+            87,
+            75,
+            131,
+            96,
+            130,
+            181,
+            400
+          ]
+        }
+      },
+      "nonactivity": {
+        "meta": 0,
+        "tiktok": 0,
+        "window": 30
+      },
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -68% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -42% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Villa Giada",
@@ -808,8 +1880,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1849759899186169",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 234.0,
@@ -846,14 +1916,13 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
         },
         "tiktok": {
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7626418949391351815",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.93,
@@ -880,10 +1949,59 @@
               "prev": 0.20071047324847757,
               "delta": -9.123325398303693
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 393.93,
+              "prev": 1544.38,
+              "delta": -74.4926766728396
+            },
+            "impressions": {
+              "cur": 979299,
+              "prev": 3437276,
+              "delta": -71.5094452700336
+            },
+            "clicks": {
+              "cur": 1920,
+              "prev": 6358,
+              "delta": -69.80182447310474
+            },
+            "cpc": {
+              "cur": 0.205171875,
+              "prev": 0.24290342875117962,
+              "delta": -15.53356160724692
+            },
+            "cpm": {
+              "cur": 0.40225712473922676,
+              "prev": 0.4493034600654705,
+              "delta": -10.47094881472499
+            },
+            "reach": {
+              "cur": 53994,
+              "prev": 79400,
+              "delta": -31.997481108312343
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": true
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -75% vs Luglio 2026"
+        }
+      ]
     },
     {
       "name": "Villa Miliani",
@@ -892,8 +2010,6 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1353024533007038",
-          "compare": "mom",
-          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 165.58,
@@ -930,10 +2046,63 @@
               "prev": 0,
               "delta": null
             }
-          }
+          },
+          "mom_label": "Luglio 2026"
+        },
+        "both": {
+          "metrics": {
+            "spend": {
+              "cur": 165.58,
+              "prev": 619.26,
+              "delta": -73.26163485450375
+            },
+            "impressions": {
+              "cur": 295558,
+              "prev": 922807,
+              "delta": -67.97185110212645
+            },
+            "clicks": {
+              "cur": 2673,
+              "prev": 8860,
+              "delta": -69.83069977426636
+            },
+            "cpc": {
+              "cur": 0.06194537972315751,
+              "prev": 0.06989390519187359,
+              "delta": -11.372272656529487
+            },
+            "cpm": {
+              "cur": 0.5602284492383899,
+              "prev": 0.6710612294878561,
+              "delta": -16.516045835944375
+            },
+            "reach": {
+              "cur": 188226,
+              "prev": 418410,
+              "delta": -55.01398150139815
+            },
+            "interazioni": {
+              "cur": 0,
+              "prev": 0,
+              "delta": null
+            }
+          },
+          "mom_label": "Luglio 2026",
+          "has_tiktok": false
         }
       },
-      "notes": []
+      "daily": {},
+      "nonactivity": {},
+      "alerts": [
+        {
+          "level": "amber",
+          "text": "Spesa Meta -73% vs Luglio 2026"
+        },
+        {
+          "level": "amber",
+          "text": "Copertura Meta -55% vs Luglio 2026"
+        }
+      ]
     }
   ]
 }

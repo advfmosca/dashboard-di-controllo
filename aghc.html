@@ -1,145 +1,162 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#1F2A44" />
-<meta name="version" content="2026-08-08-aghc-perstruct" />
-<title>AGHC — Dashboard di Controllo</title>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1F2A44" /><title>AGHC — Dashboard di Controllo</title>
 <link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root{--bg:#fff;--bg-soft:#f7f8fa;--border:#e7e8ee;--border-soft:#f0f1f5;--text:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--navy:#1F2A44;--gold:#C9A24B;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
+  :root{--bg:#fff;--soft:#f7f8fa;--border:#e7e8ee;--bsoft:#f0f1f5;--text:#1F2A44;--muted:#6b7180;--dim:#9aa0b0;--navy:#1F2A44;--gold:#C9A24B;--green:#1e8e3e;--red:#c0392b;--blue:#0866FF;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:1180px;margin:0 auto;padding:18px 20px 60px;}
   header.h{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
-  header.h img{width:44px;height:44px;border-radius:50%;}
-  header.h h1{margin:0;font-size:20px;font-weight:800;letter-spacing:-.01em;}
-  header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;}
-  header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;}
+  header.h img{width:44px;height:44px;border-radius:50%;} header.h h1{margin:0;font-size:20px;font-weight:800;}
+  header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;} header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);}
   .monthbar{display:flex;align-items:baseline;gap:12px;margin:2px 0 20px;padding-bottom:12px;border-bottom:2px solid var(--gold);flex-wrap:wrap;}
-  .monthbar .m{font-size:26px;font-weight:800;letter-spacing:-.01em;color:var(--navy);}
-  .monthbar .note{font-size:12px;color:var(--muted);}
+  .monthbar .m{font-size:26px;font-weight:800;color:var(--navy);} .monthbar .note{font-size:12px;color:var(--muted);}
   h2.block{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px;}
-  .totgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  @media(max-width:720px){.totgrid{grid-template-columns:1fr;}}
+  .totgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;} @media(max-width:720px){.totgrid{grid-template-columns:1fr;}}
   .card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
-  .card>h3{margin:0;padding:10px 15px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border-soft);background:var(--bg-soft);}
-  .card>h3 .cmp{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--dim);text-transform:none;letter-spacing:0;}
-  .plogo{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:13px;}
-  .plogo.meta{background:#0866FF;} .plogo.tiktok{background:#000;}
+  .card>h3{margin:0;padding:10px 15px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bsoft);background:var(--soft);}
+  .card>h3 .cmp{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--dim);}
+  .plogo{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;color:#fff;font-weight:800;font-size:13px;} .plogo.meta{background:#0866FF;} .plogo.tiktok{background:#000;} .plogo.both{background:linear-gradient(135deg,#0866FF 50%,#000 50%);}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));}
-  .kpi{padding:12px 15px;border-right:1px solid var(--border-soft);border-top:1px solid var(--border-soft);}
+  .kpi{padding:11px 15px;border-right:1px solid var(--bsoft);border-top:1px solid var(--bsoft);}
   .kpi .label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin-bottom:5px;}
   .kpi .value{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;}
   .kpi .prev{font-size:10px;color:var(--dim);margin-top:3px;}
-  .chip{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;margin-top:5px;font-variant-numeric:tabular-nums;}
+  .chip{display:inline-block;font-size:10.5px;font-weight:800;padding:1px 7px;border-radius:999px;font-variant-numeric:tabular-nums;}
   .chip.good{background:#d1fadf;color:#14532d;} .chip.bad{background:#fee2e2;color:#991b1b;} .chip.flat{background:#eceff1;color:#555;}
-  .structs{display:flex;flex-direction:column;gap:14px;}
-  .struct{border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-  .struct>.sh{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--bg-soft);border-bottom:1px solid var(--border-soft);}
-  .struct>.sh .sname{font-size:15px;font-weight:800;letter-spacing:-.01em;}
-  .struct>.sh .tags{margin-left:auto;display:flex;gap:6px;}
-  .tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;}
-  .tag.meta{background:#e7f0ff;color:#0b57d0;} .tag.tiktok{background:#111;color:#fff;} .tag.yoy{background:#f3e9cf;color:#7a5c12;}
-  .chan-row{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-  @media(max-width:760px){.chan-row{grid-template-columns:1fr;}}
-  .chan{padding:12px 16px;} .chan + .chan{border-left:1px solid var(--border-soft);}
-  @media(max-width:760px){.chan + .chan{border-left:0;border-top:1px solid var(--border-soft);}}
-  .chan .chead{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-  .chan .cname{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
-  .chan .cmp{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--dim);}
-  .chan a.mgr{font-size:11px;color:var(--blue);text-decoration:none;margin-left:8px;}
-  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:9px;}
-  .mcell{background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:9px;padding:9px 10px;}
-  .mcell .mlab{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;margin-bottom:4px;}
-  .mcell .mval{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;}
-  .mcell .mprev{font-size:10px;color:var(--dim);margin-top:2px;font-variant-numeric:tabular-nums;}
-  .mcell .chip{font-size:10px;padding:0 6px;margin-top:4px;}
-  .chan .note{font-size:11.5px;color:var(--dim);font-style:italic;padding:6px 2px;}
-  .chan.inactive{background:#fcfcfd;}
-  footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;line-height:1.6;}
-  .loading{padding:60px 0;text-align:center;color:var(--dim);}
+  .yoyline{font-size:10px;color:var(--muted);margin-top:3px;font-weight:700;}
+  /* struttura card grande */
+  .structs{display:flex;flex-direction:column;gap:16px;}
+  .struct{border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,60,.03);}
+  .sh{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--soft);border-bottom:1px solid var(--bsoft);flex-wrap:wrap;}
+  .sh .sname{font-size:16px;font-weight:800;}
+  .sh .tag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;}
+  .tag.yoy{background:#f3e9cf;color:#7a5c12;} .tag.meta{background:#e7f0ff;color:#0b57d0;} .tag.tiktok{background:#111;color:#fff;}
+  .toggle{margin-left:auto;display:inline-flex;border:1px solid #d2d5df;border-radius:9px;overflow:hidden;}
+  .toggle button{font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border:0;background:#fff;color:var(--muted);cursor:pointer;border-left:1px solid #eceef3;}
+  .toggle button:first-child{border-left:0;} .toggle button.on{background:var(--navy);color:#fff;} .toggle button:disabled{opacity:.35;cursor:not-allowed;}
+  .sbody{padding:12px 16px;}
+  .alerts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;}
+  .alert{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;}
+  .alert.red{background:#fdECEA;color:#a5261a;border:1px solid #f5c6c0;} .alert.amber{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;}
+  .kstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:9px;margin-bottom:14px;}
+  .kc{background:var(--soft);border:1px solid var(--bsoft);border-radius:9px;padding:9px 11px;}
+  .kc .kl{font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700;margin-bottom:4px;}
+  .kc .kv{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;}
+  .kc .kp{font-size:9.5px;color:var(--dim);margin-top:2px;}
+  .kc .chip{font-size:9.5px;padding:0 6px;margin-top:4px;}
+  .kc .yoyline{font-size:9px;}
+  .chartwrap{position:relative;height:190px;margin:4px 0 8px;}
+  .chart-note{font-size:11px;color:var(--dim);margin-bottom:8px;}
+  .signals{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);border-top:1px solid var(--bsoft);padding-top:10px;}
+  .signals b{color:var(--text);} .signals .z{color:var(--red);}
+  .note{font-size:11.5px;color:var(--dim);font-style:italic;}
+  footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;} .loading{padding:60px 0;text-align:center;color:var(--dim);}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="h">
-    <img src="assets/fmm-logo.svg" alt="AGHC"/>
-    <div>
-      <h1>AGHC — Dashboard di Controllo</h1>
-      <div class="sub">Tutte le strutture attive · Meta &amp; TikTok</div>
-    </div>
-    <div class="stamp" id="stamp"></div>
-  </header>
-
+  <header class="h"><img src="assets/fmm-logo.svg" alt="AGHC"/><div><h1>AGHC — Dashboard di Controllo</h1><div class="sub">Tutte le strutture attive · Meta &amp; TikTok</div></div><div class="stamp" id="stamp"></div></header>
   <div class="monthbar" id="monthbar"></div>
-
   <h2 class="block">Totale portfolio</h2>
   <div class="totgrid" id="totals"></div>
-
   <h2 class="block">Strutture</h2>
   <div class="structs" id="structs"><div class="loading">Caricamento dati…</div></div>
-
   <footer class="f" id="foot"></footer>
 </div>
 <script>
-const MDEF={meta:[["spend","Spesa","eur"],["reach","Copertura","int"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]],
-            tiktok:[["spend","Spesa","eur"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]]};
 const GOOD_UP={spend:false,cpc:false,cpm:false,reach:true,impressions:true,clicks:true,interazioni:true};
-let D=null;
+const META_DEF=[["spend","Spesa","eur"],["reach","Copertura","int"],["impressions","Impression","int"],["clicks","Click","int"],["interazioni","Interazioni","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]];
+const TT_DEF=[["spend","Spesa","eur"],["impressions","Impression","int"],["clicks","Click","int"],["cpc","CPC","eur4"],["cpm","CPM","eur"]];
+let D=null; const CH={};
 function fInt(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
 function fEur(n,d){return n==null?"—":n.toLocaleString("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d})+" €";}
 function fVal(v,k){if(v==null)return "—";if(k==="eur")return fEur(v,2);if(k==="eur4")return fEur(v,3);return fInt(v);}
 function fPct(p){if(p==null)return "n/d";return (p>=0?"+":"")+p.toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1})+"%";}
 function chip(k,d){if(d==null)return '<span class="chip flat">n/d</span>';const g=(d>=0)===GOOD_UP[k];if(Math.abs(d)<0.05)return '<span class="chip flat">'+fPct(d)+'</span>';return '<span class="chip '+(g?"good":"bad")+'">'+fPct(d)+'</span>';}
-function mcell(k,label,kind,m){var x=m[k]||{};return '<div class="mcell"><div class="mlab">'+label+'</div><div class="mval">'+fVal(x.cur,kind)+'</div>'+chip(k,x.delta)+'<div class="mprev">prec. '+fVal(x.prev,kind)+'</div></div>';}
 function totKpi(label,kind,mk,m){var x=m||{};return '<div class="kpi"><div class="label">'+label+'</div><div class="value">'+fVal(x.cur,kind)+'</div>'+chip(mk,x.delta)+'<div class="prev">prec. '+fVal(x.prev,kind)+'</div></div>';}
 
+function kcell(key,label,kind,m,mom_l,yoy,yoy_l){
+  var x=(m&&m[key])||{}; var h='<div class="kc"><div class="kl">'+label+'</div><div class="kv">'+fVal(x.cur,kind)+'</div>'+chip(key,x.delta)+'<div class="kp">'+mom_l+': '+fVal(x.prev,kind)+'</div>';
+  if(yoy&&yoy[key]){var yd=yoy[key].delta; h+='<div class="yoyline">YoY '+(yd==null?'n/d':fPct(yd))+' <span style="color:#c7ccd6">('+yoy_l+')</span></div>';}
+  return h+'</div>';
+}
+function kstrip(struct,ch){
+  var c=struct.channels||{};
+  if(ch==='meta'){var b=c.meta; if(!b||b.available===false)return '<div class="note">Account Meta non collegato a Windsor.</div>'; return META_DEF.map(function(d){return kcell(d[0],d[1],d[2],b.metrics,b.mom_label,b.yoy,b.yoy_label);}).join('');}
+  if(ch==='tiktok'){var t=c.tiktok; if(!t)return '<div class="note">Canale TikTok non attivo per questa struttura.</div>'; return TT_DEF.map(function(d){return kcell(d[0],d[1],d[2],t.metrics,t.mom_label,null,null);}).join('');}
+  var bo=c.both; return META_DEF.map(function(d){return kcell(d[0],d[1],d[2],bo.metrics,bo.mom_label,null,null);}).join('');
+}
+function signals(struct,ch){
+  var na=struct.nonactivity||{}; if(na.window==null)return '<div class="signals"><span>Andamento giornaliero non ancora disponibile (si popola al refresh).</span></div>';
+  function seg(lbl,v){if(v==null)return '';return '<span>'+lbl+': <b class="'+(v>0?'z':'')+'">'+v+'</b> gg senza erogazione</span>';}
+  var parts=[];
+  if(ch==='meta') parts.push(seg('Meta',na.meta));
+  else if(ch==='tiktok') parts.push(seg('TikTok',na.tiktok));
+  else { if(na.meta!=null)parts.push(seg('Meta',na.meta)); if(na.tiktok!=null)parts.push(seg('TikTok',na.tiktok)); }
+  return '<div class="signals"><span>Finestra <b>'+na.window+' gg</b></span>'+parts.join('')+'</div>';
+}
+function drawChart(canvasId,struct,ch){
+  if(typeof Chart==='undefined')return; var el=document.getElementById(canvasId); if(!el)return;
+  var day=struct.daily; if(!day||!day.dates){return;}
+  var ser = ch==='meta'?day.meta : ch==='tiktok'?day.tiktok : day.both; if(!ser){return;}
+  if(CH[canvasId]){CH[canvasId].destroy();}
+  var labels=day.dates.map(function(d){return d.slice(8)+'/'+d.slice(5,7);});
+  CH[canvasId]=new Chart(el,{data:{labels:labels,datasets:[
+      {type:'bar',label:'Spesa €',data:ser.spend,backgroundColor:'#1F2A44',yAxisID:'y',order:2,borderRadius:2},
+      {type:'line',label:'Impression',data:ser.impressions,borderColor:'#C9A24B',backgroundColor:'#C9A24B',yAxisID:'y1',tension:.3,pointRadius:0,borderWidth:2,order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}},
+      scales:{y:{position:'left',ticks:{font:{size:9},callback:function(v){return v+'€';}},grid:{display:false}},
+              y1:{position:'right',ticks:{font:{size:9},callback:function(v){return (v/1000).toFixed(0)+'k';}},grid:{display:false}},
+              x:{ticks:{font:{size:8},maxRotation:0,autoSkip:true,maxTicksLimit:10},grid:{display:false}}}}});
+}
+function setChannel(idx,ch){
+  var struct=D.structures[idx]; var card=document.getElementById('struct_'+idx);
+  card.querySelectorAll('.toggle button').forEach(function(b){b.classList.toggle('on',b.dataset.ch===ch);});
+  card.querySelector('.kstrip').innerHTML=kstrip(struct,ch);
+  card.querySelector('.signals-wrap').innerHTML=signals(struct,ch);
+  drawChart('chart_'+idx,struct,ch);
+}
 function render(data){
   D=data;
   document.getElementById("stamp").innerHTML='agg. '+data.generated_at;
-  document.getElementById("monthbar").innerHTML='<span class="m">'+data.current_label+'</span><span class="note">confronto per struttura · YoY o MoM secondo anagrafica</span>';
+  document.getElementById("monthbar").innerHTML='<span class="m">'+data.current_label+'</span><span class="note">confronto Mese vs Mese sempre presente · YoY sul Meta dove previsto</span>';
   document.getElementById("foot").textContent='Dashboard di Controllo — FMM Consulting / AGHC · dati Meta & TikTok via Windsor.ai';
-  var tm=data.totals.meta, tt=data.totals.tiktok, cl=data.totals.compare_label;
+  var tm=data.totals.meta,tt=data.totals.tiktok,cl=data.totals.compare_label;
   document.getElementById("totals").innerHTML=
-     '<div class="card"><h3><span class="plogo meta">f</span> Meta<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'
-     +totKpi("Spesa","eur","spend",tm.spend)+totKpi("Copertura","int","reach",tm.reach)+totKpi("Impression","int","impressions",tm.impressions)+totKpi("Click","int","clicks",tm.clicks)+'</div></div>'
-     +'<div class="card"><h3><span class="plogo tiktok">t</span> TikTok<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'
-     +totKpi("Spesa","eur","spend",tt.spend)+totKpi("Impression","int","impressions",tt.impressions)+totKpi("Click","int","clicks",tt.clicks)+'</div></div>';
+    '<div class="card"><h3><span class="plogo meta">f</span> Meta<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'+totKpi("Spesa","eur","spend",tm.spend)+totKpi("Copertura","int","reach",tm.reach)+totKpi("Impression","int","impressions",tm.impressions)+totKpi("Interazioni","int","interazioni",tm.interazioni)+totKpi("Click","int","clicks",tm.clicks)+'</div></div>'
+   +'<div class="card"><h3><span class="plogo tiktok">t</span> TikTok<span class="cmp">vs '+cl+'</span></h3><div class="kpis">'+totKpi("Spesa","eur","spend",tt.spend)+totKpi("Impression","int","impressions",tt.impressions)+totKpi("Click","int","clicks",tt.clicks)+'</div></div>';
   var html="";
-  data.structures.forEach(function(s){
-    var meta=s.channels.meta, tt=s.channels.tiktok;
-    var tags="";
-    if(meta&&meta.available!==false) tags+='<span class="tag meta">Meta</span>';
-    if(tt) tags+='<span class="tag tiktok">TikTok</span>';
-    if(meta&&meta.compare==="yoy") tags+='<span class="tag yoy">YoY</span>';
-    var chans="";
-    // Meta
-    chans+='<div class="chan'+((meta&&meta.active)?"":" inactive")+'"><div class="chead"><span class="plogo meta">f</span><span class="cname">Meta</span>'
-         +(meta&&meta.compare_label?'<span class="cmp">vs '+meta.compare_label+'</span>':'')
-         +(meta&&meta.url?'<a class="mgr" href="'+meta.url+'" target="_blank" rel="noopener">↗</a>':'')+'</div>';
-    if(!meta||meta.available===false) chans+='<div class="note">Account non collegato a Windsor.</div>';
-    else if(!meta.active) chans+='<div class="note">Nessuna erogazione nel periodo.</div>';
-    else chans+='<div class="mgrid">'+MDEF.meta.map(function(d){return mcell(d[0],d[1],d[2],meta.metrics);}).join("")+'</div>';
-    chans+='</div>';
-    // TikTok
-    if(tt){
-      chans+='<div class="chan'+(tt.active?"":" inactive")+'"><div class="chead"><span class="plogo tiktok">t</span><span class="cname">TikTok</span>'
-           +'<span class="cmp">vs '+tt.compare_label+'</span>'
-           +(tt.url?'<a class="mgr" href="'+tt.url+'" target="_blank" rel="noopener">↗</a>':'')+'</div>';
-      if(!tt.active) chans+='<div class="note">Nessuna erogazione nel periodo.</div>';
-      else chans+='<div class="mgrid">'+MDEF.tiktok.map(function(d){return mcell(d[0],d[1],d[2],tt.metrics);}).join("")+'</div>';
-      chans+='</div>';
-    } else {
-      chans+='<div class="chan inactive"><div class="chead"><span class="plogo tiktok" style="opacity:.35">t</span><span class="cname" style="opacity:.6">TikTok</span></div><div class="note">Canale non attivo per questa struttura.</div></div>';
-    }
-    html+='<div class="struct"><div class="sh"><span class="sname">'+s.name+'</span><span class="tags">'+tags+'</span></div><div class="chan-row">'+chans+'</div></div>';
+  data.structures.forEach(function(s,idx){
+    var meta=s.channels.meta,tt=s.channels.tiktok,hasTT=!!tt;
+    var tags='';
+    if(meta&&meta.yoy) tags+='<span class="tag yoy">YoY Meta</span>';
+    tags+='<span class="tag meta">Meta</span>'+(hasTT?'<span class="tag tiktok">TikTok</span>':'');
+    var alerts=(s.alerts||[]).map(function(a){return '<span class="alert '+a.level+'">'+(a.level==='red'?'⛔':'⚠️')+' '+a.text+'</span>';}).join('');
+    html+='<div class="struct" id="struct_'+idx+'"><div class="sh"><span class="sname">'+s.name+'</span>'+tags
+      +'<span class="toggle">'
+      +'<button data-ch="both" class="on" onclick="setChannel('+idx+',\'both\')">Entrambe</button>'
+      +'<button data-ch="meta" onclick="setChannel('+idx+',\'meta\')">Meta</button>'
+      +'<button data-ch="tiktok" '+(hasTT?'':'disabled')+' onclick="setChannel('+idx+',\'tiktok\')">TikTok</button>'
+      +'</span></div>'
+      +'<div class="sbody">'
+      +(alerts?'<div class="alerts">'+alerts+'</div>':'')
+      +'<div class="kstrip">'+kstrip(s,'both')+'</div>'
+      +'<div class="chart-note">Andamento giornaliero (spesa · impression) — ultimi '+((s.daily&&s.daily.dates)?s.daily.dates.length:0)+' giorni</div>'
+      +'<div class="chartwrap"><canvas id="chart_'+idx+'"></canvas></div>'
+      +'<div class="signals-wrap">'+signals(s,'both')+'</div>'
+      +'</div></div>';
   });
   document.getElementById("structs").innerHTML=html;
+  data.structures.forEach(function(s,idx){drawChart('chart_'+idx,s,'both');});
 }
 fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}).then(render)
- .catch(function(e){document.getElementById("structs").innerHTML='<div class="loading">Errore nel caricamento di aghc_data.json</div>';console.error(e);});
+ .catch(function(e){document.getElementById("structs").innerHTML='<div class="loading">Errore caricamento aghc_data.json</div>';console.error(e);});
 </script>
 </body>
 </html>
