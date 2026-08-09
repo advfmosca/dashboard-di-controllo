@@ -1,19 +1,10 @@
 {
-  "schema_version": 2,
-  "period_mode": "month",
-  "generated_at": "2026-08-09 04:13",
-  "current_window": {
-    "month": "2026-08",
-    "label": "Agosto 2026",
-    "through": "2026-08-08",
-    "partial": true,
-    "through_label": " (al 8 agosto)"
-  },
-  "previous_window": {
-    "month": "2026-07",
-    "label": "Luglio 2026",
-    "partial": false
-  },
+  "schema_version": 3,
+  "period_mode": "month_per_structure",
+  "generated_at": "2026-08-09 20:27",
+  "current_label": "Agosto 2026",
+  "mom_label": "Luglio 2026",
+  "yoy_label": "Agosto 2025",
   "totals": {
     "meta": {
       "spend": {
@@ -58,7 +49,8 @@
         "prev": 11685,
         "delta": -66.01626016260163
       }
-    }
+    },
+    "compare_label": "Luglio 2026"
   },
   "structures": [
     {
@@ -66,11 +58,13 @@
       "channels": {
         "meta": {
           "available": false,
-          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158"
+          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158",
+          "compare": "yoy",
+          "compare_label": "Agosto 2025"
         }
       },
       "notes": [
-        "Account Meta non collegato a Windsor: dati non disponibili."
+        "Account Meta non collegato a Windsor."
       ]
     },
     {
@@ -80,6 +74,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1201395876543423",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 207.85,
@@ -115,11 +111,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 1.9174495256907917,
-              "prev": 1.2583647444553236,
-              "delta": 52.37629106660561
             }
           }
         }
@@ -133,6 +124,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1489903155429629",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 156.28,
@@ -168,11 +161,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.9681099042801171,
-              "prev": 0.8941852650640693,
-              "delta": 8.267262065736578
             }
           }
         }
@@ -186,46 +174,43 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=911357333863123",
+          "compare": "yoy",
+          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 154.71,
-              "prev": 616.06,
-              "delta": -74.88718631302145
+              "prev": 344.18,
+              "delta": -55.04968330524726
             },
             "impressions": {
               "cur": 203097,
-              "prev": 736151,
-              "delta": -72.41095916462791
+              "prev": 429814,
+              "delta": -52.74770016797964
             },
             "clicks": {
               "cur": 2251,
-              "prev": 5532,
-              "delta": -59.30947216196674
+              "prev": 9204,
+              "delta": -75.54324206866579
             },
             "cpc": {
               "cur": 0.06872945357618837,
-              "prev": 0.11136297903109182,
-              "delta": -38.28339168531083
+              "prev": 0.03739461103867884,
+              "delta": 83.79507545913118
             },
             "cpm": {
               "cur": 0.7617542356607927,
-              "prev": 0.836866349431027,
-              "delta": -8.975401367410926
+              "prev": 0.8007649820620082,
+              "delta": -4.871684860739158
             },
             "reach": {
               "cur": 159077,
-              "prev": 391972,
-              "delta": -59.41623381261927
+              "prev": 203614,
+              "delta": -21.873250365888396
             },
             "interazioni": {
               "cur": 0,
-              "prev": 0,
-              "delta": null
-            },
-            "ctr": {
-              "cur": 1.1083373954317395,
-              "prev": 0.7514762596260821,
-              "delta": 47.488011927778466
+              "prev": 76099,
+              "delta": -100.0
             }
           }
         },
@@ -233,6 +218,8 @@
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7504967007843319824",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.93,
@@ -271,46 +258,43 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1528485957725509",
+          "compare": "yoy",
+          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 331.3,
-              "prev": 1229.04,
-              "delta": -73.0440018225607
+              "prev": 767.42,
+              "delta": -56.829376351932446
             },
             "impressions": {
               "cur": 412984,
-              "prev": 1320142,
-              "delta": -68.71669865817465
+              "prev": 722295,
+              "delta": -42.823361645864914
             },
             "clicks": {
               "cur": 6056,
-              "prev": 15363,
-              "delta": -60.580615765150036
+              "prev": 5282,
+              "delta": 14.653540325634228
             },
             "cpc": {
               "cur": 0.054706076618229856,
-              "prev": 0.08,
-              "delta": -31.61740422721268
+              "prev": 0.14528966300643695,
+              "delta": -62.34689000840608
             },
             "cpm": {
               "cur": 0.8022102551188425,
-              "prev": 0.930990757054923,
-              "delta": -13.83262948210808
+              "prev": 1.062474473726109,
+              "delta": -24.49604437973151
             },
             "reach": {
               "cur": 305868,
-              "prev": 713645,
-              "delta": -57.14003461104611
+              "prev": 327720,
+              "delta": -6.667887220798242
             },
             "interazioni": {
               "cur": 0,
-              "prev": 0,
-              "delta": null
-            },
-            "ctr": {
-              "cur": 1.4664006353757046,
-              "prev": 1.1637384463186538,
-              "delta": 26.007750282246516
+              "prev": 330862,
+              "delta": -100.0
             }
           }
         }
@@ -324,6 +308,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 202.05,
@@ -359,11 +345,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.09520532680645755,
-              "prev": 0.06710272909705758,
-              "delta": 41.87996239132433
             }
           }
         }
@@ -375,11 +356,13 @@
       "channels": {
         "meta": {
           "available": false,
-          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701"
+          "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
+          "compare": "mom",
+          "compare_label": "Luglio 2026"
         }
       },
       "notes": [
-        "Account Meta non collegato a Windsor: dati non disponibili."
+        "Account Meta non collegato a Windsor."
       ]
     },
     {
@@ -389,46 +372,43 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=687349689221880",
+          "compare": "yoy",
+          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 256.07,
-              "prev": 935.39,
-              "delta": -72.62425298538577
+              "prev": 612.53,
+              "delta": -58.1947006677224
             },
             "impressions": {
               "cur": 132945,
-              "prev": 525081,
-              "delta": -74.68104920955054
+              "prev": 527647,
+              "delta": -74.8041777931079
             },
             "clicks": {
               "cur": 577,
-              "prev": 8920,
-              "delta": -93.53139013452915
+              "prev": 3891,
+              "delta": -85.17090722179388
             },
             "cpc": {
               "cur": 0.4437954939341421,
-              "prev": 0.10486434977578475,
-              "delta": 323.2091219590275
+              "prev": 0.15742225648933436,
+              "delta": 181.9140722736432
             },
             "cpm": {
               "cur": 1.9261348678024748,
-              "prev": 1.7814203903778656,
-              "delta": 8.123544459593454
+              "prev": 1.1608708094616287,
+              "delta": 65.92155234704788
             },
             "reach": {
               "cur": 95120,
-              "prev": 311724,
-              "delta": -69.48582720611823
+              "prev": 296315,
+              "delta": -67.89902637396014
             },
             "interazioni": {
               "cur": 0,
-              "prev": 0,
-              "delta": null
-            },
-            "ctr": {
-              "cur": 0.43401406596712927,
-              "prev": 1.698785520710138,
-              "delta": -74.45150899416075
+              "prev": 218484,
+              "delta": -100.0
             }
           }
         },
@@ -436,6 +416,8 @@
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498330316248203280",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 239.86,
@@ -474,6 +456,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 0.0,
@@ -509,11 +493,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": null,
-              "prev": 0.4702199921896264,
-              "delta": null
             }
           }
         }
@@ -527,46 +506,43 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=821188209852436",
+          "compare": "yoy",
+          "compare_label": "Agosto 2025",
           "metrics": {
             "spend": {
               "cur": 159.35,
-              "prev": 618.17,
-              "delta": -74.22230130870149
+              "prev": 852.64,
+              "delta": -81.31098705197974
             },
             "impressions": {
               "cur": 156883,
-              "prev": 519279,
-              "delta": -69.7883026272967
+              "prev": 1074124,
+              "delta": -85.39433063594147
             },
             "clicks": {
               "cur": 1786,
-              "prev": 3714,
-              "delta": -51.91168551427033
+              "prev": 23179,
+              "delta": -92.29474955778937
             },
             "cpc": {
               "cur": 0.08922172452407615,
-              "prev": 0.16644318793753365,
-              "delta": -46.395087939819334
+              "prev": 0.036785020924112344,
+              "delta": 142.5490655779181
             },
             "cpm": {
               "cur": 1.015725094497173,
-              "prev": 1.1904390510688858,
-              "delta": -14.676430214116259
+              "prev": 0.7938003433495574,
+              "delta": 27.957250586611167
             },
             "reach": {
               "cur": 115101,
-              "prev": 282084,
-              "delta": -59.19619687752584
+              "prev": 477000,
+              "delta": -75.86981132075472
             },
             "interazioni": {
               "cur": 0,
-              "prev": 0,
-              "delta": null
-            },
-            "ctr": {
-              "cur": 1.1384280004844376,
-              "prev": 0.715222452669952,
-              "delta": 59.17117761538995
+              "prev": 217957,
+              "delta": -100.0
             }
           }
         },
@@ -574,6 +550,8 @@
           "available": true,
           "active": false,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7499093699838607377",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 0.0,
@@ -603,9 +581,7 @@
           }
         }
       },
-      "notes": [
-        "TikTok: nessuna erogazione nel periodo."
-      ]
+      "notes": []
     },
     {
       "name": "Mare Hotel",
@@ -614,6 +590,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1432341844596179",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 117.44,
@@ -649,11 +627,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.6677035554719,
-              "prev": 0.5832210690093543,
-              "delta": 14.485499744727262
             }
           }
         },
@@ -661,6 +634,8 @@
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498679494010667009",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.95,
@@ -699,6 +674,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=752450855779035",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 453.84,
@@ -734,11 +711,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.162799504157375,
-              "prev": 0.21905298596962736,
-              "delta": -25.68030815158673
             }
           }
         }
@@ -752,6 +724,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=30233607946222961",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 157.35,
@@ -787,11 +761,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.14781543387783752,
-              "prev": 0.16458858323041592,
-              "delta": -10.190955547078751
             }
           }
         },
@@ -799,6 +768,8 @@
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7612666695502118929",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.85,
@@ -837,6 +808,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1849759899186169",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 234.0,
@@ -872,11 +845,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 1.8734448943747866,
-              "prev": 1.8251810684112773,
-              "delta": 2.6443308446936937
             }
           }
         },
@@ -884,6 +852,8 @@
           "available": true,
           "active": true,
           "url": "https://ads.tiktok.com/i18n/dashboard?aadvid=7626418949391351815",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 159.93,
@@ -922,6 +892,8 @@
           "available": true,
           "active": true,
           "url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1353024533007038",
+          "compare": "mom",
+          "compare_label": "Luglio 2026",
           "metrics": {
             "spend": {
               "cur": 165.58,
@@ -957,11 +929,6 @@
               "cur": 0,
               "prev": 0,
               "delta": null
-            },
-            "ctr": {
-              "cur": 0.9043910163149026,
-              "prev": 0.9601140866941842,
-              "delta": -5.80379677285482
             }
           }
         }
