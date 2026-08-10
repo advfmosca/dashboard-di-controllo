@@ -63,14 +63,14 @@ def series_meta(acct,camp,acct_id,kw,exc,months):
         idx[m]["spend"]+=n(r.get("spend")); idx[m]["reach"]+=n(r.get("reach")); idx[m]["impr"]+=n(r.get("impressions")); idx[m]["eng"]+=n(r.get("actions_page_engagement")); idx[m]["clk"]+=n(r.get("clicks"))
     return {"spend":[round(idx[m]["spend"],2) for m in months],"reach":[int(idx[m]["reach"]) for m in months],"impressions":[int(idx[m]["impr"]) for m in months],"interazioni":[int(idx[m]["eng"]) for m in months],"clicks":[int(idx[m]["clk"]) for m in months]}
 def series_tt(tt,rows,months):
-    idx={m:{"spend":0.0,"impr":0.0,"clk":0.0} for m in months}
+    idx={m:{"spend":0.0,"reach":0.0,"impr":0.0,"eng":0.0,"clk":0.0} for m in months}
     if tt:
         for r in rows:
             if str(r.get("account_id"))!=tt: continue
             m=ym(r)
             if m not in idx: continue
-            idx[m]["spend"]+=n(r.get("spend")); idx[m]["impr"]+=n(r.get("impressions")); idx[m]["clk"]+=n(r.get("engagements"))
-    return {"spend":[round(idx[m]["spend"],2) for m in months],"impressions":[int(idx[m]["impr"]) for m in months],"clicks":[int(idx[m]["clk"]) for m in months]}
+            idx[m]["spend"]+=n(r.get("spend")); idx[m]["reach"]+=n(r.get("reach")); idx[m]["impr"]+=n(r.get("impressions")); idx[m]["eng"]+=n(r.get("engagements")); idx[m]["clk"]+=n(r.get("clicks"))
+    return {"spend":[round(idx[m]["spend"],2) for m in months],"reach":[int(idx[m]["reach"]) for m in months],"impressions":[int(idx[m]["impr"]) for m in months],"interazioni":[int(idx[m]["eng"]) for m in months],"clicks":[int(idx[m]["clk"]) for m in months]}
 
 def trend_word(cur, base):
     if base<=0: return ("stabile",0)
@@ -127,7 +127,9 @@ def main():
     for name,acct_id,kw,exc,ttid in STRUCTS:
         sm=series_meta(acct,camp,acct_id,kw,exc,months); st=series_tt(ttid,tt,months)
         sc={"spend":[round(sm["spend"][j]+st["spend"][j],2) for j in range(len(months))],
+            "reach":[sm["reach"][j]+st["reach"][j] for j in range(len(months))],
             "impressions":[sm["impressions"][j]+st["impressions"][j] for j in range(len(months))],
+            "interazioni":[sm["interazioni"][j]+st["interazioni"][j] for j in range(len(months))],
             "clicks":[sm["clicks"][j]+st["clicks"][j] for j in range(len(months))]}
         active=sum(sm["spend"])+sum(st["spend"])>0
         if not active: continue

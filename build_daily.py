@@ -58,8 +58,8 @@ def main():
             if str(r.get("account_id"))!=acct: continue
             dt=r.get("date")
             if not dt: continue
-            e=agg.setdefault(dt,{"spend":0.0,"impressions":0.0,"clicks":0.0})
-            e["spend"]+=num(r.get("spend")); e["impressions"]+=num(r.get("impressions")); e["clicks"]+=num(r.get("engagements"))
+            e=agg.setdefault(dt,{"spend":0.0,"reach":0.0,"impressions":0.0,"interazioni":0.0,"clicks":0.0})
+            e["spend"]+=num(r.get("spend")); e["reach"]+=num(r.get("reach")); e["impressions"]+=num(r.get("impressions")); e["interazioni"]+=num(r.get("engagements")); e["clicks"]+=num(r.get("clicks"))
         return agg
     structs=[]
     for name,acct,kw,exc,tt in STRUCTS:
@@ -72,16 +72,16 @@ def main():
             ds=sorted(bym.get(ym,[]))
             if not ds: continue
             M={k:[] for k in ("spend","reach","impressions","interazioni","clicks")}
-            T={k:[] for k in ("spend","impressions","clicks")}
+            T={k:[] for k in ("spend","reach","impressions","interazioni","clicks")}
             C={k:[] for k in ("spend","reach","impressions","interazioni","clicks")}
             for dt in ds:
                 m=md.get(dt,{}); t=td.get(dt,{})
                 for k in M: M[k].append(round(m.get(k,0.0),2) if k=="spend" else int(m.get(k,0)))
                 for k in T: T[k].append(round(t.get(k,0.0),2) if k=="spend" else int(t.get(k,0)))
                 C["spend"].append(round(m.get("spend",0.0)+t.get("spend",0.0),2))
-                C["reach"].append(int(m.get("reach",0)))
+                C["reach"].append(int(m.get("reach",0)+t.get("reach",0)))
                 C["impressions"].append(int(m.get("impressions",0)+t.get("impressions",0)))
-                C["interazioni"].append(int(m.get("interazioni",0)))
+                C["interazioni"].append(int(m.get("interazioni",0)+t.get("interazioni",0)))
                 C["clicks"].append(int(m.get("clicks",0)+t.get("clicks",0)))
             labels=[str(int(x.split("-")[2])) for x in ds]
             days[ym]={"labels":labels,"meta":M,"tiktok":(T if td and any(ym==x[:7] for x in td) else None),"combined":C}
