@@ -30,7 +30,7 @@ def main():
     out={"schema_version":1,"month":ym,"month_label":mlabel,"clients":{}}
     for c in rep["clients"]:
         name=c["name"]; M=c.get("meta",{}); T=c.get("tiktok",{}); has_tt=bool(T.get("available"))
-        tok={"NOME_CLIENTE":name,"MESE_META":f"{mlabel} vs {plabel}","MESE_TT":f"{mlabel} vs {plabel}",
+        tok={"NOME_CLIENTE":name,"MESE_META":(c.get("meta_period_label") or f"{mlabel} vs {plabel}"),"MESE_TT":(c.get("tt_period_label") or f"{mlabel} vs {plabel}"),
              "FOLL_IG_DELTA":"n/d","FOLL_IG_TOT":"n/d","FOLL_FB_DELTA":"n/d","FOLL_FB_TOT":"n/d","FOLL_TT_DELTA":"n/d","FOLL_TT_TOT":"n/d"}
         def trip(blk,pre,fmt=grp):
             tok[pre+"_ATT"]=fmt(NV(blk.get("cur"))); tok[pre+"_PRE"]=fmt(NV(blk.get("prev"))); tok[pre+"_CFR"]=pct(blk.get("delta"))

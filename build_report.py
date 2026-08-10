@@ -17,6 +17,9 @@ Output:     aghc_report.json
 import argparse, json, os, datetime
 from aghc_report_lib import CLIENTS, load_raw, bucket, n, dpct, cell
 
+# Regola confronto per struttura (Francesco): YoY pieno / split (Meta YoY + TikTok MoM) / MoM default
+CMP={"Hannah Hotels":"yoy","Terrazza Flavia":"yoy","Hotel Della Piana":"split","Hotel Lunetta":"split","Marcella Royal Hotel":"split","Mare Hotel":"split"}
+
 def fmt_int(v): return ("{:,}".format(int(round(v)))).replace(",",".")
 def fmt_eur(v): return ("{:,.2f}".format(v)).replace(",","§").replace(".",",").replace("§",".")+" €"
 
@@ -50,7 +53,9 @@ def main():
     ap.add_argument("--month-label",required=True); ap.add_argument("--prev-label",required=True)
     ap.add_argument("--comparison",choices=["mom","yoy"],default="mom")
     ap.add_argument("--history-prev",default=None,help="path history/AAAA-MM.json per YoY")
+    ap.add_argument("--yoy-label",default=None,help="etichetta anno-1 per YoY/split (es. Luglio 2025)")
     a=ap.parse_args(); ws=a.workspace
+    if not a.yoy_label: a.yoy_label=a.prev_label
     ma=load_raw(ws,"rep_meta_acct_cur.json"); ca=load_raw(ws,"rep_meta_camp_cur.json")
     mp=load_raw(ws,"rep_meta_acct_prev.json"); cp=load_raw(ws,"rep_meta_camp_prev.json")
     tt_c={str(r["account_id"]):r for r in load_raw(ws,"aghc_report_tt_month.json")}
@@ -62,23 +67,37 @@ def main():
     clients=[]; fell_back=0
     for name,acct,camp,ttid in CLIENTS:
         cur=bucket(ca if camp else ma, acct, camp)
-        cmp_used=a.comparison
-        if a.comparison=="yoy" and hist and name in hist and hist[name].get("meta"):
-            prev=hist[name]["meta"]
+        desired=CMP.get(name,"mom")
+        has_hist=bool(a.comparison=="yoy" and hist and name in hist and hist[name].get("meta"))
+        # META: YoY se la struttura lo prevede (yoy o split) e lo storico anno-1 esiste
+        meta_yoy=(desired in ("yoy","split")) and has_hist
+        if meta_yoy:
+            mprev=hist[name]["meta"]
             for k in ("ig","fb"):
-                prev.setdefault(k,{}); 
-                for f in ("reach","impr","eng","clk","spend"): prev[k].setdefault(f,0)
-            tt_prev_imp=(hist[name].get("tiktok") or {}).get("impressions",0)
+                mprev.setdefault(k,{})
+                for f in ("reach","impr","eng","clk","spend"): mprev[k].setdefault(f,0)
+            meta_prev_label=a.yoy_label
         else:
-            if a.comparison=="yoy": cmp_used="mom"; fell_back+=1
-            prev=bucket(cp if camp else mp, acct, camp)
-            tt_prev_imp=n((tt_p.get(ttid) or {}).get("impressions")) if ttid else 0
+            if desired in ("yoy","split") and a.comparison=="yoy": fell_back+=1
+            mprev=bucket(cp if camp else mp, acct, camp)
+            meta_prev_label=a.prev_label
+        # TikTok: YoY solo per le strutture "yoy" pure; le "split" usano MoM su TikTok
+        tt_yoy=(desired=="yoy") and has_hist
+        tth=(hist.get(name,{}).get("tiktok") or {}) if has_hist else {}
+        tp=(tt_p.get(ttid) or {}) if ttid else {}
+        if tt_yoy:
+            tt_prev_imp=n(tth.get("impressions")); tt_prev_clk=n(tth.get("clicks")); tt_prev_spend=n(tth.get("spend")); tt_prev_label=a.yoy_label
+        else:
+            tt_prev_imp=n(tp.get("impressions")); tt_prev_clk=n(tp.get("clicks")); tt_prev_spend=n(tp.get("spend")); tt_prev_label=a.prev_label
+        cmp_used=("yoy" if (meta_yoy and tt_yoy) else ("split" if meta_yoy else "mom"))
         active=(cur["ig"]["spend"]+cur["fb"]["spend"]+cur["ig"]["impr"]+cur["fb"]["impr"])>0
-        e={"name":name,"comparison_used":cmp_used}
+        e={"name":name,"comparison_used":cmp_used,
+           "meta_period_label":"%s vs %s"%(a.month_label,meta_prev_label),
+           "tt_period_label":"%s vs %s"%(a.month_label,tt_prev_label)}
         if not active: e["meta"]={"available":False}
         else:
-            def tbl(k): return {"ig":cell(cur["ig"][k],prev["ig"][k]),"fb":cell(cur["fb"][k],prev["fb"][k])}
-            tsc=cur["ig"]["spend"]+cur["fb"]["spend"]; tsp=prev["ig"]["spend"]+prev["fb"]["spend"]
+            def tbl(k): return {"ig":cell(cur["ig"][k],mprev["ig"][k]),"fb":cell(cur["fb"][k],mprev["fb"][k])}
+            tsc=cur["ig"]["spend"]+cur["fb"]["spend"]; tsp=mprev["ig"]["spend"]+mprev["fb"]["spend"]
             e["meta"]={"available":True,"reach":tbl("reach"),"impressions":tbl("impr"),
                        "engagement":tbl("eng"),"clicks":tbl("clk"),
                        "budget":{"cur":round(tsc,2),"prev":round(tsp,2),"delta":dpct(tsc,tsp)}}
@@ -87,13 +106,10 @@ def main():
             if ttc and (n(ttc.get("spend"))+n(ttc.get("impressions"))>0):
                 e["tiktok"]={"available":True,
                     "impressions":cell(n(ttc.get("impressions")),tt_prev_imp),
-                    "clicks":cell(n(ttc.get("clicks")), n((tt_p.get(ttid) or {}).get("clicks")) if a.comparison=="mom" else (hist.get(name,{}).get("tiktok",{}).get("clicks",0) if hist else 0)),
-                    "budget":{"cur":round(n(ttc.get("spend")),2),
-                              "prev":round((hist.get(name,{}).get("tiktok",{}).get("spend",0) if (a.comparison=="yoy" and hist) else n((tt_p.get(ttid) or {}).get("spend"))),2),
-                              "delta":None}}
-                b=e["tiktok"]["budget"]; b["delta"]=dpct(b["cur"],b["prev"])
+                    "clicks":cell(n(ttc.get("clicks")),tt_prev_clk),
+                    "budget":{"cur":round(n(ttc.get("spend")),2),"prev":round(tt_prev_spend,2),"delta":dpct(n(ttc.get("spend")),tt_prev_spend)}}
             else: e["tiktok"]={"available":False}
-        e["rational"]=rational(cur,prev, n(ttc.get("impressions")) if ttc else 0, tt_prev_imp) if active else ""
+        e["rational"]=rational(cur,mprev, n(ttc.get("impressions")) if ttc else 0, tt_prev_imp) if active else ""
         clients.append(e)
 
     out={"schema_version":2,"generated_at":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
