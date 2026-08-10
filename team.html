@@ -78,7 +78,7 @@ function demoHtml(name){var d=demoBlk(name);var head='<h2 class="block">Demograf
 function kchan(d){return CURCH==="combined"?d[3]:CURCH;}
 function kpisHtml(s){var i=CURIDX;return KDEF.map(function(d){
   var metaOnly=(d[3]==="meta");
-  if(CURCH==="tiktok"&&metaOnly){return '<div class="kpi"><div class="l">'+d[1]+'</div><div class="v" style="color:var(--dim)">n/d</div><div class="p">solo Meta</div></div>';}
+  if(CURCH==="tiktok"&&metaOnly){return '';}
   var ch=kchan(d);var cur=val(s,ch,d[0],i),prev=i>0?val(s,ch,d[0],i-1):null;var pl=i>0?mfull(HIST.months[i-1]):"—";
   return '<div class="kpi"><div class="l">'+d[1]+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+pl+': '+fV(prev,d[2])+'</div></div>';
 }).join("");}
@@ -100,8 +100,8 @@ function genRational(s){var i=CURIDX,ym=curYM(),name=s.name,hasTT=!!s.has_tiktok
 /* ---- chart giornaliero ---- */
 function dailyOf(name,ym){var s=DAILY[name];return (s&&s.days)?s.days[ym]:null;}
 function dserie(dd,ch,k){if(!dd)return null;var blk=dd[ch];if(blk&&blk[k])return blk[k];if(ch==="tiktok"&&(k==="reach"||k==="interazioni"))return null;return dd.combined?dd.combined[k]:null;}
-function buildMsel(s){var msel=document.getElementById("msel");msel.innerHTML=KDEF.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist();});});}
-function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);drawHist();});});}
+function buildMsel(s){var msel=document.getElementById("msel");var KD=KDEF.filter(function(d){return !(CURCH==="tiktok"&&d[3]==="meta");});msel.innerHTML=KD.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist();});});}
+function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;if(CURCH==="tiktok"&&(CURK==="reach"||CURK==="interazioni")){CURK="spend";CURFMT="eur";}chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);buildMsel(s);drawHist();});});}
 function drawHist(){var el=document.getElementById("hist");if(!el)return;var msg=document.getElementById("histmsg");
   var ym=curYM(),dd=dailyOf(CURS.name,ym);if(CH.hist){CH.hist.destroy();CH.hist=null;}
   var data=dd?dserie(dd,CURCH,CURK):null,fmt=CURFMT;
