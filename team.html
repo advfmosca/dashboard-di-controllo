@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="it"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#1F2A44"/><title>AGHC — Dashboard Team</title>
+<meta name="theme-color" content="#1F2A44"/><title>Dashboard Team</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -42,9 +42,10 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
 footer.f{margin-top:26px;font-size:11px;color:var(--dim);text-align:center;}.loading{padding:60px 0;text-align:center;color:var(--dim);}
 .dwrap{display:flex;gap:26px;flex-wrap:wrap;}.dcol{flex:1;min-width:280px;}.dcol h4{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--navy);}.dsub{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;margin:9px 0 3px;}.drow{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12px;}.drow .dl{width:78px;color:var(--text);}.drow .dbar{flex:1;background:#eef0f5;height:11px;border-radius:6px;overflow:hidden;}.drow .dbar i{display:block;height:100%;border-radius:6px;}.drow .dp{width:46px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted);}
 header.h img.brandlogo{height:46px;width:auto;border-radius:0;display:block;}
+.toggle{display:inline-flex;border:1px solid #d2d4dd;border-radius:9px;overflow:hidden;}.toggle button{font:inherit;font-size:12px;font-weight:700;padding:6px 14px;border:0;border-left:1px solid #d2d4dd;background:#fff;color:var(--muted);cursor:pointer;}.toggle button:first-child{border-left:0;}.toggle button.on{background:var(--navy);color:#fff;}.toggle button:disabled{opacity:.35;cursor:not-allowed;}.chsel{margin:4px 0 12px;}.mdet{margin-top:10px;border-top:1px dashed var(--border);padding-top:10px;font-size:12px;color:var(--muted);min-height:18px;}.mdet b{color:var(--navy);}.mdet .mv{display:inline-block;margin-right:14px;margin-top:4px;}
 </style></head><body>
 <div class="wrap">
-<header class="h"><img class="brandlogo" src="assets/logo-aghc.png?v=1" alt="AG Hotel Consulting"/><div><h1>AGHC — Dashboard Team</h1><div class="sub">Ultimo mese, storico e lettura del mese · per struttura</div></div><div class="stamp" id="stamp"></div></header>
+<header class="h"><img class="brandlogo" src="assets/logo-aghc.png?v=1" alt="AG Hotel Consulting"/><div><h1>Dashboard Team</h1></div><div class="stamp" id="stamp"></div></header>
 <div class="monthbar" id="monthbar"></div>
 <div class="toolbar"><label for="sel">Struttura</label><select id="sel"><option value="__all__">Tutte (panoramica)</option></select></div>
 <div id="view"><div class="loading">Caricamento dati…</div></div>
@@ -65,11 +66,16 @@ function val(s,ch,k,i){var a=ser(s,ch,k);return a?a[i]:0;}
 function demoBar(items,accent){return (items||[]).map(function(x){return '<div class="drow"><span class="dl">'+x.label+'</span><span class="dbar"><i style="width:'+Math.max(2,x.pct)+'%;background:'+accent+'"></i></span><span class="dp">'+x.pct.toLocaleString("it-IT")+'%</span></div>';}).join("");}
 function demoCol(title,blk,accent){if(!blk)return '';return '<div class="dcol"><h4>'+title+'</h4><div class="dsub">Fasce d\'età</div>'+demoBar(blk.age,accent)+'<div class="dsub">Sesso</div>'+demoBar(blk.gender,accent)+'<div class="dsub">Provenienza</div>'+demoBar(blk.geo,accent)+'</div>';}
 function demoHtml(name){var d=DEMO[name];if(!d||(!d.meta&&!d.tiktok))return '';return '<h2 class="block">Demografiche pubblico · '+HIST.as_of_label+'</h2><div class="card"><div class="dwrap">'+demoCol("Meta",d.meta,"#1F4E57")+demoCol("TikTok",d.tiktok,"#E0733C")+'</div></div>';}
+var CURS=null,CURCH="combined",CURK="spend",CURFMT="eur";
+function kchan(d){return CURCH==="combined"?d[3]:CURCH;}
+function kpisHtml(s){var i=HIST.as_of_idx;return KDEF.map(function(d){var ch=kchan(d);var cur=val(s,ch,d[0],i),prev=val(s,ch,d[0],i-1);var suff=ch==="meta"?" · Meta":(ch==="tiktok"?" · TikTok":"");return '<div class="kpi"><div class="l">'+d[1]+suff+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+HIST.prev_label+': '+fV(prev,d[2])+'</div></div>';}).join("");}
+function chselHtml(hasTT){return '<span class="toggle"><button data-ch="combined" class="'+(CURCH==="combined"?"on":"")+'">Entrambe</button><button data-ch="meta" class="'+(CURCH==="meta"?"on":"")+'">Meta</button><button data-ch="tiktok" '+(hasTT?'':'disabled')+' class="'+(CURCH==="tiktok"?"on":"")+'">TikTok</button></span>';}
+function buildMsel(s){var msel=document.getElementById("msel");msel.innerHTML=KDEF.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist(s,CURK,CURCH,CURFMT);var md=document.getElementById("monthdetail");if(md)md.innerHTML="Clicca una barra del grafico per i dati del mese.";});});}
+function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);drawHist(s,CURK,CURCH,CURFMT);var md=document.getElementById("monthdetail");if(md)md.innerHTML="Clicca una barra del grafico per i dati del mese.";});});}
+function showMonth(s,j){var md=document.getElementById("monthdetail");if(!md)return;var parts=KDEF.map(function(d){var ch=kchan(d);var cur=val(s,ch,d[0],j),prev=j>0?val(s,ch,d[0],j-1):null;return '<span class="mv">'+d[1]+': <b>'+fV(cur,d[2])+'</b> '+chip(dpc(cur,prev))+'</span>';}).join("");md.innerHTML='<b>'+HIST.month_labels[j]+'</b> · '+parts;}
 function renderClient(name){
-  var s=HIST.structures.find(function(x){return x.name===name;});var i=HIST.as_of_idx;var v=document.getElementById("view");
-  var khtml=KDEF.map(function(d){var cur=val(s,d[3],d[0],i),prev=val(s,d[3],d[0],i-1);
-    return '<div class="kpi"><div class="l">'+d[1]+(d[3]==="meta"?' · Meta':'')+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+HIST.prev_label+': '+fV(prev,d[2])+'</div></div>';}).join("");
-  var b=BUD[name];
+  var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CURK="spend";CURFMT="eur";
+  var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
   var bhtml=b?('<div class="card"><h2 class="block" style="margin:0 0 10px">Budget '+(HIST.as_of_month.split("-")[0])+'</h2><div class="bstats">'
     +'<div class="bstat"><div class="bl">Programmato annuo</div><div class="bv">'+fE(b.annual)+'</div></div>'
     +'<div class="bstat"><div class="bl">Speso YTD</div><div class="bv">'+fE(b.ytd_real)+'</div></div>'
@@ -77,21 +83,19 @@ function renderClient(name){
     +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
     +'</div></div>'):'';
   v.innerHTML='<h2 class="block">'+name+' — Ultimo mese: '+HIST.as_of_label+' (vs '+HIST.prev_label+')</h2>'
-    +'<div class="kpis">'+khtml+'</div>'
-    +'<h2 class="block">Storico mensile</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div></div>'
+    +'<div class="chsel" id="chsel">'+chselHtml(hasTT)+'</div>'
+    +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div>'
+    +'<h2 class="block">Storico mensile</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="monthdetail" class="mdet">Clicca una barra del grafico per i dati del mese.</div></div>'
     +'<h2 class="block">Lettura del mese</h2><div class="narr">'+s.rational+'</div>'
     +bhtml+demoHtml(name);
-  var msel=document.getElementById("msel");
-  msel.innerHTML=KDEF.map(function(d,k){return '<button class="'+(k===0?"on":"")+'" data-k="'+d[0]+'" data-ch="'+d[3]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");
-  Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist(s,btn.dataset.k,btn.dataset.ch,btn.dataset.fmt);});});
-  drawHist(s,"spend","combined","eur");
+  wireChsel(s,hasTT);buildMsel(s);drawHist(s,CURK,CURCH,CURFMT);
 }
 function drawHist(s,k,ch,fmt){
   if(typeof Chart==="undefined")return;var el=document.getElementById("hist");if(!el)return;var data=ser(s,ch,k);
   if(CH.hist)CH.hist.destroy();
-  var i=HIST.as_of_idx;var cols=data.map(function(_,j){return j===i?"#C9A24B":"#1F2A44";});
+  var i=HIST.as_of_idx;var cols=data.map(function(_,j){return j===i?"#E0733C":"#1F4E57";});
   CH.hist=new Chart(el,{type:"bar",data:{labels:HIST.month_labels,datasets:[{data:data,backgroundColor:cols,borderRadius:3}]},
-   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return (fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT"));}}}},
+   options:{responsive:true,maintainAspectRatio:false,onClick:function(evt,els){if(els&&els.length){showMonth(s,els[0].index);}},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return (fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT"));}}}},
      scales:{y:{ticks:{font:{size:9},callback:function(v){return fmt==="eur"?(v>=1000?(v/1000).toFixed(0)+"k€":v+"€"):(v>=1000?(v/1000).toFixed(0)+"k":v);}},grid:{color:"#f0f1f5"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
 }
 function renderAll(){
@@ -103,7 +107,7 @@ function renderAll(){
 }
 function boot(){
   document.getElementById("stamp").innerHTML="agg. "+HIST.generated_at;
-  document.getElementById("monthbar").innerHTML='<span class="m">'+HIST.as_of_label+'</span><span class="note">ultimo mese chiuso · storico 12 mesi · lettura del mese argomentata</span>';
+  document.getElementById("monthbar").innerHTML='<span class="m">'+HIST.as_of_label+'</span>';
   document.getElementById("foot").textContent="AG Hotel Consulting · dati Meta & TikTok";
   var sel=document.getElementById("sel");
   HIST.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
