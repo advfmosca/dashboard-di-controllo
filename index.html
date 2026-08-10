@@ -530,9 +530,7 @@
     <button class="tab-btn" data-tab="spending" role="tab">Spending</button>
     <button class="tab-btn" data-tab="beefamily" role="tab">BeeFamily</button>
     <button class="tab-btn" data-tab="aghc" role="tab">AGHC</button>
-    <a class="tab-btn" href="aghc.html" style="margin-left:auto;color:#0866FF;font-weight:700;text-decoration:none;border-bottom:2px solid transparent;">★ AGHC — vista unica ↗</a>
-    <a class="tab-btn" href="team.html" style="color:#1F2A44;font-weight:700;text-decoration:none;border-bottom:2px solid transparent;">👥 Dashboard Team ↗</a>
-    <a class="tab-btn" href="report-cliente.html" style="color:#1F2A44;font-weight:700;text-decoration:none;border-bottom:2px solid transparent;">📄 Report cliente ↗</a>
+    <a class="tab-btn" href="team.html" style="margin-left:auto;color:#1F2A44;font-weight:700;text-decoration:none;border-bottom:2px solid transparent;">👥 Dashboard Team ↗</a>
   </nav>
 
   <div id="error-box"></div>
@@ -633,6 +631,11 @@
       <div class="kpi"><div class="label">Alert</div><div class="value" id="ag-k-alerts">–</div><div class="sub">rosso + giallo</div></div>
     </div>
     <section class="card"><h2>Alert da analizzare <span class="pill" id="ag-alerts-pill">–</span></h2><div id="ag-alerts"></div></section>
+    <section class="card" id="ag-vista-unica-card"><h2>AGHC — Vista Unica</h2>
+      <div class="body" style="padding:0;">
+        <iframe id="ag-vu-frame" src="aghc.html" title="AGHC — Vista Unica" style="width:100%;border:0;display:block;min-height:1400px;"></iframe>
+      </div>
+    </section>
     <section class="card" id="ag-archive-card">
       <h2>Archivio Report Mensili <span class="pill" id="ag-archive-pill">–</span></h2>
       <div class="body" style="padding: 14px 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -644,11 +647,7 @@
         <span id="ag-archive-status" style="font-size:11px; color:var(--text-dim); margin-left:auto;"></span>
       </div>
     </section>
-    <section class="card"><h2>Card per cliente <span class="pill" id="ag-cards-pill">–</span></h2>
-      <div class="body" style="padding: 14px 16px;">
-        <div class="cards-grid" id="ag-cards"></div>
-      </div>
-    </section>
+    <!-- Card per cliente AGHC rimosse: la vista unica embeddata sopra le sostituisce -->
     <!-- Recap globale rimosso: ogni card ha il proprio tasto copia per il rational del cliente -->
   </section>
 
@@ -2317,6 +2316,7 @@
 
     const root = document.getElementById("ag-cards");
     const pill = document.getElementById("ag-cards-pill");
+    if (!root) return;
     if (pill) pill.textContent = cards.length + " card";
     if (cards.length === 0) { root.innerHTML = `<div class="empty">Nessun cliente AGHC nei dati</div>`; return; }
 
@@ -2601,6 +2601,9 @@
   })();
 
 
+</script>
+<script>
+(function(){var vf=document.getElementById('ag-vu-frame');if(!vf)return;function rz(){try{var d=vf.contentWindow.document;var h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);if(h>300)vf.style.height=(h+24)+'px';}catch(e){}}vf.addEventListener('load',function(){rz();setTimeout(rz,1500);setTimeout(rz,3500);});window.addEventListener('resize',rz);})();
 </script>
 </body>
 </html>
