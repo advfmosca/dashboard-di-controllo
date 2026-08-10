@@ -53,9 +53,8 @@ header.h img.brandlogo{height:46px;width:auto;border-radius:0;display:block;}
 <footer class="f" id="foot"></footer>
 </div>
 <script>
-var HIST=null, BUD={}, CH={}, DEMO={};
+var HIST=null, BUD={}, CH={}, DEMOM={by_month:{}}, DAILY={};
 var KDEF=[["spend","Investimento","eur","combined"],["reach","Copertura","int","meta"],["impressions","Visualizzazioni","int","combined"],["interazioni","Interazioni","int","meta"],["clicks","Click","int","combined"]];
-var GOOD={spend:true,reach:true,impressions:true,interazioni:true,clicks:true};
 function fI(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
 function fE(n){return n==null?"—":Math.round(n).toLocaleString("it-IT")+" €";}
 function fV(v,k){return k==="eur"?fE(v):fI(v);}
@@ -64,49 +63,82 @@ function dpc(c,p){return p?(c-p)/p*100:null;}
 function chip(d){if(d==null)return '<span class="chip flat">n/d</span>';return '<span class="chip '+(Math.abs(d)<1?"flat":(d>=0?"good":"bad"))+'">'+fP(d)+'</span>';}
 function ser(s,ch,k){var S=s.series;return (S[ch]&&S[ch][k])?S[ch][k]:S.combined[k];}
 function val(s,ch,k,i){var a=ser(s,ch,k);return a?a[i]:0;}
-function demoBar(items,accent){return (items||[]).map(function(x){return '<div class="drow"><span class="dl">'+x.label+'</span><span class="dbar"><i style="width:'+Math.max(2,x.pct)+'%;background:'+accent+'"></i></span><span class="dp">'+x.pct.toLocaleString("it-IT")+'%</span></div>';}).join("");}
-function demoCol(title,blk,accent){if(!blk)return '';return '<div class="dcol"><h4>'+title+'</h4><div class="dsub">Fasce d\'età</div>'+demoBar(blk.age,accent)+'<div class="dsub">Sesso</div>'+demoBar(blk.gender,accent)+'<div class="dsub">Provenienza</div>'+demoBar(blk.geo,accent)+'</div>';}
-function demoHtml(name){var d=DEMO[name];if(!d||(!d.meta&&!d.tiktok))return '';return '<h2 class="block">Demografiche pubblico · '+HIST.as_of_label+'</h2><div class="card"><div class="dwrap">'+demoCol("Meta",d.meta,"#1F4E57")+demoCol("TikTok",d.tiktok,"#E0733C")+'</div></div>';}
-var CURS=null,CURCH="combined",CURK="spend",CURFMT="eur",CURIDX=0;
 var MFULL=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
 function mfull(ym){var p=(ym||"").split("-");return p.length>1?MFULL[(+p[1])-1]+" "+p[0]:ym;}
+var CURS=null,CURCH="combined",CURK="spend",CURFMT="eur",CURIDX=0;
+function curYM(){return HIST.months[CURIDX];}
+/* ---- demografiche (per mese) ---- */
+function demoBar(items,accent){return (items||[]).map(function(x){return '<div class="drow"><span class="dl">'+x.label+'</span><span class="dbar"><i style="width:'+Math.max(2,x.pct)+'%;background:'+accent+'"></i></span><span class="dp">'+x.pct.toLocaleString("it-IT")+'%</span></div>';}).join("");}
+function demoCol(title,blk,accent){if(!blk)return '';return '<div class="dcol"><h4>'+title+'</h4><div class="dsub">Fasce d\'età</div>'+demoBar(blk.age,accent)+'<div class="dsub">Sesso</div>'+demoBar(blk.gender,accent)+'<div class="dsub">Provenienza</div>'+demoBar(blk.geo,accent)+'</div>';}
+function demoBlk(name){var mm=DEMOM.by_month&&DEMOM.by_month[curYM()];return mm?mm[name]:null;}
+function demoHtml(name){var d=demoBlk(name);var head='<h2 class="block">Demografiche pubblico · '+mfull(curYM())+'</h2>';
+ if(!d||(!d.meta&&!d.tiktok))return head+'<div class="card"><p style="margin:0;color:var(--dim);font-size:12px">Dati demografici non disponibili per questo mese.</p></div>';
+ return head+'<div class="card"><div class="dwrap">'+demoCol("Meta",d.meta,"#1F4E57")+demoCol("TikTok",d.tiktok,"#E0733C")+'</div></div>';}
+/* ---- KPI ---- */
 function kchan(d){return CURCH==="combined"?d[3]:CURCH;}
-function kpisHtml(s){var i=CURIDX;return KDEF.map(function(d){var ch=kchan(d);var cur=val(s,ch,d[0],i),prev=i>0?val(s,ch,d[0],i-1):null;var suff=ch==="meta"?" · Meta":(ch==="tiktok"?" · TikTok":"");var pl=i>0?mfull(HIST.months[i-1]):"—";return '<div class="kpi"><div class="l">'+d[1]+suff+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+pl+': '+fV(prev,d[2])+'</div></div>';}).join("");}
+function kpisHtml(s){var i=CURIDX;return KDEF.map(function(d){
+  var metaOnly=(d[3]==="meta");
+  if(CURCH==="tiktok"&&metaOnly){return '<div class="kpi"><div class="l">'+d[1]+'</div><div class="v" style="color:var(--dim)">n/d</div><div class="p">solo Meta</div></div>';}
+  var ch=kchan(d);var cur=val(s,ch,d[0],i),prev=i>0?val(s,ch,d[0],i-1):null;var pl=i>0?mfull(HIST.months[i-1]):"—";
+  return '<div class="kpi"><div class="l">'+d[1]+'</div><div class="v">'+fV(cur,d[2])+'</div>'+chip(dpc(cur,prev))+'<div class="p">'+pl+': '+fV(prev,d[2])+'</div></div>';
+}).join("");}
+function kpiNote(s){return (s.has_tiktok&&CURCH==="combined")?'<p style="font-size:11px;color:var(--dim);margin:8px 0 0">Copertura e Interazioni si riferiscono al solo canale Meta (TikTok non espone questi dati).</p>':'';}
 function chselHtml(hasTT){return '<span class="toggle"><button data-ch="combined" class="'+(CURCH==="combined"?"on":"")+'">Entrambe</button><button data-ch="meta" class="'+(CURCH==="meta"?"on":"")+'">Meta</button><button data-ch="tiktok" '+(hasTT?'':'disabled')+' class="'+(CURCH==="tiktok"?"on":"")+'">TikTok</button></span>';}
 function monthOptions(){var o="";HIST.months.forEach(function(ym,idx){if(ym>="2026-01"){o+='<option value="'+idx+'"'+(idx===CURIDX?" selected":"")+'>'+mfull(ym)+'</option>';}});return o;}
-function buildMsel(s){var msel=document.getElementById("msel");msel.innerHTML=KDEF.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist(s,CURK,CURCH,CURFMT);});});}
-function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);drawHist(s,CURK,CURCH,CURFMT);});});}
+/* ---- rational auto per mese ---- */
+function genRational(s){var i=CURIDX,ym=curYM(),name=s.name,hasTT=!!s.has_tiktok;
+  var sp=val(s,"combined","spend",i),re=val(s,"meta","reach",i),im=val(s,"combined","impressions",i),inr=val(s,"meta","interazioni",i),cl=val(s,"combined","clicks",i);
+  var P=[];
+  P.push('A <b>'+mfull(ym)+'</b> '+name+' ha registrato un investimento di <b>'+fE(sp)+'</b>'+(hasTT?' (Meta + TikTok)':'')+', con <b>'+fI(re)+'</b> account raggiunti e <b>'+fI(im)+'</b> visualizzazioni.');
+  if(i>0){var pv=val(s,"meta","reach",i-1),pl=mfull(HIST.months[i-1]),d=pv?(re-pv)/pv*100:null;
+    if(d==null)P.push('Le interazioni si attestano a <b>'+fI(inr)+'</b> e i click a <b>'+fI(cl)+'</b>.');
+    else if(d>=2)P.push('Rispetto a '+pl+' la copertura cresce del <b>+'+Math.round(d)+'%</b>, segno di una spinta efficace del piano; interazioni a <b>'+fI(inr)+'</b> e click a <b>'+fI(cl)+'</b>.');
+    else if(d<=-2)P.push('Rispetto a '+pl+' si osserva una fisiologica flessione della copertura (<b>'+Math.round(d)+'%</b>), coerente con l\'andamento stagionale e con l\'aumento dei CPM sul comparto ricettivo; il presidio resta solido con <b>'+fI(inr)+'</b> interazioni e <b>'+fI(cl)+'</b> click.');
+    else P.push('La copertura si mantiene stabile rispetto a '+pl+', con <b>'+fI(inr)+'</b> interazioni e <b>'+fI(cl)+'</b> click a conferma di un pubblico costantemente presidiato.');
+  } else P.push('Interazioni a <b>'+fI(inr)+'</b> e click a <b>'+fI(cl)+'</b>.');
+  return P.join(' ');}
+/* ---- chart giornaliero ---- */
+function dailyOf(name,ym){var s=DAILY[name];return (s&&s.days)?s.days[ym]:null;}
+function dserie(dd,ch,k){if(!dd)return null;var blk=dd[ch];if(blk&&blk[k])return blk[k];if(ch==="tiktok"&&(k==="reach"||k==="interazioni"))return null;return dd.combined?dd.combined[k]:null;}
+function buildMsel(s){var msel=document.getElementById("msel");msel.innerHTML=KDEF.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist();});});}
+function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);drawHist();});});}
+function drawHist(){var el=document.getElementById("hist");if(!el)return;var msg=document.getElementById("histmsg");
+  var ym=curYM(),dd=dailyOf(CURS.name,ym);if(CH.hist){CH.hist.destroy();CH.hist=null;}
+  var data=dd?dserie(dd,CURCH,CURK):null,fmt=CURFMT;
+  if(!data){el.style.display="none";if(msg)msg.textContent=dd?"Metrica non disponibile per il canale selezionato.":("Dettaglio giornaliero non disponibile per "+mfull(ym)+".");return;}
+  el.style.display="";if(msg)msg.textContent="";
+  CH.hist=new Chart(el,{type:"bar",data:{labels:dd.labels,datasets:[{data:data,backgroundColor:"#1F4E57",borderRadius:2}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:function(c){return "Giorno "+c[0].label;},label:function(c){return fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT");}}}},
+     scales:{y:{ticks:{font:{size:9},callback:function(v){return fmt==="eur"?(v>=1000?(v/1000).toFixed(0)+"k€":v+"€"):(v>=1000?(v/1000).toFixed(0)+"k":v);}},grid:{color:"#f0f1f5"}},x:{ticks:{font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:16},grid:{display:false}}}}});}
+function refreshMonth(s){document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);
+  document.getElementById("mhead").textContent=s.name+" — "+mfull(curYM());
+  document.getElementById("histhead").textContent="Andamento giornaliero · "+mfull(curYM());
+  document.getElementById("narr").innerHTML=genRational(s);
+  document.getElementById("demobox").innerHTML=demoHtml(s.name);drawHist();}
 function renderClient(name){
   var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
   var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
-  var bhtml=b?('<div class="card"><h2 class="block" style="margin:0 0 10px">Budget '+(HIST.as_of_month.split("-")[0])+'</h2><div class="bstats">'
+  var bhtml=b?('<h2 class="block">Budget '+(HIST.as_of_month.split("-")[0])+' · aggiornato a '+HIST.as_of_label+'</h2><div class="card"><div class="bstats">'
     +'<div class="bstat"><div class="bl">Programmato annuo</div><div class="bv">'+fE(b.annual)+'</div></div>'
     +'<div class="bstat"><div class="bl">Speso YTD</div><div class="bv">'+fE(b.ytd_real)+'</div></div>'
     +'<div class="bstat"><div class="bl">Proiezione fine anno</div><div class="bv">'+fE(b.projection_year_end)+'</div></div>'
     +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
     +'</div></div>'):'';
-  v.innerHTML='<h2 class="block" id="mhead">'+name+' — '+mfull(HIST.months[CURIDX])+'</h2>'
+  v.innerHTML='<h2 class="block" id="mhead">'+name+' — '+mfull(curYM())+'</h2>'
     +'<div class="toolrow"><span class="chsel" id="chsel">'+chselHtml(hasTT)+'</span><label class="mpick">Mese <select id="mpick">'+monthOptions()+'</select></label></div>'
-    +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div>'
-    +'<h2 class="block">Storico mensile</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div></div>'
-    +'<h2 class="block">Lettura del mese</h2><div class="narr">'+s.rational+'</div>'
-    +bhtml+demoHtml(name);
-  document.getElementById("mpick").addEventListener("change",function(){CURIDX=parseInt(this.value,10);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("mhead").textContent=name+" — "+mfull(HIST.months[CURIDX]);drawHist(s,CURK,CURCH,CURFMT);});
-  wireChsel(s,hasTT);buildMsel(s);drawHist(s,CURK,CURCH,CURFMT);
-}
-function drawHist(s,k,ch,fmt){
-  if(typeof Chart==="undefined")return;var el=document.getElementById("hist");if(!el)return;var data=ser(s,ch,k);
-  if(CH.hist)CH.hist.destroy();
-  var cols=data.map(function(_,j){return j===CURIDX?"#E0733C":"#1F4E57";});
-  CH.hist=new Chart(el,{type:"bar",data:{labels:HIST.month_labels,datasets:[{data:data,backgroundColor:cols,borderRadius:3}]},
-   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return (fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT"));}}}},
-     scales:{y:{ticks:{font:{size:9},callback:function(v){return fmt==="eur"?(v>=1000?(v/1000).toFixed(0)+"k€":v+"€"):(v>=1000?(v/1000).toFixed(0)+"k":v);}},grid:{color:"#f0f1f5"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
+    +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div><div id="kpinote">'+kpiNote(s)+'</div>'
+    +'<h2 class="block" id="histhead">Andamento giornaliero · '+mfull(curYM())+'</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="histmsg" style="text-align:center;color:var(--dim);font-size:12px"></div></div>'
+    +'<h2 class="block">Lettura del mese</h2><div class="narr" id="narr">'+genRational(s)+'</div>'
+    +'<div id="demobox">'+demoHtml(name)+'</div>'
+    +bhtml;
+  document.getElementById("mpick").addEventListener("change",function(){CURIDX=parseInt(this.value,10);refreshMonth(s);});
+  wireChsel(s,hasTT);buildMsel(s);drawHist();
 }
 function renderAll(){
   var v=document.getElementById("view");var i=HIST.as_of_idx;
   var rows=HIST.structures.map(function(s){var sp=s.series.combined.spend[i],re=s.series.meta.reach[i],inr=s.series.meta.interazioni[i],b=BUD[s.name];
     return '<tr data-name="'+s.name.replace(/"/g,"&quot;")+'"><td><b>'+s.name+'</b></td><td class="num">'+fE(sp)+'</td><td class="num">'+fI(re)+'</td><td class="num">'+fI(inr)+'</td><td>'+(b?'<span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span>':'—')+'</td></tr>';}).join("");
-  v.innerHTML='<h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><table><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura</th><th class="num">Interazioni</th><th>Passo budget</th></tr></thead><tbody>'+rows+'</tbody></table></div><p style="font-size:12px;color:var(--dim);margin-top:8px">Clicca una struttura per ultimo mese, storico e lettura del mese.</p>';
+  v.innerHTML='<h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><table><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura · Meta</th><th class="num">Interazioni · Meta</th><th>Passo budget</th></tr></thead><tbody>'+rows+'</tbody></table></div><p style="font-size:12px;color:var(--dim);margin-top:8px">Clicca una struttura per il dettaglio mensile, l\'andamento giornaliero, la lettura del mese e le demografiche.</p>';
   Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var nloc=tr.getAttribute("data-name");document.getElementById("sel").value=nloc;renderClient(nloc);window.scrollTo({top:0,behavior:"smooth"});});});
 }
 function boot(){
@@ -118,7 +150,11 @@ function boot(){
   sel.addEventListener("change",function(){sel.value==="__all__"?renderAll():renderClient(sel.value);});
   renderAll();
 }
-Promise.all([fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),fetch("aghc_demographics.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})])
- .then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMO={};(a[2].structures||[]).forEach(function(s){DEMO[s.name]=s;});boot();})
+Promise.all([
+ fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),
+ fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),
+ fetch("aghc_demographics_monthly.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {by_month:{}};}),
+ fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})
+]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});boot();})
  .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script></body></html>
