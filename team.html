@@ -58,6 +58,8 @@ h2.block::before{content:"";width:14px;height:3px;border-radius:2px;background:v
 .chartwrap{position:relative;height:250px;}
 .narr{border-left:3px solid var(--gold);background:#fbf6f1;border-radius:0 12px 12px 0;padding:16px 20px;font-size:14px;line-height:1.7;color:#3c474c;}
 .narr b{color:var(--navy);font-weight:700;}
+.narr p{margin:0 0 13px;}
+.narr p:last-child{margin-bottom:0;}
 .bstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
 .bstat{background:var(--soft);border:1px solid var(--bsoft);border-radius:11px;padding:11px 14px;}
 .bstat .bl{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;}
@@ -85,14 +87,6 @@ footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 .drow .dbar{flex:1;background:#eef2f3;height:10px;border-radius:999px;overflow:hidden;}
 .drow .dbar i{display:block;height:100%;border-radius:999px;}
 .drow .dp{width:52px;text-align:right;font-variant-numeric:tabular-nums;font-weight:800;color:var(--text);flex-shrink:0;}
-.hconsole{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:-2px 0 16px;}
-.hc-logo{height:38px;width:auto;max-width:150px;border-radius:8px;display:block;object-fit:contain;}
-.hc-links{display:flex;gap:8px;flex-wrap:wrap;}
-.hc-btn{font-size:12px;font-weight:700;padding:6px 13px;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;}
-.hc-btn:hover{border-color:var(--navy);color:var(--navy);}
-.hc-btn.ig:hover{border-color:#C13584;color:#C13584;}
-.hc-btn.fb:hover{border-color:#1877F2;color:#1877F2;}
-.hc-btn.tt:hover{border-color:#111;color:#111;}
 @media(max-width:640px){.wrap{padding:18px 14px 60px;}.kpi .v{font-size:22px;}}
 </style></head><body>
 <div class="wrap">
@@ -103,7 +97,7 @@ footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 <footer class="f" id="foot"></footer>
 </div>
 <script>
-var HIST=null, BUD={}, CH={}, DEMOM={by_month:{}}, DAILY={}, LINKS={};
+var HIST=null, BUD={}, CH={}, DEMOM={by_month:{}}, DAILY={};
 var KDEF=[["spend","Investimento","eur","combined"],["reach","Copertura","int","combined"],["impressions","Visualizzazioni","int","combined"],["interazioni","Interazioni","int","combined"],["clicks","Click","int","combined"]];
 function fI(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
 function fE(n){return n==null?"—":Math.round(n).toLocaleString("it-IT")+" €";}
@@ -136,15 +130,20 @@ function monthOptions(){var o="";HIST.months.forEach(function(ym,idx){if(ym>="20
 /* ---- rational auto per mese ---- */
 function genRational(s){var i=CURIDX,ym=curYM(),name=s.name,hasTT=!!s.has_tiktok;
   var sp=val(s,"combined","spend",i),re=val(s,"meta","reach",i),im=val(s,"combined","impressions",i),inr=val(s,"meta","interazioni",i),cl=val(s,"combined","clicks",i);
+  var freq=re>0?im/re:null, ctr=im>0?cl/im*100:null, erx=re>0?inr/re*100:null, cpm=im>0?sp/im*1000:null;
+  function dec(n,d){return n.toFixed(d).replace('.',',');}
   var P=[];
-  P.push('A <b>'+mfull(ym)+'</b> '+name+' ha registrato un investimento di <b>'+fE(sp)+'</b>'+(hasTT?' (Meta + TikTok)':'')+', con <b>'+fI(re)+'</b> account raggiunti e <b>'+fI(im)+'</b> visualizzazioni.');
-  if(i>0){var pv=val(s,"meta","reach",i-1),pl=mfull(HIST.months[i-1]),d=pv?(re-pv)/pv*100:null;
-    if(d==null)P.push('Le interazioni si attestano a <b>'+fI(inr)+'</b> e i click a <b>'+fI(cl)+'</b>.');
-    else if(d>=2)P.push('Rispetto a '+pl+' la copertura cresce del <b>+'+Math.round(d)+'%</b>, segno di una spinta efficace del piano; interazioni a <b>'+fI(inr)+'</b> e click a <b>'+fI(cl)+'</b>.');
-    else if(d<=-2)P.push('Rispetto a '+pl+' si osserva una fisiologica flessione della copertura (<b>'+Math.round(d)+'%</b>), coerente con l\'andamento stagionale e con l\'aumento dei CPM sul comparto ricettivo; il presidio resta solido con <b>'+fI(inr)+'</b> interazioni e <b>'+fI(cl)+'</b> click.');
-    else P.push('La copertura si mantiene stabile rispetto a '+pl+', con <b>'+fI(inr)+'</b> interazioni e <b>'+fI(cl)+'</b> click a conferma di un pubblico costantemente presidiato.');
-  } else P.push('Interazioni a <b>'+fI(inr)+'</b> e click a <b>'+fI(cl)+'</b>.');
-  return P.join(' ');}
+  P.push('Nel mese di <b>'+mfull(ym)+'</b> '+name+' ha investito <b>'+fE(sp)+'</b>'+(hasTT?' tra Meta e TikTok':' su Meta')+', raggiungendo <b>'+fI(re)+'</b> account unici e generando <b>'+fI(im)+'</b> visualizzazioni'+(freq?', con una frequenza media di <b>'+dec(freq,1)+'</b> contatti per utente raggiunto — indice di un messaggio ripetuto a sufficienza per restare memorabile senza saturare il pubblico':'')+'.');
+  if(i>0){var pv=val(s,"meta","reach",i-1),psp=val(s,"combined","spend",i-1),pl=mfull(HIST.months[i-1]),d=pv?(re-pv)/pv*100:null,ds=psp?(sp-psp)/psp*100:null;
+    var bud=(ds!=null&&Math.abs(ds)>=3)?(ds>0?' a fronte di un budget in crescita del '+Math.round(ds)+'%':' pur con un budget ridotto del '+Math.round(-ds)+'%'):' a parità sostanziale di budget';
+    if(d==null) P.push('Il confronto con '+pl+' non è disponibile per assenza di uno storico comparabile.');
+    else if(d>=2) P.push('Rispetto a '+pl+' la copertura cresce del <b>+'+Math.round(d)+'%</b>'+bud+': la spinta del piano si sta traducendo in una base di pubblico più ampia e in un costo-contatto più efficiente.');
+    else if(d<=-2) P.push('Rispetto a '+pl+' la copertura arretra del <b>'+Math.round(d)+'%</b>'+bud+'. È una flessione fisiologica, coerente con la stagionalità del comparto ricettivo e con la risalita dei CPM nei mesi ad alta competizione d\'asta; il presidio del pubblico resta comunque continuativo.');
+    else P.push('Rispetto a '+pl+' la copertura si mantiene stabile'+bud+', a conferma di un presidio costante del pubblico di riferimento e di una spesa senza dispersioni.');
+  }
+  P.push('Sul fronte dell\'engagement si contano <b>'+fI(inr)+'</b> interazioni'+(erx?' (<b>'+dec(erx,1)+'%</b> sugli account raggiunti)':'')+' e <b>'+fI(cl)+'</b> click'+(ctr?', con un tasso di click dello <b>'+dec(ctr,2)+'%</b> sulle visualizzazioni':'')+': segnali di un pubblico non solo esposto ma realmente reattivo al messaggio.');
+  if(cpm!=null) P.push('Il costo per mille visualizzazioni si attesta a <b>'+dec(cpm,2)+' €</b>, un livello '+(cpm<=8?'competitivo':cpm<=15?'in linea con i benchmark del settore ricettivo':'sostenuto ma giustificato dalla pressione stagionale')+' per il target presidiato.');
+  return '<p>'+P.join('</p><p>')+'</p>';}
 /* ---- chart giornaliero ---- */
 function dailyOf(name,ym){var s=DAILY[name];return (s&&s.days)?s.days[ym]:null;}
 function dserie(dd,ch,k){if(!dd)return null;var blk=dd[ch];if(blk&&blk[k])return blk[k];return dd.combined?dd.combined[k]:null;}
@@ -163,15 +162,6 @@ function refreshMonth(s){document.getElementById("kpis").innerHTML=kpisHtml(s);d
   document.getElementById("histhead").textContent="Andamento giornaliero · "+mfull(curYM());
   document.getElementById("narr").innerHTML=genRational(s);
   document.getElementById("demobox").innerHTML=demoHtml(s.name);drawHist();}
-function consoleHtml(name){var L=LINKS[name]||{};var out='';
-  if(L.logo)out+='<img class="hc-logo" src="'+L.logo+'" alt="'+name+'"/>';
-  var it=[];
-  if(L.sito)it.push('<a class="hc-btn" href="'+L.sito+'" target="_blank" rel="noopener">\uD83C\uDF10 Sito</a>');
-  if(L.instagram)it.push('<a class="hc-btn ig" href="'+L.instagram+'" target="_blank" rel="noopener">Instagram</a>');
-  if(L.facebook)it.push('<a class="hc-btn fb" href="'+L.facebook+'" target="_blank" rel="noopener">Facebook</a>');
-  if(L.tiktok)it.push('<a class="hc-btn tt" href="'+L.tiktok+'" target="_blank" rel="noopener">TikTok</a>');
-  if(it.length)out+='<div class="hc-links">'+it.join('')+'</div>';
-  return out;}
 function renderClient(name){
   var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
   var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
@@ -182,7 +172,6 @@ function renderClient(name){
     +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
     +'</div></div>'):'';
   v.innerHTML='<h2 class="block" id="mhead">'+name+' — '+mfull(curYM())+'</h2>'
-    +'<div class="hconsole" id="hconsole">'+consoleHtml(name)+'</div>'
     +'<div class="toolrow"><span class="chsel" id="chsel">'+chselHtml(hasTT)+'</span><label class="mpick">Mese <select id="mpick">'+monthOptions()+'</select></label></div>'
     +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div><div id="kpinote">'+kpiNote(s)+'</div>'
     +'<h2 class="block" id="histhead">Andamento giornaliero · '+mfull(curYM())+'</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="histmsg" style="text-align:center;color:var(--dim);font-size:12px"></div></div>'
@@ -212,8 +201,7 @@ Promise.all([
  fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),
  fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),
  fetch("aghc_demographics_monthly.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {by_month:{}};}),
- fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};}),
- fetch("aghc_links.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:{}};})
-]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});LINKS=(a[4]&&a[4].structures)||{};boot();})
+ fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})
+]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});boot();})
  .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script></body></html>
