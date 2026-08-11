@@ -24,9 +24,6 @@ header.h img.brandlogo{height:44px;width:auto;border-radius:0;display:block;}
 header.h h1{margin:0;font-size:21px;font-weight:800;letter-spacing:-.01em;color:var(--navy);}
 header.h .sub{font-size:12px;color:var(--muted);margin-top:2px;}
 header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;}
-.monthbar{display:flex;align-items:center;gap:12px;margin:0 0 20px;flex-wrap:wrap;}
-.monthbar .m{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:.04em;text-transform:uppercase;padding:6px 14px;background:rgba(31,78,87,.07);border:1px solid rgba(31,78,87,.15);border-radius:999px;}
-.monthbar .note{font-size:12px;color:var(--muted);}
 .toolbar{display:flex;align-items:center;gap:10px;margin:0 0 20px;flex-wrap:wrap;}
 .toolbar label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
 .toolbar select{font:inherit;font-size:14px;font-weight:600;padding:9px 14px;border-radius:10px;border:1px solid #d5dde0;background:#fff;color:var(--text);cursor:pointer;min-width:270px;box-shadow:var(--shadow-sm);}
@@ -118,7 +115,6 @@ footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 </style></head><body>
 <div class="wrap">
 <header class="h"><img class="brandlogo" src="assets/logo-aghc.png?v=1" alt="AG Hotel Consulting"/><div><h1>Dashboard Team</h1></div><div class="stamp" id="stamp"></div></header>
-<div class="monthbar" id="monthbar"></div>
 <div class="toolbar"><label for="sel">Struttura</label><select id="sel"><option value="__all__">Tutte (panoramica)</option></select></div>
 <div id="view"><div class="loading">Caricamento dati…</div></div>
 <footer class="f" id="foot"></footer>
@@ -221,7 +217,6 @@ function renderAll(){
 }
 function boot(){
   document.getElementById("stamp").innerHTML="agg. "+HIST.generated_at;
-  document.getElementById("monthbar").innerHTML='<span class="m">'+HIST.as_of_label+'</span>';
   document.getElementById("foot").textContent="";
   var sel=document.getElementById("sel");
   HIST.structures.forEach(function(s){var o=document.createElement("option");o.value=s.name;o.textContent=s.name;sel.appendChild(o);});
