@@ -33,6 +33,13 @@ header.h .stamp{margin-left:auto;font-size:11px;color:var(--dim);text-align:righ
 .toolbar select:hover{border-color:var(--navy);}
 h2.block{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:#51636a;margin:26px 0 12px;display:flex;align-items:center;gap:9px;}
 h2.block::before{content:"";width:14px;height:3px;border-radius:2px;background:var(--gold);}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 22px;box-shadow:var(--shadow-sm);margin:6px 0 20px;}
+.mh-left{display:flex;align-items:center;gap:18px;min-width:0;}
+.mh-logo{height:60px;width:auto;max-width:170px;object-fit:contain;border-radius:10px;flex-shrink:0;}
+.mh-name{font-size:24px;font-weight:800;color:var(--navy);line-height:1.15;}
+.mh-right{text-align:right;flex-shrink:0;}
+.mh-month{font-size:19px;font-weight:800;color:var(--text);letter-spacing:.01em;}
+.mh-cmp{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px;}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow-sm);transition:box-shadow .18s ease, transform .18s ease;}
 .kpi:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
@@ -76,8 +83,8 @@ tbody tr:last-child td{border-bottom:0;}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
 footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 .loading{padding:70px 0;text-align:center;color:var(--dim);}
-.dwrap{display:flex;gap:16px;flex-wrap:wrap;}
-.dcol{flex:1;min-width:300px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px 18px;box-shadow:var(--shadow-sm);}
+.dwrap{display:flex;flex-direction:column;gap:14px;}
+.dcol{min-width:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px 18px;box-shadow:var(--shadow-sm);}
 .dcol-h{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:800;color:var(--text);margin:0;}
 .ddot{width:11px;height:11px;border-radius:3px;display:inline-block;flex-shrink:0;}
 .dsub{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:16px 0 8px;padding-top:13px;border-top:1px solid var(--bsoft);}
@@ -97,7 +104,7 @@ footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 <footer class="f" id="foot"></footer>
 </div>
 <script>
-var HIST=null, BUD={}, CH={}, DEMOM={by_month:{}}, DAILY={};
+var HIST=null, BUD={}, CH={}, DEMOM={by_month:{}}, DAILY={}, LINKS={};
 var KDEF=[["spend","Investimento","eur","combined"],["reach","Copertura","int","combined"],["impressions","Visualizzazioni","int","combined"],["interazioni","Interazioni","int","combined"],["clicks","Click","int","combined"]];
 function fI(n){return n==null?"—":Math.round(n).toLocaleString("it-IT");}
 function fE(n){return n==null?"—":Math.round(n).toLocaleString("it-IT")+" €";}
@@ -158,10 +165,14 @@ function drawHist(){var el=document.getElementById("hist");if(!el)return;var msg
    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:function(c){return "Giorno "+c[0].label;},label:function(c){return fmt==="eur"?(Math.round(c.parsed.y).toLocaleString("it-IT")+" €"):c.parsed.y.toLocaleString("it-IT");}}}},
      scales:{y:{ticks:{font:{size:9},callback:function(v){return fmt==="eur"?(v>=1000?(v/1000).toFixed(0)+"k€":v+"€"):(v>=1000?(v/1000).toFixed(0)+"k":v);}},grid:{color:"#f0f1f5"}},x:{ticks:{font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:16},grid:{display:false}}}}});}
 function refreshMonth(s){document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);
-  document.getElementById("mhead").textContent=s.name+" — "+mfull(curYM());
+  document.getElementById("mhead").innerHTML=headHtml(s);
   document.getElementById("histhead").textContent="Andamento giornaliero · "+mfull(curYM());
   document.getElementById("narr").innerHTML=genRational(s);
   document.getElementById("demobox").innerHTML=demoHtml(s.name);drawHist();}
+function headHtml(s){var ym=curYM(),p=ym.split("-"),logo=(LINKS[s.name]||{}).logo,cmp=CURIDX>0?mfull(HIST.months[CURIDX-1]):null;
+  var left='<div class="mh-left">'+(logo?'<img class="mh-logo" src="'+logo+'" alt="'+s.name+'"/>':'')+'<div class="mh-name">'+s.name+'</div></div>';
+  var right='<div class="mh-right"><div class="mh-month">'+MFULL[(+p[1])-1]+' '+p[0]+'</div>'+(cmp?'<div class="mh-cmp">confronto: '+cmp+'</div>':'')+'</div>';
+  return left+right;}
 function renderClient(name){
   var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
   var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
@@ -171,7 +182,7 @@ function renderClient(name){
     +'<div class="bstat"><div class="bl">Proiezione fine anno</div><div class="bv">'+fE(b.projection_year_end)+'</div></div>'
     +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
     +'</div></div>'):'';
-  v.innerHTML='<h2 class="block" id="mhead">'+name+' — '+mfull(curYM())+'</h2>'
+  v.innerHTML='<div class="mhead" id="mhead">'+headHtml(s)+'</div>'
     +'<div class="toolrow"><span class="chsel" id="chsel">'+chselHtml(hasTT)+'</span><label class="mpick">Mese <select id="mpick">'+monthOptions()+'</select></label></div>'
     +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div><div id="kpinote">'+kpiNote(s)+'</div>'
     +'<h2 class="block" id="histhead">Andamento giornaliero · '+mfull(curYM())+'</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="histmsg" style="text-align:center;color:var(--dim);font-size:12px"></div></div>'
@@ -201,7 +212,8 @@ Promise.all([
  fetch("aghc_history.json?v="+Date.now()).then(function(r){return r.json();}),
  fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),
  fetch("aghc_demographics_monthly.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {by_month:{}};}),
- fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};})
-]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});boot();})
+ fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};}),
+ fetch("aghc_links.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:{}};})
+]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});LINKS=(a[4]&&a[4].structures)||{};boot();})
  .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script></body></html>
