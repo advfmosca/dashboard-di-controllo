@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-19T04:30:07.013179",
-  "reference_date": "2026-08-18",
+  "generated_at": "2026-08-20T16:57:38.247568",
+  "reference_date": "2026-08-19",
   "actions": [
     {
       "type": "high_spending",
@@ -9,57 +9,35 @@
       "platform": "Meta",
       "account_id": "4666471140299701",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
-      "details": "Spesa 63,80 € ieri vs media 7gg 5,56 € (+1046,9%)",
-      "reference_date": "2026-08-18",
-      "reference_date_label": "18 ago 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Magari Estates Hotel · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "1372615496521110",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
-      "details": "Spesa 52,08 € ieri vs media 7gg 28,68 € (+81,6%)",
-      "reference_date": "2026-08-18",
-      "reference_date_label": "18 ago 2026"
-    },
-    {
-      "type": "new_fermo",
-      "priority": "high",
-      "title": "⚫ ADV Helios - Rodi · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "1515205043021222",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
-      "details": "Spending 0 ieri, media 7gg precedente 11,33 €. Da verificare.",
-      "reference_date": "2026-08-18",
-      "reference_date_label": "18 ago 2026"
+      "details": "Spesa 67,93 € ieri vs media 7gg 14,68 € (+362,8%)",
+      "reference_date": "2026-08-19",
+      "reference_date_label": "19 ago 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 18/08/2026",
-      "details": "2 zero + 11 high",
-      "reference_date": "2026-08-18",
-      "reference_date_label": "18 ago 2026",
+      "title": "Alert spending — 19/08/2026",
+      "details": "2 zero + 6 high",
+      "reference_date": "2026-08-19",
+      "reference_date_label": "19 ago 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 18/08/2026*\n*Top alert:*\n• :zap: Adv_maison rosabianca (Meta) — 0,00 € (storico 32,49 €) · _Causa da verificare_\n• :zap: ADV Helios - Rodi (Meta) — 0,00 € (storico 11,33 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 126,23 € (+13,5%)\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-08-18|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 19/08/2026*\n*Top alert:*\n• :zap: Adv_maison rosabianca (Meta) — 0,00 € (storico 25,06 €) · _Causa da verificare_\n• :zap: ADV Helios - Rodi (Meta) — 0,00 € (storico 8,68 €) · _Causa da verificare_\n• :fire: Sardinia Family Villas (Google) — 128,02 € (+19,5%)\n_+ 5 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-08-19|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
       "type": "bf_fermo",
-      "priority": "high",
-      "title": "⚫ Bee Family HELIOS — nuovo fermo",
+      "priority": "medium",
+      "title": "⚠️ Bee Family HELIOS — fermo persistente",
       "source": "Meta",
       "client_name": "HELIOS",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
-      "details": "spend_y=0, prev7=79,32 €",
-      "reference_date": "2026-08-18",
-      "reference_date_label": "18 ago 2026",
+      "details": "spend_y=0, prev7=60,75 €",
+      "reference_date": "2026-08-19",
+      "reference_date_label": "19 ago 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚫ *Bee Family — HELIOS (Meta)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 79,32 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222|Apri account →>",
-      "skip_if_quiet": false,
-      "severity": "high"
+      "slack_template": "⚠️ *Bee Family — HELIOS (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 60,75 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222|Apri account →>",
+      "skip_if_quiet": true,
+      "severity": "medium"
     }
   ]
 }
