@@ -33,6 +33,34 @@ echo "→ Branch: $(git branch --show-current 2>/dev/null || echo 'unknown')"
 rm -f .git/index.lock .git/HEAD.lock .git/MERGE_HEAD.lock 2>/dev/null || true
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Step 0b — SALVAGUARDIA REFRESH MENSILE AGHC
+#
+# I JSON del report mensile AGHC sono dati freschi rigenerati da Windsor: se
+# finiscono nello stash del Step 1 rischiano di non essere riapplicati (stash
+# pop abortito o conflitti risolti a favore del remoto) e vengono persi, con il
+# push che pubblica comunque la versione vecchia. Successo il 01/09/2026 con il
+# report di Agosto: push OK, dati pubblicati ancora di Luglio.
+#
+# Soluzione: se questi file risultano modificati, li committiamo PRIMA del sync,
+# così entrano nel rebase come commit locale e non passano mai dallo stash.
+# ──────────────────────────────────────────────────────────────────────────────
+AGHC_MONTHLY="aghc_report.json aghc_history.json aghc_daily.json aghc_demographics.json aghc_demographics_monthly.json canva_fill.json"
+AGHC_PENDING=""
+for f in $AGHC_MONTHLY; do
+  if [ -f "$f" ] && ! git diff --quiet -- "$f" 2>/dev/null; then
+    AGHC_PENDING="$AGHC_PENDING $f"
+  fi
+done
+if [ -n "$AGHC_PENDING" ]; then
+  echo "→ Dati mensili AGHC modificati → commit PRIMA del sync:$AGHC_PENDING"
+  git add $AGHC_PENDING 2>/dev/null || true
+  [ -d history ] && git add history/ 2>/dev/null || true
+  [ -d raw ] && git add raw/ 2>/dev/null || true
+  git -c user.email="moscadv@gmail.com" -c user.name="Francesco Maria Mosca" \
+      commit -m "Refresh dati mensili AGHC — $(date +%Y-%m-%d)" 2>&1 | tail -2
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Step 1 — pull --rebase con auto-resolve dei conflitti (sempre vince il locale)
 # ──────────────────────────────────────────────────────────────────────────────
 echo "→ Sync con origin/main…"
@@ -81,6 +109,14 @@ if [ "$STASHED" = "1" ]; then
       esac
       git add "$f" 2>/dev/null || true
     done < <(git status --porcelain | grep -E '^(UU|AA|UA|AU|DU|UD) ')
+    # Lo stash si scarta SOLO se non restano conflitti aperti: se il pop era
+    # abortito (es. "would be overwritten by merge") nulla è stato applicato e
+    # buttarlo qui significherebbe perdere le modifiche locali in silenzio.
+    if git status --porcelain | grep -qE '^(UU|AA|UA|AU|DU|UD) '; then
+      echo "⚠️  Conflitti stash non risolti — stash CONSERVATO (git stash list)."
+      echo "   Risolvi a mano prima di ripubblicare. Interrompo senza committare."
+      exit 1
+    fi
     git stash drop 2>&1 | tail -1 || true
   fi
 fi
@@ -113,6 +149,21 @@ if ! git push origin main 2>&1 | tee /tmp/dash-push.log | tail -5; then
       GIT_EDITOR=true git rebase --continue 2>&1 | tail -3 || { git rebase --abort; break; }
     done
     git push origin main 2>&1 | tail -5
+  fi
+fi
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Step 4 — verifica che il remoto abbia davvero i dati appena pubblicati.
+# Un push andato a buon fine NON garantisce che il contenuto sia quello giusto
+# (vedi Step 0b): controlliamo il mese di aghc_report.json come pubblicato.
+# ──────────────────────────────────────────────────────────────────────────────
+if [ -f aghc_report.json ]; then
+  LOCAL_MONTH=$(python3 -c "import json;print(json.load(open('aghc_report.json'))['month_label'])" 2>/dev/null || echo "?")
+  REMOTE_MONTH=$(git show origin/main:aghc_report.json 2>/dev/null | python3 -c "import json,sys;print(json.load(sys.stdin)['month_label'])" 2>/dev/null || echo "?")
+  echo "→ Verifica: aghc_report.json locale='$LOCAL_MONTH' remoto='$REMOTE_MONTH'"
+  if [ "$LOCAL_MONTH" != "$REMOTE_MONTH" ]; then
+    echo "❌ Il remoto NON ha i dati locali. Non fidarti del push: controlla il repo."
+    exit 1
   fi
 fi
 
