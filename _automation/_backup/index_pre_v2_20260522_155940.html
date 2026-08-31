@@ -1,0 +1,3016 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1c1c1e" />
+<meta name="version" content="2026-05-19-bf-campaigns" />
+<title>FMM — Dashboard di Controllo</title>
+<link rel="icon" type="image/svg+xml" href="assets/fmm-logo.svg" />
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-soft: #fafafa;
+    --bg-card: #ffffff;
+    --border: #ececef;
+    --border-soft: #f4f4f5;
+    --text: #1c1c1e;
+    --text-muted: #6b6b70;
+    --text-dim: #8a8a90;
+    --red: #d93025;
+    --yellow: #f5a623;
+    --green: #1e8e3e;
+    --gray: #9a9aa0;
+    --blue: #0866FF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
+
+  header.h { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  header.h .title-block { display: flex; align-items: center; gap: 12px; }
+  header.h .brand-logo { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: block; }
+  header.h .title-text { display: flex; flex-direction: column; }
+  header.h h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  header.h .sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  header.h .stamp { font-size: 11px; color: var(--text-dim); text-align: right; }
+  header.h .stamp b { color: var(--text); font-weight: 600; }
+
+  /* Date selector */
+  .date-bar { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; flex-wrap: wrap; }
+  .date-bar label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .date-bar select { font: inherit; font-size: 13px; padding: 6px 10px; border-radius: 8px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; }
+  .date-bar .quick { display: flex; gap: 5px; flex-wrap: wrap; }
+  .date-bar .quick button { font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; }
+  .date-bar .quick button:hover { background: #f5f5f7; }
+  .date-bar .quick button.active { background: #1c1c1e; color: #fff; border-color: #1c1c1e; }
+  .date-bar .nav-spacer { flex: 1; }
+
+  .tabs {
+    display: flex; gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .tabs::-webkit-scrollbar { height: 3px; }
+  .tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+  .tab-btn {
+    background: transparent; border: 0; border-bottom: 2px solid transparent;
+    padding: 9px 14px; font: inherit; cursor: pointer;
+    color: var(--text-muted); font-weight: 500; white-space: nowrap;
+    border-radius: 4px 4px 0 0;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { color: var(--text); background: var(--bg-soft); }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--text); font-weight: 600; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .kpi { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; min-width: 0; }
+  .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+  .kpi .value { font-size: 24px; font-weight: 700; line-height: 1.1; color: #0f0f10; font-variant-numeric: tabular-nums; word-break: break-word; }
+  .kpi .sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+  .kpi.total { background: #1c1c1e; border-color: #1c1c1e; }
+  .kpi.total .label, .kpi.total .sub { color: #b8b8bf; }
+  .kpi.total .value { color: #fff; }
+  .kpi.danger .value { color: #b32f1f; }
+  .kpi.warn .value { color: #b88a00; }
+  .kpi.ok .value { color: #1f6b3a; }
+
+  section.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  section.card > h2 { margin: 0; padding: 11px 16px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-soft); background: var(--bg-soft); }
+  section.card > h2 .pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--border); color: #5a5a60; margin-left: auto; }
+  section.card .body { padding: 12px 16px; }
+  .empty { color: var(--text-dim); font-style: italic; font-size: 13px; padding: 14px 16px; text-align: center; }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
+  thead th { text-align: left; font-weight: 600; font-size: 11.5px; color: #5a5a60; padding: 8px 12px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.04em; }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .delta-pos { color: #b32f1f; font-weight: 500; }
+  .delta-neg { color: #1f6b3a; font-weight: 500; }
+
+  /* Platform logos */
+  .plogo { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; vertical-align: middle; }
+  .plogo.meta { background: #0866FF; color: #fff; font-weight: 800; font-size: 13px; font-family: ui-sans-serif, "Helvetica Neue"; }
+  .plogo.google { background: #fff; border: 1px solid #ececef; font-weight: 800; font-size: 12px; }
+  .plogo.tiktok { background: #000; color: #fff; font-weight: 800; font-size: 14px; font-family: ui-sans-serif; }
+  .plogo svg { display: block; }
+  .plogo.tiktok svg { width: 14px; height: 14px; }
+
+  /* Pills */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .pill.danger { background: #fee2e2; color: #991b1b; }
+  .pill.warn { background: #ffedd5; color: #9a3412; }
+  .pill.both { background: #fca5a5; color: #7f1d1d; }
+  .pill.ok { background: #d1fadf; color: #14532d; }
+
+  .status-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--border-soft); }
+  .status-row:last-child { border-bottom: 0; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .status-dot.green { background: var(--green); }
+  .status-dot.yellow { background: var(--yellow); }
+  .status-dot.red { background: var(--red); }
+  .status-dot.gray { background: var(--gray); }
+  .status-dot.black { background: #1a1a1a; }
+  /* Pill semafori Med Tech (ROSSO/GIALLO/VERDE/NERO) */
+  .mt-status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .mt-status-pill.red    { background: #fee2e2; color: #991b1b; }
+  .mt-status-pill.yellow { background: #ffedd5; color: #9a3412; }
+  .mt-status-pill.green  { background: #d1fadf; color: #14532d; }
+  .mt-status-pill.black  { background: #1a1a1a; color: #fff; }
+  .status-row .body-row { flex: 1; min-width: 0; }
+  .status-row .name { font-weight: 600; font-size: 13px; }
+  .status-row .rat { color: #4a4a50; font-size: 12.5px; margin-top: 3px; line-height: 1.45; }
+  .status-row .r-cpl  { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 6px; padding: 8px 11px; background: var(--bg-soft); border-radius: 8px; border-left: 3px solid #0866FF; }
+  .status-row .r-perf { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; margin-top: 6px; padding: 8px 11px; background: #fffaf0; border-radius: 8px; border-left: 3px solid var(--yellow); }
+  .status-row .r-perf strong { color: #1c1c1e; }
+  .status-row .row-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+  /* AGHC cards — single column, full-width */
+  .cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+  .aghc-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px;
+  }
+  .aghc-card .name { font-weight: 700; font-size: 14px; line-height: 1.2; }
+  .aghc-card .kpi-row { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+  .aghc-card .kpi-row .item .lbl { font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+  .aghc-card .kpi-row .item .val { font-size: 16px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .aghc-card .trend { font-size: 12.5px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
+  .aghc-card .trend .arrow.up { color: var(--green); }
+  .aghc-card .trend .arrow.down { color: var(--red); }
+  .aghc-card .trend .arrow.flat { color: var(--text-muted); }
+  .aghc-card .rational { font-size: 12.5px; color: #2c2c2c; line-height: 1.55; padding: 10px 12px; background: var(--bg-soft); border-radius: 8px; }
+  .aghc-card .rational p { margin: 0 0 10px; }
+  .aghc-card .rational p:last-child { margin-bottom: 0; }
+  .aghc-card .rational .rat-label { display: block; font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px; }
+  .aghc-card .rational .r-head { font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+  .aghc-card .rational .r-action { margin-top: 8px; color: #2c2c2c; }
+  .aghc-card .rational .r-channels { list-style: none; padding: 0; margin: 6px 0 4px; display: flex; flex-direction: column; gap: 4px; }
+  .aghc-card .rational .r-channels li { padding: 6px 10px; background: #fff; border: 1px solid var(--border-soft); border-radius: 6px; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .aghc-card .rational .r-channels li strong { color: #1c1c1e; }
+  /* Lista campagne attive dentro il breakdown canale META/GOOGLE */
+  .aghc-card .rational .r-campaigns { list-style: none; padding: 4px 0 0 18px; margin: 4px 0 0; border-top: 1px dashed var(--border-soft); }
+  .aghc-card .rational .r-campaigns li { padding: 3px 0; background: transparent; border: 0; border-radius: 0; font-size: 11.5px; color: #4a4a4a; }
+  .aghc-card .rational .r-campaigns li::before { content: "↳ "; color: var(--text-dim); margin-right: 4px; }
+  .aghc-card .rational .r-campaigns li em { font-style: normal; font-weight: 600; color: #2c2c2c; }
+  .aghc-card .footer { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .aghc-card .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .aghc-card .status-pill.red    { background: #fee2e2; color: #991b1b; }
+  .aghc-card .status-pill.yellow { background: #ffedd5; color: #9a3412; }
+  .aghc-card .status-pill.green  { background: #d1fadf; color: #14532d; }
+  .aghc-card .status-pill.gray   { background: #eceff1; color: #455a64; }
+  /* Budget bar */
+  .aghc-card .budget { padding: 9px 11px; background: #fafafa; border: 1px solid var(--border); border-radius: 8px; }
+  .aghc-card .budget .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 12px; }
+  .aghc-card .budget .lbl { color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10.5px; }
+  .aghc-card .budget .val { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .aghc-card .budget .val.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+  .aghc-card .budget .bar { margin-top: 6px; height: 6px; background: #ececef; border-radius: 999px; overflow: hidden; }
+  .aghc-card .budget .bar .fill { height: 100%; background: linear-gradient(90deg, #1e8e3e, #34a853); border-radius: 999px; transition: width .3s; }
+  .aghc-card .budget .bar .fill.warn { background: linear-gradient(90deg, #f5a623, #f7b733); }
+  .aghc-card .budget .bar .fill.danger { background: linear-gradient(90deg, #d93025, #ee5a52); }
+  .aghc-card .budget .pct { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Vanity row (visibilità) — sempre verde-friendly per i clienti hotel */
+  /* Riga 5 KPI 15gg AGHC (Impression / Copertura / Interazioni / Clic / Budget) */
+  .aghc-card .aghc-vanity-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .aghc-card .aghc-vanity-row .av-item { background: var(--bg-soft); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+  .aghc-card .aghc-vanity-row .av-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .aghc-card .aghc-vanity-row .av-val { font-size: 14.5px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .aghc-card .aghc-vanity-row .av-val.placeholder { color: var(--text-dim); font-weight: 500; font-style: italic; }
+  @media (max-width: 560px) { .aghc-card .aghc-vanity-row { grid-template-columns: repeat(3, 1fr); } }
+
+  .aghc-card .vanity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px 10px; background: #f1faf3; border: 1px solid #d5ebd9; border-radius: 8px; }
+  .aghc-card .vanity .v-item { text-align: center; }
+  .aghc-card .vanity .v-item .v-lbl { font-size: 10px; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 700; }
+  .aghc-card .vanity .v-item .v-val { font-size: 13.5px; font-weight: 700; color: #14532d; font-variant-numeric: tabular-nums; line-height: 1.15; }
+
+  .error { background: #fdf2f0; color: #b32f1f; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin: 10px 0; }
+
+  /* Loading */
+  .loading { color: var(--text-muted); font-size: 13px; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
+  .spinner { width: 12px; height: 12px; border: 2px solid #e0e0e3; border-top-color: #6a6a70; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Platform filter bar */
+  .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-bar .lbl { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .filter-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 8px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 500; transition: background .15s, border-color .15s; }
+  .filter-chip:hover { background: var(--bg-soft); }
+  .filter-chip.active { background: #1c1c1e; color: #fff; border-color: #1c1c1e; }
+  .filter-chip.active .plogo.google { background: #fff; }
+  .filter-chip .plogo { width: 18px; height: 18px; font-size: 11px; }
+
+  /* Overview chart */
+  .chart-legend { display: flex; gap: 18px; padding: 4px 0 10px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+  .chart-legend .lg-item { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend .lg-swatch { display: inline-block; width: 12px; height: 3px; border-radius: 2px; }
+  .chart-wrap { width: 100%; }
+  .chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-wrap .ax-line { stroke: var(--border); stroke-width: 1; }
+  .chart-wrap .grid-line { stroke: var(--border-soft); stroke-width: 1; stroke-dasharray: 3 3; }
+  .chart-wrap .ax-tick { fill: var(--text-dim); font-size: 10px; font-family: inherit; font-variant-numeric: tabular-nums; }
+  .chart-wrap .ax-tick.right { fill: #0866FF; }
+  .chart-wrap .ax-tick.left { fill: #1c1c1e; }
+  .chart-wrap .line-spend { fill: none; stroke: #1c1c1e; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .chart-wrap .line-leads { fill: none; stroke: #0866FF; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .chart-wrap .dot-spend { fill: #1c1c1e; stroke: #fff; stroke-width: 1.5; }
+  .chart-wrap .dot-leads { fill: #0866FF; stroke: #fff; stroke-width: 1.5; }
+  .chart-wrap .pt-target { fill: transparent; cursor: pointer; }
+  .chart-wrap .tooltip-bg { fill: #1c1c1e; opacity: 0; }
+  .chart-wrap .tooltip-txt { fill: #fff; font-size: 11px; font-family: inherit; opacity: 0; pointer-events: none; }
+  .chart-wrap .x-label { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
+
+  /* Overview search */
+  .ov-search { position: relative; margin-bottom: 14px; }
+  .ov-search .search-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; }
+  .ov-search .search-row .search-ico { font-size: 14px; color: var(--text-muted); flex-shrink: 0; }
+  .ov-search input[type="search"] { flex: 1; font: inherit; font-size: 13px; padding: 6px 8px; border: 0; background: transparent; color: var(--text); outline: none; min-width: 0; }
+  .ov-search input[type="search"]::placeholder { color: var(--text-dim); }
+  .ov-search .clear-btn { font: inherit; font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid #d2d2d7; background: #fff; color: var(--text-muted); cursor: pointer; flex-shrink: 0; }
+  .ov-search .clear-btn:hover { background: #f5f5f7; color: var(--text); }
+  .ov-search .clear-btn.hidden { display: none; }
+  .ov-search .hint { font-size: 11px; color: var(--text-dim); padding: 4px 4px 0; }
+  .ov-search .suggestions { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.08); max-height: 320px; overflow-y: auto; z-index: 50; display: none; }
+  .ov-search .suggestions.show { display: block; }
+  .ov-search .sug-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
+  .ov-search .sug-item:last-child { border-bottom: 0; }
+  .ov-search .sug-item:hover, .ov-search .sug-item.kbd-focus { background: var(--bg-soft); }
+  .ov-search .sug-item .sug-name { font-weight: 600; font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ov-search .sug-item .sug-proj { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; }
+  .ov-search .sug-item .sug-proj.beefamily { background: #fff7d6; color: #8a6a00; }
+  .ov-search .sug-item .sug-proj.aghc { background: #eafff1; color: #14532d; }
+  .ov-search .sug-item .sug-proj.medtech { background: #fde2e2; color: #991b1b; }
+  .ov-search .sug-item .sug-proj.cea { background: #ede0ff; color: #4c1d95; }
+  .ov-search .sug-item .sug-proj.altri { background: #eceff1; color: #455a64; }
+  .ov-search .sug-item .sug-platforms { display: inline-flex; gap: 4px; flex-shrink: 0; }
+  .ov-search .sug-item .sug-platforms .plogo { width: 18px; height: 18px; font-size: 11px; }
+  .ov-search .sug-empty { padding: 14px 16px; color: var(--text-dim); font-style: italic; font-size: 12.5px; text-align: center; }
+
+  /* Single-client card in Overview */
+  .single-card .proj-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #eef2ff; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.05em; }
+  .single-card .proj-badge.beefamily { background: #fff7d6; color: #8a6a00; }
+  .single-card .proj-badge.aghc { background: #eafff1; color: #14532d; }
+  .single-card .proj-badge.medtech { background: #fde2e2; color: #991b1b; }
+  .single-card .proj-badge.cea { background: #ede0ff; color: #4c1d95; }
+  .single-card .proj-badge.altri { background: #eceff1; color: #455a64; }
+  .single-card .header-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .single-card .header-row .name { font-size: 16px; font-weight: 700; }
+  .single-card .stability { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--bg-soft); border: 1px solid var(--border); }
+  .single-card .stability.stable { background: #d1fadf; border-color: #86efac; color: #14532d; }
+  .single-card .stability.medium { background: #fff3cd; border-color: #ffe69c; color: #8a6500; }
+  .single-card .stability.volatile { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+  .single-card .stability.unknown { color: var(--text-dim); }
+  .single-card .alert-banner { padding: 9px 12px; border-radius: 8px; font-size: 12.5px; line-height: 1.45; display: flex; gap: 8px; align-items: flex-start; }
+  .single-card .alert-banner.red { background: #fee2e2; border-left: 3px solid var(--red); color: #7f1d1d; }
+  .single-card .alert-banner.yellow { background: #fff3cd; border-left: 3px solid var(--yellow); color: #6b4500; }
+  .single-card .lead-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .single-card .lead-row .lead-item { background: #f1faf3; border: 1px solid #d5ebd9; border-radius: 8px; padding: 8px 10px; }
+  .single-card .lead-row .lead-item .lbl { font-size: 10px; font-weight: 700; color: #1f6b3a; text-transform: uppercase; letter-spacing: 0.04em; }
+  .single-card .lead-row .lead-item .val { font-size: 15px; font-weight: 700; color: #14532d; font-variant-numeric: tabular-nums; line-height: 1.15; }
+
+  /* Performance summary block — versione leggibile sopra al rational tecnico */
+  .single-card .perf-block { padding: 12px 14px; border-radius: 10px; line-height: 1.55; font-size: 13px; border-left: 4px solid var(--gray); background: var(--bg-soft); }
+  .single-card .perf-block.tier-learning { background: #eef4ff; border-left-color: #0866FF; color: #1e3a8a; }
+  .single-card .perf-block.tier-ottimo   { background: #d1fadf; border-left-color: var(--green); color: #14532d; }
+  .single-card .perf-block.tier-pessimo  { background: #fee2e2; border-left-color: var(--red); color: #7f1d1d; }
+  .single-card .perf-block.tier-in_line  { background: #fff3cd; border-left-color: var(--yellow); color: #6b4500; }
+  .single-card .perf-block .pb-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; font-weight: 700; font-size: 12.5px; }
+  .single-card .perf-block .pb-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; background: rgba(255,255,255,.7); font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+  .single-card .perf-block .pb-meta { font-size: 11px; font-weight: 600; opacity: 0.75; }
+  .single-card .perf-block p { margin: 4px 0; }
+  .single-card .perf-block .pb-stats { display: flex; gap: 14px; flex-wrap: wrap; margin: 8px 0 4px; padding: 8px 10px; background: rgba(255,255,255,.65); border-radius: 8px; font-size: 12.5px; }
+  .single-card .perf-block .pb-stats .s-item { display: flex; flex-direction: column; }
+  .single-card .perf-block .pb-stats .s-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
+  .single-card .perf-block .pb-stats .s-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .single-card .perf-block .pb-creative { padding: 8px 10px; background: rgba(255,255,255,.7); border-radius: 8px; margin-top: 6px; font-size: 12.5px; }
+  .single-card .perf-block .pb-creative .pc-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; display: block; margin-bottom: 3px; }
+  .single-card .perf-block .pb-creative .pc-name { font-weight: 700; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; }
+  .single-card .perf-block .pb-creative .pc-meta { font-size: 11.5px; opacity: 0.75; margin-top: 2px; }
+  .single-card .perf-block .pb-action { margin-top: 6px; font-size: 12.5px; font-weight: 600; }
+
+  /* Mini chart per card (riusa stile chart-wrap) */
+  .single-card .mini-chart-wrap { background: #fafafa; border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px 6px; }
+  .single-card .mini-chart-wrap .mc-title { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .single-card .mini-chart-wrap .mc-loading { color: var(--text-dim); font-size: 12px; padding: 14px 0; text-align: center; font-style: italic; }
+  .single-card .mini-chart-wrap svg { width: 100%; height: auto; display: block; }
+  .single-card .mini-chart-wrap .dot-spend.sel { r: 5; stroke: #1c1c1e; stroke-width: 2; }
+  .single-card .mini-chart-wrap .dot-leads.sel { r: 5; stroke: #0866FF; stroke-width: 2; }
+  .single-card .mini-chart-wrap .pt-target { cursor: pointer; }
+  .single-card .mini-chart-wrap .day-marker { stroke: #1c1c1e; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.4; }
+  /* Day-navigator panel */
+  .single-card .day-nav { display: flex; align-items: center; gap: 10px; margin-top: 6px; padding: 8px 10px; background: #fff; border: 1px solid var(--border); border-radius: 8px; flex-wrap: wrap; }
+  .single-card .day-nav .nav-btn { font: inherit; font-size: 14px; padding: 3px 9px; border-radius: 6px; border: 1px solid #d2d2d7; background: #fff; cursor: pointer; line-height: 1; color: var(--text); }
+  .single-card .day-nav .nav-btn:hover { background: var(--bg-soft); }
+  .single-card .day-nav .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .single-card .day-nav .day-label { font-weight: 700; font-size: 12.5px; font-variant-numeric: tabular-nums; min-width: 120px; text-align: center; }
+  .single-card .day-nav .day-label .small { display: block; font-size: 10.5px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+  .single-card .day-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 6px; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; }
+  .single-card .day-kpis .dk-cell { text-align: center; padding: 6px 4px; border-right: 1px solid var(--border-soft); }
+  .single-card .day-kpis .dk-cell:last-child { border-right: 0; }
+  .single-card .day-kpis .dk-lbl { font-size: 9.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .single-card .day-kpis .dk-val { font-size: 14px; font-weight: 700; color: #0f0f10; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 3px; word-break: break-word; }
+  .single-card .day-kpis-empty { padding: 10px 12px; text-align: center; color: var(--text-dim); font-style: italic; font-size: 12px; background: #fafafa; border: 1px dashed var(--border); border-radius: 8px; margin-top: 6px; }
+  /* Lead row adattiva (1 o 2 colonne) */
+  .single-card .lead-row.cols-1 { grid-template-columns: 1fr; }
+
+  /* Reports list */
+  .report-list { display: flex; flex-direction: column; gap: 4px; }
+  .report-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid var(--border); background: #fff; transition: background .15s, border-color .15s; }
+  .report-item:hover { background: var(--bg-soft); border-color: #d2d2d7; }
+  .report-item .ri-date { font-weight: 600; font-size: 13px; flex-shrink: 0; }
+  .report-item .ri-counts { font-size: 12.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .report-item .ri-counts .c-r { color: var(--red); font-weight: 600; }
+  .report-item .ri-counts .c-y { color: #b88a00; font-weight: 600; }
+  .report-item .ri-counts .c-v { color: var(--green); font-weight: 600; }
+  .report-item .ri-counts .c-n { color: #444; font-weight: 600; }
+  .report-item .ri-arrow { margin-left: auto; color: var(--text-dim); }
+
+  .recap-box { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; color: var(--text); }
+  .recap-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .btn { font: inherit; padding: 7px 14px; border-radius: 8px; border: 1px solid #d2d2d7; background: #fff; color: var(--text); cursor: pointer; font-weight: 500; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: #f5f5f7; }
+  .btn.primary { background: #1c1c1e; color: #fff; border-color: #1c1c1e; }
+  .btn.primary:hover { background: #3a3a3c; }
+  .btn-mini { padding: 4px 10px; font-size: 12px; border-radius: 7px; }
+  .btn-icon { padding: 4px 6px; border-radius: 6px; line-height: 1; }
+  .btn-icon svg { width: 12px; height: 12px; display: block; }
+  /* Bottone "Apri account" con logo piattaforma */
+  .btn-platform { padding: 3px 5px; border-radius: 8px; line-height: 1; display: inline-flex; align-items: center; }
+  .btn-platform .plogo { width: 22px; height: 22px; }
+  .btn-platform:hover { background: var(--bg-soft); }
+
+  /* Filtro semaforico cliccabile */
+  .sem-cell { transition: transform .15s, box-shadow .15s, opacity .15s; user-select: none; }
+  .sem-cell:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+  .sem-cell.active-filter { outline: 3px solid #1c1c1e; outline-offset: -3px; }
+  .sem-grid-filter.has-active .sem-cell:not(.active-filter) { opacity: 0.42; }
+  .copy-feedback { font-size: 12px; color: #1f6b3a; font-weight: 600; opacity: 0; transition: opacity .25s; }
+  .copy-feedback.show { opacity: 1; }
+
+  .alert-row { padding: 10px 16px; border-bottom: 1px solid var(--border-soft); display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+  .alert-row:last-child { border-bottom: 0; }
+  .alert-row .ico { font-size: 16px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+  .alert-row .body-row { flex: 1; min-width: 0; }
+  .alert-row .title { font-weight: 600; }
+  .alert-row .desc { color: var(--text-muted); font-size: 12.5px; margin-top: 2px; }
+  .alert-row .row-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+  .signature { font-size: 11.5px; color: var(--text-dim); margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border-soft); text-align: center; letter-spacing: 0.02em; }
+
+  .muted { color: var(--text-dim); }
+  .small { font-size: 11.5px; }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 14px 14px 50px; }
+    header.h { gap: 8px; margin-bottom: 12px; }
+    header.h h1 { font-size: 18px; }
+    .tab-btn { padding: 8px 12px; font-size: 13px; }
+    .kpis { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .kpi { padding: 11px 12px; }
+    .kpi .value { font-size: 20px; }
+    section.card > h2 { font-size: 12.5px; padding: 10px 14px; }
+    .aghc-card { padding: 12px 14px; }
+    .aghc-card .kpi-row .item .val { font-size: 14px; }
+    .recap-box { font-size: 11.5px; padding: 12px 14px; }
+    .btn { padding: 9px 14px; }
+    table { font-size: 12px; }
+    thead th, tbody td { padding: 7px 10px; }
+  }
+  @media (max-width: 480px) {
+    .wrap { padding: 12px 10px 40px; }
+    header.h h1 { font-size: 17px; }
+    .tabs { gap: 0; }
+    .tab-btn { padding: 8px 10px; font-size: 12.5px; }
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .kpi .value { font-size: 18px; }
+    .aghc-card .name { font-size: 13px; }
+    .btn { width: 100%; }
+    .recap-actions { flex-direction: column; align-items: stretch; }
+    .copy-feedback { text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="h">
+    <div class="title-block">
+      <img class="brand-logo" src="assets/fmm-logo.svg" alt="FMM Consultant" />
+      <div class="title-text">
+        <h1>Dashboard di Controllo</h1>
+        <div class="sub" id="hdr-sub">Caricamento dati…</div>
+      </div>
+    </div>
+    <div class="stamp" id="hdr-stamp"></div>
+  </header>
+
+  <div class="date-bar">
+    <label for="date-select">Giorno:</label>
+    <select id="date-select"><option>Caricamento…</option></select>
+    <div class="nav-spacer"></div>
+    <div class="quick">
+      <button data-quick="0" class="active">Ieri</button>
+      <button data-quick="1">2gg fa</button>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="overview" role="tab">Overview</button>
+    <button class="tab-btn" data-tab="spending" role="tab">Spending</button>
+    <button class="tab-btn" data-tab="beefamily" role="tab">BeeFamily</button>
+    <button class="tab-btn" data-tab="aghc" role="tab">AGHC</button>
+    <button class="tab-btn" data-tab="medtech" role="tab">Med &amp; Tech</button>
+    <button class="tab-btn" data-tab="cea" role="tab">CEA</button>
+  </nav>
+
+  <div id="error-box"></div>
+
+  <section class="tab-panel active" id="tab-overview">
+    <div class="ov-search">
+      <div class="search-row">
+        <span class="search-ico">🔎</span>
+        <input id="ov-search-input" type="search" autocomplete="off" spellcheck="false" placeholder="Cerca account o cliente (es. H&amp;V, Lunetta, CIA ADV…)" />
+        <button type="button" class="clear-btn hidden" id="ov-search-clear" title="Pulisci ricerca">Pulisci</button>
+      </div>
+      <div class="hint" id="ov-search-hint">Carico l'indice account…</div>
+      <div class="suggestions" id="ov-search-sug" role="listbox"></div>
+    </div>
+    <section class="card" id="ov-search-result-card" style="display:none">
+      <h2>Risultato ricerca <span class="pill" id="ov-search-result-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="ov-search-result"></div>
+      </div>
+    </section>
+    <div class="kpis">
+      <div class="kpi total"><div class="label">Spending totale ieri</div><div class="value" id="ov-spend">–</div><div class="sub">Tutti gli account collegati</div></div>
+      <div class="kpi"><div class="label">Account attivi ieri</div><div class="value" id="ov-acc">–</div><div class="sub">con spesa &gt; 0</div></div>
+      <div class="kpi"><div class="label">Account collegati</div><div class="value" id="ov-acc-tot">–</div><div class="sub">Meta · Google · TikTok</div></div>
+      <div class="kpi"><div class="label">Data</div><div class="value" id="ov-date" style="font-size:18px">–</div><div class="sub">Giorno di riferimento</div></div>
+    </div>
+    <section class="card">
+      <h2>Andamento Spesa &amp; Lead Generati <span class="pill" id="ov-chart-pill">ultimi 15 giorni</span></h2>
+      <div class="body" id="ov-chart-body">
+        <div class="chart-legend">
+          <span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa (€)</span>
+          <span class="lg-item"><span class="lg-swatch" style="background:#0866FF"></span> Lead Generati</span>
+        </div>
+        <div class="chart-wrap" id="ov-chart">
+          <div class="loading"><div class="spinner"></div> Carico la serie storica…</div>
+        </div>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Breakdown per piattaforma <span class="pill" id="ov-platforms-pill">–</span></h2>
+      <div class="table-scroll" id="ov-platforms"></div>
+    </section>
+    <section class="card">
+      <h2>Breakdown per progetto <span class="pill" id="ov-projects-pill">–</span></h2>
+      <div class="table-scroll" id="ov-projects"></div>
+    </section>
+  </section>
+
+  <section class="tab-panel" id="tab-spending">
+    <div class="filter-bar" data-filter-scope="sp">
+      <span class="lbl">Piattaforme:</span>
+      <button type="button" class="filter-chip active" data-platform="all">Tutte</button>
+      <button type="button" class="filter-chip active" data-platform="Meta"><span class="plogo meta">M</span> Meta</button>
+      <button type="button" class="filter-chip active" data-platform="Google"><span class="plogo google">G</span> Google</button>
+      <button type="button" class="filter-chip active" data-platform="TikTok"><span class="plogo tiktok"><svg viewBox="0 0 24 24" fill="none"><path fill="#fff" d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6c0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64c0 3.33 2.76 5.7 5.69 5.7c3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg></span> TikTok</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="label">Account analizzati</div><div class="value" id="sp-k-total">–</div><div class="sub" id="sp-k-total-sub">Meta · Google · TikTok</div></div>
+      <div class="kpi danger"><div class="label">Zero anomalo</div><div class="value" id="sp-k-zero">–</div></div>
+      <div class="kpi warn"><div class="label">Sopra soglia</div><div class="value" id="sp-k-high">–</div></div>
+    </div>
+    <section class="card">
+      <h2><span class="status-dot red"></span> Spending ZERO anomalo</h2>
+      <div class="table-scroll" id="sp-zero"></div>
+    </section>
+    <section class="card">
+      <h2><span class="status-dot yellow"></span> Spending sopra soglia (&gt;50€ giorno o +30% vs media 7gg)</h2>
+      <div class="table-scroll" id="sp-high"></div>
+    </section>
+  </section>
+
+  <section class="tab-panel" id="tab-beefamily">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Account attivi ieri</div><div class="value" id="bf-k-acc">–</div><div class="sub" id="bf-k-acc-sub">/ totali</div></div>
+      <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="bf-k-spend">–</div></div>
+      <div class="kpi"><div class="label">Contatti generati ieri</div><div class="value" id="bf-k-contatti">–</div><div class="sub">Lead Ad + LP</div></div>
+      <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="bf-k-cpc">–</div><div class="sub">€ / lead</div></div>
+    </div>
+    <section class="card"><h2>Alert da analizzare <span class="pill" id="bf-alerts-pill">–</span></h2><div id="bf-alerts"></div></section>
+    <section class="card"><h2>Card per cliente <span class="pill" id="bf-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="bf-cards"></div>
+      </div>
+    </section>
+    <section class="card"><h2>Recap copia-incolla per il team</h2>
+      <div class="body">
+        <div class="recap-box" id="bf-recap">–</div>
+        <div class="recap-actions"><button class="btn primary" data-copy="bf-recap">Copia recap</button><span class="copy-feedback" id="bf-copy-fb">Copiato ✓</span></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="tab-panel" id="tab-aghc">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Clienti attivi ieri</div><div class="value" id="ag-k-acc">–</div><div class="sub" id="ag-k-acc-sub">/ totali</div></div>
+      <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="ag-k-spend">–</div></div>
+      <div class="kpi"><div class="label">Spending 15gg</div><div class="value" id="ag-k-spend-w">–</div><div class="sub">finestra mobile</div></div>
+      <div class="kpi"><div class="label">Alert</div><div class="value" id="ag-k-alerts">–</div><div class="sub">rosso + giallo</div></div>
+    </div>
+    <section class="card"><h2>Alert da analizzare <span class="pill" id="ag-alerts-pill">–</span></h2><div id="ag-alerts"></div></section>
+    <section class="card"><h2>Card per cliente <span class="pill" id="ag-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="ag-cards"></div>
+      </div>
+    </section>
+    <!-- Recap globale rimosso: ogni card ha il proprio tasto copia per il rational del cliente -->
+  </section>
+
+  <section class="tab-panel" id="tab-medtech">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Campagne attive ieri</div><div class="value" id="mt-k-camp">–</div><div class="sub">Total Lift / Total Sculpt</div></div>
+      <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="mt-k-spend">–</div></div>
+      <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="mt-k-contatti">–</div><div class="sub">Instant Form</div></div>
+      <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="mt-k-cpc">–</div></div>
+    </div>
+    <!-- Conteggi semafori cliccabili: filtrano le entries -->
+    <div class="kpis sem-grid-filter" data-scope="mt" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="mt-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="mt-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="mt-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="mt-k-nero" style="color:#fff;">–</div></div>
+    </div>
+    <section class="card"><h2>Card per cliente <span class="pill" id="mt-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="mt-cards"></div>
+      </div>
+    </section>
+    <section class="card"><h2>Report disponibili <span class="pill" id="mt-reports-pill">–</span></h2>
+      <div class="body">
+        <div id="mt-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
+        <div style="margin-top: 10px;">
+          <a class="btn" href="https://advfmosca.github.io/med-tech-daily-check/" target="_blank" rel="noopener">Apri archivio completo →</a>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="tab-panel" id="tab-cea">
+    <div class="kpis">
+      <div class="kpi"><div class="label">Campagne attive ieri</div><div class="value" id="cea-k-camp">–</div><div class="sub">CEA</div></div>
+      <div class="kpi total"><div class="label">Spending ieri</div><div class="value" id="cea-k-spend">–</div></div>
+      <div class="kpi"><div class="label">Lead Ad generati ieri</div><div class="value" id="cea-k-contatti">–</div><div class="sub">Instant Form</div></div>
+      <div class="kpi"><div class="label">CPL medio ieri</div><div class="value" id="cea-k-cpc">–</div></div>
+    </div>
+    <!-- Conteggi semafori CEA cliccabili (filtrano le entries) -->
+    <div class="kpis sem-grid-filter" data-scope="cea" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="kpi sem-cell" data-filter="red"    style="background:#fee2e2;border-color:#fca5a5;cursor:pointer;"><div class="label" style="color:#991b1b;">ROSSO</div><div class="value" id="cea-k-rosso" style="color:#991b1b;">–</div></div>
+      <div class="kpi sem-cell" data-filter="yellow" style="background:#ffedd5;border-color:#fed7aa;cursor:pointer;"><div class="label" style="color:#9a3412;">GIALLO</div><div class="value" id="cea-k-giallo" style="color:#9a3412;">–</div></div>
+      <div class="kpi sem-cell" data-filter="green"  style="background:#d1fadf;border-color:#86efac;cursor:pointer;"><div class="label" style="color:#14532d;">VERDE</div><div class="value" id="cea-k-verde" style="color:#14532d;">–</div></div>
+      <div class="kpi sem-cell" data-filter="black"  style="background:#1a1a1a;border-color:#1a1a1a;cursor:pointer;"><div class="label" style="color:#b8b8bf;">NERO</div><div class="value" id="cea-k-nero" style="color:#fff;">–</div></div>
+    </div>
+    <section class="card"><h2>Card per cliente <span class="pill" id="cea-cards-pill">–</span></h2>
+      <div class="body" style="padding: 14px 16px;">
+        <div class="cards-grid" id="cea-cards"></div>
+      </div>
+    </section>
+    <section class="card"><h2>Report disponibili <span class="pill" id="cea-reports-pill">–</span></h2>
+      <div class="body">
+        <div id="cea-reports"><div class="loading"><div class="spinner"></div> Carico l'archivio storico…</div></div>
+        <div style="margin-top: 10px;">
+          <a class="btn" href="cea-daily-check.html" target="_blank" rel="noopener">Apri archivio completo →</a>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <div class="signature">© Francesco Maria Mosca 2026</div>
+</div>
+
+<!-- SVG external link icon for "Apri account" -->
+<svg style="display:none">
+  <symbol id="i-ext" viewBox="0 0 24 24"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></symbol>
+</svg>
+
+<script>
+(function() {
+  "use strict";
+
+  // ============================ HELPERS ============================
+  function escapeHtml(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+  function fmtEUR(n) { if (n == null || isNaN(n)) return "—"; return Number(n).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; }
+  function fmtEURcompact(n) { if (n == null || isNaN(n)) return "—"; if (Math.abs(n) >= 1000) return (n/1000).toFixed(1).replace(".",",") + "k €"; return fmtEUR(n); }
+  function fmtPct(p) { if (p == null || isNaN(p)) return "—"; const s = p >= 0 ? "+" : ""; return s + Number(p).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%"; }
+
+  function platformLogo(p) {
+    if (p === "Meta") {
+      return `<span class="plogo meta" title="Meta">M</span>`;
+    }
+    if (p === "Google") {
+      // Google "G" letter mark with brand-ish colors (red/blue/green/yellow gradient)
+      return `<span class="plogo google" title="Google">
+        <svg viewBox="0 0 18 18" width="14" height="14"><path fill="#4285F4" d="M16.51 8.24c0-.57-.05-1.12-.15-1.65H9v3.13h4.21c-.18.97-.74 1.79-1.57 2.34v1.95h2.54c1.49-1.37 2.33-3.39 2.33-5.77z"/><path fill="#34A853" d="M9 17c2.13 0 3.91-.71 5.21-1.91l-2.54-1.95c-.7.47-1.6.75-2.67.75-2.05 0-3.79-1.39-4.41-3.25H2.04v2.05A8 8 0 0 0 9 17z"/><path fill="#FBBC05" d="M4.59 10.64A4.8 4.8 0 0 1 4.34 9c0-.57.1-1.12.25-1.64V5.31H2.04A8 8 0 0 0 1 9c0 1.29.31 2.51.86 3.59l2.73-1.95z"/><path fill="#EA4335" d="M9 4.16c1.16 0 2.2.4 3.02 1.18l2.26-2.26C12.91.94 11.13 0 9 0 5.84 0 3.16 1.85 2.04 4.56l2.55 1.99C5.21 4.69 6.95 4.16 9 4.16z"/></svg>
+      </span>`;
+    }
+    // TikTok
+    return `<span class="plogo tiktok" title="TikTok">
+      <svg viewBox="0 0 24 24" fill="none"><path fill="#fff" d="M16.6 5.82s.51.5 0 0A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6c0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64c0 3.33 2.76 5.7 5.69 5.7c3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+    </span>`;
+  }
+
+  function openAccountBtn(url, platform) {
+    if (!url) return "";
+    const lbl = platform === "Meta" ? "Apri Meta Ads Manager" : platform === "Google" ? "Apri Google Ads" : platform === "TikTok" ? "Apri TikTok Ads" : "Apri account";
+    // Il bottone usa il LOGO della piattaforma al posto della freccia generica
+    return `<a class="btn btn-mini btn-platform" href="${escapeHtml(url)}" target="_blank" rel="noopener" title="${lbl}">${platformLogo(platform)}</a>`;
+  }
+
+  // Module-scope cache of last loaded data (per filtri client-side)
+  let LAST_DATA = null;
+
+  // Mapping opzionale clienti MT/CEA (target/audience_size/ad_url).
+  // Caricato al boot da mtcea_clients_meta.json; fallback a {} se 404.
+  let MTCEA_META = {};
+  function loadMtCeaMeta() {
+    return fetchJson("mtcea_clients_meta.json")
+      .then(j => { MTCEA_META = j || {}; })
+      .catch(() => { MTCEA_META = {}; });
+  }
+
+  // Filtro semaforico per CEA + Med & Tech (null = mostra tutte; "red"/"yellow"/"green"/"black" = solo quel colore)
+  const SEM_FILTER = { mt: null, cea: null };
+
+  // ============================ TAB SWITCHING ============================
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabPanels = document.querySelectorAll(".tab-panel");
+  function activateTab(t) {
+    tabBtns.forEach(x => x.classList.toggle("active", x.getAttribute("data-tab") === t));
+    tabPanels.forEach(p => p.classList.toggle("active", p.id === "tab-" + t));
+    if (location.hash !== "#" + t) history.replaceState(null, "", "#" + t);
+  }
+  tabBtns.forEach(b => b.addEventListener("click", () => activateTab(b.getAttribute("data-tab"))));
+  // honor initial hash
+  const initialHash = (location.hash || "").replace("#", "");
+  if (initialHash && document.getElementById("tab-" + initialHash)) activateTab(initialHash);
+
+  // ============================ PLATFORM FILTER CHIPS ============================
+  // Stato filtri: per default tutte le piattaforme attive
+  // (dichiarato qui prima dei listener perché syncFilterUI lo legge subito al boot)
+  const FILTER_STATE = {
+    sp: new Set(["Meta", "Google", "TikTok"]),
+    bf: new Set(["Meta", "Google"]),
+  };
+
+  function syncFilterUI(scope) {
+    const bar = document.querySelector(`.filter-bar[data-filter-scope="${scope}"]`);
+    if (!bar) return;
+    const active = FILTER_STATE[scope];
+    const allPlatforms = Array.from(bar.querySelectorAll(".filter-chip"))
+      .map(b => b.getAttribute("data-platform"))
+      .filter(p => p !== "all");
+    const allActive = allPlatforms.every(p => active.has(p));
+    bar.querySelectorAll(".filter-chip").forEach(b => {
+      const plat = b.getAttribute("data-platform");
+      if (plat === "all") b.classList.toggle("active", allActive);
+      else b.classList.toggle("active", active.has(plat));
+    });
+  }
+
+  function rerenderForScope(scope) {
+    if (!LAST_DATA) return;
+    if (scope === "sp") renderSpending(LAST_DATA);
+    else if (scope === "bf") renderBeefamily(LAST_DATA);
+  }
+
+  document.querySelectorAll(".filter-bar").forEach(bar => {
+    const scope = bar.getAttribute("data-filter-scope");
+    const allPlatforms = Array.from(bar.querySelectorAll(".filter-chip"))
+      .map(b => b.getAttribute("data-platform"))
+      .filter(p => p !== "all");
+    bar.querySelectorAll(".filter-chip").forEach(b => {
+      b.addEventListener("click", () => {
+        const plat = b.getAttribute("data-platform");
+        const state = FILTER_STATE[scope];
+        if (plat === "all") {
+          // toggle "tutte": se tutte attive → spegne nulla (no-op); altrimenti rimette tutte
+          allPlatforms.forEach(p => state.add(p));
+        } else {
+          if (state.has(plat)) {
+            state.delete(plat);
+            // Se rimane vuoto, fallback a "tutte"
+            if (state.size === 0) allPlatforms.forEach(p => state.add(p));
+          } else {
+            state.add(plat);
+          }
+        }
+        syncFilterUI(scope);
+        rerenderForScope(scope);
+      });
+    });
+    syncFilterUI(scope);
+  });
+
+  // ============================ SEMAFORI CLICCABILI (filtro CEA + Med & Tech) ============================
+  function syncSemUI(scope) {
+    const grid = document.querySelector(`.sem-grid-filter[data-scope="${scope}"]`);
+    if (!grid) return;
+    const filter = SEM_FILTER[scope];
+    grid.classList.toggle("has-active", !!filter);
+    grid.querySelectorAll(".sem-cell").forEach(c => {
+      c.classList.toggle("active-filter", c.getAttribute("data-filter") === filter);
+    });
+  }
+
+  document.querySelectorAll(".sem-grid-filter .sem-cell").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const grid = cell.closest(".sem-grid-filter");
+      if (!grid) return;
+      const scope = grid.getAttribute("data-scope");
+      const f = cell.getAttribute("data-filter");
+      // Toggle: clic sullo stesso filtro attivo = reset
+      SEM_FILTER[scope] = (SEM_FILTER[scope] === f) ? null : f;
+      syncSemUI(scope);
+      // Ri-rendering della tab interessata
+      if (!LAST_DATA) return;
+      if (scope === "mt")  renderMedtech(LAST_DATA);
+      if (scope === "cea") renderCEA(LAST_DATA);
+    });
+  });
+
+  // ============================ COPY HELPER ============================
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest("[data-copy]");
+    if (!btn) return;
+    const targetId = btn.getAttribute("data-copy");
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const text = el.innerText || el.textContent || "";
+    const finalize = () => {
+      // Priorità: feedback id esplicito via data-copy-fb, altrimenti convenzione "{id}-copy-fb" su id ending -recap
+      const fbId = btn.getAttribute("data-copy-fb") || targetId.replace(/-recap$/, "-copy-fb");
+      const fb = document.getElementById(fbId);
+      if (fb) { fb.classList.add("show"); setTimeout(()=> fb.classList.remove("show"), 1800); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(finalize, () => fallbackCopy(text, finalize));
+    else fallbackCopy(text, finalize);
+  });
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta); cb && cb();
+  }
+
+  // ============================ OPEN VISTA CLIENTE (per-card) ============================
+  // Ogni card AGHC/BF ha un bottone "👁 Anteprima cliente" con data-client-preview="<nome>".
+  // Apre cliente.html?name=<nome>&date=<giorno selezionato> in una nuova finestra/tab.
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest("[data-client-preview]");
+    if (!btn) return;
+    const name = btn.getAttribute("data-client-preview");
+    if (!name) return;
+    const sel = document.getElementById("date-select");
+    const day = sel && sel.value && /^\d{4}-\d{2}-\d{2}$/.test(sel.value) ? sel.value : "";
+    const baseHref = location.origin + location.pathname.replace(/[^/]*$/, "");
+    const url = baseHref + "cliente.html?name=" + encodeURIComponent(name) + (day ? "&date=" + day : "");
+    window.open(url, "_blank", "noopener");
+  });
+
+  function showError(msg) { document.getElementById("error-box").innerHTML = `<div class="error">${escapeHtml(msg)}</div>`; }
+  function clearError() { document.getElementById("error-box").innerHTML = ""; }
+
+  // ============================ RENDER ============================
+  function renderOverview(d) {
+    const ov = d.overview || {};
+    document.getElementById("ov-spend").textContent = fmtEUR(ov.total_spend);
+    document.getElementById("ov-acc").textContent = ov.active_accounts != null ? ov.active_accounts : "–";
+    document.getElementById("ov-acc-tot").textContent = ov.total_accounts != null ? ov.total_accounts : "–";
+    document.getElementById("ov-date").textContent = ov.date_label || "–";
+
+    let html = `<table><thead><tr><th>Piattaforma</th><th class="num">Account attivi</th><th class="num">Spending ieri</th><th class="num">Quota</th></tr></thead><tbody>`;
+    for (const p of ov.platforms || []) {
+      html += `<tr><td><span style="display:inline-flex;align-items:center;gap:8px">${platformLogo(p.name)} <b>${escapeHtml(p.name)}</b></span></td><td class="num">${p.accounts || 0}</td><td class="num">${fmtEUR(p.spend)}</td><td class="num">${(p.pct != null ? Number(p.pct).toFixed(1) : "0.0")}%</td></tr>`;
+    }
+    html += `</tbody></table>`;
+    document.getElementById("ov-platforms").innerHTML = html;
+    document.getElementById("ov-platforms-pill").textContent = "Tot: " + fmtEUR(ov.total_spend);
+
+    let p_html = `<table><thead><tr><th>Progetto</th><th class="num">Account/Camp.</th><th class="num">Spending ieri</th><th class="num">Quota</th></tr></thead><tbody>`;
+    for (const p of ov.projects || []) {
+      p_html += `<tr><td><b>${escapeHtml(p.name)}</b></td><td class="num">${p.accounts || 0}</td><td class="num">${fmtEUR(p.spend)}</td><td class="num">${(p.pct != null ? Number(p.pct).toFixed(1) : "0.0")}%</td></tr>`;
+    }
+    p_html += `</tbody></table>`;
+    document.getElementById("ov-projects").innerHTML = p_html;
+    document.getElementById("ov-projects-pill").textContent = (ov.projects || []).length + " progetti";
+
+    // Rebuild search index ogni volta che cambiano i dati Overview
+    rebuildSearchIndex(d);
+  }
+
+  // ============================ SEARCH + SINGLE-CLIENT CARD ============================
+  // Indice unificato dei "clienti/account" cercabili — un entry per nome univoco.
+  // Sorgenti, in ordine di priorità (vince la prima per dati ricchi tipo rational/budget):
+  //   1. AGHC cards  → progetto "AGHC"        (Meta + opt. TikTok)
+  //   2. BF cards    → progetto "BeeFamily"   (Meta + Google raggruppati)
+  //   3. BF entries  → progetto "BeeFamily"   (account singoli non-card)
+  //   4. CEA entries → progetto "CEA"
+  //   5. Medtech     → progetto "Med & Tech"
+  //   6. Spending zero/high + other_roster → progetto "Altri" (solo nome+spend+link)
+  let SEARCH_INDEX = [];
+  let SUG_FOCUS = -1;
+  const SNAP_CACHE = {};        // { "YYYY-MM-DD": snapJson | null | Promise }
+  let LAST_15D_DATES = null;    // array di 15 date ASC (più recente per ultimo)
+
+  function projectKey(p) {
+    if (p === "AGHC") return "aghc";
+    if (p === "BeeFamily") return "beefamily";
+    if (p === "Med & Tech") return "medtech";
+    if (p === "CEA") return "cea";
+    return "altri";
+  }
+  function normalize(s) { return String(s == null ? "" : s).toLowerCase().replace(/\s+/g, " ").trim(); }
+
+  function rebuildSearchIndex(d) {
+    const byName = new Map();
+    function add(entry) {
+      const key = normalize(entry.name);
+      if (!key) return;
+      if (!byName.has(key)) {
+        byName.set(key, entry);
+      } else {
+        // Merge — completa i campi mancanti del primo (priorità più alta)
+        const prev = byName.get(key);
+        for (const k of Object.keys(entry)) {
+          if (prev[k] == null && entry[k] != null) prev[k] = entry[k];
+          if (k === "ad_urls") {
+            prev.ad_urls = Object.assign({}, entry.ad_urls || {}, prev.ad_urls || {});
+            // se prev mancava una piattaforma, copia
+            for (const pf of ["Meta","Google","TikTok"]) {
+              if (!prev.ad_urls[pf] && (entry.ad_urls || {})[pf]) prev.ad_urls[pf] = entry.ad_urls[pf];
+            }
+          }
+          if (k === "search_terms") prev.search_terms = Array.from(new Set((prev.search_terms||[]).concat(entry.search_terms||[])));
+        }
+      }
+    }
+
+    // 1) AGHC
+    for (const c of (d.aghc && d.aghc.cards) || []) {
+      const adUrls = {};
+      if (c.ad_url_meta)   adUrls.Meta = c.ad_url_meta;
+      if (c.ad_url_tiktok) adUrls.TikTok = c.ad_url_tiktok;
+      add({
+        id: "aghc-" + c.id,
+        name: c.name,
+        project: "AGHC",
+        spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days || 15,
+        contatti_y: c.contatti_y != null ? c.contatti_y : null,
+        trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+        status: c.status, rational: c.rational,
+        budget: c.budget, series_spend: c.series,
+        vanity: c.vanity || null,
+        ad_urls: adUrls,
+        search_terms: [c.name, c.id]
+      });
+    }
+
+    // 2) BeeFamily cards
+    for (const c of (d.beefamily && d.beefamily.cards) || []) {
+      const adUrls = {};
+      if (c.ad_url_meta)   adUrls.Meta = c.ad_url_meta;
+      if (c.ad_url_google) adUrls.Google = c.ad_url_google;
+      const campNames = [].concat(
+        (c.meta_campaigns || []).map(x => x.name),
+        (c.google_campaigns || []).map(x => x.name)
+      ).filter(Boolean);
+      add({
+        id: "bf-" + c.id,
+        name: c.name,
+        project: "BeeFamily",
+        spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days || 15,
+        contatti_y: c.contatti_y != null ? c.contatti_y : null,
+        contatti_window: c.contatti_window != null ? c.contatti_window : null,
+        cpl_window: c.cpl_window != null ? c.cpl_window : null,
+        trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+        status: c.status, rational: c.rational,
+        meta_campaigns: c.meta_campaigns || [],
+        google_campaigns: c.google_campaigns || [],
+        ad_urls: adUrls,
+        search_terms: [c.name, c.id].concat(campNames)
+      });
+    }
+    // 2b) BF entries — somma contatti_y per nome di card (così il numero "lead ieri" è preciso)
+    const bfContattiByName = new Map();
+    const bfPrev7ContattiByName = new Map();
+    for (const e of (d.beefamily && d.beefamily.entries) || []) {
+      const k = normalize(e.name);
+      bfContattiByName.set(k, (bfContattiByName.get(k) || 0) + (Number(e.contatti_y) || 0));
+      bfPrev7ContattiByName.set(k, (bfPrev7ContattiByName.get(k) || 0) + (Number(e.prev7_contatti) || 0));
+    }
+    for (const [k, v] of bfContattiByName) {
+      if (byName.has(k)) {
+        byName.get(k).contatti_y = v;
+        byName.get(k).prev7_contatti = bfPrev7ContattiByName.get(k) || 0;
+      }
+    }
+    // 2c) BF entries non-card — ogni account separato (per ricerca per nome account)
+    for (const e of (d.beefamily && d.beefamily.entries) || []) {
+      const adUrls = {};
+      if (e.source && e.ad_url) adUrls[e.source] = e.ad_url;
+      add({
+        id: "bf-e-" + normalize(e.name) + "-" + (e.source || "x"),
+        name: e.name,
+        project: "BeeFamily",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y, prev7_contatti: e.prev7_contatti,
+        status: e.status, ad_urls: adUrls,
+        search_terms: [e.name, e.source]
+      });
+    }
+
+    // 3) Med & Tech entries
+    for (const e of (d.medtech && d.medtech.entries) || []) {
+      const adUrls = {};
+      if (e.ad_url) adUrls.Meta = e.ad_url;
+      const clientShort = extractMTCEAClient(e.name);
+      add({
+        id: "mt-" + normalize(e.name),
+        name: clientShort, // espongo SOLO il nome cliente (estratto) in SEARCH_INDEX
+        project: "Med & Tech",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
+        prev7_contatti: e.prev7_contatti != null ? e.prev7_contatti : e.prev7_lead,
+        status: e.status, rational: null,
+        ad_urls: adUrls,
+        cpl_y: e.cpl_y, performance_eval: e.performance_eval,
+        _mtcea_entry: e,
+        search_terms: [e.name, e.source, clientShort]
+      });
+    }
+
+    // 4) CEA entries
+    for (const e of (d.cea && d.cea.entries) || []) {
+      const adUrls = {};
+      if (e.ad_url) adUrls.Meta = e.ad_url;
+      const clientShort = extractMTCEAClient(e.name);
+      add({
+        id: "cea-" + normalize(e.name),
+        name: clientShort,
+        project: "CEA",
+        spend_y: e.spend_y, spend_window: null, window_days: 15,
+        contatti_y: e.contatti_y != null ? e.contatti_y : e.lead_y,
+        prev7_contatti: e.prev7_contatti != null ? e.prev7_contatti : e.prev7_lead,
+        status: e.status, rational: null,
+        ad_urls: adUrls,
+        cpl_y: e.cpl_y, performance_eval: e.performance_eval,
+        _mtcea_entry: e,
+        search_terms: [e.name, e.source, clientShort]
+      });
+    }
+
+    // 5) Spending alerts (zero + high) → arricchiscono le card esistenti con alert_spesa
+    function attachSpendAlert(arr, kind) {
+      for (const r of (arr || [])) {
+        const k = normalize(r.account_name);
+        const adUrls = {};
+        if (r.platform && r.ad_url) adUrls[r.platform] = r.ad_url;
+        if (byName.has(k)) {
+          const item = byName.get(k);
+          item.alert_spesa = item.alert_spesa || { kind, reason: spendAlertReason(r, kind) };
+          item.ad_urls = Object.assign({}, item.ad_urls || {}, adUrls);
+        } else {
+          // Account "Altri" — non in BF/AGHC/CEA/MT
+          add({
+            id: "sp-" + (r.account_id || normalize(r.account_name)),
+            name: r.account_name,
+            project: "Altri",
+            spend_y: r.target, spend_window: null, window_days: 15,
+            ad_urls: adUrls,
+            alert_spesa: { kind, reason: spendAlertReason(r, kind) },
+            search_terms: [r.account_name, r.account_id, r.platform]
+          });
+        }
+      }
+    }
+    attachSpendAlert((d.spending && d.spending.zero) || [], "red");
+    attachSpendAlert((d.spending && d.spending.high) || [], "yellow");
+
+    // 6) Other roster (account che non rientrano in alcun progetto ma sono collegati)
+    for (const a of (d.other_roster && d.other_roster.accounts) || []) {
+      const adUrls = {};
+      if (a.ad_url) adUrls.Meta = a.ad_url; // other_roster contiene Meta nel snapshot attuale
+      add({
+        id: "or-" + (a.account_id || normalize(a.account_name)),
+        name: a.account_name,
+        project: "Altri",
+        spend_y: a.spend_y, spend_window: a.spend_window_15d, window_days: 15,
+        ad_urls: adUrls,
+        search_terms: [a.account_name, a.account_id]
+      });
+    }
+
+    SEARCH_INDEX = Array.from(byName.values()).sort((a,b) => normalize(a.name).localeCompare(normalize(b.name)));
+    const hint = document.getElementById("ov-search-hint");
+    if (hint) hint.textContent = SEARCH_INDEX.length + " account/clienti indicizzati · cerca per nome, ID o nome campagna";
+  }
+
+  function spendAlertReason(r, kind) {
+    if (kind === "red") {
+      const tag = "Spesa ieri 0 € · media 7gg " + fmtEUR(r.mean7);
+      return tag;
+    }
+    // yellow
+    const trigs = (r.triggers || []).join(", ") || "fuori soglia";
+    return "Spesa ieri " + fmtEUR(r.target) + " (media 7gg " + fmtEUR(r.mean7) + ", Δ " + fmtPct(r.delta) + ") · " + trigs;
+  }
+
+  function scoreMatch(item, q) {
+    const n = normalize(item.name);
+    if (n === q) return 100;
+    if (n.startsWith(q)) return 80;
+    if (n.includes(q)) return 60;
+    for (const t of (item.search_terms || [])) {
+      const nt = normalize(t);
+      if (!nt) continue;
+      if (nt === q) return 50;
+      if (nt.startsWith(q)) return 40;
+      if (nt.includes(q)) return 25;
+    }
+    return 0;
+  }
+
+  function searchQuery(q) {
+    q = normalize(q);
+    if (!q || q.length < 1) return [];
+    const scored = SEARCH_INDEX.map(it => ({ it, s: scoreMatch(it, q) }))
+      .filter(x => x.s > 0)
+      .sort((a,b) => b.s - a.s || normalize(a.it.name).localeCompare(normalize(b.it.name)));
+    return scored.slice(0, 12).map(x => x.it);
+  }
+
+  function renderSuggestions(items) {
+    const root = document.getElementById("ov-search-sug");
+    if (!root) return;
+    SUG_FOCUS = -1;
+    if (items.length === 0) {
+      root.innerHTML = `<div class="sug-empty">Nessun account trovato</div>`;
+      root.classList.add("show");
+      return;
+    }
+    let html = "";
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      const pk = projectKey(it.project);
+      const platforms = Object.keys(it.ad_urls || {});
+      const platformIcons = platforms.length
+        ? `<span class="sug-platforms">${platforms.map(p => platformLogo(p)).join("")}</span>`
+        : "";
+      html += `<div class="sug-item" data-idx="${i}" data-id="${escapeHtml(it.id)}" role="option">
+        <span class="sug-name">${escapeHtml(it.name)}</span>
+        ${platformIcons}
+        <span class="sug-proj ${pk}">${escapeHtml(it.project)}</span>
+      </div>`;
+    }
+    root.innerHTML = html;
+    root.classList.add("show");
+    root.querySelectorAll(".sug-item").forEach(el => {
+      el.addEventListener("mousedown", (e) => { e.preventDefault(); selectById(el.getAttribute("data-id")); });
+    });
+  }
+  function hideSuggestions() {
+    const root = document.getElementById("ov-search-sug");
+    if (root) root.classList.remove("show");
+    SUG_FOCUS = -1;
+  }
+  function selectById(id) {
+    const item = SEARCH_INDEX.find(x => x.id === id);
+    if (!item) return;
+    hideSuggestions();
+    const input = document.getElementById("ov-search-input");
+    if (input) input.value = item.name;
+    document.getElementById("ov-search-clear").classList.remove("hidden");
+    renderSingleCard(item);
+  }
+
+  // Calcola la serie 7gg per il cliente partendo dai snapshot (lazy).
+  const SNAP_WINDOW_DAYS = 7;
+  function ensureSnapshotDates() {
+    if (LAST_15D_DATES) return Promise.resolve(LAST_15D_DATES);
+    return fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, SNAP_WINDOW_DAYS).reverse(); // ASC
+      LAST_15D_DATES = dates;
+      return dates;
+    });
+  }
+  function loadSnapshot(date) {
+    if (SNAP_CACHE[date] !== undefined) return Promise.resolve(SNAP_CACHE[date]);
+    const p = fetchJson("snapshots/" + date + ".json").then(j => { SNAP_CACHE[date] = j; return j; }).catch(() => { SNAP_CACHE[date] = null; return null; });
+    SNAP_CACHE[date] = p;
+    return p;
+  }
+
+  // Per uno snapshot, estrae { spend, leads, impressions, clicks, cpl, ctr, cpm } per il cliente.
+  // Cerca per nome (normalizzato) in:
+  //   aghc.cards → BF cards → BF entries → CEA entries → Medtech entries → other_roster
+  // I valori derivati (cpl/ctr/cpm) sono calcolati a partire dai totali se non già forniti.
+  function extractDailyForClient(snap, clientName) {
+    const empty = { spend: null, leads: null, impressions: null, clicks: null, reach: null, page_engagement: null, cpl: null, ctr: null, cpm: null };
+    if (!snap) return empty;
+    const key = normalize(clientName);
+
+    // Stati di aggregazione (somma sui campi che si possono sommare)
+    let spend = null, leads = null, impressions = null, clicks = null;
+    let reach = null, page_engagement = null; // AGHC-only (Meta-side, dal vanity_y)
+    function add(s, l, imp, clk) {
+      if (s   != null) spend       = (spend       || 0) + (Number(s)   || 0);
+      if (l   != null) leads       = (leads       || 0) + (Number(l)   || 0);
+      if (imp != null) impressions = (impressions || 0) + (Number(imp) || 0);
+      if (clk != null) clicks      = (clicks      || 0) + (Number(clk) || 0);
+    }
+    let touched = false;
+
+    // 1) AGHC card (Meta + opt TikTok aggregati lato server in spend_y/contatti_y).
+    // Per AGHC popoliamo anche impressions/reach/page_engagement/clicks dal vanity_y
+    // se presenti nello snapshot (i campi sono Meta-only).
+    for (const c of (snap.aghc && snap.aghc.cards) || []) {
+      if (normalize(c.name) === key) {
+        add(c.spend_y, c.contatti_y, null, null);
+        const v = c.vanity || {};
+        if (v.impressions_y != null) impressions = (impressions || 0) + Number(v.impressions_y);
+        if (v.clicks_y      != null) clicks      = (clicks      || 0) + Number(v.clicks_y);
+        if (v.reach_y       != null && v.reach_y > 0) reach = Number(v.reach_y);
+        if (v.page_eng_y    != null) page_engagement = Number(v.page_eng_y);
+        touched = true;
+        break;
+      }
+    }
+
+    // 2) BF card (solo spesa) + somma contatti dalle entries
+    if (!touched) {
+      for (const c of (snap.beefamily && snap.beefamily.cards) || []) {
+        if (normalize(c.name) === key) { add(c.spend_y, null, null, null); touched = true; break; }
+      }
+      // Aggiungi contatti dalle entries (lead non sono sulla card BF aggregata)
+      for (const e of (snap.beefamily && snap.beefamily.entries) || []) {
+        if (normalize(e.name) === key) {
+          if (touched) { add(null, e.contatti_y, null, null); }
+          else { add(e.spend_y, e.contatti_y, null, null); touched = true; }
+        }
+      }
+    }
+
+    // 3) CEA / Med&Tech entries (hanno impressions, clicks, cpl_y, ctr, cpm).
+    // Confrontiamo SIA sul nome campagna completo SIA sul cliente estratto (auto-estrazione
+    // basata su ' - '), perche' la SEARCH_INDEX espone il cliente estratto.
+    if (!touched) {
+      for (const e of (snap.cea && snap.cea.entries) || []) {
+        const eClient = extractMTCEAClient(e.name);
+        if (normalize(e.name) === key || normalize(eClient) === key) {
+          const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
+          add(e.spend_y, l, e.impressions, e.clicks);
+          touched = true;
+        }
+      }
+    }
+    if (!touched) {
+      for (const e of (snap.medtech && snap.medtech.entries) || []) {
+        const eClient = extractMTCEAClient(e.name);
+        if (normalize(e.name) === key || normalize(eClient) === key) {
+          const l = e.contatti_y != null ? e.contatti_y : e.lead_y;
+          add(e.spend_y, l, e.impressions, e.clicks);
+          touched = true;
+        }
+      }
+    }
+
+    // 4) Other roster (solo spend_y)
+    if (!touched) {
+      for (const a of (snap.other_roster && snap.other_roster.accounts) || []) {
+        if (normalize(a.account_name) === key) { add(a.spend_y, null, null, null); touched = true; break; }
+      }
+    }
+
+    if (!touched) return empty;
+
+    // Derivati
+    const cpl = (leads != null && leads > 0 && spend != null) ? (spend / leads) : null;
+    const ctr = (impressions != null && impressions > 0 && clicks != null) ? (clicks / impressions * 100) : null;
+    const cpm = (impressions != null && impressions > 0 && spend  != null) ? (spend / impressions * 1000) : null;
+
+    return { spend, leads, impressions, clicks, reach, page_engagement, cpl, ctr, cpm };
+  }
+
+  function loadDailySeries15d(clientName) {
+    return ensureSnapshotDates().then(dates =>
+      Promise.all(dates.map(d => loadSnapshot(d).then(s => ({ date: d, snap: s }))))
+        .then(rows => rows.map(r => Object.assign({ date: r.date }, extractDailyForClient(r.snap, clientName))))
+    );
+  }
+
+  // Mini-chart spesa+lead INTERATTIVO. Cliccando un punto / hitbox cambia il giorno selezionato.
+  // onSelect(i) viene chiamato con l'indice rispetto a `series` (compresi i giorni con spend=null).
+  function drawMiniChart(root, series, selectedIdx, onSelect) {
+    // Costruiamo la mappa idx_originale ↔ indice nei valid (per evidenziare il punto del giorno selezionato).
+    const valid = [];
+    const validToOrig = [];
+    for (let i = 0; i < series.length; i++) {
+      if (series[i].spend != null) { valid.push(series[i]); validToOrig.push(i); }
+    }
+    if (valid.length === 0) { root.innerHTML = `<div class="mc-loading">Nessun dato giornaliero negli snapshot</div>`; return; }
+    const W = 640, H = 170;
+    const padL = 44, padR = 44, padT = 8, padB = 30;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = valid.length;
+    const spends = valid.map(p => p.spend);
+    const leads  = valid.map(p => p.leads != null ? p.leads : 0);
+    const hasLeads = valid.some(p => p.leads != null && p.leads > 0);
+    const spendMax = Math.max(...spends) * 1.15 || 1;
+    const leadMax  = Math.max(...leads, 1) * 1.15;
+    const xAt = i => padL + (n <= 1 ? innerW/2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax)  * innerH;
+
+    let grid = "";
+    const steps = 3;
+    for (let i = 0; i <= steps; i++) {
+      const y = padT + (innerH * i) / steps;
+      grid += `<line class="grid-line" x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}"/>`;
+    }
+
+    // x labels: una sotto ogni punto (con N=7 ci sta tutto)
+    const xLabels = [];
+    for (let i = 0; i < n; i++) {
+      xLabels.push(`<text class="x-label" x="${xAt(i)}" y="${H - padB + 14}" text-anchor="middle">${escapeHtml(shortDate(valid[i].date))}</text>`);
+    }
+    const pathSpend = spends.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = hasLeads ? leads.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + yLeads(v)).join(" ") : "";
+
+    // Indice valid corrispondente al giorno selezionato
+    let selValidIdx = validToOrig.indexOf(selectedIdx);
+    if (selValidIdx < 0) selValidIdx = n - 1;
+
+    // Day-marker: linea verticale tratteggiata sul giorno selezionato
+    const selX = xAt(selValidIdx);
+    const dayMarker = `<line class="day-marker" x1="${selX}" x2="${selX}" y1="${padT}" y2="${padT + innerH}"/>`;
+
+    // Dots + hitbox cliccabili
+    let dots = "", interact = "";
+    for (let i = 0; i < n; i++) {
+      const xs = xAt(i);
+      const isSel = i === selValidIdx;
+      dots += `<circle class="dot-spend ${isSel ? 'sel' : ''}" cx="${xs}" cy="${ySpend(spends[i])}" r="${isSel ? 4 : 2.5}"/>`;
+      if (hasLeads) dots += `<circle class="dot-leads ${isSel ? 'sel' : ''}" cx="${xs}" cy="${yLeads(leads[i])}" r="${isSel ? 4 : 2.5}"/>`;
+      interact += `<rect class="pt-target" x="${xs - innerW/(n*2)}" y="${padT}" width="${innerW/n}" height="${innerH}" data-orig-idx="${validToOrig[i]}"/>`;
+    }
+
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Serie giornaliera spesa e lead — naviga giorno per giorno">
+      ${grid}
+      <line class="ax-line" x1="${padL}" x2="${W - padR}" y1="${padT + innerH}" y2="${padT + innerH}"/>
+      ${dayMarker}
+      <path class="line-spend" d="${pathSpend}"/>
+      ${pathLeads ? `<path class="line-leads" d="${pathLeads}"/>` : ""}
+      ${dots}
+      ${xLabels.join("")}
+      ${interact}
+    </svg>`;
+    root.innerHTML = svg;
+
+    // Wire click handlers
+    if (onSelect) {
+      root.querySelectorAll(".pt-target").forEach(el => {
+        el.addEventListener("click", () => {
+          const i = Number(el.getAttribute("data-orig-idx"));
+          if (!isNaN(i)) onSelect(i);
+        });
+      });
+    }
+  }
+
+  // Pannello "giorno selezionato" con i KPI del giorno.
+  // kind:
+  //  - 'aghc': Budget + Impression + Copertura + Interazioni + Clic (no Lead/CPL/CTR/CPM).
+  //  - 'bf':   Budget + Contatti + CPL (BF lavora a contatti+CPL, non a vanity).
+  //  - 'other' (default): Budget + Lead + CPL + CTR + CPM (CEA/MedTech/Other).
+  // Mostra SOLO le celle con dato disponibile per quel giorno.
+  function renderDayPanel(panelRoot, series, idx, kind) {
+    if (!panelRoot) return 0;
+    const p = series[idx] || {};
+    function cell(lbl, val) {
+      return `<div class="dk-cell"><div class="dk-lbl">${escapeHtml(lbl)}</div><div class="dk-val">${val}</div></div>`;
+    }
+    const fmtNum = v => Math.round(v).toLocaleString("it-IT");
+    const fmtPctVal = v => v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+    const cells = [];
+    if (p.spend != null) cells.push(cell("Budget", fmtEUR(p.spend)));
+    if (kind === 'aghc') {
+      // KPI AGHC giornalieri (presenti solo se la series è stata arricchita da build_data.py).
+      // Reach: mostrato solo se > 0 (il refresh script popola `reach` da Meta solo dal 2026-05-20).
+      if (p.impressions     != null && p.impressions     > 0) cells.push(cell("Impression",  fmtNum(p.impressions)));
+      if (p.reach           != null && p.reach           > 0) cells.push(cell("Copertura",   fmtNum(p.reach)));
+      if (p.page_engagement != null && p.page_engagement > 0) cells.push(cell("Interazioni", fmtNum(p.page_engagement)));
+      if (p.clicks          != null && p.clicks          > 0) cells.push(cell("Clic",        fmtNum(p.clicks)));
+    } else if (kind === 'bf') {
+      if (p.leads != null) cells.push(cell("Contatti", fmtNum(p.leads)));
+      if (p.cpl   != null) cells.push(cell("CPL",      fmtEUR(p.cpl)));
+    } else {
+      if (p.leads != null) cells.push(cell("Lead", fmtNum(p.leads)));
+      if (p.cpl   != null) cells.push(cell("CPL",  fmtEUR(p.cpl)));
+      if (p.ctr   != null) cells.push(cell("CTR",  fmtPctVal(p.ctr)));
+      if (p.cpm   != null) cells.push(cell("CPM",  fmtEUR(p.cpm)));
+    }
+    if (cells.length === 0) {
+      panelRoot.classList.add("day-kpis-empty");
+      panelRoot.classList.remove("day-kpis");
+      panelRoot.innerHTML = "Nessun KPI disponibile per questo giorno";
+    } else {
+      panelRoot.classList.remove("day-kpis-empty");
+      panelRoot.classList.add("day-kpis");
+      panelRoot.innerHTML = cells.join("");
+    }
+    return cells.length;
+  }
+
+  // Etichetta giorno italiana per la day-nav
+  function dayLabelIT(iso) {
+    const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return iso || "—";
+    const wd = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+    const mo = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+    const dt = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return `${wd[dt.getDay()]} ${Number(m[3])} ${mo[dt.getMonth()]}`;
+  }
+
+  function stabilityFromSeries(series) {
+    const vals = series.map(p => p.spend).filter(v => v != null);
+    if (vals.length < 4) return { cls: "unknown", label: "Stabilità n/d", cv: null };
+    const mean = vals.reduce((a,b)=>a+b,0) / vals.length;
+    if (mean <= 0) return { cls: "unknown", label: "Stabilità n/d", cv: null };
+    const variance = vals.reduce((a,b)=>a + (b-mean)*(b-mean), 0) / vals.length;
+    const cv = Math.sqrt(variance) / mean;
+    let cls, label;
+    if (cv < 0.15) { cls = "stable"; label = "Stabile"; }
+    else if (cv < 0.35) { cls = "medium"; label = "Volatile"; }
+    else { cls = "volatile"; label = "Molto volatile"; }
+    return { cls, label: label + " (CV " + (cv*100).toFixed(0) + "%)", cv };
+  }
+
+  function leadAvg7d(series) {
+    // Ultimi 7 giorni con dato lead
+    const lastN = series.slice(-7);
+    const withLead = lastN.filter(p => p.leads != null);
+    if (withLead.length === 0) return null;
+    const sum = withLead.reduce((a,b) => a + (b.leads || 0), 0);
+    return sum / withLead.length;
+  }
+
+  // ============================ PERFORMANCE ASSESSMENT ============================
+  // Valutazione semplificata "ottimo / in_line / pessimo / learning" per il blocco Performance.
+  // Sorgenti del segnale:
+  //   1. status.color del giorno corrente (red/yellow/green/gray)
+  //   2. days_active sui 7gg → se < 3 → "learning" (campagna troppo giovane per ottimizzare)
+  //   3. Per CEA/Med&Tech: anche il CTR (>1.5% buono, <0.7% pessimo)
+  function assessPerformance(item, series) {
+    const daysActive = series.filter(p => p.spend != null && p.spend > 0).length;
+    // Primo giorno della finestra con spesa = "start visible" (può essere precedente, non lo sappiamo)
+    const firstActive = series.find(p => p.spend != null && p.spend > 0);
+    const startDate = firstActive ? firstActive.date : null;
+
+    // Tier base da status del giorno corrente
+    let tier = "in_line";
+    const color = (item.status && item.status.color) || "gray";
+    if (color === "green") tier = "ottimo";
+    else if (color === "red") tier = "pessimo";
+    else if (color === "yellow") tier = "in_line";
+    else tier = "in_line";
+
+    // Override learning se troppo giovane
+    if (daysActive < 3) tier = "learning";
+
+    // CTR signal per CEA/MedTech: medio ultimi 7gg
+    let ctrAvg = null;
+    if (item.project === "CEA" || item.project === "Med & Tech") {
+      const ctrVals = series.map(p => p.ctr).filter(v => v != null);
+      if (ctrVals.length > 0) ctrAvg = ctrVals.reduce((a,b)=>a+b,0) / ctrVals.length;
+      // Se il tier è "in_line" ma CTR forte/debole, sposta
+      if (tier !== "learning") {
+        if (ctrAvg != null) {
+          if (ctrAvg >= 1.5 && tier === "in_line") tier = "ottimo";
+          else if (ctrAvg < 0.7 && tier !== "pessimo") tier = "pessimo";
+        }
+      }
+    }
+
+    // CPL signal: confronto ultimi 3gg vs media precedente
+    const cplVals = series.map(p => p.cpl).filter(v => v != null);
+    let cplAvg = cplVals.length ? cplVals.reduce((a,b)=>a+b,0) / cplVals.length : null;
+
+    return { tier, daysActive, startDate, ctrAvg, cplAvg, color };
+  }
+
+  // Per BeeFamily: trova la campagna con miglior CPL nei 15gg (campagne meta che hanno lead > 0)
+  function bestCreativeBF(item) {
+    const all = []
+      .concat((item.meta_campaigns || []).map(c => Object.assign({ channel: "META" }, c)))
+      .concat((item.google_campaigns || []).map(c => Object.assign({ channel: "GOOGLE" }, c)));
+    const withLead = all.filter(c => c.lead != null && c.lead > 0 && c.cpl != null);
+    if (withLead.length === 0) {
+      // Fallback: campagna con più spesa
+      const bySpend = all.filter(c => c.spend != null && c.spend > 0).sort((a,b) => (b.spend||0) - (a.spend||0));
+      return bySpend[0] || null;
+    }
+    withLead.sort((a,b) => a.cpl - b.cpl);
+    return withLead[0];
+  }
+
+  // Restante "tempo contratto" disponibile solo per AGHC con budget annuo.
+  // Calcoliamo i giorni residui rispetto al 31/12 dell'anno del budget.
+  function daysToYearEnd(budgetYear) {
+    if (!budgetYear) return null;
+    const today = new Date();
+    const end = new Date(Number(budgetYear), 11, 31);
+    const ms = end - today;
+    if (ms <= 0) return 0;
+    return Math.ceil(ms / (1000 * 60 * 60 * 24));
+  }
+
+  // Costruisce l'HTML del blocco "Performance" leggibile.
+  function buildPerformanceBlock(item, series) {
+    if (!series || series.length === 0) return ""; // niente serie → niente blocco
+    const assess = assessPerformance(item, series);
+    const { tier, daysActive, startDate, ctrAvg, cplAvg } = assess;
+
+    // Aggregati 7gg
+    const totSpend = series.reduce((s,p) => s + (p.spend || 0), 0);
+    const totLeads = series.reduce((s,p) => s + (p.leads || 0), 0);
+    const cplOverall = totLeads > 0 ? totSpend / totLeads : null;
+
+    // Header
+    const tierLabel = tier === "learning" ? "In apprendimento"
+                    : tier === "ottimo"   ? "Performance ottime"
+                    : tier === "pessimo"  ? "Performance da rivedere"
+                    : "Performance in linea";
+
+    const startMeta = [];
+    if (startDate) {
+      const fromDays = daysActive >= series.length ? `≥${series.length}` : daysActive;
+      startMeta.push(`Attiva da almeno ${fromDays} ${daysActive === 1 ? "giorno" : "giorni"} nella finestra · primo giorno visto: ${escapeHtml(dayLabelIT(startDate))}`);
+    }
+    // Giorni residui anno solo per AGHC con budget anno
+    if (item.project === "AGHC" && item.budget && item.budget.year) {
+      const rem = daysToYearEnd(item.budget.year);
+      if (rem != null) startMeta.push(`Anno ${item.budget.year}: ${rem} giorni residui al 31/12`);
+    }
+    const metaHtml = startMeta.length ? `<div class="pb-meta">${startMeta.map(escapeHtml).join(" · ")}</div>` : "";
+
+    // Statistiche compatte
+    const stats = [];
+    stats.push(`<div class="s-item"><div class="s-lbl">Spesa 7gg</div><div class="s-val">${fmtEUR(totSpend)}</div></div>`);
+    if (totLeads > 0) stats.push(`<div class="s-item"><div class="s-lbl">Lead 7gg</div><div class="s-val">${totLeads.toLocaleString("it-IT")}</div></div>`);
+    if (cplOverall != null) stats.push(`<div class="s-item"><div class="s-lbl">CPL medio</div><div class="s-val">${fmtEUR(cplOverall)}</div></div>`);
+    if ((item.project === "CEA" || item.project === "Med & Tech") && ctrAvg != null) {
+      stats.push(`<div class="s-item"><div class="s-lbl">CTR medio</div><div class="s-val">${ctrAvg.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</div></div>`);
+    }
+    const statsHtml = stats.length ? `<div class="pb-stats">${stats.join("")}</div>` : "";
+
+    // Body testuale (3 fasce + variazione per progetto)
+    let body = "";
+    const projName = item.project;
+    const nameDisplay = escapeHtml(item.name);
+
+    if (tier === "learning") {
+      body = `<p>La campagna è attiva da meno di 3 giorni nella finestra osservata, quindi <b>non ha ancora raggiunto la fase di ottimizzazione</b>. Le metriche di questi primi giorni vanno lette come indicative — nelle prime 72 ore Meta/Google sono in apprendimento e tendono a spendere in modo discontinuo finché l'algoritmo non identifica gli utenti più reattivi.</p>
+              <p class="pb-action">▶ Prossimo step: lasciar maturare il learning per altri 2-3 giorni prima di intervenire su budget o creative.</p>`;
+    } else if (projName === "CEA" || projName === "Med & Tech") {
+      // Focus su CTR (appetibilità offerta)
+      const ctrTxt = ctrAvg != null
+        ? `Il CTR medio è di <b>${ctrAvg.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2})}%</b>`
+        : "Il CTR non è ancora calcolabile su questa finestra";
+      if (tier === "ottimo") {
+        body = `<p>${ctrTxt} — un valore <b>alto</b>, segnale che <b>l'offerta è appetibile</b> per il pubblico raggiunto e che le creative funzionano. La combinazione audience + messaggio sta lavorando bene.</p>
+                <p class="pb-action">▶ Procederemo in questa direzione: mantenere creative e offerta, valutare un incremento incrementale di budget (+10-20%) per non saturare il pubblico, monitorare il CPL.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${ctrTxt} — un valore <b>basso</b>: l'offerta che stiamo proponendo non sta intercettando interesse. Quando il CTR è basso e il CPL alto significa che la creative non aggancia o l'audience non è in target.</p>
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: refresh creative (testo + visual), test di una nuova promo/incentivo, restringimento o riprofilazione dell'audience. CTR è il primo indicatore da rialzare.</p>`;
+      } else { // in_line
+        body = `<p>${ctrTxt} — siamo <b>in linea con le aspettative</b>. C'è spazio per migliorare l'appetibilità dell'offerta: un CTR più alto significa meno spreco di impression e CPL più basso a parità di budget.</p>
+                <p class="pb-action">▶ Faremo in modo di migliorare: A/B test su 2 nuove varianti di copy/visual, eventuale ritocco dell'offerta o della headline per alzare il CTR.</p>`;
+      }
+    } else if (projName === "BeeFamily") {
+      // Contatti, costo per contatto, miglior creative
+      const best = bestCreativeBF(item);
+      let creativeHtml = "";
+      if (best) {
+        const channel = escapeHtml(best.channel || "—");
+        const cplTxt  = best.cpl  != null ? fmtEUR(best.cpl)  : "—";
+        const leadTxt = best.lead != null ? best.lead.toLocaleString("it-IT") : "—";
+        const spendTxt = best.spend != null ? fmtEUR(best.spend) : "—";
+        creativeHtml = `<div class="pb-creative">
+          <span class="pc-lbl">Creative più performante (media 15gg)</span>
+          <div class="pc-name">${channel} · ${escapeHtml(best.name)}</div>
+          <div class="pc-meta">CPL ${cplTxt} · ${leadTxt} lead · spesa ${spendTxt}</div>
+        </div>`;
+      }
+      const leadLine = totLeads > 0
+        ? `Nei 7 giorni la campagna ha generato <b>${totLeads.toLocaleString("it-IT")} contatti</b>${cplOverall != null ? ` con un costo per contatto medio di <b>${fmtEUR(cplOverall)}</b>` : ""}.`
+        : `Nei 7 giorni non risultano contatti tracciati lato data feed.`;
+      if (tier === "ottimo") {
+        body = `<p>${leadLine} I dati indicano una <b>performance ottima</b>: volume di lead solido e costo per contatto sotto controllo.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Procederemo in questa direzione: scaling progressivo del budget sulla creative migliore, refresh delle creative secondarie senza toccare la winner.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${leadLine} <b>Le performance non sono soddisfacenti</b>: costo per contatto fuori range e/o volume insufficiente rispetto al budget allocato.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: spegnimento delle creative sottoperformanti, test di un nuovo angolo creativo, eventuale revisione del modulo lead.</p>`;
+      } else {
+        body = `<p>${leadLine} La performance è <b>in linea con le aspettative</b> ma c'è margine per spingere CPL e volume.</p>
+                ${creativeHtml}
+                <p class="pb-action">▶ Faremo in modo di migliorarla: A/B test creative, aggiornamento copy con leve stagionali, eventuale split di una nuova ad-set sulla winner.</p>`;
+      }
+    } else {
+      // AGHC / Altri — focus CPL + giorni residui
+      const cplLine = cplOverall != null
+        ? `Il CPL medio nei 7 giorni è di <b>${fmtEUR(cplOverall)}</b>`
+        : `Su questa finestra il CPL non è tracciabile in aggregato (lead non lato canale)`;
+      if (tier === "ottimo") {
+        body = `<p>${cplLine}. I dati indicano una <b>performance ottima</b> della campagna sull'asse spesa/risultati. La traiettoria attuale è quella corretta.</p>
+                <p class="pb-action">▶ Procederemo in questa direzione: manteniamo assetto creative e budget, valutiamo un eventuale upscale stagionale.</p>`;
+      } else if (tier === "pessimo") {
+        body = `<p>${cplLine}. <b>Performance da rivedere</b>: la traiettoria attuale non è sostenibile rispetto al benchmark di progetto.</p>
+                <p class="pb-action">▶ Procederemo con le ottimizzazioni: revisione targeting, refresh creative, eventuale rebalancing del budget tra creative/audience.</p>`;
+      } else {
+        body = `<p>${cplLine}. Performance <b>in linea</b> con il benchmark di progetto, con spazio per migliorare.</p>
+                <p class="pb-action">▶ Faremo in modo di migliorarla: A/B su nuova ad-set, test creative aggiuntiva, monitor CPL settimanale.</p>`;
+      }
+    }
+
+    return `<div class="perf-block tier-${tier}">
+      <div class="pb-head">
+        <span class="pb-pill">${escapeHtml(tierLabel)}</span>
+        <span>${nameDisplay} · ${escapeHtml(projName)}</span>
+      </div>
+      ${metaHtml}
+      ${statsHtml}
+      ${body}
+    </div>`;
+  }
+
+  // ============================================================================
+  // Helper card BeeFamily — stessa filosofia di buildAGHCCardHTML/wireAGHCSeries
+  // ma con riga KPI 15gg specifica BF (Budget/Contatti/CPL) e niente budget annuale.
+  // ============================================================================
+  // ============================================================================
+  // Helper card MT/CEA — campagne corte (~14gg) con KPI Budget/Contatti/Costo per contatto.
+  // Una "entry" MT o CEA e' gia' una campagna 1:1 col cliente: estraiamo il nome cliente
+  // dal nome campagna (separatore ' - ', ultimo segmento). Stessa filosofia BF: helper
+  // condivisa, idPrefix univoco, niente budget annuale, rational semplificato senza
+  // "prossima mossa" interna (P3 e' un monitoraggio continuativo).
+  // ============================================================================
+  function extractMTCEAClient(campaignName) {
+    if (!campaignName) return "";
+    const parts = String(campaignName).split(' - ').map(p => p.trim()).filter(Boolean);
+    return parts.length > 1 ? parts[parts.length - 1] : campaignName;
+  }
+  function _fmtIntIT(n) {
+    if (n == null) return "—";
+    return Math.round(Number(n)).toLocaleString("it-IT");
+  }
+  function buildMTCEARational(entry, clientName, projectLabel, series7d) {
+    // series7d e' opzionale (verra' popolato async). Se assente uso solo i dati di ieri.
+    const win = (series7d || []).filter(p => p.spend != null);
+    const winSpend = win.reduce((a, p) => a + (Number(p.spend) || 0), 0);
+    const winLeads = win.reduce((a, p) => a + (Number(p.leads) || 0), 0);
+    const winCpl = (winLeads > 0) ? (winSpend / winLeads) : null;
+    const daysActive = win.filter(p => (p.spend || 0) > 0).length;
+    const avgDaily = winSpend / Math.max(daysActive, 1);
+    const cn = clientName;
+
+    // P1 — stato campagna in linguaggio non tecnico
+    let p1;
+    if (daysActive === 0) {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} non risulta ancora in erogazione: nessun consumo registrato nei giorni monitorati.`;
+    } else if (daysActive <= 3) {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in fase iniziale di erogazione: ${daysActive} ${daysActive === 1 ? 'giorno' : 'giorni'} attivi negli ultimi 7, con un investimento di ${fmtEUR(winSpend)} e un ritmo medio di ${fmtEUR(avgDaily)} al giorno. I primi giorni sono fisiologicamente dedicati all'apprendimento del sistema sul pubblico.`;
+    } else {
+      p1 = `La campagna ${projectLabel === 'Med & Tech' ? 'di ' : ''}${cn} è in piena erogazione: ${daysActive} giorni attivi nell'ultima settimana, con un investimento di ${fmtEUR(winSpend)} distribuito a un ritmo medio di ${fmtEUR(avgDaily)} al giorno.`;
+    }
+
+    // P2 — risultati e lettura efficienza
+    let p2;
+    if (winLeads === 0 && winSpend > 0) {
+      p2 = `Sul fronte risultati la campagna non ha ancora generato richieste qualificate. Per campagne corte come questa, è normale che i primi contatti arrivino dal terzo-quarto giorno di erogazione: il sistema sta ancora completando la fase di apprendimento sul pubblico più reattivo.`;
+    } else if (winLeads > 0 && winCpl != null) {
+      const efficiency = winCpl < 8 ? "molto contenuto, in zona ottimale per il settore" :
+                         winCpl < 18 ? "in linea con il benchmark del settore" :
+                         winCpl < 35 ? "leggermente sopra il benchmark di riferimento" :
+                         "sopra il benchmark, da consolidare nei prossimi giorni";
+      p2 = `Sul fronte risultati la campagna ha raccolto <strong>${_fmtIntIT(winLeads)} ${winLeads === 1 ? 'contatto' : 'contatti'} qualificati</strong> a un costo medio di <strong>${fmtEUR(winCpl)} a contatto</strong> — un valore ${efficiency}.`;
+    } else {
+      p2 = `Sul fronte risultati la campagna è in fase di start-up: i primi contatti diretti sono attesi nei prossimi giorni di erogazione.`;
+    }
+
+    // P3 — monitoraggio (non azione interna)
+    const p3 = `Nei prossimi giorni l'attenzione si concentra sull'ottimizzazione del costo per contatto e sul mantenimento della qualità delle richieste in arrivo. Il dato si stabilizza tipicamente dopo i primi 4-5 giorni di erogazione: continueremo a monitorare la performance giornaliera per intervenire tempestivamente se necessario.`;
+
+    return `<p>${p1}</p><p>${p2}</p><p>${p3}</p>`;
+  }
+
+  function buildMTCEACardHTML(entry, idPrefix, projectLabel) {
+    const clientName = extractMTCEAClient(entry.name);
+    const statusColor = (entry.status && entry.status.color) || "gray";
+    const badgeCls = projectLabel === "Med & Tech" ? "medtech" : "cea";
+    const badgeLbl = projectLabel === "Med & Tech" ? "MED & TECH" : "CEA";
+    const header = `<div class="header-row">
+      <span class="proj-badge ${badgeCls}">${badgeLbl}</span>
+      <div class="name">${escapeHtml(clientName)}</div>
+    </div>`;
+    // Riga 3 KPI 7gg cliente-friendly (popolata async da loadDailySeries15d).
+    // Per il primo render usiamo placeholders: verranno aggiornati da wireMTCEASeries.
+    const vRow = `<div class="aghc-vanity-row bf-3col" id="${idPrefix}-vrow">
+      <div class="av-item"><div class="av-lbl">Budget 7gg</div><div class="av-val" id="${idPrefix}-v-spend">—</div></div>
+      <div class="av-item"><div class="av-lbl">Contatti 7gg</div><div class="av-val" id="${idPrefix}-v-leads">—</div></div>
+      <div class="av-item"><div class="av-lbl">Costo per contatto 7gg</div><div class="av-val" id="${idPrefix}-v-cpl">—</div></div>
+    </div>`;
+    const chartBlock = `<div class="mini-chart-wrap">
+      <div class="mc-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Contatti</span></span></div>
+      <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
+        <button type="button" class="nav-btn" id="${idPrefix}-prev" title="Giorno precedente">←</button>
+        <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
+        <button type="button" class="nav-btn" id="${idPrefix}-next" title="Giorno successivo">→</button>
+      </div>
+      <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
+    </div>`;
+    // Rational placeholder: verra' popolato da wireMTCEASeries con series7d aggregati.
+    const rationalBlock = `<div class="rational" id="${idPrefix}-rat"><span class="muted small">Calcolo dell'analisi in corso…</span></div>`;
+    const statusPill = entry.status ? `<span class="status-pill ${statusColor}">${escapeHtml(entry.status.label || "—")}</span>` : "";
+    // Cerca ad_url: prima nel mapping opzionale MTCEA_META (override manuale per
+    // CEA dove l'account meta_id non e' nel CSV), poi fallback su entry.ad_url
+    // (popolato server-side per MT).
+    const metaOverride = (typeof MTCEA_META === "object" && MTCEA_META && MTCEA_META[clientName]) || {};
+    const effectiveAdUrl = metaOverride.ad_url || entry.ad_url || "";
+    const adLink = effectiveAdUrl ? openAccountBtn(effectiveAdUrl, "Meta") : "";
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(clientName)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const footer = `<div class="footer">${statusPill}${adLink}${previewBtn}</div>`;
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">${header}${vRow}${chartBlock}${rationalBlock}${footer}</div>`;
+  }
+
+  function wireMTCEASeries(entry, idPrefix, projectLabel, attachKeyboardOn) {
+    const clientName = extractMTCEAClient(entry.name);
+    loadDailySeries15d(clientName).then(fullSeries => {
+      // Per le campagne corte usiamo solo gli ultimi 7gg del chart (gia' coperto da drawMiniChart).
+      const series = fullSeries.slice(-7);
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
+      const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
+      const labelEl   = document.getElementById(`${idPrefix}-day-label`);
+      const prevBtn   = document.getElementById(`${idPrefix}-prev`);
+      const nextBtn   = document.getElementById(`${idPrefix}-next`);
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+      const hasAnySpend = series.some(p => p.spend != null);
+
+      // Aggiorno i 3 KPI 7gg
+      const winSpend = series.reduce((a, p) => a + (Number(p.spend) || 0), 0);
+      const winLeads = series.reduce((a, p) => a + (Number(p.leads) || 0), 0);
+      const winCpl = winLeads > 0 ? winSpend / winLeads : null;
+      const elS = document.getElementById(`${idPrefix}-v-spend`);
+      const elL = document.getElementById(`${idPrefix}-v-leads`);
+      const elC = document.getElementById(`${idPrefix}-v-cpl`);
+      if (elS) elS.textContent = winSpend > 0 ? fmtEURcompact(winSpend) : "—";
+      if (elL) elL.textContent = winLeads > 0 ? _fmtIntIT(winLeads) : "0";
+      if (elC) elC.textContent = winCpl != null ? fmtEUR(winCpl) : "—";
+
+      // Rational
+      const ratRoot = document.getElementById(`${idPrefix}-rat`);
+      if (ratRoot) ratRoot.innerHTML = buildMTCEARational(entry, clientName, projectLabel, series);
+
+      // Chart + day nav
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = "";
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+        return;
+      }
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = "";
+        if (kpiRoot) kpiRoot.style.display = "";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot) renderDayPanel(kpiRoot, series, selIdx, 'bf'); // stesso kind BF (Budget/Contatti/CPL)
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+      if (attachKeyboardOn) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        if (attachKeyboardOn._keyHandler) attachKeyboardOn.removeEventListener("keydown", attachKeyboardOn._keyHandler);
+        attachKeyboardOn._keyHandler = keyHandler;
+        attachKeyboardOn.tabIndex = 0;
+        attachKeyboardOn.addEventListener("keydown", keyHandler);
+      }
+    }).catch(err => {
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie</div>`;
+      const ratRoot = document.getElementById(`${idPrefix}-rat`);
+      if (ratRoot) ratRoot.innerHTML = `<span class="muted small">Analisi non disponibile.</span>`;
+    });
+  }
+
+  function normalizeMTCEAItem(entry, projectLabel) {
+    return {
+      name: extractMTCEAClient(entry.name),
+      raw_name: entry.name,
+      project: projectLabel,
+      spend_y: entry.spend_y, lead_y: entry.lead_y, contatti_y: entry.contatti_y,
+      cpl_y: entry.cpl_y, cpl_mean_3d: entry.cpl_mean_3d,
+      status: entry.status, ad_url: entry.ad_url,
+      cpl_narrative: entry.cpl_narrative, performance_eval: entry.performance_eval,
+    };
+  }
+
+  function buildBFCardHTML(item, idPrefix) {
+    const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
+    const statusColor = (item.status && item.status.color) || "gray";
+    const header = `<div class="header-row">
+      <span class="proj-badge beefamily">BeeFamily</span>
+      <div class="name">${escapeHtml(item.name)}</div>
+      <div class="stability unknown" id="${idPrefix}-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
+    </div>`;
+    const kpiItems = [];
+    if (item.spend_window != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
+    if (item.spend_y != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
+    const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
+    // Riga KPI 15gg BF (3 mini-card): Budget / Contatti generati / CPL.
+    const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+    const win = item.window_days || 15;
+    const bfVanityRow = `<div class="aghc-vanity-row bf-3col">
+      <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>
+      <div class="av-item"><div class="av-lbl">Contatti generati ${win}gg</div><div class="av-val">${fmtN(item.contatti_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">CPL ${win}gg</div><div class="av-val">${item.cpl_window != null ? fmtEUR(item.cpl_window) : '—'}</div></div>
+    </div>`;
+    const trendBlock = (item.trend_arrow || item.trend_label)
+      ? `<div class="trend"><span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span><span>${escapeHtml(item.trend_label || "")}</span>${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}</div>`
+      : "";
+    const chartBlock = `<div class="mini-chart-wrap">
+      <div class="mc-title"><span>Andamento spesa &amp; contatti (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Contatti</span></span></div>
+      <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
+        <button type="button" class="nav-btn" id="${idPrefix}-prev" title="Giorno precedente">←</button>
+        <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
+        <button type="button" class="nav-btn" id="${idPrefix}-next" title="Giorno successivo">→</button>
+      </div>
+      <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
+    </div>`;
+    const rationalCopyId = `${idPrefix}-rat`;
+    const rationalBlock = item.rational ? `<div class="rational" id="${rationalCopyId}">${item.rational}</div>` : "";
+    const ad = item.ad_urls || {};
+    const links = [
+      ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
+      ad.Google ? openAccountBtn(ad.Google, "Google") : "",
+    ].join("");
+    const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
+      ${header}
+      ${bfVanityRow}
+      ${trendBlock}
+      ${chartBlock}
+      ${rationalBlock}
+      ${footer}
+    </div>`;
+  }
+
+  function wireBFSeries(item, idPrefix, attachKeyboardOn) {
+    loadDailySeries15d(item.name).then(series => {
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
+      const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
+      const labelEl   = document.getElementById(`${idPrefix}-day-label`);
+      const prevBtn   = document.getElementById(`${idPrefix}-prev`);
+      const nextBtn   = document.getElementById(`${idPrefix}-next`);
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+      const hasAnySpend = series.some(p => p.spend != null);
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = "";
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+      }
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = hasAnySpend ? "" : "none";
+        if (kpiRoot) kpiRoot.style.display = hasAnySpend ? "" : "none";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx, 'bf');
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+      if (attachKeyboardOn) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        if (attachKeyboardOn._keyHandler) attachKeyboardOn.removeEventListener("keydown", attachKeyboardOn._keyHandler);
+        attachKeyboardOn._keyHandler = keyHandler;
+        attachKeyboardOn.tabIndex = 0;
+        attachKeyboardOn.addEventListener("keydown", keyHandler);
+      }
+      const stab = stabilityFromSeries(series);
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) {
+        if (stab.cls === "unknown") {
+          stabEl.style.display = "none";
+        } else {
+          stabEl.style.display = "";
+          stabEl.className = "stability " + stab.cls;
+          const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : "!";
+          stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        }
+      }
+    }).catch(err => {
+      console.warn("Daily series load failed:", err);
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie (${escapeHtml(err.message)})</div>`;
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) stabEl.innerHTML = `<span>·</span><span>Stabilità n/d</span>`;
+    });
+  }
+
+  function normalizeBFItem(c) {
+    const adUrls = {};
+    if (c.ad_url_meta)   adUrls.Meta   = c.ad_url_meta;
+    if (c.ad_url_google) adUrls.Google = c.ad_url_google;
+    return {
+      name: c.name, project: "BeeFamily",
+      spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days,
+      contatti_window: c.contatti_window, contatti_y: c.contatti_y, cpl_window: c.cpl_window,
+      trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+      status: c.status, rational: c.rational,
+      ad_urls: adUrls,
+    };
+  }
+
+  // ============================================================================
+  // Helper card AGHC
+  // ============================================================================
+  // Helper condivisa: genera l'HTML completo della card AGHC con ID prefissati.
+  // idPrefix = "oc" per la single-card view (Overview search) | "ag-<id>" per il grid del tab AGHC.
+  function buildAGHCCardHTML(item, idPrefix) {
+    const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
+    const statusColor = (item.status && item.status.color) || "gray";
+    const header = `<div class="header-row">
+      <span class="proj-badge aghc">AGHC</span>
+      <div class="name">${escapeHtml(item.name)}</div>
+      <div class="stability unknown" id="${idPrefix}-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
+    </div>`;
+    const kpiItems = [];
+    if (item.spend_window != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
+    if (item.spend_y != null) kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
+    const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
+    const v = item.vanity || {};
+    const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+    const reachHasData = v.reach_window != null && v.reach_window > 0;
+    const win = item.window_days || 15;
+    const aghcVanityRow = `<div class="aghc-vanity-row">
+      <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachHasData ? fmtN(v.reach_window) : '—'}</div></div>
+      <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
+      <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>
+    </div>`;
+    const trendBlock = (item.trend_arrow || item.trend_label)
+      ? `<div class="trend"><span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span><span>${escapeHtml(item.trend_label || "")}</span>${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}</div>`
+      : "";
+    let budgetBlock = "";
+    if (item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) {
+      const b = item.budget;
+      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
+      const residuo = (b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null;
+      const pctVal = b.budget_pct;
+      let barFillCls = "";
+      let barWidth = 0;
+      if (pctVal != null) {
+        barWidth = Math.min(100, pctVal);
+        if (pctVal >= 95) barFillCls = "danger";
+        else if (pctVal >= 80) barFillCls = "warn";
+      }
+      budgetBlock = `<div class="budget">
+        <div class="row">
+          <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
+          <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
+        </div>
+        <div class="row" style="margin-top:4px">
+          <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
+          ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
+        </div>
+        ${pctVal != null ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div>` : ''}
+      </div>`;
+    }
+    const chartBlock = `<div class="mini-chart-wrap">
+      <div class="mc-title"><span>Andamento spesa (7gg) — naviga con ← →</span><span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span></span></div>
+      <div class="chart-wrap" id="${idPrefix}-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+      <div class="day-nav" id="${idPrefix}-day-nav" style="display:none">
+        <button type="button" class="nav-btn" id="${idPrefix}-prev" title="Giorno precedente">←</button>
+        <div class="day-label" id="${idPrefix}-day-label">—<span class="small">giorno selezionato</span></div>
+        <button type="button" class="nav-btn" id="${idPrefix}-next" title="Giorno successivo">→</button>
+      </div>
+      <div class="day-kpis" id="${idPrefix}-day-kpis" style="display:none"></div>
+    </div>`;
+    const rationalCopyId = `${idPrefix}-rat`;
+    const rationalBlock = item.rational ? `<div class="rational" id="${rationalCopyId}">${item.rational}</div>` : "";
+    const ad = item.ad_urls || {};
+    const links = [
+      ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
+      ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
+    ].join("");
+    const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
+    const previewBtn = `<button class="btn btn-mini" data-client-preview="${escapeHtml(item.name)}" title="Apri anteprima vista cliente in nuova finestra" style="margin-left:auto;">👁 Anteprima cliente</button>`;
+    const footer = `<div class="footer">${statusPill}${links}${previewBtn}</div>`;
+    return `<div class="aghc-card single-card ${statusColor}" data-card-id="${idPrefix}">
+      ${header}
+      ${aghcVanityRow}
+      ${trendBlock}
+      ${budgetBlock}
+      ${chartBlock}
+      ${rationalBlock}
+      ${footer}
+    </div>`;
+  }
+
+  // Helper condivisa: carica la series 15gg, disegna chart, wirea day-nav e day-panel.
+  // attachKeyboardOn: HTMLElement opzionale a cui attaccare il keyboard nav (solo single-card).
+  function wireAGHCSeries(item, idPrefix, attachKeyboardOn) {
+    loadDailySeries15d(item.name).then(series => {
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      const navRoot   = document.getElementById(`${idPrefix}-day-nav`);
+      const kpiRoot   = document.getElementById(`${idPrefix}-day-kpis`);
+      const labelEl   = document.getElementById(`${idPrefix}-day-label`);
+      const prevBtn   = document.getElementById(`${idPrefix}-prev`);
+      const nextBtn   = document.getElementById(`${idPrefix}-next`);
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+      const hasAnySpend = series.some(p => p.spend != null);
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = "";
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+      }
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = hasAnySpend ? "" : "none";
+        if (kpiRoot) kpiRoot.style.display = hasAnySpend ? "" : "none";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx, 'aghc');
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+      if (attachKeyboardOn) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        if (attachKeyboardOn._keyHandler) attachKeyboardOn.removeEventListener("keydown", attachKeyboardOn._keyHandler);
+        attachKeyboardOn._keyHandler = keyHandler;
+        attachKeyboardOn.tabIndex = 0;
+        attachKeyboardOn.addEventListener("keydown", keyHandler);
+      }
+      const stab = stabilityFromSeries(series);
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) {
+        if (stab.cls === "unknown") {
+          stabEl.style.display = "none";
+        } else {
+          stabEl.style.display = "";
+          stabEl.className = "stability " + stab.cls;
+          const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : "!";
+          stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        }
+      }
+    }).catch(err => {
+      console.warn("Daily series load failed:", err);
+      const chartRoot = document.getElementById(`${idPrefix}-chart`);
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie (${escapeHtml(err.message)})</div>`;
+      const stabEl = document.getElementById(`${idPrefix}-stability`);
+      if (stabEl) stabEl.innerHTML = `<span>·</span><span>Stabilità n/d</span>`;
+    });
+  }
+
+  // Normalizza un oggetto card AGHC (dal feed d.aghc.cards) nel formato `item` atteso
+  // dalle helper. Centralizza il mapping ad_url_meta/tiktok → ad_urls.
+  function normalizeAGHCItem(c) {
+    const adUrls = {};
+    if (c.ad_url_meta)   adUrls.Meta   = c.ad_url_meta;
+    if (c.ad_url_tiktok) adUrls.TikTok = c.ad_url_tiktok;
+    return {
+      name: c.name, project: "AGHC",
+      spend_y: c.spend_y, spend_window: c.spend_window, window_days: c.window_days,
+      contatti_y: c.contatti_y,
+      trend_arrow: c.trend_arrow, trend_label: c.trend_label, trend_pct: c.trend_pct,
+      status: c.status, rational: c.rational,
+      budget: c.budget, vanity: c.vanity,
+      ad_urls: adUrls,
+    };
+  }
+
+  function renderSingleCard(item) {
+    const card = document.getElementById("ov-search-result-card");
+    const root = document.getElementById("ov-search-result");
+    const pill = document.getElementById("ov-search-result-pill");
+    if (!card || !root) return;
+    card.style.display = "";
+    pill.textContent = item.project + " · " + item.name;
+
+    // AGHC: usa le helper condivise per allinearsi al grid del tab AGHC.
+    if (item.project === "AGHC") {
+      root.innerHTML = buildAGHCCardHTML(item, "oc");
+      wireAGHCSeries(item, "oc", card);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    // BeeFamily: stessa strategia, helper dedicate (KPI con Contatti+CPL al posto di vanity).
+    if (item.project === "BeeFamily") {
+      root.innerHTML = buildBFCardHTML(item, "oc");
+      wireBFSeries(item, "oc", card);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    // Med & Tech / CEA: campagne corte (~14gg), KPI Budget/Contatti/Costo per contatto.
+    if (item.project === "Med & Tech" || item.project === "CEA") {
+      // Per la search da Overview l'`item` arriva gia' normalizzato. Per costruire la card
+      // riuso lo schema "entry" originale (presente in item._mtcea_entry se passato dalla feed,
+      // altrimenti uso direttamente item che ha gia' i campi cpl_narrative/performance_eval).
+      const entry = item._mtcea_entry || item;
+      root.innerHTML = buildMTCEACardHTML(entry, "oc", item.project);
+      wireMTCEASeries(entry, "oc", item.project, card);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    const pk = projectKey(item.project);
+    const arrowCls = item.trend_arrow === "↑" ? "up" : (item.trend_arrow === "↓" ? "down" : "flat");
+    const statusColor = (item.status && item.status.color) || "gray";
+
+    // KPI row: spesa finestra + spesa ieri (mostriamo solo i campi popolati)
+    const kpiItems = [];
+    if (item.spend_window != null) {
+      kpiItems.push(`<div class="item"><div class="lbl">Spesa ${item.window_days || 15}gg</div><div class="val">${fmtEURcompact(item.spend_window)}</div></div>`);
+    }
+    if (item.spend_y != null) {
+      kpiItems.push(`<div class="item"><div class="lbl">Spesa ieri</div><div class="val">${fmtEURcompact(item.spend_y)}</div></div>`);
+    }
+    const kpiRow = kpiItems.length ? `<div class="kpi-row">${kpiItems.join("")}</div>` : "";
+
+    // Header con badge progetto + stabilità (placeholder; aggiornato/nascosto dopo loadSeries)
+    const header = `
+      <div class="header-row">
+        <span class="proj-badge ${pk}">${escapeHtml(item.project)}</span>
+        <div class="name">${escapeHtml(item.name)}</div>
+        <div class="stability unknown" id="oc-stability" style="display:none"><span>⏳</span><span>Calcolo stabilità…</span></div>
+      </div>`;
+
+    // Alert spesa
+    let alertBlock = "";
+    if (item.alert_spesa) {
+      const k = item.alert_spesa.kind;
+      const icon = k === "red" ? "🔴" : "🟡";
+      const title = k === "red" ? "Spesa ZERO anomala" : "Spesa sopra soglia";
+      alertBlock = `<div class="alert-banner ${k}"><div>${icon}</div><div><b>${title}</b> — ${escapeHtml(item.alert_spesa.reason)}</div></div>`;
+    }
+
+    // Trend (BF + AGHC)
+    let trendBlock = "";
+    if (item.trend_arrow || item.trend_label) {
+      trendBlock = `<div class="trend">
+        <span class="arrow ${arrowCls}">${item.trend_arrow || "→"}</span>
+        <span>${escapeHtml(item.trend_label || "")}</span>
+        ${item.trend_pct != null ? `<span class="small muted">(${fmtPct(item.trend_pct)})</span>` : ""}
+      </div>`;
+    }
+
+    // Lead row (nascosta per AGHC — gli AGHC non tracciano lead lato canale)
+    const isAGHC = item.project === "AGHC";
+    let leadRow = "";
+    if (!isAGHC) {
+      const leadItems = [];
+      if (item.contatti_y != null) {
+        leadItems.push(`<div class="lead-item" id="oc-lead-y-cell"><div class="lbl">Lead generati ieri</div><div class="val">${escapeHtml(item.contatti_y.toLocaleString("it-IT"))}</div></div>`);
+      }
+      // Cella media 7gg sempre presente come placeholder (se rimane vuota la nascondiamo dopo)
+      leadItems.push(`<div class="lead-item" id="oc-lead-avg7-cell" style="display:none"><div class="lbl">Lead medi ultimi 7gg</div><div class="val" id="oc-lead-avg7">—</div></div>`);
+      leadRow = `<div class="lead-row" id="oc-lead-row">${leadItems.join("")}</div>`;
+    }
+
+    // Riga 5 KPI 15gg per AGHC: Impression / Copertura / Interazioni / Clic / Budget
+    // Reach: mostriamo "—" se reach_window è null o 0 (il refresh script popola reach solo dal 2026-05-20+).
+    let aghcVanityRow = "";
+    if (isAGHC) {
+      const v = item.vanity || {};
+      const win = item.window_days || 15;
+      const fmtN = n => (n != null) ? Math.round(n).toLocaleString("it-IT") : "—";
+      const reachHasData = v.reach_window != null && v.reach_window > 0;
+      const reachVal = reachHasData ? fmtN(v.reach_window) : "—";
+      aghcVanityRow = `<div class="aghc-vanity-row">
+        <div class="av-item"><div class="av-lbl">Impression</div><div class="av-val">${fmtN(v.impressions_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Copertura</div><div class="av-val ${reachHasData ? '' : 'placeholder'}">${reachVal}</div></div>
+        <div class="av-item"><div class="av-lbl">Interazioni</div><div class="av-val">${fmtN(v.page_eng_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Clic (tutti)</div><div class="av-val">${fmtN(v.clicks_window)}</div></div>
+        <div class="av-item"><div class="av-lbl">Budget ${win}gg</div><div class="av-val">${item.spend_window != null ? fmtEURcompact(item.spend_window) : '—'}</div></div>
+      </div>`;
+    }
+
+    // Budget (solo se presente — AGHC)
+    let budgetBlock = "";
+    if (item.budget && item.budget.budget_annuale != null && item.budget.budget_annuale > 0) {
+      const b = item.budget;
+      const ytdVal = b.ytd_spent != null ? fmtEUR(b.ytd_spent) : "—";
+      const residuo = (b.budget_annuale != null && b.ytd_spent != null) ? Math.max(0, b.budget_annuale - b.ytd_spent) : null;
+      const pctVal = b.budget_pct;
+      let barFillCls = "";
+      let barWidth = 0;
+      if (pctVal != null) {
+        barWidth = Math.min(100, pctVal);
+        if (pctVal >= 95) barFillCls = "danger";
+        else if (pctVal >= 80) barFillCls = "warn";
+      }
+      budgetBlock = `
+        <div class="budget">
+          <div class="row">
+            <div><div class="lbl">Budget approvato (${b.year || "anno"})</div><div class="val">${fmtEUR(b.budget_annuale)}</div></div>
+            <div style="text-align:right"><div class="lbl">Residuo</div><div class="val">${residuo != null ? fmtEUR(residuo) : '—'}</div></div>
+          </div>
+          <div class="row" style="margin-top:4px">
+            <div><div class="lbl">Speso YTD</div><div class="val">${ytdVal}</div></div>
+            ${pctVal != null ? `<div style="text-align:right"><div class="lbl">% consumato</div><div class="val">${pctVal.toFixed(1).replace('.', ',')}%</div></div>` : ""}
+          </div>
+          ${pctVal != null ? `<div class="bar"><div class="fill ${barFillCls}" style="width:${barWidth}%"></div></div>` : ''}
+        </div>`;
+    }
+
+    // Mini-chart 7gg + pannello giorno navigabile
+    // Per AGHC: titolo e legenda solo "Spesa" (no lead).
+    const chartTitle = isAGHC ? "Andamento spesa (7gg) — naviga con ← →" : "Spesa &amp; Lead giornalieri (7gg) — naviga con ← →";
+    const chartLegend = isAGHC
+      ? `<span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span></span>`
+      : `<span class="chart-legend" style="padding:0; font-size:10px;"><span class="lg-item"><span class="lg-swatch" style="background:#1c1c1e"></span> Spesa</span> <span class="lg-item" style="margin-left:8px"><span class="lg-swatch" style="background:#0866FF"></span> Lead</span></span>`;
+    const chartBlock = `
+      <div class="mini-chart-wrap">
+        <div class="mc-title"><span>${chartTitle}</span>${chartLegend}</div>
+        <div class="chart-wrap" id="oc-chart"><div class="mc-loading">Carico la serie storica…</div></div>
+        <div class="day-nav" id="oc-day-nav" style="display:none">
+          <button type="button" class="nav-btn" id="oc-prev" title="Giorno precedente">←</button>
+          <div class="day-label" id="oc-day-label">—<span class="small">giorno selezionato</span></div>
+          <button type="button" class="nav-btn" id="oc-next" title="Giorno successivo">→</button>
+        </div>
+        <div class="day-kpis" id="oc-day-kpis" style="display:none"></div>
+      </div>`;
+
+    // Blocco Performance (leggibile) — popolato dopo loadSeries.
+    // Per AGHC NON lo mostriamo: il rational copre già "come stanno andando le campagne".
+    const performanceBlock = isAGHC ? "" : `<div id="oc-perf-block"></div>`;
+
+    // Rational tecnico (BF + AGHC) — dettaglio dopo il blocco performance
+    const rationalBlock = item.rational ? `<div class="rational">${item.rational}</div>` : "";
+
+    // Performance eval breve (Med&Tech / CEA) — già presente nel feed
+    const perfBlock = item.performance_eval
+      ? `<div class="rational"><span class="rat-label">Performance (analisi rapida)</span>${escapeHtml(item.performance_eval)}</div>` : "";
+
+    // Footer con status + link account
+    const ad = item.ad_urls || {};
+    const links = [
+      ad.Meta   ? openAccountBtn(ad.Meta,   "Meta")   : "",
+      ad.Google ? openAccountBtn(ad.Google, "Google") : "",
+      ad.TikTok ? openAccountBtn(ad.TikTok, "TikTok") : "",
+    ].join("");
+    const statusPill = item.status ? `<span class="status-pill ${statusColor}">${escapeHtml(item.status.label || "—")}</span>` : "";
+    const footer = `<div class="footer">${statusPill}${links}</div>`;
+
+    root.innerHTML = `<div class="aghc-card single-card ${statusColor}">
+      ${header}
+      ${alertBlock}
+      ${kpiRow}
+      ${leadRow}
+      ${aghcVanityRow}
+      ${trendBlock}
+      ${budgetBlock}
+      ${chartBlock}
+      ${performanceBlock}
+      ${rationalBlock}
+      ${perfBlock}
+      ${footer}
+    </div>`;
+
+    // Carica la serie giornaliera e aggiorna chart + stabilità + lead medi 7gg
+    loadDailySeries15d(item.name).then(series => {
+      const chartRoot = document.getElementById("oc-chart");
+      const navRoot   = document.getElementById("oc-day-nav");
+      const kpiRoot   = document.getElementById("oc-day-kpis");
+      const labelEl   = document.getElementById("oc-day-label");
+      const prevBtn   = document.getElementById("oc-prev");
+      const nextBtn   = document.getElementById("oc-next");
+
+      // Default selected day = ultimo giorno con dati (= ieri di solito)
+      let selIdx = -1;
+      for (let i = series.length - 1; i >= 0; i--) {
+        if (series[i].spend != null) { selIdx = i; break; }
+      }
+      if (selIdx < 0) selIdx = series.length - 1;
+
+      // Se la serie non ha NESSUN giorno con spesa, nascondiamo del tutto chart + nav + day-kpis
+      const hasAnySpend = series.some(p => p.spend != null);
+      if (!hasAnySpend) {
+        if (chartRoot) chartRoot.innerHTML = ""; // nessun chart
+        const wrap = chartRoot ? chartRoot.closest(".mini-chart-wrap") : null;
+        if (wrap) wrap.style.display = "none";
+      }
+
+      function update() {
+        if (chartRoot) drawMiniChart(chartRoot, series, selIdx, (newIdx) => { selIdx = newIdx; update(); });
+        if (navRoot) navRoot.style.display = hasAnySpend ? "" : "none";
+        if (kpiRoot) kpiRoot.style.display = hasAnySpend ? "" : "none";
+        if (labelEl) {
+          const d = series[selIdx] && series[selIdx].date;
+          labelEl.innerHTML = `${escapeHtml(dayLabelIT(d))}<span class="small">${escapeHtml(d || "")}</span>`;
+        }
+        if (kpiRoot && hasAnySpend) renderDayPanel(kpiRoot, series, selIdx, isAGHC);
+        if (prevBtn) prevBtn.disabled = selIdx <= 0;
+        if (nextBtn) nextBtn.disabled = selIdx >= series.length - 1;
+      }
+      update();
+
+      if (prevBtn) prevBtn.addEventListener("click", () => { if (selIdx > 0) { selIdx--; update(); } });
+      if (nextBtn) nextBtn.addEventListener("click", () => { if (selIdx < series.length - 1) { selIdx++; update(); } });
+
+      // Frecce da tastiera quando il focus è sui pulsanti / chart-wrap (delegato all'intero card)
+      const card = document.getElementById("ov-search-result-card");
+      if (card) {
+        const keyHandler = (e) => {
+          if (e.key === "ArrowLeft")  { if (selIdx > 0) { selIdx--; update(); } e.preventDefault(); }
+          else if (e.key === "ArrowRight") { if (selIdx < series.length - 1) { selIdx++; update(); } e.preventDefault(); }
+        };
+        // Rimuovi eventuale handler precedente (rendering multiplo della stessa card)
+        if (card._keyHandler) card.removeEventListener("keydown", card._keyHandler);
+        card._keyHandler = keyHandler;
+        card.tabIndex = 0;
+        card.addEventListener("keydown", keyHandler);
+      }
+
+      // Blocco Performance (rational leggibile basato sui 7gg + start date)
+      const perfRoot = document.getElementById("oc-perf-block");
+      if (perfRoot) perfRoot.innerHTML = buildPerformanceBlock(item, series);
+
+      const stab = stabilityFromSeries(series);
+      const stabEl = document.getElementById("oc-stability");
+      if (stabEl) {
+        if (stab.cls === "unknown") {
+          stabEl.style.display = "none";
+        } else {
+          stabEl.style.display = "";
+          stabEl.className = "stability " + stab.cls;
+          const icon = stab.cls === "stable" ? "✓" : stab.cls === "medium" ? "≈" : "!";
+          stabEl.innerHTML = `<span>${icon}</span><span>${escapeHtml(stab.label)}</span>`;
+        }
+      }
+      const leadAvg = leadAvg7d(series);
+      const leadAvgEl = document.getElementById("oc-lead-avg7");
+      const leadAvgCell = document.getElementById("oc-lead-avg7-cell");
+      if (leadAvg == null) {
+        if (leadAvgCell) leadAvgCell.style.display = "none";
+      } else {
+        if (leadAvgCell) leadAvgCell.style.display = "";
+        if (leadAvgEl) leadAvgEl.textContent = (Math.round(leadAvg * 10) / 10).toLocaleString("it-IT");
+      }
+      // Adatta lead-row: se rimane una sola cella visibile, occupa tutta la larghezza
+      const leadRow = document.getElementById("oc-lead-row");
+      if (leadRow) {
+        const visibles = Array.from(leadRow.querySelectorAll(".lead-item")).filter(el => el.style.display !== "none");
+        leadRow.classList.toggle("cols-1", visibles.length === 1);
+        if (visibles.length === 0) leadRow.style.display = "none";
+      }
+    }).catch(err => {
+      console.warn("Daily series load failed:", err);
+      const chartRoot = document.getElementById("oc-chart");
+      if (chartRoot) chartRoot.innerHTML = `<div class="mc-loading">Impossibile caricare la serie (${escapeHtml(err.message)})</div>`;
+      const stabEl = document.getElementById("oc-stability");
+      if (stabEl) stabEl.innerHTML = `<span>·</span><span>Stabilità n/d</span>`;
+    });
+
+    // Scroll: porta la card in vista
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function clearSearchResult() {
+    const card = document.getElementById("ov-search-result-card");
+    if (card) card.style.display = "none";
+    const input = document.getElementById("ov-search-input");
+    if (input) input.value = "";
+    document.getElementById("ov-search-clear").classList.add("hidden");
+    hideSuggestions();
+  }
+
+  // Wire up: input, keyboard nav, click-outside, clear, deep-link via #q=…
+  function initSearchUI() {
+    const input = document.getElementById("ov-search-input");
+    const clearBtn = document.getElementById("ov-search-clear");
+    const sugRoot = document.getElementById("ov-search-sug");
+    if (!input) return;
+    input.addEventListener("input", () => {
+      const q = input.value;
+      clearBtn.classList.toggle("hidden", !q);
+      if (!q || q.length < 1) { hideSuggestions(); return; }
+      renderSuggestions(searchQuery(q));
+    });
+    input.addEventListener("focus", () => {
+      const q = input.value;
+      if (q && q.length >= 1) renderSuggestions(searchQuery(q));
+    });
+    input.addEventListener("keydown", (e) => {
+      const items = sugRoot.querySelectorAll(".sug-item");
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (items.length === 0) { renderSuggestions(searchQuery(input.value)); return; }
+        SUG_FOCUS = Math.min(items.length - 1, SUG_FOCUS + 1);
+        items.forEach((el, i) => el.classList.toggle("kbd-focus", i === SUG_FOCUS));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        SUG_FOCUS = Math.max(0, SUG_FOCUS - 1);
+        items.forEach((el, i) => el.classList.toggle("kbd-focus", i === SUG_FOCUS));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        let target = SUG_FOCUS >= 0 ? items[SUG_FOCUS] : items[0];
+        if (target) selectById(target.getAttribute("data-id"));
+        else {
+          // Match esatto/parziale diretto
+          const matches = searchQuery(input.value);
+          if (matches.length) selectById(matches[0].id);
+        }
+      } else if (e.key === "Escape") {
+        hideSuggestions();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".ov-search")) hideSuggestions();
+    });
+    clearBtn.addEventListener("click", clearSearchResult);
+
+    // Deep link: #q=NOME
+    const hashMatch = (location.hash || "").match(/[#&]q=([^&]+)/);
+    if (hashMatch) {
+      const q = decodeURIComponent(hashMatch[1]);
+      // attendere il primo applyData (SEARCH_INDEX pronto)
+      const trySelect = () => {
+        if (SEARCH_INDEX.length === 0) { setTimeout(trySelect, 300); return; }
+        input.value = q;
+        clearBtn.classList.remove("hidden");
+        const matches = searchQuery(q);
+        if (matches.length) {
+          activateTab("overview");
+          selectById(matches[0].id);
+        }
+      };
+      trySelect();
+    }
+  }
+  initSearchUI();
+
+  function renderSpending(d) {
+    if (!d) return;
+    LAST_DATA = d;
+    const sp = d.spending || {};
+    const totals = sp.totals || {};
+    const active = FILTER_STATE.sp;
+    const filterRow = r => active.has(r.platform);
+
+    const zeroAll = sp.zero || [];
+    const highAll = sp.high || [];
+    const zeroF = zeroAll.filter(filterRow);
+    const highF = highAll.filter(filterRow);
+
+    // KPI totale = numero account in tabella filtrati (zero + high non riempie tutta la base; usiamo totals)
+    const totalByPlatform = { Meta: totals.meta || 0, Google: totals.google || 0, TikTok: totals.tiktok || 0 };
+    const totalShown = [...active].reduce((s, p) => s + (totalByPlatform[p] || 0), 0);
+    document.getElementById("sp-k-total").textContent = totalShown;
+    document.getElementById("sp-k-total-sub").textContent =
+      [...active].map(p => `${p} ${totalByPlatform[p]||0}`).join(" · ");
+    document.getElementById("sp-k-zero").textContent = zeroF.length;
+    document.getElementById("sp-k-high").textContent = highF.length;
+
+    let zHtml = "";
+    if (zeroF.length === 0) zHtml = `<div class="empty">Nessun account con spending zero anomalo ${zeroAll.length>0?'(con i filtri attivi)':''} ✓</div>`;
+    else {
+      zHtml = `<table><thead><tr><th>Piattaforma</th><th>Account</th><th class="num">Spend</th><th class="num">Media 7gg</th><th></th></tr></thead><tbody>`;
+      for (const r of zeroF) {
+        zHtml += `<tr>
+          <td>${platformLogo(r.platform)}</td>
+          <td>${escapeHtml(r.account_name)} <span class="small muted">· ${escapeHtml(r.account_id)}</span></td>
+          <td class="num">${fmtEUR(r.target)}</td>
+          <td class="num">${fmtEUR(r.mean7)}</td>
+          <td class="num">${openAccountBtn(r.ad_url, r.platform)}</td>
+        </tr>`;
+      }
+      zHtml += `</tbody></table>`;
+    }
+    document.getElementById("sp-zero").innerHTML = zHtml;
+
+    let hHtml = "";
+    if (highF.length === 0) hHtml = `<div class="empty">Nessun account sopra soglia ${highAll.length>0?'(con i filtri attivi)':''} ✓</div>`;
+    else {
+      hHtml = `<table><thead><tr><th>Piattaforma</th><th>Account</th><th class="num">Spend</th><th class="num">Media 7gg</th><th class="num">Δ%</th><th>Trigger</th><th></th></tr></thead><tbody>`;
+      for (const r of highF) {
+        const dCls = r.delta == null ? "" : (r.delta >= 0 ? "delta-pos" : "delta-neg");
+        const t = r.triggers || [];
+        const trigPill = (t.includes(">50€") && t.includes(">30%")) ? `<span class="pill both">&gt;50€ + &gt;30%</span>` : (t.includes(">50€") ? `<span class="pill warn">&gt;50€</span>` : `<span class="pill warn">&gt;30%</span>`);
+        hHtml += `<tr>
+          <td>${platformLogo(r.platform)}</td>
+          <td>${escapeHtml(r.account_name)} <span class="small muted">· ${escapeHtml(r.account_id)}</span></td>
+          <td class="num">${fmtEUR(r.target)}</td>
+          <td class="num">${fmtEUR(r.mean7)}</td>
+          <td class="num ${dCls}">${fmtPct(r.delta)}</td>
+          <td>${trigPill}</td>
+          <td class="num">${openAccountBtn(r.ad_url, r.platform)}</td>
+        </tr>`;
+      }
+      hHtml += `</tbody></table>`;
+    }
+    document.getElementById("sp-high").innerHTML = hHtml;
+  }
+
+  function renderBeefamily(d) {
+    if (!d) return;
+    LAST_DATA = d;
+    const proj = d.beefamily;
+    if (!proj) return;
+    const active = FILTER_STATE.bf;
+    const entries = (proj.entries || []).filter(e => active.has(e.source));
+
+    // KPI ricalcolati sul subset filtrato
+    const actives = entries.filter(e => e.spend_y > 0).length;
+    const total_spend = entries.reduce((s,e)=> s + (e.spend_y || 0), 0);
+    const total_contatti = entries.reduce((s,e)=> s + (e.contatti_y || 0), 0);
+    const cpc_y = total_contatti > 0 ? total_spend / total_contatti : null;
+    document.getElementById("bf-k-acc").textContent = actives;
+    document.getElementById("bf-k-acc-sub").textContent = "/ " + entries.length + " (con spesa > 0)";
+    document.getElementById("bf-k-spend").textContent = fmtEUR(total_spend);
+    document.getElementById("bf-k-contatti").textContent = total_contatti;
+    document.getElementById("bf-k-cpc").textContent = cpc_y == null ? "—" : fmtEUR(cpc_y);
+    const alerts = entries.filter(e => e.status && (e.status.color === "red" || e.status.color === "yellow"));
+    const alertsPill = document.getElementById("bf-alerts-pill");
+    if (alertsPill) alertsPill.textContent = alerts.length + " da analizzare";
+
+    const alertsRoot = document.getElementById("bf-alerts");
+    if (alerts.length === 0) alertsRoot.innerHTML = `<div class="empty">Nessun alert. Tutti gli account in linea ✓</div>`;
+    else {
+      let html = "";
+      for (const a of alerts) {
+        const ico = a.status.color === "red" ? "🔴" : "🟡";
+        html += `<div class="alert-row">
+          <div class="ico">${ico}</div>
+          <div class="body-row">
+            <div class="title">${platformLogo(a.source)} ${escapeHtml(a.name)} <span class="small muted">· ${escapeHtml(a.source)}</span></div>
+            <div class="desc">${escapeHtml(a.status.label)} — ${escapeHtml(a.status.reason)}</div>
+          </div>
+          <div class="row-actions">${openAccountBtn(a.ad_url, a.source)}</div>
+        </div>`;
+      }
+      alertsRoot.innerHTML = html;
+    }
+
+    // Sezione "Status performance account" rimossa dal layout (le info per account
+    // sono già visibili nelle card per cliente sotto, evitiamo duplicazione).
+
+
+    // Card per cliente (raggruppa Meta+Google per nome cliente)
+    const cards = proj.cards || [];
+    const cardsPill = document.getElementById("bf-cards-pill");
+    if (cardsPill) cardsPill.textContent = cards.length + " card";
+    const cardsRoot = document.getElementById("bf-cards");
+    if (cardsRoot) {
+      if (cards.length === 0) cardsRoot.innerHTML = `<div class="empty">Nessuna card disponibile</div>`;
+      else {
+        // Render IDENTICO alla single-card view BF: per ogni cliente genero la card completa
+        // (badge BeeFamily + pill stabilità + Spesa 15gg/ieri + KPI 15gg [Budget/Contatti/CPL]
+        // + chart 7gg + day-navigator + day-panel + rational + footer Meta/Google).
+        const itemsBF = cards.map(c => ({ c, item: normalizeBFItem(c), idPrefix: `bf-card-${c.id}` }));
+        let chtml = "";
+        for (const { item, idPrefix } of itemsBF) {
+          chtml += buildBFCardHTML(item, idPrefix);
+        }
+        cardsRoot.innerHTML = chtml;
+        for (const { item, idPrefix } of itemsBF) {
+          wireBFSeries(item, idPrefix, null);
+        }
+      }
+    }
+
+    document.getElementById("bf-recap").textContent = proj.recap || "—";
+  }
+  // (Il vecchio render BF cards è stato rimosso: ora la card BF viene generata
+  // da buildBFCardHTML + wireBFSeries direttamente in renderBeefamily, in modo
+  // identico alla card che esce cercando il cliente da Overview.)
+
+  function renderAGHC(d) {
+    const proj = d.aghc;
+    if (!proj) return;
+    const kpi = proj.kpi || {};
+    document.getElementById("ag-k-acc").textContent = kpi.actives != null ? kpi.actives : "–";
+    document.getElementById("ag-k-acc-sub").textContent = "/ " + (kpi.total || 0) + " clienti";
+    document.getElementById("ag-k-spend").textContent = fmtEUR(kpi.total_spend_y);
+    document.getElementById("ag-k-spend-w").textContent = fmtEUR(kpi.total_spend_window);
+
+    const cards = proj.cards || [];
+    const alerts = cards.filter(c => c.status && (c.status.color === "red" || c.status.color === "yellow"));
+    document.getElementById("ag-k-alerts").textContent = alerts.length;
+
+    // Sezione "Alert da analizzare" (analoga a quella BeeFamily)
+    const alertsPillAg = document.getElementById("ag-alerts-pill");
+    if (alertsPillAg) alertsPillAg.textContent = alerts.length + " da analizzare";
+    const alertsRootAg = document.getElementById("ag-alerts");
+    if (alertsRootAg) {
+      if (alerts.length === 0) {
+        alertsRootAg.innerHTML = `<div class="empty">Nessun alert. Tutti i clienti AGHC in linea ✓</div>`;
+      } else {
+        let ahtml = "";
+        for (const a of alerts) {
+          const ico = a.status.color === "red" ? "🔴" : "🟡";
+          const platforms = [];
+          if (a.ad_url_meta)   platforms.push(platformLogo("Meta"));
+          if (a.ad_url_tiktok) platforms.push(platformLogo("TikTok"));
+          const platformLogos = platforms.join("");
+          const links = [
+            a.ad_url_meta   ? openAccountBtn(a.ad_url_meta,   "Meta")   : "",
+            a.ad_url_tiktok ? openAccountBtn(a.ad_url_tiktok, "TikTok") : "",
+          ].join("");
+          ahtml += `<div class="alert-row">
+            <div class="ico">${ico}</div>
+            <div class="body-row">
+              <div class="title">${platformLogos} ${escapeHtml(a.name)}</div>
+              <div class="desc">${escapeHtml(a.status.label || "—")} — ${escapeHtml(a.status.reason || "—")}</div>
+            </div>
+            <div class="row-actions">${links}</div>
+          </div>`;
+        }
+        alertsRootAg.innerHTML = ahtml;
+      }
+    }
+
+    const root = document.getElementById("ag-cards");
+    const pill = document.getElementById("ag-cards-pill");
+    if (pill) pill.textContent = cards.length + " card";
+    if (cards.length === 0) { root.innerHTML = `<div class="empty">Nessun cliente AGHC nei dati</div>`; return; }
+
+    // Render IDENTICO alla single-card view: per ogni cliente AGHC genero la card completa
+    // (badge AGHC, pill stabilità, riga 5 KPI vanity, budget esteso con Residuo/% consumato,
+    // chart 7gg + day-navigator + day-panel, rational, footer). idPrefix univoco per evitare
+    // collisioni di ID HTML quando ci sono N card sulla stessa pagina.
+    let html = "";
+    const items = cards.map(c => ({ c, item: normalizeAGHCItem(c), idPrefix: `ag-${c.id}` }));
+    for (const { item, idPrefix } of items) {
+      html += buildAGHCCardHTML(item, idPrefix);
+    }
+    root.innerHTML = html;
+    // Wire async per ogni card (no keyboard nav: troppe card focusabili sarebbero confuse;
+    // la keyboard nav resta sulla single-card view dell'Overview).
+    for (const { item, idPrefix } of items) {
+      wireAGHCSeries(item, idPrefix, null);
+    }
+  }
+
+  function renderMedtech(d) {
+    LAST_DATA = d;
+    const proj = d.medtech;
+    if (!proj) return;
+    const kpi = proj.kpi || {};
+    document.getElementById("mt-k-camp").textContent = kpi.actives != null ? kpi.actives : "–";
+    document.getElementById("mt-k-spend").textContent = fmtEUR(kpi.total_spend);
+    document.getElementById("mt-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
+    document.getElementById("mt-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    // Conteggi semaforici
+    document.getElementById("mt-k-rosso").textContent = kpi.rosso != null ? kpi.rosso : "–";
+    document.getElementById("mt-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
+    document.getElementById("mt-k-verde").textContent = kpi.verde != null ? kpi.verde : "–";
+    document.getElementById("mt-k-nero").textContent = kpi.nero != null ? kpi.nero : "–";
+
+    const allEntries = proj.entries || [];
+
+    // === Sezione "Card per cliente" (Livello 1 — vista interna)
+    const cardsRoot = document.getElementById("mt-cards");
+    const cardsPill = document.getElementById("mt-cards-pill");
+    if (cardsRoot) {
+      if (allEntries.length === 0) {
+        cardsRoot.innerHTML = `<div class="empty">Nessuna campagna Med &amp; Tech attiva</div>`;
+        if (cardsPill) cardsPill.textContent = "0 card";
+      } else {
+        const itemsMT = allEntries.map(e => ({ e, idPrefix: `mt-card-${normalize(extractMTCEAClient(e.name))}` }));
+        if (cardsPill) cardsPill.textContent = itemsMT.length + " card";
+        let chtml = "";
+        for (const { e, idPrefix } of itemsMT) chtml += buildMTCEACardHTML(e, idPrefix, "Med & Tech");
+        cardsRoot.innerHTML = chtml;
+        for (const { e, idPrefix } of itemsMT) wireMTCEASeries(e, idPrefix, "Med & Tech", null);
+      }
+    }
+
+    // 'Daily check campagne' rimosso: la card per cliente sopra (con rational sintetico)
+    // copre la lettura quotidiana. Il drill-down tecnico vive ora nei daily snapshot
+    // (Report disponibili) che mantengono cpl_narrative + performance_eval per campagna.
+  }
+
+  // ============================ CEA RENDER (stessa struttura Med & Tech) ============================
+  function renderCEA(d) {
+    LAST_DATA = d;
+    const proj = d.cea;
+    if (!proj || !Array.isArray(proj.entries) || proj.entries.length === 0) {
+      // Nessun dato CEA nel feed: setto KPI a placeholder e mostro stato vuoto + hint
+      ["cea-k-camp","cea-k-spend","cea-k-contatti","cea-k-cpc","cea-k-rosso","cea-k-giallo","cea-k-verde","cea-k-nero"].forEach(id => {
+        const el = document.getElementById(id); if (el) el.textContent = "–";
+      });
+      const ap = document.getElementById("cea-alerts-pill");
+      if (ap) ap.textContent = "0 campagne";
+      const ar = document.getElementById("cea-alerts");
+      if (ar) ar.innerHTML = `<div class="empty">Nessun dato CEA in questo giorno. Vedi <b>Report disponibili</b> qui sotto per le giornate già caricate, oppure aggiungi il CSV del giorno per popolarlo.</div>`;
+      return;
+    }
+    const kpi = proj.kpi || {};
+    document.getElementById("cea-k-camp").textContent = kpi.actives != null ? kpi.actives : "–";
+    document.getElementById("cea-k-spend").textContent = fmtEUR(kpi.total_spend);
+    document.getElementById("cea-k-contatti").textContent = kpi.total_contatti != null ? kpi.total_contatti : "–";
+    document.getElementById("cea-k-cpc").textContent = (kpi.cpl_y || kpi.cpc_y) == null ? "—" : fmtEUR(kpi.cpl_y || kpi.cpc_y);
+    document.getElementById("cea-k-rosso").textContent  = kpi.rosso  != null ? kpi.rosso  : "–";
+    document.getElementById("cea-k-giallo").textContent = kpi.giallo != null ? kpi.giallo : "–";
+    document.getElementById("cea-k-verde").textContent  = kpi.verde  != null ? kpi.verde  : "–";
+    document.getElementById("cea-k-nero").textContent   = kpi.nero   != null ? kpi.nero   : "–";
+
+    const allEntries = proj.entries || [];
+
+    // === Sezione "Card per cliente" (Livello 1 — vista interna)
+    const cardsRootCEA = document.getElementById("cea-cards");
+    const cardsPillCEA = document.getElementById("cea-cards-pill");
+    if (cardsRootCEA) {
+      if (allEntries.length === 0) {
+        cardsRootCEA.innerHTML = `<div class="empty">Nessuna campagna CEA attiva</div>`;
+        if (cardsPillCEA) cardsPillCEA.textContent = "0 card";
+      } else {
+        const itemsCEA = allEntries.map(e => ({ e, idPrefix: `cea-card-${normalize(extractMTCEAClient(e.name))}` }));
+        if (cardsPillCEA) cardsPillCEA.textContent = itemsCEA.length + " card";
+        let chtml = "";
+        for (const { e, idPrefix } of itemsCEA) chtml += buildMTCEACardHTML(e, idPrefix, "CEA");
+        cardsRootCEA.innerHTML = chtml;
+        for (const { e, idPrefix } of itemsCEA) wireMTCEASeries(e, idPrefix, "CEA", null);
+      }
+    }
+
+    // 'Daily check campagne' rimosso anche da CEA (stessa decisione presa per MT).
+  }
+
+  // ============================ MED TECH REPORTS (fetch live) ============================
+  function loadMedtechReports() {
+    const root = document.getElementById("mt-reports");
+    const pill = document.getElementById("mt-reports-pill");
+    if (!root) return;
+    fetch("https://advfmosca.github.io/med-tech-daily-check/?t=" + Date.now(), { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        // Each report is an <li><a href="med-tech-daily-YYYY-MM-DD.html">Domenica 17 Maggio 2026 7R · 4G · 3V · 0N →</a></li>
+        const anchors = Array.from(doc.querySelectorAll("li a[href*='med-tech-daily-']"));
+        if (anchors.length === 0) throw new Error("Nessun report trovato nella pagina archivio");
+        let listHtml = `<div class="report-list">`;
+        for (const a of anchors) {
+          const url = new URL(a.getAttribute("href"), "https://advfmosca.github.io/med-tech-daily-check/").href;
+          const text = (a.textContent || "").replace(/→\s*$/, "").trim();
+          // Parse counts: "Domenica 17 Maggio 2026 7R · 4G · 3V · 0N"
+          const m = text.match(/^(.*?)\s+(\d+)R\s*[·•]\s*(\d+)G\s*[·•]\s*(\d+)V\s*[·•]\s*(\d+)N/);
+          let dateLabel = text, counts = "";
+          if (m) {
+            dateLabel = m[1].trim();
+            counts = `<span class="c-r">${m[2]} R</span> · <span class="c-y">${m[3]} G</span> · <span class="c-v">${m[4]} V</span> · <span class="c-n">${m[5]} N</span>`;
+          }
+          listHtml += `<a class="report-item" href="${escapeHtml(url)}" target="_blank" rel="noopener">
+            <span class="ri-date">${escapeHtml(dateLabel)}</span>
+            <span class="ri-counts">${counts}</span>
+            <span class="ri-arrow">→</span>
+          </a>`;
+        }
+        listHtml += `</div>`;
+        root.innerHTML = listHtml;
+        if (pill) pill.textContent = anchors.length + " report";
+      })
+      .catch(err => {
+        console.warn("Med Tech reports fetch failed:", err);
+        root.innerHTML = `<div class="empty">Impossibile caricare la lista report (${escapeHtml(err.message)}). Apri l'archivio completo dal pulsante sotto.</div>`;
+        if (pill) pill.textContent = "—";
+      });
+  }
+
+  // ============================ OVERVIEW CHART (Spesa + Lead, ultimi 15gg) ============================
+  function loadOverviewChart() {
+    const root = document.getElementById("ov-chart");
+    const pill = document.getElementById("ov-chart-pill");
+    if (!root) return;
+    fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, 15).reverse(); // ordine cronologico asc
+      if (dates.length === 0) throw new Error("Nessuno snapshot disponibile");
+      return Promise.all(dates.map(d =>
+        fetchJson("snapshots/" + d + ".json")
+          .then(j => ({ date: d, snap: j }))
+          .catch(() => ({ date: d, snap: null }))
+      ));
+    }).then(rows => {
+      const series = rows.map(r => {
+        if (!r.snap) return { date: r.date, spend: null, leads: null };
+        const ov = r.snap.overview || {};
+        const bf = (r.snap.beefamily && r.snap.beefamily.kpi) || {};
+        const mt = (r.snap.medtech   && r.snap.medtech.kpi)   || {};
+        const cea = (r.snap.cea      && r.snap.cea.kpi)        || {};
+        const leads = (bf.total_contatti || 0) + (mt.total_contatti || 0) + (cea.total_contatti || 0);
+        return { date: r.date, spend: ov.total_spend != null ? ov.total_spend : null, leads: leads };
+      }).filter(p => p.spend != null);
+
+      if (series.length === 0) { root.innerHTML = `<div class="empty">Dati insufficienti per il grafico</div>`; return; }
+      drawOverviewChart(root, series);
+      if (pill) pill.textContent = "ultimi " + series.length + " giorni";
+    }).catch(err => {
+      console.warn("Overview chart failed:", err);
+      root.innerHTML = `<div class="empty">Impossibile caricare il grafico (${escapeHtml(err.message)})</div>`;
+    });
+  }
+
+  function drawOverviewChart(root, series) {
+    const W = 720, H = 240;
+    const padL = 56, padR = 56, padT = 18, padB = 34;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const n = series.length;
+    const spends = series.map(p => p.spend);
+    const leads  = series.map(p => p.leads);
+    const spendMax = Math.max(...spends) * 1.1 || 1;
+    const leadMax  = Math.max(...leads, 1) * 1.1;
+    const xAt = i => padL + (n <= 1 ? innerW/2 : (i * innerW) / (n - 1));
+    const ySpend = v => padT + innerH - (v / spendMax) * innerH;
+    const yLeads = v => padT + innerH - (v / leadMax)  * innerH;
+
+    // Grid orizzontale (4 linee)
+    let grid = "";
+    let yticksLeft = "", yticksRight = "";
+    const steps = 4;
+    for (let i = 0; i <= steps; i++) {
+      const y = padT + (innerH * i) / steps;
+      grid += `<line class="grid-line" x1="${padL}" x2="${W - padR}" y1="${y}" y2="${y}"/>`;
+      const sv = spendMax * (1 - i / steps);
+      const lv = leadMax  * (1 - i / steps);
+      yticksLeft  += `<text class="ax-tick left"  x="${padL - 6}" y="${y + 3}" text-anchor="end">${formatAxisEUR(sv)}</text>`;
+      yticksRight += `<text class="ax-tick right" x="${W - padR + 6}" y="${y + 3}" text-anchor="start">${formatAxisNum(lv)}</text>`;
+    }
+
+    // Asse X — etichette: prima, ultima, e una nel mezzo
+    const xLabels = [];
+    const labelIdx = n === 1 ? [0] : (n <= 5 ? series.map((_,i)=>i) : [0, Math.floor((n-1)/2), n - 1]);
+    for (const i of labelIdx) {
+      const lbl = shortDate(series[i].date);
+      xLabels.push(`<text class="x-label" x="${xAt(i)}" y="${H - padB + 16}" text-anchor="middle">${escapeHtml(lbl)}</text>`);
+    }
+
+    // Polilinee
+    const pathSpend = spends.map((v,i) => (i===0 ? "M" : "L") + xAt(i) + "," + ySpend(v)).join(" ");
+    const pathLeads = leads.map((v,i)  => (i===0 ? "M" : "L") + xAt(i) + "," + yLeads(v)).join(" ");
+
+    // Punti + tooltip group per ciascun indice
+    let dots = "", interact = "";
+    for (let i = 0; i < n; i++) {
+      const xs = xAt(i);
+      dots += `<circle class="dot-spend" cx="${xs}" cy="${ySpend(spends[i])}" r="3"/>`;
+      dots += `<circle class="dot-leads" cx="${xs}" cy="${yLeads(leads[i])}" r="3"/>`;
+      const tipBody = `${shortDate(series[i].date)} · ${fmtEUR(spends[i])} · ${leads[i]} lead`;
+      // hover hitbox
+      interact += `<rect class="pt-target" x="${xs - innerW/(n*2)}" y="${padT}" width="${innerW/n}" height="${innerH}"
+          data-tip="${escapeHtml(tipBody)}" data-x="${xs}"/>`;
+    }
+
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Spesa e Lead generati ultimi giorni">
+      ${grid}
+      <line class="ax-line" x1="${padL}" x2="${padL}" y1="${padT}" y2="${padT + innerH}"/>
+      <line class="ax-line" x1="${W - padR}" x2="${W - padR}" y1="${padT}" y2="${padT + innerH}"/>
+      <line class="ax-line" x1="${padL}" x2="${W - padR}" y1="${padT + innerH}" y2="${padT + innerH}"/>
+      <path class="line-spend" d="${pathSpend}"/>
+      <path class="line-leads" d="${pathLeads}"/>
+      ${dots}
+      ${yticksLeft}
+      ${yticksRight}
+      ${xLabels.join("")}
+      <g id="ov-tip" style="pointer-events:none">
+        <rect class="tooltip-bg" id="ov-tip-bg" x="0" y="0" rx="6" ry="6" width="0" height="0"/>
+        <text class="tooltip-txt" id="ov-tip-txt" x="0" y="0"></text>
+      </g>
+      ${interact}
+    </svg>`;
+    root.innerHTML = svg;
+
+    // Tooltip handlers
+    const tipBg = root.querySelector("#ov-tip-bg");
+    const tipTxt = root.querySelector("#ov-tip-txt");
+    root.querySelectorAll(".pt-target").forEach(t => {
+      t.addEventListener("mouseenter", () => {
+        const text = t.getAttribute("data-tip");
+        const x = Number(t.getAttribute("data-x"));
+        tipTxt.textContent = text;
+        tipTxt.setAttribute("x", String(x));
+        tipTxt.setAttribute("y", String(padT - 4));
+        tipTxt.setAttribute("text-anchor", "middle");
+        tipTxt.style.opacity = "1";
+        // Background sizing via getBBox
+        const bb = tipTxt.getBBox();
+        tipBg.setAttribute("x", String(bb.x - 6));
+        tipBg.setAttribute("y", String(bb.y - 3));
+        tipBg.setAttribute("width", String(bb.width + 12));
+        tipBg.setAttribute("height", String(bb.height + 6));
+        tipBg.style.opacity = "0.92";
+      });
+      t.addEventListener("mouseleave", () => { tipBg.style.opacity = "0"; tipTxt.style.opacity = "0"; });
+    });
+  }
+
+  function formatAxisEUR(v) { if (v >= 1000) return (v/1000).toFixed(1).replace(".",",")+"k €"; return Math.round(v) + " €"; }
+  function formatAxisNum(v) { return Math.round(v).toLocaleString("it-IT"); }
+  function shortDate(iso) {
+    // "2026-05-18" → "18/05"
+    const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}` : iso;
+  }
+
+  // ============================ CEA REPORTS (da snapshots locali) ============================
+  // I dati CEA vivono direttamente negli snapshot della dashboard (non in un repo esterno).
+  // Listo i giorni che hanno cea.entries non vuoto: un click salta al giorno + attiva la TAB CEA.
+  function loadCEAReports() {
+    const root = document.getElementById("cea-reports");
+    const pill = document.getElementById("cea-reports-pill");
+    if (!root) return;
+    const monthsIT = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+    const weekdaysIT = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+    function formatDateIT(iso) {
+      const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (!m) return iso;
+      const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+      return `${weekdaysIT[d.getDay()]} ${Number(m[3])} ${monthsIT[d.getMonth()]} ${m[1]}`;
+    }
+    fetchJson("snapshots/index.json").then(idx => {
+      const dates = (idx.dates || []).slice(0, 30);
+      // Fetch parallelo limitato — ogni giorno verifica se ha data.cea con entries
+      return Promise.all(dates.map(d =>
+        fetchJson("snapshots/" + d + ".json")
+          .then(j => ({ date: d, cea: (j && j.cea && Array.isArray(j.cea.entries) && j.cea.entries.length) ? j.cea : null }))
+          .catch(() => ({ date: d, cea: null }))
+      ));
+    }).then(rows => {
+      const withCEA = rows.filter(r => r.cea);
+      if (withCEA.length === 0) {
+        root.innerHTML = `<div class="empty">Nessun report CEA disponibile negli snapshot. Carica i CSV CEA e rigenera lo snapshot del giorno per vederli qui.</div>`;
+        if (pill) pill.textContent = "—";
+        return;
+      }
+      // Stesso layout di Med & Tech: solo lista cliccabile (link diretto alla pagina dedicata)
+      let html = `<div class="report-list">`;
+      for (const r of withCEA) {
+        const k = r.cea.kpi || {};
+        const counts = `<span class="c-r">${k.rosso||0} R</span> · <span class="c-y">${k.giallo||0} G</span> · <span class="c-v">${k.verde||0} V</span> · <span class="c-n">${k.nero||0} N</span>`;
+        const pageUrl = `cea-daily-${r.date}.html`;
+        html += `<a class="report-item" href="${pageUrl}" target="_blank" rel="noopener">
+          <span class="ri-date">${escapeHtml(formatDateIT(r.date))}</span>
+          <span class="ri-counts">${counts}</span>
+          <span class="ri-arrow">→</span>
+        </a>`;
+      }
+      html += `</div>`;
+      root.innerHTML = html;
+      if (pill) pill.textContent = withCEA.length + " report";
+    }).catch(err => {
+      console.warn("CEA reports list failed:", err);
+      root.innerHTML = `<div class="empty">Impossibile caricare la lista report (${escapeHtml(err.message)})</div>`;
+      if (pill) pill.textContent = "—";
+    });
+  }
+
+  function applyData(d) {
+    clearError();
+    document.getElementById("hdr-sub").textContent = "Giorno di riferimento: " + (d.reference_date_label || d.reference_date || "—");
+    const stamp = document.getElementById("hdr-stamp");
+    if (d.generated_at_label) stamp.innerHTML = "Snapshot:<br><b>" + escapeHtml(d.generated_at_label) + "</b>";
+    if (d.errors && d.errors.length) showError("Errori durante il fetch: " + d.errors.join(" · "));
+    try { renderOverview(d); } catch (e) { console.error("Overview", e); }
+    try { renderSpending(d); } catch (e) { console.error("Spending", e); }
+    try { renderBeefamily(d); } catch (e) { console.error("BeeFamily", e); }
+    try { renderAGHC(d); } catch (e) { console.error("AGHC", e); }
+    try { renderMedtech(d); } catch (e) { console.error("Med&Tech", e); }
+    try { renderCEA(d); } catch (e) { console.error("CEA", e); }
+  }
+
+  // ============================ DATE PICKER + LOAD ============================
+  function fetchJson(url) {
+    return fetch(url + "?t=" + Date.now(), { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  }
+
+  const dateSelect = document.getElementById("date-select");
+
+  function setQuickActive(idx) {
+    document.querySelectorAll(".date-bar .quick button").forEach(b => b.classList.toggle("active", b.getAttribute("data-quick") === String(idx)));
+  }
+
+  function loadDate(date) {
+    return fetchJson("snapshots/" + date + ".json")
+      .then(applyData)
+      .catch(err => {
+        // Fallback: prova data.json se snapshot specifico non c'è (es. primo run)
+        return fetchJson("data.json").then(applyData).catch(e2 => {
+          showError("Impossibile caricare lo snapshot del " + date + ": " + err.message + ". La scheduled task delle 08:30 aggiorna ogni mattina.");
+          document.getElementById("hdr-sub").textContent = "Nessun dato disponibile per il " + date;
+        });
+      });
+  }
+
+  // Boot: load snapshots index then activate latest + load Med Tech / CEA reports + Overview chart in parallel
+  loadMedtechReports();
+  loadCEAReports();
+  loadOverviewChart();
+  loadMtCeaMeta();
+  fetchJson("snapshots/index.json").then(idx => {
+    const dates = (idx.dates || []).slice(0, 90);
+    if (dates.length === 0) throw new Error("nessuno snapshot");
+    dateSelect.innerHTML = dates.map(d => `<option value="${d}">${d}</option>`).join("");
+    dateSelect.value = dates[0];
+    dateSelect.addEventListener("change", () => {
+      const idx2 = dates.indexOf(dateSelect.value);
+      setQuickActive(idx2 >= 0 ? idx2 : -1);
+      loadDate(dateSelect.value);
+    });
+    document.querySelectorAll(".date-bar .quick button").forEach(b => {
+      b.addEventListener("click", () => {
+        const idx2 = Number(b.getAttribute("data-quick"));
+        if (idx2 < dates.length) {
+          dateSelect.value = dates[idx2];
+          setQuickActive(idx2);
+          loadDate(dates[idx2]);
+        }
+      });
+    });
+    return loadDate(dates[0]);
+  }).catch(err => {
+    // Fallback: niente index, prova data.json
+    console.error("Index error:", err);
+    dateSelect.innerHTML = `<option>—</option>`;
+    fetchJson("data.json").then(applyData).catch(e2 => {
+      showError("Nessun dato disponibile. La scheduled task delle 08:30 lo aggiorna ogni mattina.");
+      document.getElementById("hdr-sub").textContent = "Nessun dato disponibile";
+    });
+  });
+})();
+</script>
+</body>
+</html>

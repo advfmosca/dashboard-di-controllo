@@ -71,6 +71,7 @@ AGHC = [
     {"name": "VILLA MILIANI",   "meta_id": "1353024533007038",  "tiktok_id": None},
 ]
 
+# Account esclusi dal report spending / other_roster (id storici non più attivi).
 EXCLUDED_SPENDING = {"1576344015714351", "533672775128363"}
 
 # Slack targets per le azioni slack auto-generate (assorbiti da fmm-dashboard legacy).
@@ -228,7 +229,7 @@ def daily_series(daily, ref_iso, days):
 
 def status_account(spend_y, contatti_y, prev7_spend, prev7_contatti, project_type="hotel"):
     """
-    project_type: 'hotel' (BF + AGHC) | 'leadgen'
+    project_type: 'hotel' (BF + AGHC) | 'leadgen' (campagne a lead)
     Hotel: status su anomalia spending; contatti informativi.
     Leadgen: status su CPL (Cost Per Contatto).
     """
@@ -1000,8 +1001,7 @@ def build_aghc_cards(meta_rows, tiktok_rows, y_iso, yesterday, window_days=15, v
             "budget_structures": budget_structures,
             # Liste campagne attive sulla window (Meta + TikTok), usate dalla vista
             # cliente per il blocco "Campagne attive" con Target + Grandezza Pubblico
-            # per singola campagna (target/audience da client_display_names.json
-            # a livello campagna).
+            # per singola campagna (target/audience da client_display_names.json).
             "meta_campaigns": aghc_meta_camps_by_aid.get(mid, []),
             "tiktok_campaigns": [
                 c for tt_id in info["tiktok_ids"]
@@ -1457,9 +1457,8 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     # ============ Brief payload light (token-saving P3 — 2026-05-22) ============
-    # Endpoint dedicato a fmm-morning-brief + semaforo-v2-drift-monitor.
-    # Logica centralizzata in _automation/brief_builder.py (2026-05-24):
-    # data.json ~400 KB e WebFetch tagliava a 88 KB prima di arrivare in fondo.
+    # Endpoint dedicato a fmm-morning-brief. Logica centralizzata in
+    # _automation/brief_builder.py.
     import sys as _sys
     _automation_dir = os.path.join(workspace, "_automation")
     if _automation_dir not in _sys.path:

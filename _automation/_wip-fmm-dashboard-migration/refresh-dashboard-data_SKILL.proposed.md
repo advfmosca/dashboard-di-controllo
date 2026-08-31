@@ -7,7 +7,7 @@ Refresh giornaliero della Dashboard di Controllo + creazione eventi Calendar per
 
 REPO = github.com/advfmosca/dashboard-di-controllo
 PAGES = https://advfmosca.github.io/dashboard-di-controllo/
-WORKSPACE = `/Users/francescomariamosca/Desktop/Dashboard di Controllo`
+WORKSPACE = `/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo`
 
 ## 1) FETCH WINDSOR (3 chiamate parallele — Med & Tech rimosso 2026-05-19)
 
@@ -26,7 +26,7 @@ Estrai PATH del file salvato dall'errore "Output has been saved to /var/folders/
 ## 2) BUILD + PUSH (un'unica pipeline)
 
 ```bash
-cd "/Users/francescomariamosca/Desktop/Dashboard di Controllo"
+cd "/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo"
 mkdir -p raw snapshots
 
 [ -n "$META_RAW" ]  && cp "$META_RAW"  raw/meta.json    || true

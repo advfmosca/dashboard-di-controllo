@@ -68,10 +68,10 @@ In una nuova sessione Cowork con Francesco presente:
 
 ```bash
 # 1. Applica gli SKILL proposti (terminale Mac):
-cp "$HOME/Desktop/Dashboard di Controllo/_automation/_wip-fmm-dashboard-migration/refresh-dashboard-data_SKILL.proposed.md" \
+cp "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_automation/_wip-fmm-dashboard-migration/refresh-dashboard-data_SKILL.proposed.md" \
    "$HOME/Documents/Claude/Scheduled/refresh-dashboard-data/SKILL.md"
 
-cp "$HOME/Desktop/Dashboard di Controllo/_automation/_wip-fmm-dashboard-migration/fmm-morning-brief_SKILL.proposed.md" \
+cp "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_automation/_wip-fmm-dashboard-migration/fmm-morning-brief_SKILL.proposed.md" \
    "$HOME/Documents/Claude/Scheduled/fmm-morning-brief/SKILL.md"
 ```
 
@@ -90,7 +90,7 @@ cp "$HOME/Desktop/Dashboard di Controllo/_automation/_wip-fmm-dashboard-migratio
 ```bash
 # 4. (Opzionale ma raccomandato) scarica owners.json una sola volta:
 curl -fsSL "https://advfmosca.github.io/fmm-dashboard/scripts/owners.json" \
-     -o "$HOME/Desktop/Dashboard di Controllo/owners.json"
+     -o "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/owners.json"
 ```
 
 Poi osserva il morning brief delle 08:30 del giorno successivo per validazione.
@@ -101,14 +101,14 @@ Poi osserva il morning brief delle 08:30 del giorno successivo per validazione.
 
 ```bash
 # 1. Ripristina SKILL dai backup
-cp "$HOME/Desktop/Dashboard di Controllo/_backups/skills/refresh-dashboard-data_2026-05-19.md" \
+cp "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_backups/skills/refresh-dashboard-data_2026-05-19.md" \
    "$HOME/Documents/Claude/Scheduled/refresh-dashboard-data/SKILL.md"
-cp "$HOME/Desktop/Dashboard di Controllo/_backups/skills/fmm-morning-brief_2026-05-19.md" \
+cp "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_backups/skills/fmm-morning-brief_2026-05-19.md" \
    "$HOME/Documents/Claude/Scheduled/fmm-morning-brief/SKILL.md"
 
 # 2. Ripristina build_data.py
-cp "$HOME/Desktop/Dashboard di Controllo/_backups/code/build_data.py.pre-migration.2026-05-19.bak" \
-   "$HOME/Desktop/Dashboard di Controllo/build_data.py"
+cp "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_backups/code/build_data.py.pre-migration.2026-05-19.bak" \
+   "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/build_data.py"
 
 # 3. Riabilita le 3 task vecchie (via Claude chat):
 "Riabilita fmm-discover-other-accounts, alert-spending-anomalie-windsor, daily-check-beefamily"
@@ -133,7 +133,7 @@ Tempo totale rollback: ~3 minuti.
 
 | File | Stato |
 |---|---|
-| `/Users/francescomariamosca/Desktop/Dashboard di Controllo/build_data.py` | MODIFICATO LIVE (retrocompatibile) |
+| `/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo/build_data.py` | MODIFICATO LIVE (retrocompatibile) |
 | `/Users/francescomariamosca/Documents/Claude/Scheduled/refresh-dashboard-data/SKILL.md` | NON modificato (proposta in WIP) |
 | `/Users/francescomariamosca/Documents/Claude/Scheduled/fmm-morning-brief/SKILL.md` | NON modificato (proposta in WIP) |
 | `/Users/francescomariamosca/Documents/Claude/Scheduled/fmm-discover-other-accounts/SKILL.md` | NON modificato (rimane attivo) |

@@ -672,7 +672,7 @@ function officialName(internalName, project) {
 
 // Renderizza il blocco "Campagne attive" con UNA card per campagna.
 // `campaigns` = array di {name, spend, lead, cpl, active, platform?}
-// `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. CSV Alfredo target_geo).
+// `clientLevelTarget` / `clientLevelAudienceSize` sono fallback (es. target_geo).
 // `showTargetAudience` (default true): se false, omette il blocco Target/Pubblico
 //   (richiesto per BeeFamily dove non gestiamo target/pubblico geografico per campagna).
 function buildCampaignsSectionHTML(campaigns, clientName, clientLevelTarget, clientLevelAudienceSize, showTargetAudience) {
@@ -724,10 +724,6 @@ function extractCampaignsFromEntry(entry, project) {
   pushAll(entry.meta_campaigns,   "Meta");
   pushAll(entry.google_campaigns, "Google");
   pushAll(entry.tiktok_campaigns, "TikTok");
-  if (entry.campaigns && Array.isArray(entry.campaigns)) {
-    // Campagne con campaigns[]: platform default Meta
-    pushAll(entry.campaigns, "Meta");
-  }
   return out;
 }
 
@@ -747,7 +743,7 @@ if (!clienteName) {
   document.getElementById("hdr-name").textContent = "Cliente non specificato";
   showError("Parametro 'name' mancante nella URL. Esempio: cliente.html?name=Lunetta");
 } else {
-  // Carico in parallelo: meta overrides + display names override + data/snapshot del giorno.
+  // Carico in parallelo: display names override + data/snapshot del giorno.
   const namesPromise = loadDisplayNames();
   const dataPromise = dateParam
     ? fetchJson("snapshots/" + dateParam + ".json")
@@ -781,6 +777,7 @@ if (!clienteName) {
     const idPrefix = "vc";
 
     // Funzione comune: renderizza il blocco "Campagne attive" sopra alla card.
+    // Per BeeFamily il nome usato nel mapping è quello UFFICIALE.
     // `showTargetAudience` controlla se rendere il blocco Target/Pubblico:
     //   - BeeFamily: false (non gestiamo target geografico per le campagne BF)
     //   - AGHC: non chiamato affatto (vedi blocco AGHC sotto — sezione rimossa)
@@ -789,7 +786,7 @@ if (!clienteName) {
       const campaigns = extractCampaignsFromEntry(entry, projectLabel);
       let list = campaigns;
       if (!list.length) {
-        // Senza campaigns[]: usa il displayName ufficiale come fallback singolo.
+        // BeeFamily senza campaigns[]: usa il displayName ufficiale come fallback.
         list = [{
           name: displayName || entry.name || "—",
           platform: "Meta",
@@ -798,7 +795,7 @@ if (!clienteName) {
           cpl:   entry.cpl_y,
         }];
       }
-      const lookupKey = displayName || (entry.name || "");
+      const lookupKey = displayName || entry.name || "";
       const clientTarget = entry.target_geo || null;
       const clientAud    = entry.audience_size || null;
       metaRoot.innerHTML = buildCampaignsSectionHTML(list, lookupKey, clientTarget, clientAud, showTargetAudience);

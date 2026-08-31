@@ -3,14 +3,14 @@
 # Retention: 30 giorni, file più vecchi vengono auto-rimossi.
 #
 # Lanciare dal Terminal del Mac:
-#   bash "$HOME/Desktop/Dashboard di Controllo/_tools/backup-skills.sh"
+#   bash "$HOME/Desktop/COWORK FMM/Dashboard di Controllo/_tools/backup-skills.sh"
 #
 # Oppure schedulare via cron utente (esempio: ogni notte alle 23:00):
-#   0 23 * * * bash ~/Desktop/Dashboard\ di\ Controllo/_tools/backup-skills.sh
+#   0 23 * * * bash ~/Desktop/COWORK\ FMM/Dashboard\ di\ Controllo/_tools/backup-skills.sh
 
 set -euo pipefail
 
-WORKSPACE="$HOME/Desktop/Dashboard di Controllo"
+WORKSPACE="$HOME/Desktop/COWORK FMM/Dashboard di Controllo"
 SCHED_DIR="$HOME/Documents/Claude/Scheduled"
 BACKUP_DIR="$WORKSPACE/_backups/skills"
 TODAY=$(date +%Y-%m-%d)

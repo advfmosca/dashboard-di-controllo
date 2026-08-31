@@ -154,7 +154,7 @@ Totale ~50k token per la migrazione completa.
 Apri una nuova sessione Cowork e dì a Claude:
 
 > "Esegui la Fase B della dismissione fmm-dashboard come da piano in 
-> `/Users/francescomariamosca/Desktop/Dashboard di Controllo/_automation/_MIGRATION_PLAN_fmm-dashboard.md`. 
+> `/Users/francescomariamosca/Desktop/COWORK FMM/Dashboard di Controllo/_automation/_MIGRATION_PLAN_fmm-dashboard.md`. 
 > Segui gli Step 1-6, fammi confermare prima di disabilitare le 3 task vecchie."
 
 Claude leggerà questo documento, eseguirà gli step, e ti chiederà conferma prima del punto di non ritorno (Step 5).
