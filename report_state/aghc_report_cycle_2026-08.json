@@ -4,6 +4,29 @@
   "monday_column": {"board_id": "18397375920", "column_id": "link_mm6r58kk", "title": "AG AGOSTO", "items_filled": 18},
   "mail": {"thread_id": "1a0582be0b319b0c", "subject": "Template Monthly Report_Agosto 2026", "from": "marketing@aghotelconsulting.it", "date": "2026-08-31T14:13:36Z"},
   "slides_done": {},
+  "slides_blocked": {
+    "since": "2026-09-01",
+    "reason": "Canva MCP: accesso ai documenti del team in sola LETTURA (via link token). merge-designs -> 'Not allowed to access design'; open_transaction -> 'Not allowed to edit this design'. Serve che l'account Canva collegato riceva permessi di modifica sui design del team AG (team_id oBYcYd78sEg22Zb_r27dIQ) oppure inserimento manuale.",
+    "plan": [
+      {"hotel": "Mare Hotel", "team_design": "DAHTkTOmmY0", "pages": 21, "insert_after": 20, "report_design": "DAHT6KDroLo"},
+      {"hotel": "Altafiumara", "team_design": "DAHTkQHx39c", "pages": 21, "insert_after": 20, "report_design": "DAHT6JeIj9o"},
+      {"hotel": "Hotel Castello", "team_design": "DAHTkctJWk8", "pages": 24, "insert_after": 23, "report_design": "DAHT6L3j5vs"},
+      {"hotel": "Hotel Della Piana", "team_design": "DAHTkVF7Gvc", "pages": 18, "insert_after": 16, "report_design": "DAHT6Lqmc1s", "nota": "cover finale a p.17, p.18 e' una slide GBP aggiunta dopo la cover"},
+      {"hotel": "Hotel Regno (Hannah Hotels)", "team_design": "DAHTksEhQrc", "pages": 23, "insert_after": 22, "report_design": "DAHT6Joo3PA"},
+      {"hotel": "Puntebianche Resort", "team_design": "DAHTksNdlEo", "pages": 19, "insert_after": 18, "report_design": "DAHT6LYj7T0"},
+      {"hotel": "Hemanaire", "team_design": "DAHTkGap9Vc", "pages": 21, "insert_after": 20, "report_design": "DAHT6Mvyack", "nota": "cover finale del team riporta ancora Luglio 2026"},
+      {"hotel": "Hotel Lunetta", "team_design": "DAHTkZygblY", "pages": 11, "insert_after": 10, "report_design": "DAHT6LEClco"},
+      {"hotel": "Magari Estates", "team_design": "DAHTkRZjB1w", "pages": 20, "insert_after": 19, "report_design": "DAHT6POtt3w"},
+      {"hotel": "Marcella Royal", "team_design": "DAHTkUgq9-I", "pages": 14, "insert_after": 13, "report_design": "DAHT6L8uXbI"},
+      {"hotel": "Tenuta Montemagno", "team_design": "DAHTkt6BrPk", "pages": 19, "insert_after": 18, "report_design": "DAHT6UjtYg8"},
+      {"hotel": "Villa Ermellina", "team_design": "DAHTkGRDi0U", "pages": 41, "insert_after": 40, "report_design": "DAHT6UaBjMw"},
+      {"hotel": "Villa Giada", "team_design": "DAHTkYHS9RQ", "pages": 24, "insert_after": 23, "report_design": "DAHT6UEUrHA"},
+      {"hotel": "Villa Miliani", "team_design": "DAHTkXGsOh4", "pages": 21, "insert_after": 20, "report_design": "DAHT6Yj8Y9w"}
+    ],
+    "skipped": [
+      {"cliente": "Terrazza Flavia", "report_design": "DAHT6Fec0pU", "motivo": "nessun documento dedicato nella mail del team (su Monday condivide il link di Marcella Royal); slide non inserita per non duplicare nel doc Marcella"}
+    ]
+  },
   "completed": false,
-  "note": "Report per-cliente Agosto non ancora generati (task aghc-report-canva-mensile gira il 1/09 07:00). Inserimento slide rimandato al run successivo."
+  "note": "Colonna Monday AG AGOSTO completata. Report Canva Agosto generati (15/15). Inserimento slide nei documenti del team NON eseguibile via API: permessi di sola lettura sui design del team AG."
 }
