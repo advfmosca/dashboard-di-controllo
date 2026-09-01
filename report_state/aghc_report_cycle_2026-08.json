@@ -1,8 +1,18 @@
 {
   "month": "2026-08",
   "monday_done": true,
-  "monday_column": {"board_id": "18397375920", "column_id": "link_mm6r58kk", "title": "AG AGOSTO", "items_filled": 18},
-  "mail": {"thread_id": "1a0582be0b319b0c", "subject": "Template Monthly Report_Agosto 2026", "from": "marketing@aghotelconsulting.it", "date": "2026-08-31T14:13:36Z"},
+  "monday_column": {
+    "board_id": "18397375920",
+    "column_id": "link_mm6r58kk",
+    "title": "AG AGOSTO",
+    "items_filled": 18
+  },
+  "mail": {
+    "thread_id": "1a0582be0b319b0c",
+    "subject": "Template Monthly Report_Agosto 2026",
+    "from": "marketing@aghotelconsulting.it",
+    "date": "2026-08-31T14:13:36Z"
+  },
   "slides_done": {
     "Mare Hotel": true,
     "Altafiumara": true,
@@ -17,31 +27,132 @@
     "Tenuta Montemagno": true,
     "Villa Ermellina": true,
     "Villa Giada": true,
-    "Villa Miliani": true
+    "Villa Miliani": true,
+    "Hotel Livata": true
   },
   "slides_detail": [
-    {"hotel": "Mare Hotel", "team_design": "DAHTkTOmmY0", "block_start": 21, "pages": 7, "total_after": 28},
-    {"hotel": "Altafiumara", "team_design": "DAHTkQHx39c", "block_start": 21, "pages": 6, "total_after": 27},
-    {"hotel": "Hotel Castello", "team_design": "DAHTkctJWk8", "block_start": 24, "pages": 6, "total_after": 30},
-    {"hotel": "Hotel Della Piana", "team_design": "DAHTkVF7Gvc", "block_start": 17, "pages": 7, "total_after": 25, "nota": "cover finale era a p.17 con una slide GBP a p.18 dopo la cover; blocco inserito prima della cover"},
-    {"hotel": "Hotel Regno (Hannah Hotels)", "team_design": "DAHTksEhQrc", "block_start": 23, "pages": 6, "total_after": 29},
-    {"hotel": "Puntebianche Resort", "team_design": "DAHTksNdlEo", "block_start": 19, "pages": 6, "total_after": 25},
-    {"hotel": "Hemanaire", "team_design": "DAHTkGap9Vc", "block_start": 21, "pages": 6, "total_after": 27, "nota": "cover finale del team riporta ancora Luglio 2026"},
-    {"hotel": "Hotel Lunetta", "team_design": "DAHTkZygblY", "block_start": 11, "pages": 7, "total_after": 18},
-    {"hotel": "Magari Estates", "team_design": "DAHTkRZjB1w", "block_start": 20, "pages": 6, "total_after": 26},
-    {"hotel": "Marcella Royal", "team_design": "DAHTkUgq9-I", "block_start": 14, "pages": 6, "total_after": 20},
-    {"hotel": "Tenuta Montemagno", "team_design": "DAHTkt6BrPk", "block_start": 19, "pages": 6, "total_after": 25},
-    {"hotel": "Villa Ermellina", "team_design": "DAHTkGRDi0U", "block_start": 41, "pages": 7, "total_after": 48},
-    {"hotel": "Villa Giada", "team_design": "DAHTkYHS9RQ", "block_start": 24, "pages": 7, "total_after": 31},
-    {"hotel": "Villa Miliani", "team_design": "DAHTkXGsOh4", "block_start": 21, "pages": 6, "total_after": 27}
+    {
+      "hotel": "Mare Hotel",
+      "team_design": "DAHTkTOmmY0",
+      "block_start": 21,
+      "pages": 7,
+      "total_after": 28
+    },
+    {
+      "hotel": "Altafiumara",
+      "team_design": "DAHTkQHx39c",
+      "block_start": 21,
+      "pages": 6,
+      "total_after": 27
+    },
+    {
+      "hotel": "Hotel Castello",
+      "team_design": "DAHTkctJWk8",
+      "block_start": 24,
+      "pages": 6,
+      "total_after": 30
+    },
+    {
+      "hotel": "Hotel Della Piana",
+      "team_design": "DAHTkVF7Gvc",
+      "block_start": 17,
+      "pages": 7,
+      "total_after": 25,
+      "nota": "cover finale era a p.17 con una slide GBP a p.18 dopo la cover; blocco inserito prima della cover"
+    },
+    {
+      "hotel": "Hotel Regno (Hannah Hotels)",
+      "team_design": "DAHTksEhQrc",
+      "block_start": 23,
+      "pages": 6,
+      "total_after": 29
+    },
+    {
+      "hotel": "Puntebianche Resort",
+      "team_design": "DAHTksNdlEo",
+      "block_start": 19,
+      "pages": 6,
+      "total_after": 25
+    },
+    {
+      "hotel": "Hemanaire",
+      "team_design": "DAHTkGap9Vc",
+      "block_start": 21,
+      "pages": 6,
+      "total_after": 27,
+      "nota": "cover finale del team riporta ancora Luglio 2026"
+    },
+    {
+      "hotel": "Hotel Lunetta",
+      "team_design": "DAHTkZygblY",
+      "block_start": 11,
+      "pages": 7,
+      "total_after": 18
+    },
+    {
+      "hotel": "Magari Estates",
+      "team_design": "DAHTkRZjB1w",
+      "block_start": 20,
+      "pages": 6,
+      "total_after": 26
+    },
+    {
+      "hotel": "Marcella Royal",
+      "team_design": "DAHTkUgq9-I",
+      "block_start": 14,
+      "pages": 6,
+      "total_after": 20
+    },
+    {
+      "hotel": "Tenuta Montemagno",
+      "team_design": "DAHTkt6BrPk",
+      "block_start": 19,
+      "pages": 6,
+      "total_after": 25
+    },
+    {
+      "hotel": "Villa Ermellina",
+      "team_design": "DAHTkGRDi0U",
+      "block_start": 41,
+      "pages": 7,
+      "total_after": 48
+    },
+    {
+      "hotel": "Villa Giada",
+      "team_design": "DAHTkYHS9RQ",
+      "block_start": 24,
+      "pages": 7,
+      "total_after": 31
+    },
+    {
+      "hotel": "Villa Miliani",
+      "team_design": "DAHTkXGsOh4",
+      "block_start": 21,
+      "pages": 6,
+      "total_after": 27
+    },
+    {
+      "hotel": "Hotel Livata",
+      "team_design": "DAHTkc0vLpQ",
+      "block_start": 20,
+      "pages": 6,
+      "total_after": 26,
+      "nota": "cliente inizialmente mancante: assente da CLIENTS in aghc_report_lib.py; report generato a posteriori (DAHT6w9wEnE)"
+    }
   ],
   "skipped": [
-    {"cliente": "Terrazza Flavia", "report_design": "DAHT6Fec0pU", "motivo": "nessun documento dedicato nella mail del team (su Monday condivide il link di Marcella Royal); slide NON inserita per non duplicare nel doc Marcella - da decidere a mano"}
+    {
+      "cliente": "Terrazza Flavia",
+      "report_design": "DAHT6Fec0pU",
+      "motivo": "nessun documento dedicato nella mail del team (su Monday condivide il link di Marcella Royal); slide NON inserita per non duplicare nel doc Marcella - da decidere a mano"
+    }
   ],
   "lessons": [
     "merge-designs insert_pages INVERTE l'ordine delle pagine inserite: usare source.page_numbers in ordine inverso [7,6,5,4,3,2,1] oppure riordinare dopo con move_pages.",
     "merge-designs accetta UNA SOLA operazione per chiamata: il riordino richiede n-1 chiamate singole (move page s+k -> after s-1, k=1..n-1).",
-    "Il primo tentativo di scrittura sui design del team puo' restituire 'Not allowed to access design': ritentare, il permesso si propaga."
+    "Il primo tentativo di scrittura sui design del team puo' restituire 'Not allowed to access design': ritentare, il permesso si propaga.",
+    "Livata mancava nella lista CLIENTS di aghc_report_lib.py pur essendo nel roster: aggiunto il 01/09/2026, ora i clienti del report mensile sono 16.",
+    "Per inserire nell'ordine giusto al primo colpo: insert_pages con source.page_numbers in ordine INVERSO (es. [7,6,5,4,3,2,1])."
   ],
   "completed": true
 }
