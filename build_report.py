@@ -27,6 +27,19 @@ def _eur2(v): return fmt_eur(v)
 
 def _cpm(spend, impr): return (spend / impr * 1000.0) if impr else None
 
+def _pv_used(ttid, clk_cur, clk_prev, tt_pv):
+    """Vero quando i click alla destinazione sono strutturalmente a zero (annunci senza
+    landing page) e abbiamo le visite al profilo con cui alimentare la riga."""
+    if clk_cur or clk_prev: return False
+    pv=(tt_pv or {}).get(str(ttid)) or {}
+    return pv.get("cur") is not None
+
+def _clicks_or_pv(ttid, clk_cur, clk_prev, tt_pv):
+    if not _pv_used(ttid, clk_cur, clk_prev, tt_pv): return (clk_cur, clk_prev)
+    pv=tt_pv[str(ttid)]
+    return (n(pv.get("cur")), n(pv.get("prev")))
+
+
 def rational(cur, prev):
     """Rational della slide Meta: parla SOLO di IG/FB, una frase per riga."""
     tsc=cur["ig"]["spend"]+cur["fb"]["spend"]; tsp=prev["ig"]["spend"]+prev["fb"]["spend"]
@@ -114,7 +127,10 @@ def rational_tt(tt):
     elif cc is not None:
         L.append("Il costo per mille visualizzazioni si attesta a %s."%_eur2(cc))
 
-    if clk_c:
+    if tt.get("clicks_source")=="profile_visits":
+        cdd=dpct(clk_c,prv("clicks"))
+        L.append("Le campagne sono impostate su obiettivo Reach, con creatività video prive di link esterno: l'azione dell'utente si concentra quindi sulla visita al profilo, %s nel mese%s, ed è questo il dato riportato in tabella."%(fmt_int(clk_c),(" (%+d%%)"%cdd if cdd is not None else "")))
+    elif clk_c:
         L.append("Il traffico generato verso le destinazioni del brand è di %s clic."%fmt_int(clk_c))
     else:
         L.append("Le campagne sono impostate su obiettivo Reach, con creatività video prive di link di destinazione: TikTok non conteggia quindi clic verso il sito, e il valore del canale si misura su copertura e visualizzazioni.")
@@ -135,6 +151,11 @@ def main():
     ma=load_raw(ws,"rep_meta_acct_cur.json"); ca=load_raw(ws,"rep_meta_camp_cur.json")
     mp=load_raw(ws,"rep_meta_acct_prev.json"); cp=load_raw(ws,"rep_meta_camp_prev.json")
     tt_c={str(r["account_id"]):r for r in load_raw(ws,"aghc_report_tt_month.json")}
+    # visite al profilo: fallback per gli account i cui annunci non hanno destinazione
+    try:
+        import json as _json
+        tt_pv=_json.load(open(os.path.join(ws,"raw","aghc_report_tt_profile_visits.json"),encoding="utf-8"))
+    except Exception: tt_pv={}
     tt_p={str(r["account_id"]):r for r in load_raw(ws,"aghc_report_tt_prev.json")}
     hist=None
     if a.comparison=="yoy" and a.history_prev and os.path.exists(os.path.join(ws,a.history_prev)):
@@ -183,8 +204,9 @@ def main():
                 e["tiktok"]={"available":True,
                     "reach":cell(n(ttc.get("reach")),tt_prev_reach),
                     "impressions":cell(n(ttc.get("impressions")),tt_prev_imp),
-                    "clicks":cell(n(ttc.get("clicks")),tt_prev_clk),
+                    "clicks":cell(*_clicks_or_pv(ttid,n(ttc.get("clicks")),tt_prev_clk,tt_pv)),
                     "budget":{"cur":round(n(ttc.get("spend")),2),"prev":round(tt_prev_spend,2),"delta":dpct(n(ttc.get("spend")),tt_prev_spend)}}
+                if _pv_used(ttid,n(ttc.get("clicks")),tt_prev_clk,tt_pv): e["tiktok"]["clicks_source"]="profile_visits"
             else: e["tiktok"]={"available":False}
         e["rational"]=rational(cur,mprev) if active else ""
         e["rational_tiktok"]=rational_tt(e.get("tiktok"))
