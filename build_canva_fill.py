@@ -21,8 +21,19 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--workspace",default="."); ap.add_argument("--month",default=None); a=ap.parse_args()
     W=a.workspace; L=lambda n: json.load(open(os.path.join(W,n),encoding="utf-8"))
     rep=L("aghc_report.json"); data=L("aghc_data.json")
+    try: act={x["name"]:x for x in L("aghc_actuals_monthly.json")["structures"]}
+    except Exception: act={}
     demoM=L("aghc_demographics_monthly.json")
-    month=a.month or data.get("as_of_month")
+    # il mese di riferimento è quello del REPORT (aghc_report.json), non quello di
+    # aghc_data.json: quest'ultimo è scritto dal refresh quotidiano e può essere indietro,
+    # facendo scivolare token di budget e demografiche sul mese sbagliato.
+    def month_from_label(lbl):
+        if not lbl: return None
+        parts=str(lbl).split()
+        if len(parts)!=2: return None
+        try: return "%s-%02d"%(parts[1], MESI.index(parts[0].capitalize())+1)
+        except ValueError: return None
+    month=a.month or month_from_label(rep.get("month_label")) or data.get("as_of_month")
     ym=month; mm=int(ym.split("-")[1])
     bud={s["name"]:s.get("budget",{}) for s in data["structures"]}
     demo=demoM.get("by_month",{}).get(ym,{})
@@ -50,8 +61,27 @@ def main():
         pb=NV(M.get("budget",{}).get("prev")) + (NV(T.get("budget",{}).get("prev")) if has_tt else 0)
         tok["BUDGET_TOT_ATT"]=eurd(mb); tok["BUDGET_TOT_PRE"]=eurd(pb); tok["BUDGET_TOT_CFR"]=pct(((mb-pb)/pb*100) if pb else None)
         # 12 totali mensili meta+tiktok (da budget.monthly_real del cliente)
-        b=bud.get(name,{}); mr=b.get("monthly_real",[0]*12); plan=b.get("monthly_plan",[0]*12)
-        for i in range(12): tok[f"TOT_{MABBR[i].upper()}"]=eurd(NV(mr[i]) if i<len(mr) else 0)
+        b=bud.get(name,{}); mr=list(b.get("monthly_real",[0]*12)); plan=b.get("monthly_plan",[0]*12)
+        # split per canale dagli actuals; il MESE DI REPORT viene sovrascritto con i valori
+        # autoritativi di aghc_report.json (gli actuals sono aggiornati dal refresh quotidiano
+        # e possono mancare gli ultimi giorni del mese -> pagina Budget incoerente con Meta/TikTok)
+        A=act.get(name,{}); mon=A.get("monthly",{})
+        mmeta=list(mon.get("meta",[0]*12)); mtt=list(mon.get("tiktok",[0]*12))
+        for L_ in (mr,mmeta,mtt):
+            while len(L_)<12: L_.append(0.0)
+        i0=mm-1
+        if 0<=i0<12:
+            mmeta[i0]=NV(M.get("budget",{}).get("cur"))
+            mtt[i0]=NV(T.get("budget",{}).get("cur")) if has_tt else 0.0
+            mr[i0]=mmeta[i0]+mtt[i0]
+        for i in range(12):
+            tok[f"TOT_{MABBR[i].upper()}"]=eurd(NV(mr[i]))
+            tok[f"META_{MABBR[i].upper()}"]=eurd(NV(mmeta[i]))
+            tok[f"TT_{MABBR[i].upper()}"]=eurd(NV(mtt[i])) if has_tt else "0,00 €"
+        annuo=NV(A.get("budget_annuale")) or NV(b.get("budget_annuale"))
+        speso=sum(NV(x) for x in mr)
+        tok["BUD_ANNUO"]=eurd(annuo); tok["TOT_SPESO"]=eurd(speso)
+        tok["TOT_RESIDUO"]=eurd(max(annuo-speso,0))
         # grafico budget pag.6: mesi chiusi (fino a mese report)
         chart={"labels":MABBR[:mm],"programmato":[round(NV(plan[i]),2) for i in range(mm)],"speso":[round(NV(mr[i]),2) for i in range(mm)]}
         # demografiche pag.7
