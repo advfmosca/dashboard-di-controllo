@@ -5,7 +5,7 @@
 Legge aghc_report.json (KPI IG/FB + TikTok + rational), aghc_data.json (budget mensile),
 aghc_demographics_monthly.json. Output: canva_fill.json  (dict per cliente).
 Uso: python3 build_canva_fill.py --workspace . [--month 2026-07]"""
-import argparse, json, os
+import argparse, json, os, re
 MESI=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]
 MABBR=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"]
 def grp(n):  # 1234567 -> 1.234.567
@@ -21,8 +21,18 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--workspace",default="."); ap.add_argument("--month",default=None); a=ap.parse_args()
     W=a.workspace; L=lambda n: json.load(open(os.path.join(W,n),encoding="utf-8"))
     rep=L("aghc_report.json"); data=L("aghc_data.json")
-    try: act={x["name"]:x for x in L("aghc_actuals_monthly.json")["structures"]}
-    except Exception: act={}
+    try: _acts=L("aghc_actuals_monthly.json")["structures"]
+    except Exception: _acts=[]
+    act={x["name"]:x for x in _acts}
+    # gli account condivisi (es. "Hannah Hotels Collection" = Hannah + Puntebianche) hanno in
+    # aghc_actuals_monthly.json un nome aggregato: il match per nome fallisce. Si aggancia
+    # quindi l'ad-account id, letto dall'URL Meta di aghc_data.json.
+    act_by_id={str(x.get("meta_id")):x for x in _acts if x.get("meta_id")}
+    def _acct_id(s):
+        u=(((s.get("channels") or {}).get("meta") or {}).get("url") or "")
+        m=re.search(r"act=(\d+)", u)
+        return m.group(1) if m else None
+    acct_of={s["name"]:_acct_id(s) for s in data["structures"]}
     demoM=L("aghc_demographics_monthly.json")
     # il mese di riferimento è quello del REPORT (aghc_report.json), non quello di
     # aghc_data.json: quest'ultimo è scritto dal refresh quotidiano e può essere indietro,
@@ -65,10 +75,19 @@ def main():
         # split per canale dagli actuals; il MESE DI REPORT viene sovrascritto con i valori
         # autoritativi di aghc_report.json (gli actuals sono aggiornati dal refresh quotidiano
         # e possono mancare gli ultimi giorni del mese -> pagina Budget incoerente con Meta/TikTok)
-        A=act.get(name,{}); mon=A.get("monthly",{})
-        mmeta=list(mon.get("meta",[0]*12)); mtt=list(mon.get("tiktok",[0]*12))
-        for L_ in (mr,mmeta,mtt):
+        A=act.get(name) or act_by_id.get(acct_of.get(name) or "", {}); mon=A.get("monthly",{})
+        amet=list(mon.get("meta",[0]*12)); att=list(mon.get("tiktok",[0]*12))
+        for L_ in (mr,amet,att):
             while len(L_)<12: L_.append(0.0)
+        # su account condivisi i valori di aghc_actuals_monthly.json sono di ACCOUNT (più clienti):
+        # non vanno attribuiti a un singolo cliente. Si usa il totale per cliente (monthly_real di
+        # aghc_data.json) e lo si ripartisce con la proporzione di canale dell'account, così
+        # TOT_<mese> = META_<mese> + TT_<mese> resta sempre vero.
+        mmeta=[0.0]*12; mtt=[0.0]*12
+        for i in range(12):
+            tot_acc=NV(amet[i])+NV(att[i])
+            r_tt=(NV(att[i])/tot_acc) if tot_acc>0 else 0.0
+            mtt[i]=round(NV(mr[i])*r_tt,2); mmeta[i]=round(NV(mr[i])-mtt[i],2)
         i0=mm-1
         if 0<=i0<12:
             mmeta[i0]=NV(M.get("budget",{}).get("cur"))
@@ -77,8 +96,10 @@ def main():
         for i in range(12):
             tok[f"TOT_{MABBR[i].upper()}"]=eurd(NV(mr[i]))
             tok[f"META_{MABBR[i].upper()}"]=eurd(NV(mmeta[i]))
-            tok[f"TT_{MABBR[i].upper()}"]=eurd(NV(mtt[i])) if has_tt else "0,00 €"
-        annuo=NV(A.get("budget_annuale")) or NV(b.get("budget_annuale"))
+            # niente gate su has_tt: mtt è già 0 quando l'account non ha speso su TikTok,
+            # e sui mesi in cui ha speso il valore va mostrato per non rompere TOT = META + TT
+            tok[f"TT_{MABBR[i].upper()}"]=eurd(NV(mtt[i]))
+        annuo=NV(b.get("annual")) or NV(A.get("budget_annuale")) or NV(b.get("budget_annuale"))
         speso=sum(NV(x) for x in mr)
         tok["BUD_ANNUO"]=eurd(annuo); tok["TOT_SPESO"]=eurd(speso)
         tok["TOT_RESIDUO"]=eurd(max(annuo-speso,0))
