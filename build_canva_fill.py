@@ -86,7 +86,9 @@ def main():
         mmeta=[0.0]*12; mtt=[0.0]*12
         for i in range(12):
             tot_acc=NV(amet[i])+NV(att[i])
-            r_tt=(NV(att[i])/tot_acc) if tot_acc>0 else 0.0
+            # cliente senza TikTok: la colonna TikTok resta a zero e l'intero totale del mese
+            # confluisce su Meta, così TOT_ = META_ + TT_ continua a quadrare
+            r_tt=(NV(att[i])/tot_acc) if (has_tt and tot_acc>0) else 0.0
             mtt[i]=round(NV(mr[i])*r_tt,2); mmeta[i]=round(NV(mr[i])-mtt[i],2)
         i0=mm-1
         if 0<=i0<12:
