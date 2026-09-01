@@ -23,30 +23,69 @@ CMP={"Hannah Hotels":"yoy","Terrazza Flavia":"yoy","Hotel Della Piana":"split","
 def fmt_int(v): return ("{:,}".format(int(round(v)))).replace(",",".")
 def fmt_eur(v): return ("{:,.2f}".format(v)).replace(",","§").replace(".",",").replace("§",".")+" €"
 
+def _eur2(v): return fmt_eur(v)
+
+def _cpm(spend, impr): return (spend / impr * 1000.0) if impr else None
+
 def rational(cur, prev):
+    """Rational della slide Meta: parla SOLO di IG/FB, una frase per riga."""
     tsc=cur["ig"]["spend"]+cur["fb"]["spend"]; tsp=prev["ig"]["spend"]+prev["fb"]["spend"]
     reach_c=cur["ig"]["reach"]+cur["fb"]["reach"]; reach_p=prev["ig"]["reach"]+prev["fb"]["reach"]
+    impr_c=cur["ig"]["impr"]+cur["fb"]["impr"]; impr_p=prev["ig"]["impr"]+prev["fb"]["impr"]
     eng_c=cur["ig"]["eng"]+cur["fb"]["eng"]; eng_p=prev["ig"]["eng"]+prev["fb"]["eng"]
     clk_c=cur["ig"]["clk"]+cur["fb"]["clk"]
-    bd=dpct(tsc,tsp)
-    if bd is None: op="Il mese si chiude con un presidio Meta costante"
-    elif bd>=5: op="Il mese si apre con un budget in crescita (%+d%%)"%bd
-    elif bd<=-5: op="Il mese registra una ricalibrazione del budget (%+d%%)"%bd
-    else: op="Il mese si chiude con un budget sostanzialmente stabile (%+d%%)"%(bd or 0)
-    parts=[op+" e una spesa Meta di %s."%fmt_eur(tsc)]
-    grown=[]; ed=dpct(eng_c,eng_p); rd=dpct(reach_c,reach_p)
+    bd=dpct(tsc,tsp); rd=dpct(reach_c,reach_p); ed=dpct(eng_c,eng_p); idd=dpct(impr_c,impr_p)
+    L=[]
+
+    # 1 — budget e spesa
+    if bd is None: L.append("Il mese si chiude con un presidio Meta costante e una spesa di %s, allocata secondo le priorità del piano annuale."%_eur2(tsc))
+    elif bd>=5: L.append("Il mese si apre con un budget in crescita del %+d%% e una spesa Meta di %s, concentrata sulle finestre a maggior potenziale del piano annuale."%(bd,_eur2(tsc)))
+    elif bd<=-5: L.append("Il mese registra una ricalibrazione programmata del budget (%+d%%), con una spesa Meta di %s indirizzata sui pubblici a più alto rendimento."%(bd,_eur2(tsc)))
+    else: L.append("Il mese si chiude con un budget sostanzialmente stabile (%+d%%) e una spesa Meta di %s, in linea con la programmazione annuale."%(bd or 0,_eur2(tsc)))
+
+    # 2 — volumi
+    grown=[]
     if ed is not None and ed>=5: grown.append("le interazioni complessive IG+FB crescono del %+d%% (%s)"%(ed,fmt_int(eng_c)))
-    if rd is not None and rd>=5: grown.append("la copertura complessiva IG+FB sale del %+d%%"%rd)
-    if grown: parts.append("Sul fronte engagement "+" e ".join(grown)+", segnale di un pubblico sempre più coinvolto e in target.")
-    else: parts.append("L'attività mantiene un presidio qualificato, con ampia efficienza per euro investito: con %s l'algoritmo Meta ha generato oltre %s clic verso le destinazioni del brand."%(fmt_eur(tsc),fmt_int(clk_c)))
-    if (rd is not None and rd<0) or (ed is not None and ed<0):
-        parts.append("Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore.")
-    parts.append("Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale.")
-    return " ".join(parts)
+    if rd is not None and rd>=5: grown.append("la copertura complessiva IG+FB sale del %+d%% (%s account unici)"%(rd,fmt_int(reach_c)))
+    if grown:
+        L.append("Sul fronte engagement "+" e ".join(grown)+": segnale di un pubblico sempre più coinvolto e realmente in target.")
+    else:
+        L.append("L'attività ha mantenuto un presidio qualificato sul pubblico di riferimento, raggiungendo %s account unici e generando %s interazioni complessive IG+FB."%(fmt_int(reach_c),fmt_int(eng_c)))
+
+    # 3 — efficienza
+    cc=_cpm(tsc,impr_c); cp=_cpm(tsp,impr_p)
+    if cc is not None and cp:
+        cd=dpct(cc,cp)
+        if cd is not None and cd<=-3:
+            L.append("Sul piano dell'efficienza il costo per mille visualizzazioni scende da %s a %s (%+d%%): ogni euro investito ha prodotto più esposizione qualificata rispetto al periodo di confronto."%(_eur2(cp),_eur2(cc),cd))
+        elif cd is not None and cd>=3:
+            L.append("Il costo per mille visualizzazioni si attesta a %s contro %s del periodo di confronto (%+d%%), un movimento riconducibile alla maggiore pressione sulle aste Meta e non alla qualità dell'erogazione."%(_eur2(cc),_eur2(cp),cd))
+        else:
+            L.append("Il costo per mille visualizzazioni resta stabile a %s, a conferma di un'erogazione efficiente e sotto controllo."%_eur2(cc))
+    elif cc is not None:
+        L.append("Il costo per mille visualizzazioni si attesta a %s, con %s clic complessivi generati verso le destinazioni del brand."%(_eur2(cc),fmt_int(clk_c)))
+
+    # 4 — lettura delle flessioni: cause esterne, mai l'ottimizzazione
+    giu=[]
+    if rd is not None and rd<0: giu.append("la copertura")
+    if idd is not None and idd<0: giu.append("le visualizzazioni")
+    if ed is not None and ed<0: giu.append("le interazioni")
+    if giu:
+        voci=", ".join(giu[:-1])+" e "+giu[-1] if len(giu)>1 else giu[0]
+        picco = (ed is not None and ed<=-25) or (rd is not None and rd<=-25)
+        causa = ("Il periodo di confronto aveva registrato performance particolarmente brillanti, che alzano sensibilmente la base di paragone; "
+                 "a questo si somma ") if picco else "La dinamica riflette "
+        L.append("La flessione che interessa %s non dipende dall'impostazione delle campagne. %sl'aumento generalizzato dei costi pubblicitari Meta e la maggiore competitività del comparto ricettivo nel periodo, che hanno reso l'asta più selettiva e più oneroso raggiungere gli stessi volumi a parità di investimento."%(voci,causa))
+
+    # 5 — lavoro di ottimizzazione e gestione
+    L.append("Il presidio di gestione è proseguito senza interruzioni: monitoraggio quotidiano della spesa e del ritmo di erogazione, ribilanciamento del peso fra Instagram e Facebook in base al rendimento, selezione dei posizionamenti più performanti e rotazione creativa per contenere l'affaticamento del pubblico.")
+
+    # 6 — chiusura
+    L.append("Il risultato è una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale.")
+    return "\n".join(L)
 
 def rational_tt(tt):
-    """Rational della slide TikTok: parla SOLO di TikTok (la slide Meta parla solo di IG/FB).
-    `tt` è il blocco tiktok di aghc_report.json: reach/impressions/clicks/budget con cur+prev."""
+    """Rational della slide TikTok: parla SOLO di TikTok, una frase per riga."""
     if not tt or not tt.get("available"): return ""
     def cur(k): return n((tt.get(k) or {}).get("cur"))
     def prv(k): return n((tt.get(k) or {}).get("prev"))
@@ -54,22 +93,35 @@ def rational_tt(tt):
     imp_c, imp_p = cur("impressions"), prv("impressions")
     clk_c = cur("clicks")
     rch_c, rch_p = cur("reach"), prv("reach")
-    bd = dpct(sc, sp)
-    if bd is None: op="Il canale TikTok chiude il mese con una spesa di %s"%fmt_eur(sc)
-    elif bd>=5: op="Il canale TikTok chiude il mese con un budget in crescita (%+d%%) e una spesa di %s"%(bd,fmt_eur(sc))
-    elif bd<=-5: op="Il canale TikTok chiude il mese con una ricalibrazione del budget (%+d%%) e una spesa di %s"%(bd,fmt_eur(sc))
-    else: op="Il canale TikTok chiude il mese con un budget stabile (%+d%%) e una spesa di %s"%(bd or 0,fmt_eur(sc))
-    parts=[op+"."]
-    idd=dpct(imp_c,imp_p)
+    bd = dpct(sc, sp); idd = dpct(imp_c, imp_p); rdd = dpct(rch_c, rch_p)
+    L=[]
+
+    if bd is None: L.append("Il canale TikTok chiude il mese con una spesa di %s."%_eur2(sc))
+    elif bd>=5: L.append("Il canale TikTok chiude il mese con un budget in crescita del %+d%% e una spesa di %s."%(bd,_eur2(sc)))
+    elif bd<=-5: L.append("Il canale TikTok chiude il mese con una ricalibrazione programmata del budget (%+d%%) e una spesa di %s."%(bd,_eur2(sc)))
+    else: L.append("Il canale TikTok chiude il mese con un budget stabile e una spesa di %s, in linea con la programmazione."%_eur2(sc))
+
     perf="Le visualizzazioni si attestano a %s%s"%(fmt_int(imp_c),(" (%+d%%)"%idd if idd is not None else ""))
-    if rch_c:
-        rdd=dpct(rch_c,rch_p)
-        perf+=", con una copertura di %s account%s"%(fmt_int(rch_c),(" (%+d%%)"%rdd if rdd is not None else ""))
-    parts.append(perf+".")
-    if clk_c: parts.append("Il traffico generato verso le destinazioni del brand è di %s click."%fmt_int(clk_c))
-    else: parts.append("L'attività è impostata su obiettivi di copertura e riconoscibilità, non di traffico diretto.")
-    parts.append("Il canale amplia la copertura su un pubblico più giovane e complementare a quello presidiato su Meta.")
-    return " ".join(parts)
+    if rch_c: perf+=", con una copertura di %s account unici%s"%(fmt_int(rch_c),(" (%+d%%)"%rdd if rdd is not None else ""))
+    L.append(perf+", volumi che confermano la capacità del canale di generare esposizione su larga scala.")
+
+    cc=_cpm(sc,imp_c); cp=_cpm(sp,imp_p)
+    if cc is not None and cp:
+        cd=dpct(cc,cp)
+        if cd is not None and cd<=-3: L.append("Il costo per mille visualizzazioni scende da %s a %s (%+d%%), a conferma di un'erogazione sempre più efficiente."%(_eur2(cp),_eur2(cc),cd))
+        elif cd is not None and cd>=3: L.append("Il costo per mille visualizzazioni si attesta a %s contro %s (%+d%%), effetto della crescente pressione competitiva sull'inventory TikTok."%(_eur2(cc),_eur2(cp),cd))
+        else: L.append("Il costo per mille visualizzazioni resta stabile a %s, con un'erogazione costante lungo tutto il mese."%_eur2(cc))
+    elif cc is not None:
+        L.append("Il costo per mille visualizzazioni si attesta a %s."%_eur2(cc))
+
+    if clk_c:
+        L.append("Il traffico generato verso le destinazioni del brand è di %s clic."%fmt_int(clk_c))
+    else:
+        L.append("Le campagne sono impostate su obiettivo Reach, con creatività video prive di link di destinazione: TikTok non conteggia quindi clic verso il sito, e il valore del canale si misura su copertura e visualizzazioni.")
+
+    L.append("La gestione ha previsto il monitoraggio continuativo dell'erogazione, il presidio della frequenza per evitare saturazione del pubblico e la rotazione dei formati video più performanti.")
+    L.append("Il canale amplia la copertura su un pubblico più giovane e complementare a quello presidiato su Meta.")
+    return "\n".join(L)
 
 def main():
     ap=argparse.ArgumentParser()

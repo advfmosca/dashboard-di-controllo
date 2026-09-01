@@ -32,8 +32,9 @@ def main():
             cur = {}; prev = {}
             for side in ("ig", "fb"):
                 rc, rp = g(M, side, "reach"); ec, ep = g(M, side, "engagement"); kc, kp = g(M, side, "clicks")
-                cur[side] = {"reach": rc, "eng": ec, "clk": kc, "spend": 0.0}
-                prev[side] = {"reach": rp, "eng": ep, "clk": kp, "spend": 0.0}
+                ic, ip = g(M, side, "impressions")
+                cur[side] = {"reach": rc, "impr": ic, "eng": ec, "clk": kc, "spend": 0.0}
+                prev[side] = {"reach": rp, "impr": ip, "eng": ep, "clk": kp, "spend": 0.0}
             b = M.get("budget") or {}
             cur["ig"]["spend"] = b.get("cur") or 0.0
             prev["ig"]["spend"] = b.get("prev") or 0.0
