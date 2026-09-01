@@ -17,7 +17,7 @@ for name,acct,camp,ttid in CLIENTS:
     b=bucket(src,acct,camp)
     rec={"meta":b}
     if ttid and ttid in tt:
-        t=tt[ttid]; rec["tiktok"]={"impressions":n(t.get("impressions")),"clicks":n(t.get("clicks")),"spend":n(t.get("spend"))}
+        t=tt[ttid]; rec["tiktok"]={"reach":n(t.get("reach")),"impressions":n(t.get("impressions")),"clicks":n(t.get("clicks")),"spend":n(t.get("spend"))}
     out["clients"][name]=rec
 os.makedirs(os.path.join(ws,"history"),exist_ok=True)
 json.dump(out,open(os.path.join(ws,"history",a.month+".json"),"w",encoding="utf-8"),ensure_ascii=False,indent=2)

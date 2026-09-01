@@ -86,9 +86,9 @@ def main():
         tth=(hist.get(name,{}).get("tiktok") or {}) if has_hist else {}
         tp=(tt_p.get(ttid) or {}) if ttid else {}
         if tt_yoy:
-            tt_prev_imp=n(tth.get("impressions")); tt_prev_clk=n(tth.get("clicks")); tt_prev_spend=n(tth.get("spend")); tt_prev_label=a.yoy_label
+            tt_prev_imp=n(tth.get("impressions")); tt_prev_clk=n(tth.get("clicks")); tt_prev_spend=n(tth.get("spend")); tt_prev_reach=n(tth.get("reach")); tt_prev_label=a.yoy_label
         else:
-            tt_prev_imp=n(tp.get("impressions")); tt_prev_clk=n(tp.get("clicks")); tt_prev_spend=n(tp.get("spend")); tt_prev_label=a.prev_label
+            tt_prev_imp=n(tp.get("impressions")); tt_prev_clk=n(tp.get("clicks")); tt_prev_spend=n(tp.get("spend")); tt_prev_reach=n(tp.get("reach")); tt_prev_label=a.prev_label
         cmp_used=("yoy" if (meta_yoy and tt_yoy) else ("split" if meta_yoy else "mom"))
         active=(cur["ig"]["spend"]+cur["fb"]["spend"]+cur["ig"]["impr"]+cur["fb"]["impr"])>0
         e={"name":name,"comparison_used":cmp_used,
@@ -105,6 +105,7 @@ def main():
         if ttid:
             if ttc and (n(ttc.get("spend"))+n(ttc.get("impressions"))>0):
                 e["tiktok"]={"available":True,
+                    "reach":cell(n(ttc.get("reach")),tt_prev_reach),
                     "impressions":cell(n(ttc.get("impressions")),tt_prev_imp),
                     "clicks":cell(n(ttc.get("clicks")),tt_prev_clk),
                     "budget":{"cur":round(n(ttc.get("spend")),2),"prev":round(tt_prev_spend,2),"delta":dpct(n(ttc.get("spend")),tt_prev_spend)}}

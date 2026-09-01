@@ -40,7 +40,8 @@ def main():
             b=M.get("budget",{}); tok["BUDGET_ATT"]=eurd(NV(b.get("cur"))); tok["BUDGET_PRE"]=eurd(NV(b.get("prev"))); tok["BUDGET_CFR"]=pct(b.get("delta"))
         tok["RATIONAL_META"]=c.get("rational","")
         if has_tt:
-            tok["TT_REACH_ATT"]=tok["TT_REACH_PRE"]="n/d"; tok["TT_REACH_CFR"]="n/d"  # TikTok non espone reach
+            if T.get("reach"): trip(T["reach"],"TT_REACH")
+            else: tok["TT_REACH_ATT"]=tok["TT_REACH_PRE"]=tok["TT_REACH_CFR"]="n/d"
             trip(T["impressions"],"TT_VIEWS"); trip(T["clicks"],"TT_CLICK")
             tb=T.get("budget",{}); tok["TT_BUDGET_ATT"]=eurd(NV(tb.get("cur"))); tok["TT_BUDGET_PRE"]=eurd(NV(tb.get("prev"))); tok["TT_BUDGET_CFR"]=pct(tb.get("delta"))
             tok["RATIONAL_TT"]=f"Il canale TikTok ha generato {grp(NV(T['impressions'].get('cur')))} visualizzazioni e {grp(NV(T['clicks'].get('cur')))} click nel mese, ampliando la copertura su un pubblico complementare e più giovane."
