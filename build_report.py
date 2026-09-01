@@ -23,7 +23,7 @@ CMP={"Hannah Hotels":"yoy","Terrazza Flavia":"yoy","Hotel Della Piana":"split","
 def fmt_int(v): return ("{:,}".format(int(round(v)))).replace(",",".")
 def fmt_eur(v): return ("{:,.2f}".format(v)).replace(",","§").replace(".",",").replace("§",".")+" €"
 
-def rational(cur, prev, tt_cur_imp, tt_prev_imp):
+def rational(cur, prev):
     tsc=cur["ig"]["spend"]+cur["fb"]["spend"]; tsp=prev["ig"]["spend"]+prev["fb"]["spend"]
     reach_c=cur["ig"]["reach"]+cur["fb"]["reach"]; reach_p=prev["ig"]["reach"]+prev["fb"]["reach"]
     eng_c=cur["ig"]["eng"]+cur["fb"]["eng"]; eng_p=prev["ig"]["eng"]+prev["fb"]["eng"]
@@ -33,18 +33,42 @@ def rational(cur, prev, tt_cur_imp, tt_prev_imp):
     elif bd>=5: op="Il mese si apre con un budget in crescita (%+d%%)"%bd
     elif bd<=-5: op="Il mese registra una ricalibrazione del budget (%+d%%)"%bd
     else: op="Il mese si chiude con un budget sostanzialmente stabile (%+d%%)"%(bd or 0)
-    parts=[op+" e una spesa complessiva di %s."%fmt_eur(tsc)]
+    parts=[op+" e una spesa Meta di %s."%fmt_eur(tsc)]
     grown=[]; ed=dpct(eng_c,eng_p); rd=dpct(reach_c,reach_p)
-    if ed is not None and ed>=5: grown.append("le interazioni su Meta crescono del %+d%% (%s)"%(ed,fmt_int(eng_c)))
-    if rd is not None and rd>=5: grown.append("la copertura sale del %+d%%"%rd)
+    if ed is not None and ed>=5: grown.append("le interazioni complessive IG+FB crescono del %+d%% (%s)"%(ed,fmt_int(eng_c)))
+    if rd is not None and rd>=5: grown.append("la copertura complessiva IG+FB sale del %+d%%"%rd)
     if grown: parts.append("Sul fronte engagement "+" e ".join(grown)+", segnale di un pubblico sempre più coinvolto e in target.")
     else: parts.append("L'attività mantiene un presidio qualificato, con ampia efficienza per euro investito: con %s l'algoritmo Meta ha generato oltre %s clic verso le destinazioni del brand."%(fmt_eur(tsc),fmt_int(clk_c)))
     if (rd is not None and rd<0) or (ed is not None and ed<0):
         parts.append("Le variazioni in flessione si inseriscono in uno scenario di aumento generalizzato dei costi pubblicitari Meta e di crescente competitività nel comparto ricettivo, che ha reso più selettiva l'erogazione sui pubblici a maggior valore.")
-    if tt_cur_imp:
-        ttd=dpct(tt_cur_imp,tt_prev_imp or 0)
-        parts.append("Il canale TikTok ha contribuito con %s visualizzazioni%s, ampliando la copertura su un pubblico più giovane e complementare."%(fmt_int(tt_cur_imp),(" (%+d%%)"%ttd if ttd is not None else "")))
     parts.append("Una base solida ed efficiente da cui costruire le prossime finestre ad alto peso del piano annuale.")
+    return " ".join(parts)
+
+def rational_tt(tt):
+    """Rational della slide TikTok: parla SOLO di TikTok (la slide Meta parla solo di IG/FB).
+    `tt` è il blocco tiktok di aghc_report.json: reach/impressions/clicks/budget con cur+prev."""
+    if not tt or not tt.get("available"): return ""
+    def cur(k): return n((tt.get(k) or {}).get("cur"))
+    def prv(k): return n((tt.get(k) or {}).get("prev"))
+    sc, sp = cur("budget"), prv("budget")
+    imp_c, imp_p = cur("impressions"), prv("impressions")
+    clk_c = cur("clicks")
+    rch_c, rch_p = cur("reach"), prv("reach")
+    bd = dpct(sc, sp)
+    if bd is None: op="Il canale TikTok chiude il mese con una spesa di %s"%fmt_eur(sc)
+    elif bd>=5: op="Il canale TikTok chiude il mese con un budget in crescita (%+d%%) e una spesa di %s"%(bd,fmt_eur(sc))
+    elif bd<=-5: op="Il canale TikTok chiude il mese con una ricalibrazione del budget (%+d%%) e una spesa di %s"%(bd,fmt_eur(sc))
+    else: op="Il canale TikTok chiude il mese con un budget stabile (%+d%%) e una spesa di %s"%(bd or 0,fmt_eur(sc))
+    parts=[op+"."]
+    idd=dpct(imp_c,imp_p)
+    perf="Le visualizzazioni si attestano a %s%s"%(fmt_int(imp_c),(" (%+d%%)"%idd if idd is not None else ""))
+    if rch_c:
+        rdd=dpct(rch_c,rch_p)
+        perf+=", con una copertura di %s account%s"%(fmt_int(rch_c),(" (%+d%%)"%rdd if rdd is not None else ""))
+    parts.append(perf+".")
+    if clk_c: parts.append("Il traffico generato verso le destinazioni del brand è di %s click."%fmt_int(clk_c))
+    else: parts.append("L'attività è impostata su obiettivi di copertura e riconoscibilità, non di traffico diretto.")
+    parts.append("Il canale amplia la copertura su un pubblico più giovane e complementare a quello presidiato su Meta.")
     return " ".join(parts)
 
 def main():
@@ -110,7 +134,8 @@ def main():
                     "clicks":cell(n(ttc.get("clicks")),tt_prev_clk),
                     "budget":{"cur":round(n(ttc.get("spend")),2),"prev":round(tt_prev_spend,2),"delta":dpct(n(ttc.get("spend")),tt_prev_spend)}}
             else: e["tiktok"]={"available":False}
-        e["rational"]=rational(cur,mprev, n(ttc.get("impressions")) if ttc else 0, tt_prev_imp) if active else ""
+        e["rational"]=rational(cur,mprev) if active else ""
+        e["rational_tiktok"]=rational_tt(e.get("tiktok"))
         clients.append(e)
 
     out={"schema_version":2,"generated_at":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),

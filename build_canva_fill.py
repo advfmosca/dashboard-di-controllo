@@ -65,7 +65,9 @@ def main():
             else: tok["TT_REACH_ATT"]=tok["TT_REACH_PRE"]=tok["TT_REACH_CFR"]="n/d"
             trip(T["impressions"],"TT_VIEWS"); trip(T["clicks"],"TT_CLICK")
             tb=T.get("budget",{}); tok["TT_BUDGET_ATT"]=eurd(NV(tb.get("cur"))); tok["TT_BUDGET_PRE"]=eurd(NV(tb.get("prev"))); tok["TT_BUDGET_CFR"]=pct(tb.get("delta"))
-            tok["RATIONAL_TT"]=f"Il canale TikTok ha generato {grp(NV(T['impressions'].get('cur')))} visualizzazioni e {grp(NV(T['clicks'].get('cur')))} click nel mese, ampliando la copertura su un pubblico complementare e più giovane."
+            # il rational TikTok arriva da aghc_report.json (build_report.rational_tt): la slide
+            # Meta parla solo di IG/FB, questa solo di TikTok
+            tok["RATIONAL_TT"]=c.get("rational_tiktok") or f"Il canale TikTok ha generato {grp(NV(T['impressions'].get('cur')))} visualizzazioni nel mese, ampliando la copertura su un pubblico complementare e più giovane."
         # budget totale periodo = meta.budget + tiktok.budget
         mb=NV(M.get("budget",{}).get("cur")) + (NV(T.get("budget",{}).get("cur")) if has_tt else 0)
         pb=NV(M.get("budget",{}).get("prev")) + (NV(T.get("budget",{}).get("prev")) if has_tt else 0)
