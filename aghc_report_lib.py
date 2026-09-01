@@ -19,6 +19,8 @@ CLIENTS = [
  ("Villa Ermellina","30233607946222961",None,"7612666695502118929"),
  ("Villa Giada","1849759899186169",None,"7626418949391351815"),
  ("Villa Miliani","1353024533007038",None,None),
+ # entrata in gestione ad agosto 2026 (prima erogazione il 17/08): confronto MoM, solo Meta
+ ("Livata","4666471140299701",None,None),
 ]
 
 def load_raw(ws, p):
@@ -64,6 +66,7 @@ KEYWORDS = [
  ("Villa Ermellina",          ["ermellina"], []),
  ("Villa Giada",              ["giada"], []),
  ("Villa Miliani",            ["miliani"], []),
+ ("Livata",                   ["livata"], []),
 ]
 
 def match_client(campaign_name):

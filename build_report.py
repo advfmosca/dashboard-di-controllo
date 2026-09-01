@@ -51,7 +51,10 @@ def rational(cur, prev):
     L=[]
 
     # 1 — budget e spesa
-    if bd is None: L.append("Il mese si chiude con un presidio Meta costante e una spesa di %s, allocata secondo le priorità del piano annuale."%_eur2(tsc))
+    if tsp==0 and tsc>0:
+        # primo mese di erogazione: non esiste un periodo di confronto, va detto
+        L.append("Il mese segna l'avvio dell'attività Meta, con una spesa di %s: non essendoci erogazione nel periodo precedente, i confronti percentuali non sono applicabili."%_eur2(tsc))
+    elif bd is None: L.append("Il mese si chiude con un presidio Meta costante e una spesa di %s, allocata secondo le priorità del piano annuale."%_eur2(tsc))
     elif bd>=5: L.append("Il mese si apre con un budget in crescita del %+d%% e una spesa Meta di %s, concentrata sulle finestre a maggior potenziale del piano annuale."%(bd,_eur2(tsc)))
     elif bd<=-5: L.append("Il mese registra una ricalibrazione programmata del budget (%+d%%), con una spesa Meta di %s indirizzata sui pubblici a più alto rendimento."%(bd,_eur2(tsc)))
     else: L.append("Il mese si chiude con un budget sostanzialmente stabile (%+d%%) e una spesa Meta di %s, in linea con la programmazione annuale."%(bd or 0,_eur2(tsc)))
