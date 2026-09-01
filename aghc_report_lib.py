@@ -10,7 +10,6 @@ CLIENTS = [
  ("Hannah Hotels","1528485957725509","Hannah",None),
  ("Puntebianche Resort","1528485957725509","Puntebianche",None),
  ("Hemanaire","217115315497718",None,None),
- ("Livata","4666471140299701",None,None),
  ("Hotel Lunetta","687349689221880",None,"7498330316248203280"),
  ("Magari Estates","1372615496521110",None,None),
  ("Marcella Royal Hotel","821188209852436","Marcella","7499093699838607377"),
