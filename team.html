@@ -112,6 +112,58 @@ footer.f{margin-top:30px;font-size:11px;color:var(--dim);text-align:center;}
 .drow .dbar i{display:block;height:100%;border-radius:999px;}
 .drow .dp{width:52px;text-align:right;font-variant-numeric:tabular-nums;font-weight:800;color:var(--text);flex-shrink:0;}
 @media(max-width:640px){.wrap{padding:18px 14px 60px;}.kpi .v{font-size:22px;}}
+/* ---- obiettivi e fonti ---- */
+.btn-pdf{font:inherit;font-size:12px;font-weight:800;padding:8px 16px;border-radius:10px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:7px;margin-left:auto;box-shadow:var(--shadow-sm);}
+.btn-pdf:hover{background:#173d44;}
+.btn-pdf svg{width:14px;height:14px;}
+.splitbar{display:flex;height:14px;border-radius:999px;overflow:hidden;background:#eef2f3;margin:4px 0 6px;}
+.splitbar i{display:block;height:100%;}
+.splitleg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);}
+.splitleg b{color:var(--text);}
+.objgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:12px;}
+.obj{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow-sm);border-top:3px solid var(--navy);}
+.obj-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.obj-t{font-size:14px;font-weight:800;color:var(--text);}
+.obj-s{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.obj-s b{color:var(--text);font-size:15px;}
+.plan{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;background:#eef2f3;color:#51636a;white-space:nowrap;}
+.plan.warn{background:#fff4e5;color:#b45309;}
+.omx{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:12px;}
+.om{background:var(--soft);border:1px solid var(--bsoft);border-radius:10px;padding:9px 11px;}
+.om .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;}
+.om .v{font-size:16px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;}
+.om .chip{margin-top:4px;}
+.ocamp{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.45;}
+.onote{font-size:11.5px;color:#b45309;margin-top:8px;}
+.insights{margin:0;padding-left:18px;font-size:13px;line-height:1.65;color:#3c474c;}
+.insights b{color:var(--navy);}
+.srctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+.plats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;}
+.plat{background:var(--soft);border:1px solid var(--bsoft);border-radius:11px;padding:11px 13px;}
+.plat .n{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;}
+.plat .v{font-size:18px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums;}
+.plat .s{font-size:11px;color:var(--muted);margin-top:2px;}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table.src tbody tr{cursor:default;}
+table.src td,table.src th{padding:9px 11px;white-space:nowrap;}
+table.src .pbar{display:inline-block;width:46px;height:6px;border-radius:999px;background:#eef2f3;vertical-align:middle;margin-left:6px;overflow:hidden;}
+table.src .pbar i{display:block;height:100%;background:var(--gold);}
+.srcnote{font-size:11px;color:var(--dim);margin-top:8px;}
+.printonly{display:none;}
+@media print{
+  @page{size:A4;margin:12mm;}
+  html,body{background:#fff!important;}
+  .wrap{max-width:none;padding:0;}
+  .toolbar,.toolrow,.metricsel,.btn-pdf,.srctools,footer.f,.noprint{display:none!important;}
+  .printonly{display:block;}
+  #view>*{animation:none!important;}
+  .card,.obj,.kpi,.dcol,.mhead,.narr,.plat{box-shadow:none!important;break-inside:avoid;}
+  h2.block{break-after:avoid;}
+  .kpi:hover,.dcol:hover{transform:none!important;}
+  .tscroll{overflow:visible;}
+  table.src td,table.src th{padding:5px 7px;font-size:10.5px;}
+  .chip,.pace,.plan,.splitbar i,.drow .dbar i,.ddot,.pbar i{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
 </style></head><body>
 <div class="wrap">
 <header class="h"><img class="brandlogo" src="assets/logo-aghc.png?v=1" alt="AG Hotel Consulting"/><div><h1>Dashboard Team</h1></div><div class="stamp" id="stamp"></div></header>
@@ -171,7 +223,7 @@ function genRational(s){var i=CURIDX,ym=curYM(),name=s.name,hasTT=!!s.has_tiktok
 function dailyOf(name,ym){var s=DAILY[name];return (s&&s.days)?s.days[ym]:null;}
 function dserie(dd,ch,k){if(!dd)return null;var blk=dd[ch];if(blk&&blk[k])return blk[k];return dd.combined?dd.combined[k]:null;}
 function buildMsel(s){var msel=document.getElementById("msel");msel.innerHTML=KDEF.map(function(d){return '<button class="'+(d[0]===CURK?"on":"")+'" data-k="'+d[0]+'" data-fmt="'+d[2]+'">'+d[1]+'</button>';}).join("");Array.prototype.forEach.call(msel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){CURK=btn.dataset.k;CURFMT=btn.dataset.fmt;msel.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});btn.classList.add("on");drawHist();});});}
-function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);buildMsel(s);drawHist();});});}
+function wireChsel(s,hasTT){var chsel=document.getElementById("chsel");Array.prototype.forEach.call(chsel.querySelectorAll("button"),function(btn){btn.addEventListener("click",function(){if(btn.hasAttribute("disabled"))return;CURCH=btn.dataset.ch;chsel.innerHTML=chselHtml(hasTT);wireChsel(s,hasTT);document.getElementById("kpis").innerHTML=kpisHtml(s);document.getElementById("kpinote").innerHTML=kpiNote(s);buildMsel(s);renderObj(s);drawHist();});});}
 function drawHist(){var el=document.getElementById("hist");if(!el)return;var msg=document.getElementById("histmsg");
   var ym=curYM(),dd=dailyOf(CURS.name,ym);if(CH.hist){CH.hist.destroy();CH.hist=null;}
   var data=dd?dserie(dd,CURCH,CURK):null,fmt=CURFMT;
@@ -184,13 +236,101 @@ function refreshMonth(s){document.getElementById("kpis").innerHTML=kpisHtml(s);d
   document.getElementById("mhead").innerHTML=headHtml(s);
   document.getElementById("histhead").textContent="Andamento giornaliero · "+mfull(curYM());
   document.getElementById("narr").innerHTML=genRational(s);
-  document.getElementById("demobox").innerHTML=demoHtml(s.name);drawHist();}
+  document.getElementById("demobox").innerHTML=demoHtml(s.name);renderObj(s);drawHist();}
+/* ---- obiettivi e fonti di traffico ---- */
+var BRK={structures:{}}, CUROBJ="all";
+var OCOL={aon:"#1F4E57",traffico:"#E0733C",conversioni:"#1e8e3e",tematiche:"#8a9aa0"};
+var PCOL={instagram:"#c13584",facebook:"#1877f2",tiktok:"#111111",audience_network:"#8a9aa0",threads:"#555555",messenger:"#0084ff",unknown:"#b8c2c6"};
+var NUMK=["spend","reach","impressions","clicks","link_clicks","engagement","lpv","video_views"];
+function brk(name,ym){var s=BRK.structures&&BRK.structures[name];return s?s[ym]:null;}
+function zero(){var z={purchases:null};NUMK.forEach(function(k){z[k]=0;});return z;}
+function addB(a,b){if(!b)return a;NUMK.forEach(function(k){a[k]+=(b[k]||0);});if(b.purchases!=null)a.purchases=(a.purchases||0)+b.purchases;return a;}
+function objTot(o){var t=zero();if(!o)return t;if(CURCH!=="tiktok")addB(t,o.meta);if(CURCH!=="meta")addB(t,o.tiktok);return t;}
+function findObj(d,k){if(!d)return null;for(var i=0;i<d.objectives.length;i++)if(d.objectives[i].key===k)return d.objectives[i];return null;}
+function rat(a,b,m){return b?a/b*(m||1):null;}
+function f2(n,suf){return n==null?"—":n.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2})+(suf||"");}
+function f1(n,suf){return n==null?"—":n.toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1})+(suf||"");}
+function chipI(d,inv){if(d==null)return '<span class="chip flat">n/d</span>';if(inv===2)return '<span class="chip flat">'+fP(d)+'</span>';var good=inv?d<=0:d>=0;return '<span class="chip '+(Math.abs(d)<1?"flat":(good?"good":"bad"))+'">'+fP(d)+'</span>';}
+/* KPI dedicati per obiettivo: [etichetta, funzione valore, formato, costo(=meno è meglio)] */
+var OKPI={
+ aon:[["Copertura",function(t){return t.reach;},"int"],["CPM",function(t){return rat(t.spend,t.impressions,1000);},"eur2",1],["Frequenza",function(t){return rat(t.impressions,t.reach);},"x",2],["Interazioni",function(t){return t.engagement;},"int"],["Costo per interazione",function(t){return rat(t.spend,t.engagement);},"eur2",1]],
+ traffico:[["Click sul link",function(t){return t.link_clicks;},"int"],["CTR link",function(t){return rat(t.link_clicks,t.impressions,100);},"pct"],["CPC link",function(t){return rat(t.spend,t.link_clicks);},"eur2",1],["Visite alla landing",function(t){return t.lpv;},"int"],["Costo per visita",function(t){return rat(t.spend,t.lpv);},"eur2",1]],
+ conversioni:[["Click sul link",function(t){return t.link_clicks;},"int"],["Visite alla landing",function(t){return t.lpv;},"int"],["Costo per visita",function(t){return rat(t.spend,t.lpv);},"eur2",1],["Acquisti tracciati",function(t){return t.purchases;},"int"],["Costo per acquisto",function(t){return t.purchases?t.spend/t.purchases:null;},"eur2",1]],
+ tematiche:[["Copertura",function(t){return t.reach;},"int"],["CPM",function(t){return rat(t.spend,t.impressions,1000);},"eur2",1],["Interazioni",function(t){return t.engagement;},"int"],["Click sul link",function(t){return t.link_clicks;},"int"]]
+};
+function fmtK(v,f){if(v==null)return "—";if(f==="eur2")return (v>0&&v<0.1)?v.toLocaleString("it-IT",{minimumFractionDigits:3,maximumFractionDigits:3})+" €":f2(v," €");if(f==="pct")return f2(v,"%");if(f==="x")return f1(v);return fI(v);}
+/* il confronto pianificato/reale ha senso solo se i pesi da naming dei canali Meta attivi sommano a 100 e nessun obiettivo e' stato avviato nel mese */
+function planCheck(d,pd){var sum=0,ok=true,any=false;d.objectives.forEach(function(o){if(o.meta.spend<=0)return;if(!o.planned_pct||o.planned_pct.length!==1){if(o.planned_pct)ok=false;return;}any=true;sum+=o.planned_pct[0];var po=findObj(pd,o.key);if(!po||po.meta.spend<=0)ok=false;});return any&&ok&&sum===100;}
+var PLANOK=false;
+function objCard(o,prevO,totSpend,metaTot){
+  var t=objTot(o),p=prevO?objTot(prevO):null;if(t.spend<=0)return "";
+  var share=totSpend?t.spend/totSpend*100:0;
+  var plan="";if(o.planned_pct&&metaTot>0&&o.meta.spend>0){var real=o.meta.spend/metaTot*100,pl=o.planned_pct.join("/");var off=o.planned_pct.length===1&&Math.abs(real-o.planned_pct[0])>10;
+    plan=PLANOK?'<span class="plan'+(off?' warn':'')+'" title="Peso da nomenclatura campagna, calcolato sulla spesa Meta">pianificato '+pl+'% · reale '+Math.round(real)+'%</span>':'<span class="plan" title="Peso indicato nella nomenclatura campagna">peso da naming '+pl+'%</span>';}
+  if(!prevO||prevO.meta.spend+prevO.tiktok.spend<=0)plan+=(CURIDX>0?' <span class="plan">nuova nel mese</span>':'');
+  var k=(OKPI[o.key]||OKPI.tematiche).map(function(d){var cv=d[1](t),pv=p?d[1](p):null;var dd=(cv!=null&&pv)?(cv-pv)/pv*100:null;
+    return '<div class="om"><div class="l">'+d[0]+'</div><div class="v">'+fmtK(cv,d[2])+'</div>'+(CURIDX>0?chipI(dd,d[3]):'')+'</div>';}).join("");
+  var note="";if(o.key==="conversioni"&&t.purchases==null&&t.spend>=50)note='<div class="onote">Nessun acquisto registrato dal pixel nel mese: verificare che l\'evento di conversione ottimizzato sia tracciato correttamente.</div>';
+  if(o.key==="traffico"&&t.link_clicks>0&&t.lpv===0&&t.spend>=50)note='<div class="onote">Visite alla landing non rilevate: il pixel potrebbe non essere installato sul sito di destinazione.</div>';
+  var ch=[];if(CURCH!=="tiktok"&&o.meta.spend>0)ch.push("Meta");if(CURCH!=="meta"&&o.tiktok.spend>0)ch.push("TikTok");
+  return '<div class="obj" style="border-top-color:'+OCOL[o.key]+'"><div class="obj-h"><span class="obj-t">'+o.label+'</span>'+plan+'</div>'
+   +'<div class="obj-s"><b>'+fE(t.spend)+'</b> · '+Math.round(share)+'% dell\'investimento'+(ch.length?' · '+ch.join(" + "):'')+'</div>'
+   +'<div class="omx">'+k+'</div>'+note
+   +'<div class="ocamp">'+(o.campaigns&&o.campaigns.length?'Campagne Meta: '+o.campaigns.join(" · "):'')+(o.tiktok.spend>0&&CURCH!=="meta"?(o.campaigns&&o.campaigns.length?'<br>':'')+'TikTok: campagne Copertura (AON)':'')+'</div></div>';}
+function srcRows(d){if(!d)return [];return d.sources.filter(function(x){
+  if(CURCH==="meta"&&x.platform==="tiktok")return false;if(CURCH==="tiktok"&&x.platform!=="tiktok")return false;
+  return CUROBJ==="all"||x.obj===CUROBJ;});}
+function clk(x){return x.platform==="tiktok"?x.clicks:x.link_clicks;}
+function aggBy(rows,keyf,labf){var m={},ord=[];rows.forEach(function(x){var k=keyf(x);if(!m[k]){m[k]=zero();m[k].key=k;m[k].label=labf(x);m[k].platform=x.platform;m[k].platform_label=x.platform_label;m[k].clk=0;ord.push(k);}addB(m[k],x);m[k].clk+=clk(x)||0;});return ord.map(function(k){return m[k];}).sort(function(a,b){return b.spend-a.spend;});}
+function insightsHtml(d,objs,totSpend,rows){var L=[];
+  var main=objs.slice().sort(function(a,b){return objTot(b).spend-objTot(a).spend;})[0];
+  if(main&&totSpend)L.push('L\'obiettivo prevalente è <b>'+main.label+'</b>, con il '+Math.round(objTot(main).spend/totSpend*100)+'% dell\'investimento del mese.');
+  var metaTot=0;objs.forEach(function(o){metaTot+=o.meta.spend;});
+  if(PLANOK)objs.forEach(function(o){if(o.planned_pct&&o.planned_pct.length===1&&metaTot>0&&o.meta.spend>0){var r=o.meta.spend/metaTot*100,df=r-o.planned_pct[0];if(Math.abs(df)>10)L.push('<b>'+o.label+'</b>: spesa reale al '+Math.round(r)+'% contro il '+o.planned_pct[0]+'% pianificato ('+(df>0?'+':'')+Math.round(df)+' punti): da riallineare nella distribuzione del budget.');}});
+  if(!PLANOK){var pd=CURIDX>0?brk(CURS.name,HIST.months[CURIDX-1]):null;var nw=objs.filter(function(o){var po=findObj(pd,o.key);return CURIDX>0&&(!po||po.meta.spend+po.tiktok.spend<=0);});
+    if(nw.length)L.push('Nel mese è stato avviato '+(nw.length>1?'un nuovo assetto di campagne (':'l\'obiettivo ')+nw.map(function(o){return '<b>'+o.label+'</b>';}).join(', ')+(nw.length>1?')':'')+': la ripartizione tra obiettivi del mese è parziale e va letta a regime dal mese successivo.');}
+  var plats=aggBy(rows,function(x){return x.platform;},function(x){return x.platform_label;}).filter(function(p){return p.spend>0;});
+  if(plats.length>1){var tot=plats.reduce(function(a,p){return a+p.spend;},0);var best=plats.filter(function(p){return p.impressions>0&&p.spend/tot>=0.05;}).sort(function(a,b){return (a.spend/a.impressions)-(b.spend/b.impressions);})[0];
+    L.push('Ripartizione per piattaforma: '+plats.slice(0,3).map(function(p){return p.platform_label+' '+Math.round(p.spend/tot*100)+'%';}).join(', ')+(best?'. CPM più efficiente su <b>'+best.platform_label+'</b> ('+f2(best.spend/best.impressions*1000,' €')+')':'')+'.');}
+  var pos=aggBy(rows,function(x){return x.platform+"|"+x.position_label;},function(x){return x.position_label;}).filter(function(p){return p.platform!=="tiktok"&&p.impressions>1000;});
+  var tp=pos.reduce(function(a,p){return a+p.spend;},0);
+  var cand=pos.filter(function(p){return tp&&p.spend/tp>=0.05&&p.clk>0;}).sort(function(a,b){return (b.clk/b.impressions)-(a.clk/a.impressions);});
+  if(cand.length>1){var b=cand[0],w=cand[cand.length-1];L.push('Posizionamento con il miglior tasso di click: <b>'+b.platform_label+' '+b.label+'</b> (CTR '+f2(b.clk/b.impressions*100,'%')+'); il più debole tra quelli rilevanti è '+w.platform_label+' '+w.label+' ('+f2(w.clk/w.impressions*100,'%')+').');}
+  return L.length?'<div class="card"><ul class="insights"><li>'+L.join('</li><li>')+'</li></ul></div>':'';}
+function objHtml(s){var ym=curYM(),d=brk(s.name,ym),pd=CURIDX>0?brk(s.name,HIST.months[CURIDX-1]):null;
+  var head='<h2 class="block" id="objhead">Obiettivi e fonti di traffico · '+mfull(ym)+'</h2>';
+  if(!d||!d.objectives.length)return head+'<div class="card"><p style="margin:0;color:var(--dim);font-size:12px">Dettaglio per obiettivo non disponibile per questo mese.</p></div>';
+  PLANOK=planCheck(d,pd);
+  var objs=d.objectives.filter(function(o){return objTot(o).spend>0;});
+  if(!objs.length)return head+'<div class="card"><p style="margin:0;color:var(--dim);font-size:12px">Nessuna spesa sul canale selezionato in questo mese.</p></div>';
+  var tot=objs.reduce(function(a,o){return a+objTot(o).spend;},0),metaTot=d.objectives.reduce(function(a,o){return a+o.meta.spend;},0);
+  var bar='<div class="card"><div class="splitbar">'+objs.map(function(o){return '<i style="width:'+(objTot(o).spend/tot*100)+'%;background:'+OCOL[o.key]+'" title="'+o.label+'"></i>';}).join("")+'</div>'
+    +'<div class="splitleg">'+objs.map(function(o){return '<span><span class="ddot" style="background:'+OCOL[o.key]+';margin-right:5px;vertical-align:-1px"></span>'+o.label+' <b>'+Math.round(objTot(o).spend/tot*100)+'%</b></span>';}).join("")+'</div></div>';
+  var cards='<div class="objgrid">'+objs.map(function(o){return objCard(o,findObj(pd,o.key),tot,metaTot);}).join("")+'</div>';
+  // fonti
+  var present=objs.map(function(o){return o.key;});if(CUROBJ!=="all"&&present.indexOf(CUROBJ)<0)CUROBJ="all";
+  var rows=srcRows(d),allRows=(function(){var k=CUROBJ;CUROBJ="all";var r=srcRows(d);CUROBJ=k;return r;})();
+  var ins=insightsHtml(d,objs,tot,allRows);
+  var tog='<div class="srctools"><span class="mpick" style="margin:0">Obiettivo</span><span class="toggle" id="objsel"><button data-o="all" class="'+(CUROBJ==="all"?"on":"")+'">Tutti</button>'+objs.map(function(o){return '<button data-o="'+o.key+'" class="'+(CUROBJ===o.key?"on":"")+'">'+o.label.split(" (")[0]+'</button>';}).join("")+'</span></div>';
+  var plats=aggBy(rows,function(x){return x.platform;},function(x){return x.platform_label;}),ps=plats.reduce(function(a,p){return a+p.spend;},0);
+  var pc='<div class="plats">'+plats.map(function(p){return '<div class="plat"><div class="n"><span class="ddot" style="background:'+(PCOL[p.platform]||"#999")+'"></span>'+p.platform_label+'</div><div class="v">'+fE(p.spend)+'</div><div class="s">'+(ps?Math.round(p.spend/ps*100):0)+'% spesa · CPM '+f2(rat(p.spend,p.impressions,1000),' €')+' · CTR '+f2(rat(p.clk,p.impressions,100),'%')+'</div></div>';}).join("")+'</div>';
+  var pos=aggBy(rows,function(x){return x.platform+"|"+x.position_label;},function(x){return x.position_label;});
+  var top=pos.slice(0,12),rest=pos.slice(12);if(rest.length){var o=zero();o.label="Altri posizionamenti ("+rest.length+")";o.platform_label="—";o.platform="unknown";o.clk=0;rest.forEach(function(r){addB(o,r);o.clk+=r.clk;});top.push(o);}
+  var tb='<div class="tscroll"><table class="src"><thead><tr><th>Piattaforma</th><th>Posizionamento</th><th class="num">Spesa</th><th class="num">Impression</th><th class="num">CPM</th><th class="num">Click</th><th class="num">CTR</th><th class="num">Interazioni</th></tr></thead><tbody>'
+    +top.map(function(p){var sh=ps?p.spend/ps*100:0;return '<tr><td><span class="ddot" style="background:'+(PCOL[p.platform]||"#999")+';margin-right:6px;vertical-align:-1px"></span>'+p.platform_label+'</td><td>'+p.label+'</td><td class="num">'+fE(p.spend)+' <span class="pbar"><i style="width:'+Math.max(2,sh)+'%"></i></span></td><td class="num">'+fI(p.impressions)+'</td><td class="num">'+f2(rat(p.spend,p.impressions,1000),' €')+'</td><td class="num">'+fI(p.clk)+'</td><td class="num">'+f2(rat(p.clk,p.impressions,100),'%')+'</td><td class="num">'+fI(p.engagement)+'</td></tr>';}).join("")
+    +'</tbody></table></div>';
+  return head+bar+cards+'<h2 class="block">Fonti di traffico · piattaforme e posizionamenti</h2>'+ins+'<div class="card">'+tog+pc+tb
+    +'<div class="srcnote">Click: su Meta click sul link, su TikTok click totali. Copertura e interazioni per obiettivo sono somme per campagna (un utente raggiunto da più campagne può essere contato più volte). Pesi pianificati letti dalla nomenclatura campagne e confrontati con la sola spesa Meta.</div></div>';}
+function wireObj(s){var el=document.getElementById("objsel");if(!el)return;Array.prototype.forEach.call(el.querySelectorAll("button"),function(b){b.addEventListener("click",function(){CUROBJ=b.dataset.o;renderObj(s);});});}
+function renderObj(s){var box=document.getElementById("objbox");if(!box)return;box.innerHTML=objHtml(s);wireObj(s);}
+function printReport(label){var t=document.title;document.title=label;setTimeout(function(){window.print();setTimeout(function(){document.title=t;},800);},60);}
+var PDFICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>';
 function headHtml(s){var ym=curYM(),p=ym.split("-"),logo=(LINKS[s.name]||{}).logo,cmp=CURIDX>0?mfull(HIST.months[CURIDX-1]):null;
   var left='<div class="mh-left">'+(logo?'<img class="mh-logo" src="'+logo+'" alt="'+s.name+'"/>':'')+'<div class="mh-name">'+s.name+'</div></div>';
   var right='<div class="mh-right"><div class="mh-month">'+MFULL[(+p[1])-1]+' '+p[0]+'</div>'+(cmp?'<div class="mh-cmp">confronto: '+cmp+'</div>':'')+'</div>';
   return left+right;}
 function renderClient(name){
-  var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
+  var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CUROBJ="all";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
   var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
   var bhtml=b?('<h2 class="block">Budget '+(HIST.as_of_month.split("-")[0])+' · aggiornato a '+HIST.as_of_label+'</h2><div class="card"><div class="bstats">'
     +'<div class="bstat"><div class="bl">Programmato annuo</div><div class="bv">'+fE(b.annual)+'</div></div>'
@@ -199,20 +339,23 @@ function renderClient(name){
     +'<div class="bstat"><div class="bl">Passo vs programmato</div><div class="bv"><span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span></div></div>'
     +'</div></div>'):'';
   v.innerHTML='<div class="mhead" id="mhead">'+headHtml(s)+'</div>'
-    +'<div class="toolrow"><span class="chsel" id="chsel">'+chselHtml(hasTT)+'</span><label class="mpick">Mese <select id="mpick">'+monthOptions()+'</select></label></div>'
+    +'<div class="toolrow"><span class="chsel" id="chsel">'+chselHtml(hasTT)+'</span><label class="mpick">Mese <select id="mpick">'+monthOptions()+'</select></label><button class="btn-pdf" id="pdfbtn" type="button">'+PDFICO+'Scarica PDF</button></div>'
     +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div><div id="kpinote">'+kpiNote(s)+'</div>'
     +'<h2 class="block" id="histhead">Andamento giornaliero · '+mfull(curYM())+'</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="histmsg" style="text-align:center;color:var(--dim);font-size:12px"></div></div>'
     +'<h2 class="block">Lettura del mese</h2><div class="narr" id="narr">'+genRational(s)+'</div>'
+    +'<div id="objbox"></div>'
     +'<div id="demobox">'+demoHtml(name)+'</div>'
     +bhtml;
   document.getElementById("mpick").addEventListener("change",function(){CURIDX=parseInt(this.value,10);refreshMonth(s);});
-  wireChsel(s,hasTT);buildMsel(s);drawHist();
+  document.getElementById("pdfbtn").addEventListener("click",function(){printReport("AGHC - "+s.name+" - "+mfull(curYM()));});
+  wireChsel(s,hasTT);buildMsel(s);renderObj(s);drawHist();
 }
 function renderAll(){
   var v=document.getElementById("view");var i=HIST.as_of_idx;
   var rows=HIST.structures.map(function(s){var sp=s.series.combined.spend[i],re=s.series.meta.reach[i],inr=s.series.meta.interazioni[i],b=BUD[s.name];
     return '<tr data-name="'+s.name.replace(/"/g,"&quot;")+'"><td><b>'+s.name+'</b></td><td class="num">'+fE(sp)+'</td><td class="num">'+fI(re)+'</td><td class="num">'+fI(inr)+'</td><td>'+(b?'<span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span>':'—')+'</td></tr>';}).join("");
-  v.innerHTML='<h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><table><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura · Meta</th><th class="num">Interazioni · Meta</th><th>Passo budget</th></tr></thead><tbody>'+rows+'</tbody></table></div><p style="font-size:12px;color:var(--dim);margin-top:8px">Clicca una struttura per il dettaglio mensile, l\'andamento giornaliero, la lettura del mese e le demografiche.</p>';
+  v.innerHTML='<div class="toolrow" style="margin:0"><button class="btn-pdf" id="pdfall" type="button">'+PDFICO+'Scarica PDF panoramica</button></div><h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><table><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura · Meta</th><th class="num">Interazioni · Meta</th><th>Passo budget</th></tr></thead><tbody>'+rows+'</tbody></table></div><p style="font-size:12px;color:var(--dim);margin-top:8px">Clicca una struttura per il dettaglio mensile, l\'andamento giornaliero, la lettura del mese e le demografiche.</p>';
+  document.getElementById("pdfall").addEventListener("click",function(){printReport("AGHC - Panoramica strutture - "+HIST.as_of_label);});
   Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var nloc=tr.getAttribute("data-name");document.getElementById("sel").value=nloc;renderClient(nloc);window.scrollTo({top:0,behavior:"smooth"});});});
 }
 function boot(){
@@ -228,7 +371,8 @@ Promise.all([
  fetch("aghc_data.json?v="+Date.now()).then(function(r){return r.json();}),
  fetch("aghc_demographics_monthly.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {by_month:{}};}),
  fetch("aghc_daily.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:[]};}),
- fetch("aghc_links.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:{}};})
-]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});LINKS=(a[4]&&a[4].structures)||{};boot();})
+ fetch("aghc_links.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:{}};}),
+ fetch("aghc_breakdown.json?v="+Date.now()).then(function(r){return r.json();}).catch(function(){return {structures:{}};})
+]).then(function(a){HIST=a[0];BUD={};(a[1].structures||[]).forEach(function(s){if(s.budget)BUD[s.name]=s.budget;});DEMOM=a[2]||{by_month:{}};DAILY={};(a[3].structures||[]).forEach(function(s){DAILY[s.name]=s;});LINKS=(a[4]&&a[4].structures)||{};BRK=a[5]||{structures:{}};boot();})
  .catch(function(e){document.getElementById("view").innerHTML='<div class="loading">Errore caricamento dati</div>';console.error(e);});
 </script></body></html>
