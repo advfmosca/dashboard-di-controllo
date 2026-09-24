@@ -3,7 +3,8 @@
 build_breakdown.py — Analisi per TIPOLOGIA DI OBIETTIVO e FONTE DI TRAFFICO (AGHC).
 
 Input (estratti Windsor, connector "facebook"; TikTok dallo storico mensile):
-  raw/aghc_obj_meta_camp.json       campaign x year_month  (+campaign_objective, reach, link click, LPV, ...)
+  raw/aghc_obj_meta_camp.json       campaign x year_month  (+campaign_objective, reach, link click, LPV, ...) anno corrente
+  raw/aghc_obj_meta_camp_prev.json  stessi campi, anno precedente completo (confronto anno su anno; si aggiorna una volta l'anno)
   raw/aghc_src_meta_placement.json  campaign x year_month x publisher_platform x platform_position
   aghc_history.json                 serie mensili TikTok per struttura (tutte campagne AON/Reach)
 
@@ -157,7 +158,17 @@ def main():
     ap.add_argument("--workspace", default=".")
     a = ap.parse_args()
     ws = a.workspace
-    camp = load(os.path.join(ws, "raw/aghc_obj_meta_camp.json"))
+    # anno corrente + anno precedente (quest'ultimo serve al confronto anno su anno delle card obiettivo)
+    camp = load(os.path.join(ws, "raw/aghc_obj_meta_camp_prev.json")) + load(os.path.join(ws, "raw/aghc_obj_meta_camp.json"))
+    _seen = set()
+    _dedup = []
+    for _r in reversed(camp):
+        _k = (str(_r.get("account_id")), _r.get("campaign"), _r.get("year_month"))
+        if _k in _seen:
+            continue
+        _seen.add(_k)
+        _dedup.append(_r)
+    camp = list(reversed(_dedup))
     plac = load(os.path.join(ws, "raw/aghc_src_meta_placement.json"))
     hist = json.load(open(os.path.join(ws, "aghc_history.json"), encoding="utf-8"))
 
@@ -256,6 +267,6 @@ if __name__ == "__main__":
     _ws = "."
     if "--workspace" in sys.argv:
         _ws = sys.argv[sys.argv.index("--workspace") + 1]
-    for _r in load(os.path.join(_ws, "raw/aghc_obj_meta_camp.json")):
+    for _r in load(os.path.join(_ws, "raw/aghc_obj_meta_camp_prev.json")) + load(os.path.join(_ws, "raw/aghc_obj_meta_camp.json")):
         NATIVE[(str(_r.get("account_id")), _r.get("campaign"))] = _r.get("campaign_objective")
     main()

@@ -28,10 +28,17 @@ STRUCTS=[
  ("Villa Giada","1849759899186169",None,[],"7626418949391351815"),
  ("Villa Miliani","1353024533007038",None,[],None),
 ]
-def load(ws,p):
-    fp=os.path.join(ws,"raw",p)
+def _load1(fp):
     if not os.path.exists(fp): return []
     d=json.load(open(fp,encoding="utf-8")); return d.get("result",d) if isinstance(d,dict) else d
+def load(ws,p):
+    """Righe del pull corrente + archivio storico (raw/aghc_hist_archive_*.json) per i mesi
+    non coperti dal pull: serve al confronto anno su anno anche quando il refresh mensile
+    riscarica solo gli ultimi 13 mesi."""
+    rows=_load1(os.path.join(ws,"raw",p))
+    arch=_load1(os.path.join(ws,"raw",p.replace("aghc_hist_","aghc_hist_archive_")))
+    have={str(r.get("year_month")) for r in rows}
+    return [r for r in arch if str(r.get("year_month")) not in have]+rows
 def n(x):
     try: return float(x) if x is not None else 0.0
     except: return 0.0
@@ -116,8 +123,9 @@ def rational(name, meta, tt, combined, i, has_tt, month_label):
     return " ".join(parts)
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--workspace",default="."); ap.add_argument("--as-of-month",required=True); ap.add_argument("--months",type=int,default=12)
+    ap=argparse.ArgumentParser(); ap.add_argument("--workspace",default="."); ap.add_argument("--as-of-month",required=True); ap.add_argument("--months",type=int,default=24)
     a=ap.parse_args(); ws=a.workspace
+    a.months=max(a.months,24)  # 24 mesi: team.html confronta ogni mese con lo stesso mese dell'anno prima
     acct=load(ws,"aghc_hist_meta_acct.json"); camp=load(ws,"aghc_hist_meta_camp.json"); tt=load(ws,"aghc_hist_tiktok.json")
     months=month_list(a.as_of_month,a.months); labels=[lab(m) for m in months]; i=len(months)-1
     y,m=a.as_of_month.split("-"); as_of_label="%s %s"%(MESI[int(m)-1].capitalize(),y)

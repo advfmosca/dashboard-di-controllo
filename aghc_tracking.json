@@ -1,0 +1,22 @@
+{
+ "checked_at": "2026-09-24",
+ "source": "Meta Ads: dataset (pixel) collegati a ciascun account pubblicitario; CAPI = eventi ricevuti lato server",
+ "structures": {
+  "Altafiumara Resort":      {"pixel": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}, "capi": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}},
+  "Hotel Castello":          {"pixel": {"status": "missing", "detail": "Nessun pixel collegato all'account pubblicitario"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Hotel Della Piana":       {"pixel": {"status": "on", "detail": "PIXEL // Hotel Della Piana: eventi ricevuti il 24/09/2026"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Hannah Hotels":           {"pixel": {"status": "stale", "since": "04/2026", "detail": "PIXEL // Hannah Hotels Collection: ultimo evento il 15/04/2026"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Puntebianche Resort":     {"pixel": {"status": "stale", "since": "04/2026", "detail": "Account condiviso con Hannah: PIXEL // Hannah Hotels Collection, ultimo evento il 15/04/2026"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Hemanaire":               {"pixel": {"status": "stale", "since": "07/2021", "detail": "Pixel collegati (CW + CM, Casa Wallace) senza eventi dal 30/07/2021"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Livata":                  {"pixel": {"status": "missing", "detail": "Nessun pixel collegato all'account pubblicitario"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Hotel Lunetta":           {"pixel": {"status": "on", "detail": "Pixel di Hotel Lunetta: eventi ricevuti il 24/09/2026"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Magari Estates":          {"pixel": {"status": "stale", "since": "mai", "detail": "Dataset \"Website\" creato ma mai attivato: nessun evento ricevuto"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Marcella Royal Hotel":    {"pixel": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}, "capi": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}},
+  "Terrazza Flavia":         {"pixel": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}, "capi": {"status": "check", "detail": "Account non ancora leggibile dagli strumenti di verifica automatica"}},
+  "Mare Hotel":              {"pixel": {"status": "on", "detail": "Pixel Mare Hotel: eventi ricevuti il 24/09/2026"}, "capi": {"status": "on", "detail": "Eventi lato server ricevuti il 23/09/2026"}},
+  "Tenuta Montemagno Relais":{"pixel": {"status": "on", "detail": "Pixel di TM Relais: eventi ricevuti il 24/09/2026"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Villa Ermellina":         {"pixel": {"status": "missing", "detail": "Nessun pixel collegato all'account pubblicitario"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Villa Giada":             {"pixel": {"status": "missing", "detail": "Nessun pixel collegato all'account pubblicitario"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}},
+  "Villa Miliani":           {"pixel": {"status": "missing", "detail": "Nessun pixel collegato all'account pubblicitario"}, "capi": {"status": "off", "detail": "Nessun evento lato server"}}
+ }
+}
