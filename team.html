@@ -167,7 +167,7 @@ table.src .pbar i{display:block;height:100%;background:var(--gold);}
   .chip,.pace,.plan,.splitbar i,.drow .dbar i,.ddot,.pbar i{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 }
 
-table.ov{font-size:12.5px;}table.ov td,table.ov th{white-space:nowrap;padding:10px 9px;}table.ov th{line-height:1.25;vertical-align:bottom;}table.ov td:first-child,table.ov th:first-child{padding-left:14px;}
+table.ov{font-size:12.5px;}table.ov td,table.ov th{white-space:nowrap;padding:10px 7px;}table.ov th{line-height:1.25;vertical-align:bottom;}table.ov td:first-child,table.ov th:first-child{padding-left:14px;}
 .na{color:var(--dim);}
 .trk{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;white-space:nowrap;cursor:help;}
 .trk i{width:8px;height:8px;border-radius:50%;display:inline-block;background:#bdb5ae;flex-shrink:0;}
@@ -176,6 +176,22 @@ table.ov{font-size:12.5px;}table.ov td,table.ov th{white-space:nowrap;padding:10
 .trk.off i{background:#bdb5ae;}.trk.off{color:#7A706C;}
 .trk.check{color:#A39993;font-style:italic;}
 @media print{table.ov td,table.ov th{padding:5px 6px;font-size:10px;}.trk{font-size:9.5px;}.trk i{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+table.ov td .sub{font-size:10.5px;color:var(--muted);font-weight:400;margin-top:2px;}
+table.ov tr.off td{color:var(--dim);}
+.ochip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin:1px 6px 1px 0;white-space:nowrap;}
+.ochip i{width:8px;height:8px;border-radius:2px;background:var(--oc);display:inline-block;}
+td.ocell{white-space:normal!important;min-width:112px;}
+.period{font-size:12px;color:var(--muted);margin:-6px 0 12px;}
+table.camps td{vertical-align:top;}
+table.camps tr.crow{cursor:pointer;}
+table.camps tr.crow.open{background:#F6F4F2;}
+table.camps td.chev{color:var(--muted);width:20px;text-align:center;}
+table.camps tr.cdet td{background:#FBFAF9;white-space:normal;padding:4px 14px 16px;cursor:default;}
+table.camps tr.cdet:hover{background:transparent;}
+.cdinfo{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px 18px;margin:8px 0 4px;font-size:12px;}
+.cdinfo span{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;}
+.cdinfo b{font-weight:600;color:var(--text);}
+@media print{table.camps tr.cdet td{padding:4px 7px 8px;}}
 /* ================= TEMA AG HOTEL CONSULTING (aghotelconsulting.it) ================= */
 :root{
   --bg:#F0EEEC; --card:#FFFFFF; --soft:#F6F4F2; --bsoft:#E7E3E0; --border:#DFDCDC;
@@ -278,7 +294,7 @@ function kpisHtml(s){var i=CURIDX;return KDEF.map(function(d){
 }).join("");}
 function kpiNote(s){return '';}
 function chselHtml(hasTT){return '<span class="toggle"><button data-ch="combined" class="'+(CURCH==="combined"?"on":"")+'">Entrambe</button><button data-ch="meta" class="'+(CURCH==="meta"?"on":"")+'">Meta</button><button data-ch="tiktok" '+(hasTT?'':'disabled')+' class="'+(CURCH==="tiktok"?"on":"")+'">TikTok</button></span>';}
-function monthOptions(){var o="";HIST.months.forEach(function(ym,idx){if(ym>="2026-01"){o+='<option value="'+idx+'"'+(idx===CURIDX?" selected":"")+'>'+mfull(ym)+'</option>';}});return o;}
+function monthOptions(){var o="";HIST.months.forEach(function(ym,idx){if(ym>="2025-01"){o+='<option value="'+idx+'"'+(idx===CURIDX?" selected":"")+'>'+mfull(ym)+'</option>';}});return o;}
 /* ---- rational auto per mese ---- */
 function genRational(s){var i=CURIDX,ym=curYM(),name=s.name,hasTT=!!s.has_tiktok;
   var sp=val(s,"combined","spend",i),re=val(s,"meta","reach",i),im=val(s,"combined","impressions",i),inr=val(s,"meta","interazioni",i),cl=val(s,"combined","clicks",i);
@@ -318,11 +334,11 @@ function refreshMonth(s){document.getElementById("kpis").innerHTML=kpisHtml(s);d
 /* ---- obiettivi e fonti di traffico ---- */
 var BRK={structures:{}}, CUROBJ="all", TRK={structures:{}};
 var TRKL={on:"Attivo",off:"Non attivo",stale:"Inattivo",missing:"Non collegato",check:"Da verificare"};
-function trkBadge(x,kind){if(!x)return '<span class="trk check">Da verificare</span>';var l=kind==="capi"&&x.status==="off"?"Non configurata":(kind==="capi"&&x.status==="on"?"Attiva":TRKL[x.status]||x.status);
+function trkBadge(x,kind){if(!x)return '<span class="trk check">Da verificare</span>';var l=kind==="capi"&&x.status==="off"?"Non attiva":(kind==="capi"&&x.status==="on"?"Attiva":TRKL[x.status]||x.status);
   if(x.status==="stale"&&x.since)l+=x.since==="mai"?" · mai attivato":" dal "+x.since;
   return '<span class="trk '+x.status+'" title="'+(x.detail||"").replace(/"/g,"&quot;")+'"><i></i>'+l+'</span>';}
 var OCOL={aon:"#423A38",traffico:"#E4623D",conversioni:"#9C8672",tematiche:"#C9C1BA"};
-var PCOL={instagram:"#E4623D",facebook:"#5F564F",tiktok:"#000000",audience_network:"#C9C1BA",threads:"#9C8672",messenger:"#9C8672",unknown:"#D8D2CD"};
+var PCOL={meta:"#5F564F",instagram:"#E4623D",facebook:"#5F564F",tiktok:"#000000",audience_network:"#C9C1BA",threads:"#9C8672",messenger:"#9C8672",unknown:"#D8D2CD"};
 var NUMK=["spend","reach","impressions","clicks","link_clicks","engagement","lpv","video_views"];
 function brk(name,ym){var s=BRK.structures&&BRK.structures[name];return s?s[ym]:null;}
 function zero(){var z={purchases:null};NUMK.forEach(function(k){z[k]=0;});return z;}
@@ -404,15 +420,55 @@ function objHtml(s){var ym=curYM(),d=brk(s.name,ym),pd=CURIDX>0?brk(s.name,HIST.
   return head+bar+cards+'<h2 class="block">Fonti di traffico · piattaforme e posizionamenti</h2>'+ins+'<div class="card">'+tog+pc+tb
     +'<div class="srcnote">Click: su Meta click sul link, su TikTok click totali. Copertura e interazioni per obiettivo sono somme per campagna (un utente raggiunto da più campagne può essere contato più volte). Pesi pianificati letti dalla nomenclatura campagne e confrontati con la sola spesa Meta.</div></div>';}
 function wireObj(s){var el=document.getElementById("objsel");if(!el)return;Array.prototype.forEach.call(el.querySelectorAll("button"),function(b){b.addEventListener("click",function(){CUROBJ=b.dataset.o;renderObj(s);});});}
-function renderObj(s){var box=document.getElementById("objbox");if(!box)return;box.innerHTML=objHtml(s);wireObj(s);}
+function renderObj(s){var box=document.getElementById("objbox");if(!box)return;box.innerHTML=objHtml(s);wireObj(s);renderCamps(s);}
+/* ---- campagne del mese (periodo + dettaglio singola campagna) ---- */
+var CURCAMP=null;
+function dIt(d){if(!d)return null;var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
+function campRows(d){if(!d||!d.campaigns)return [];return d.campaigns.filter(function(c){if(c.m.spend<=0)return false;if(CURCH==="meta"&&c.platform!=="meta")return false;if(CURCH==="tiktok"&&c.platform!=="tiktok")return false;return true;});}
+function campKey(c){return c.platform+"|"+c.name;}
+var CUTOFF=null;
+function cutoff(){if(CUTOFF)return CUTOFF;var mx="";Object.keys(BRK.structures||{}).forEach(function(n){var S=BRK.structures[n];Object.keys(S).forEach(function(m){(S[m].campaigns||[]).forEach(function(c){if(c.last_day&&c.last_day>mx)mx=c.last_day;});});});
+  var d=new Date(mx+"T12:00:00");d.setDate(d.getDate()-2);CUTOFF=d.toISOString().slice(0,10);return CUTOFF;}
+function isRunning(c){if(c.status==="PAUSED")return false;if(c.stop&&c.stop<cutoff())return false;return !!(c.last_day&&c.last_day>=cutoff());}
+function flight(c){var st=dIt(c.start||c.first_day);var end=c.stop?dIt(c.stop):null;var lastSpend=c.last_day;
+  var running=isRunning(c);
+  if(end)return st+' – '+end;
+  return st+' – '+(running?'in corso':(dIt(lastSpend)||'—'));}
+function keyKpi(c){var m=c.m,cl=campClk(c);if(c.obj==="traffico")return ['CPC',cl?m.spend/cl:null];if(c.obj==="conversioni")return m.purchases?['Costo/acquisto',m.spend/m.purchases]:['Costo/visita',m.lpv?m.spend/m.lpv:null];return ['CPM',m.impressions?m.spend/m.impressions*1000:null];}
+function campClk(c){return c.platform==="tiktok"?c.m.clicks:c.m.link_clicks;}
+function campHtml(s){var ym=curYM(),d=brk(s.name,ym),rows=campRows(d);
+  var head='<h2 class="block">Campagne del mese · '+mfull(ym)+'</h2>';
+  if(!rows.length)return head+'<div class="card"><p style="margin:0;color:var(--dim);font-size:12px">Nessuna campagna con investimento nel mese per il canale selezionato.</p></div>';
+  var tb=rows.map(function(c){var k=campKey(c),cl=campClk(c),ctr=c.m.impressions?cl/c.m.impressions*100:null,cpc=cl?c.m.spend/cl:null,open=(CURCAMP===k);
+    var days=(c.month_first&&c.month_last)?dIt(c.month_first).slice(0,5)+' – '+dIt(c.month_last).slice(0,5):'—';
+    return '<tr class="crow'+(open?' open':'')+'" data-k="'+k.replace(/"/g,"&quot;")+'"><td><span class="ddot" style="background:'+(PCOL[c.platform]||'#999')+';margin-right:7px;vertical-align:-1px"></span><b>'+c.name+'</b><div class="sub">'+(c.platform==="tiktok"?"TikTok":"Meta")+' · '+c.obj_label+(c.planned_pct?' · peso '+c.planned_pct+'%':'')+'</div></td>'
+      +'<td>'+flight(c)+'<div class="sub">nel mese: '+days+'</div></td>'
+      +'<td class="num"><b>'+fE(c.m.spend)+'</b></td><td class="num">'+fI(c.m.reach)+'</td><td class="num">'+fI(c.m.impressions)+'</td><td class="num">'+fI(cl)+'</td><td class="num">'+f2(ctr,'%')+'</td><td class="num">'+(function(kk){return fmtK(kk[1],"eur2")+'<div class="sub">'+kk[0]+'</div>';})(keyKpi(c))+'</td><td class="chev">'+(open?'▴':'▾')+'</td></tr>'
+      +(open?'<tr class="cdet"><td colspan="9">'+campDetail(s,c)+'</td></tr>':'');}).join("");
+  return head+'<div class="card" style="padding:0"><div class="tscroll"><table class="ov camps"><thead><tr><th>Campagna</th><th>Periodo campagna</th><th class="num">Spesa</th><th class="num">Copertura</th><th class="num">Visualizz.</th><th class="num">Click</th><th class="num">CTR</th><th class="num">Costo chiave</th><th></th></tr></thead><tbody>'+tb+'</tbody></table></div></div>'
+    +'<p class="srcnote">Periodo campagna: date di inizio e fine impostate (o "in corso" se senza data di fine); sotto, i giorni con erogazione nel mese. Click: click sul link su Meta, click su TikTok. Costo chiave: CPM per le campagne di notorietà (AON e tematiche), CPC per il Traffico, costo per visita o per acquisto per le Conversioni. Clicca una campagna per il dettaglio.</p>';}
+function campDetail(s,c){var yi=yIdx(),yd=yi>=0?brk(s.name,HIST.months[yi]):null,yc=null;
+  if(yd&&yd.campaigns)yd.campaigns.forEach(function(x){if(campKey(x)===campKey(c))yc=x;});
+  var t=zero(),p=yc?zero():null;addB(t,c.m);if(yc)addB(p,yc.m);
+  if(c.platform==="tiktok"){t.link_clicks=c.m.clicks;if(p)p.link_clicks=yc.m.clicks;}
+  var defs=(OKPI[c.obj]||OKPI.tematiche).slice();
+  defs=[["Investimento",function(x){return x.spend;},"eur"]].concat(defs);
+  if(c.platform==="tiktok")defs=[["Investimento",function(x){return x.spend;},"eur"],["Copertura",function(x){return x.reach;},"int"],["CPM",function(x){return rat(x.spend,x.impressions,1000);},"eur2",1],["Click",function(x){return x.clicks;},"int"],["Interazioni",function(x){return x.engagement;},"int"],["Visite al profilo",function(x){return x.profile_visits;},"int"],["Nuovi follower",function(x){return x.follows;},"int"]];
+  var k=defs.map(function(dd){var cv=dd[1](c.platform==="tiktok"?c.m:t),pv=p?dd[1](c.platform==="tiktok"?yc.m:p):null;var df=(cv!=null&&pv)?(cv-pv)/pv*100:null;
+    return '<div class="om"><div class="l">'+dd[0]+'</div><div class="v">'+(dd[2]==="eur"?fE(cv):fmtK(cv,dd[2]))+'</div>'+chipI(df,dd[3])+'</div>';}).join("");
+  var info=[['Piattaforma',c.platform==="tiktok"?"TikTok":"Meta (Facebook + Instagram)"],['Obiettivo',c.obj_label+(c.planned_pct?' · peso da nomenclatura '+c.planned_pct+'%':'')],['Obiettivo impostato',({OUTCOME_ENGAGEMENT:'Interazione',OUTCOME_AWARENESS:'Notorietà',OUTCOME_TRAFFIC:'Traffico',OUTCOME_SALES:'Vendite',OUTCOME_LEADS:'Contatti',REACH:'Copertura'})[c.native]||(c.native||'—')],['Periodo campagna',flight(c)],['Prima / ultima erogazione',(dIt(c.first_day)||'—')+' – '+(dIt(c.last_day)||'—')],['Stato',isRunning(c)?"Attiva":(c.status==="PAUSED"?"In pausa":"Terminata")]];
+  return '<div class="cdbox"><div class="cdinfo">'+info.map(function(x){return '<div><span>'+x[0]+'</span><b>'+x[1]+'</b></div>';}).join("")+'</div>'
+    +'<div class="omx">'+k+'</div><div class="srcnote">'+(yc?'Variazioni rispetto alla stessa campagna '+aPrep(yLab())+'.':'Confronto anno su anno non disponibile: la campagna non era attiva '+(yLab()?aPrep(yLab()):'l\'anno precedente')+'.')+'</div></div>';}
+function renderCamps(s){var box=document.getElementById("campbox");if(!box)return;box.innerHTML=campHtml(s);
+  Array.prototype.forEach.call(box.querySelectorAll("tr.crow"),function(tr){tr.addEventListener("click",function(){var k=tr.getAttribute("data-k");CURCAMP=(CURCAMP===k)?null:k;renderCamps(s);});});}
 function printReport(label){var t=document.title;document.title=label;setTimeout(function(){window.print();setTimeout(function(){document.title=t;},800);},60);}
 var PDFICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>';
 function headHtml(s){var ym=curYM(),p=ym.split("-"),logo=(LINKS[s.name]||{}).logo,cmp=yLab();
   var left='<div class="mh-left">'+(logo?'<img class="mh-logo" src="'+logo+'" alt="'+s.name+'"/>':'')+'<div class="mh-name">'+s.name+'</div></div>';
-  var right='<div class="mh-right"><div class="mh-month">'+MFULL[(+p[1])-1]+' '+p[0]+'</div>'+(cmp?'<div class="mh-cmp">confronto con '+cmp+' · anno precedente</div>':'')+'</div>';
+  var lastd=new Date(+p[0],+p[1],0).getDate();var right='<div class="mh-right"><div class="mh-month">'+MFULL[(+p[1])-1]+' '+p[0]+'</div><div class="mh-cmp">periodo di riferimento: 01/'+p[1]+'/'+p[0]+' – '+lastd+'/'+p[1]+'/'+p[0]+'</div>'+(cmp?'<div class="mh-cmp">confronto con '+cmp+' · anno precedente</div>':'')+'</div>';
   return left+right;}
-function renderClient(name){
-  var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CUROBJ="all";CURK="spend";CURFMT="eur";CURIDX=HIST.as_of_idx;
+function renderClient(name,idx){
+  var s=HIST.structures.find(function(x){return x.name===name;});CURS=s;CURCH="combined";CUROBJ="all";CURCAMP=null;CURK="spend";CURFMT="eur";CURIDX=(idx!=null&&HIST.months[idx]>="2025-01")?idx:HIST.as_of_idx;
   var v=document.getElementById("view");var hasTT=!!s.has_tiktok;var b=BUD[name];
   var bhtml=b?('<h2 class="block">Budget '+(HIST.as_of_month.split("-")[0])+' · aggiornato a '+HIST.as_of_label+'</h2><div class="card"><div class="bstats">'
     +'<div class="bstat"><div class="bl">Programmato annuo</div><div class="bv">'+fE(b.annual)+'</div></div>'
@@ -425,6 +481,7 @@ function renderClient(name){
     +'<div class="kpis" id="kpis">'+kpisHtml(s)+'</div><div id="kpinote">'+kpiNote(s)+'</div>'
     +'<h2 class="block" id="histhead">Andamento giornaliero · '+mfull(curYM())+'</h2><div class="card"><div class="metricsel" id="msel"></div><div class="chartwrap"><canvas id="hist"></canvas></div><div id="histmsg" style="text-align:center;color:var(--dim);font-size:12px"></div></div>'
     +'<h2 class="block">Lettura del mese</h2><div class="narr" id="narr">'+genRational(s)+'</div>'
+    +'<div id="campbox"></div>'
     +'<div id="objbox"></div>'
     +'<div id="demobox">'+demoHtml(name)+'</div>'
     +bhtml;
@@ -432,14 +489,35 @@ function renderClient(name){
   document.getElementById("pdfbtn").addEventListener("click",function(){printReport("AGHC - "+s.name+" - "+mfull(curYM()));});
   wireChsel(s,hasTT);buildMsel(s);renderObj(s);drawHist();
 }
+var PANOIDX=null;
+var OSHORT={aon:"AON",traffico:"Traffico",conversioni:"Conversioni",tematiche:"Tematiche"};
+function panoMonths(){var o="";HIST.months.forEach(function(ym,idx){if(ym>="2025-01"){o+='<option value="'+idx+'"'+(idx===PANOIDX?" selected":"")+'>'+mfull(ym)+'</option>';}});return o;}
+function panoLinkClicks(name,ym){var d=brk(name,ym);if(!d)return null;var c=0;d.objectives.forEach(function(o){c+=(o.meta.link_clicks||0)+(o.tiktok.clicks||0);});return c;}
+function panoObj(name,ym){var d=brk(name,ym);if(!d||!d.objectives.length)return '<span class="na">—</span>';var t=0;d.objectives.forEach(function(o){t+=o.meta.spend+o.tiktok.spend;});if(!t)return '<span class="na">—</span>';
+  return d.objectives.filter(function(o){return o.meta.spend+o.tiktok.spend>0;}).sort(function(x,y){return (y.meta.spend+y.tiktok.spend)-(x.meta.spend+x.tiktok.spend);}).map(function(o){return '<span class="ochip" style="--oc:'+OCOL[o.key]+'"><i></i>'+OSHORT[o.key]+' '+(function(v){return v<1?'<1':Math.round(v);})((o.meta.spend+o.tiktok.spend)/t*100)+'%</span>';}).join(" ");}
 function renderAll(){
-  var v=document.getElementById("view");var i=HIST.as_of_idx;
-  var rows=HIST.structures.map(function(s){var S=s.series,sp=S.combined.spend[i],ms=S.meta.spend[i],ts=S.tiktok.spend[i],re=S.meta.reach[i],tr=S.tiktok.reach[i],inr=S.meta.interazioni[i],b=BUD[s.name],tk=TRK.structures&&TRK.structures[s.name];
-    var na='<span class="na">—</span>';
-    return '<tr data-name="'+s.name.replace(/"/g,"&quot;")+'"><td><b>'+s.name+'</b></td><td class="num"><b>'+fE(sp)+'</b></td><td class="num">'+fE(ms)+'</td><td class="num">'+(s.has_tiktok&&ts>0?fE(ts):na)+'</td><td class="num">'+fI(re)+'</td><td class="num">'+(s.has_tiktok&&ts>0?fI(tr):na)+'</td><td class="num">'+fI(inr)+'</td><td>'+trkBadge(tk&&tk.pixel,"pixel")+'</td><td>'+trkBadge(tk&&tk.capi,"capi")+'</td><td>'+(b?'<span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span>':'—')+'</td></tr>';}).join("");
-  v.innerHTML='<div class="toolrow" style="margin:0"><button class="btn-pdf" id="pdfall" type="button">'+PDFICO+'Scarica PDF panoramica</button></div><h2 class="block">Panoramica — '+HIST.as_of_label+'</h2><div class="card" style="padding:0"><div class="tscroll"><table class="ov"><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Meta</th><th class="num">TikTok</th><th class="num">Copertura<br>Meta</th><th class="num">Copertura<br>TikTok</th><th class="num">Interazioni<br>Meta</th><th>Pixel</th><th>CAPI</th><th>Budget</th></tr></thead><tbody>'+rows+'</tbody></table></div></div><p class="srcnote" style="margin-top:8px">TikTok: solo per le strutture con account TikTok attivo. Pixel e CAPI: verifica del '+(TRK.checked_at?TRK.checked_at.split("-").reverse().join("/"):'—')+' sui dati collegati all\'account pubblicitario Meta; passa il mouse sullo stato per il dettaglio. Clicca una struttura per il dettaglio mensile, l\'andamento giornaliero, la lettura del mese e le demografiche.</p>';
-  document.getElementById("pdfall").addEventListener("click",function(){printReport("AGHC - Panoramica strutture - "+HIST.as_of_label);});
-  Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var nloc=tr.getAttribute("data-name");document.getElementById("sel").value=nloc;renderClient(nloc);window.scrollTo({top:0,behavior:"smooth"});});});
+  if(PANOIDX===null)PANOIDX=HIST.as_of_idx;
+  var v=document.getElementById("view");var i=PANOIDX,ym=HIST.months[i],cur=(i===HIST.as_of_idx);
+  var na='<span class="na">—</span>';
+  var rows=HIST.structures.map(function(s){var S=s.series,sp=S.combined.spend[i],ms=S.meta.spend[i],ts=S.tiktok.spend[i],re=S.meta.reach[i],tr=S.tiktok.reach[i],inr=S.meta.interazioni[i],im=S.combined.impressions[i],b=BUD[s.name],tk=TRK.structures&&TRK.structures[s.name];
+    var hasT=s.has_tiktok&&ts>0,lc=panoLinkClicks(s.name,ym),ctr=(lc!=null&&im>0)?lc/im*100:null,off=sp<=0;
+    return '<tr data-name="'+s.name.replace(/"/g,"&quot;")+'"'+(off?' class="off"':'')+'><td><b>'+s.name+'</b></td>'
+      +'<td class="num"><b>'+(off?na:fE(sp))+'</b>'+(hasT?'<div class="sub">Meta '+fE(ms)+' · TikTok '+fE(ts)+'</div>':'')+'</td>'
+      +'<td class="num">'+(off?na:fI(re))+(hasT?'<div class="sub">TikTok '+fI(tr)+'</div>':'')+'</td>'
+      +'<td class="num">'+(off?na:fI(inr))+'</td>'
+      +'<td class="num">'+(off||lc==null?na:fI(lc))+'</td>'
+      +'<td class="num">'+(ctr==null||off?na:f2(ctr,'%'))+'</td>'
+      +'<td class="ocell">'+(off?na:panoObj(s.name,ym))+'</td>'
+      +'<td>'+trkBadge(tk&&tk.pixel,"pixel")+'</td><td>'+trkBadge(tk&&tk.capi,"capi")+'</td>'
+      +'<td>'+(cur&&b?'<span class="pace '+b.status+'">'+fP(b.pace_pct)+'</span>':na)+'</td></tr>';}).join("");
+  var mm=ym.split("-"),last=new Date(+mm[0],+mm[1],0).getDate();
+  v.innerHTML='<div class="toolrow" style="margin:0"><label class="mpick">Mese <select id="panopick">'+panoMonths()+'</select></label><button class="btn-pdf" id="pdfall" type="button">'+PDFICO+'Scarica PDF panoramica</button></div>'
+    +'<h2 class="block">Panoramica — '+mfull(ym)+'</h2><p class="period">Periodo di riferimento: 01/'+mm[1]+'/'+mm[0]+' – '+last+'/'+mm[1]+'/'+mm[0]+'</p>'
+    +'<div class="card" style="padding:0"><div class="tscroll"><table class="ov"><thead><tr><th>Struttura</th><th class="num">Investimento</th><th class="num">Copertura</th><th class="num">Interazioni</th><th class="num">Click</th><th class="num">CTR</th><th>Obiettivo campagne</th><th>Pixel</th><th>CAPI</th><th>Budget</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'
+    +'<p class="srcnote" style="margin-top:8px">Investimento: totale Meta + TikTok, con la ripartizione sotto per le strutture con account TikTok attivo. Copertura: Meta, con la copertura TikTok sotto. Interazioni: Meta. Click: click sul link su Meta + click su TikTok; CTR = click / visualizzazioni. Obiettivo: quota di investimento per obiettivo, dalla nomenclatura delle campagne. Pixel e CAPI: stato attuale (verifica del '+(TRK.checked_at?TRK.checked_at.split("-").reverse().join("/"):'—')+'), non riferito al mese selezionato. Budget: passo rispetto al programmato, solo per l\'ultimo mese chiuso. Clicca una struttura per il dettaglio.</p>';
+  document.getElementById("panopick").addEventListener("change",function(){PANOIDX=parseInt(this.value,10);renderAll();});
+  document.getElementById("pdfall").addEventListener("click",function(){printReport("AGHC - Panoramica strutture - "+mfull(ym));});
+  Array.prototype.forEach.call(v.querySelectorAll("tbody tr"),function(tr){tr.addEventListener("click",function(){var nloc=tr.getAttribute("data-name");document.getElementById("sel").value=nloc;renderClient(nloc,PANOIDX);window.scrollTo({top:0,behavior:"smooth"});});});
 }
 function boot(){
   document.getElementById("stamp").innerHTML="agg. "+HIST.generated_at;

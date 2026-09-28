@@ -4,6 +4,8 @@ build_breakdown.py — Analisi per TIPOLOGIA DI OBIETTIVO e FONTE DI TRAFFICO (A
 
 Input (estratti Windsor, connector "facebook"; TikTok dallo storico mensile):
   raw/aghc_obj_meta_camp.json       campaign x year_month  (+campaign_objective, reach, link click, LPV, ...) anno corrente
+  raw/aghc_tt_camp.json            TikTok campaign x year_month (spend,reach,impressions,clicks,engagements,profile_visits,follows)
+  raw/aghc_camp_meta_info.json      date campagne (start/stop, primo/ultimo giorno di erogazione, per mese) Meta + TikTok
   raw/aghc_obj_meta_camp_prev.json  stessi campi, anno precedente completo (confronto anno su anno; si aggiorna una volta l'anno)
   raw/aghc_src_meta_placement.json  campaign x year_month x publisher_platform x platform_position
   aghc_history.json                 serie mensili TikTok per struttura (tutte campagne AON/Reach)
@@ -189,6 +191,24 @@ def main():
         if w is not None:
             o["planned"].add(w)
         o["campaigns"].add(r.get("campaign"))
+        c = m["camps"].setdefault(("meta", str(r.get("account_id")), r.get("campaign")),
+                                  {"obj": key, "planned": w, "native": r.get("campaign_objective"), "m": blank()})
+        add(c["m"], r)
+
+    # --- dettaglio campagne TikTok (per il pannello "Campagne" della scheda struttura) ---
+    TT_OWNER = {tt: n for n, _mid, _kw, _exc, tt in STRUCTS if tt}
+    for r in load(os.path.join(ws, "raw/aghc_tt_camp.json")):
+        name = TT_OWNER.get(str(r.get("account_id")))
+        if not name or num(r.get("spend")) <= 0:
+            continue
+        m = M(name, ym(r))
+        c = m["camps"].setdefault(("tiktok", str(r.get("account_id")), r.get("campaign")),
+                                  {"obj": "aon", "planned": None, "native": r.get("objective_type") or "REACH", "m": blank()})
+        cm = c["m"]
+        cm["spend"] += num(r.get("spend")); cm["reach"] += num(r.get("reach")); cm["impressions"] += num(r.get("impressions"))
+        cm["clicks"] += num(r.get("clicks")); cm["engagement"] += num(r.get("engagements"))
+        cm["profile_visits"] = cm.get("profile_visits", 0) + num(r.get("profile_visits"))
+        cm["follows"] = cm.get("follows", 0) + num(r.get("follows"))
 
     # --- TikTok (tutte campagne Reach / AON) dallo storico mensile ---
     months = hist.get("months", [])
@@ -230,7 +250,13 @@ def main():
         src = m["src"].setdefault((key, plat, pos), blank())
         add(src, r)
 
-    out = {"schema_version": 1,
+    INFO = {(str(x.get("account_id")), x.get("campaign")): x
+            for x in load(os.path.join(ws, "raw/aghc_camp_meta_info.json"))}
+
+    def dday(t):
+        return (t or "")[:10] or None
+
+    out = {"schema_version": 2,
            "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
            "objectives": [{"key": k, "label": OBJ_LABEL[k]} for k in OBJ_ORDER],
            "structures": {}}
@@ -253,7 +279,19 @@ def main():
                                  position_label=("Rete di app e siti" if pos == "audience_network"
                                                  else POS_LABEL.get((plat, pos), pos.replace("_", " ").capitalize()))))
             srcs.sort(key=lambda x: -x["spend"])
-            blk[mo] = {"objectives": objs, "sources": srcs}
+            camps = []
+            for (plat, acct, cname), c in d["camps"].items():
+                inf = INFO.get((acct, cname), {})
+                mon = (inf.get("months") or {}).get(mo) or [None, None]
+                camps.append({"name": cname, "platform": plat, "obj": c["obj"], "obj_label": OBJ_LABEL[c["obj"]],
+                              "planned_pct": c["planned"], "native": c["native"],
+                              "start": dday(inf.get("start_time")) or inf.get("first_day"),
+                              "stop": dday(inf.get("stop_time")),
+                              "first_day": inf.get("first_day"), "last_day": inf.get("last_day"),
+                              "month_first": mon[0], "month_last": mon[1],
+                              "status": inf.get("status"), "m": rnd(c["m"])})
+            camps.sort(key=lambda x: -x["m"]["spend"])
+            blk[mo] = {"objectives": objs, "sources": srcs, "campaigns": camps}
         out["structures"][name] = blk
     json.dump(out, open(os.path.join(ws, "aghc_breakdown.json"), "w", encoding="utf-8"),
               ensure_ascii=False, separators=(",", ":"))
