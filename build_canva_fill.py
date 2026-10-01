@@ -37,6 +37,36 @@ def main():
         return m.group(1) if m else None
     acct_of={s["name"]:_acct_id(s) for s in data["structures"]}
     demoM=L("aghc_demographics_monthly.json")
+    # --- v3: storico mensile autoritativo per i mesi chiusi (vedi uso più sotto) ---
+    from aghc_report_lib import CLIENTS, load_raw, match_client, n as _n
+    _cl={c[0]:c for c in CLIENTS}
+    _accts=[c[1] for c in CLIENTS]; _shared={x for x in _accts if _accts.count(x)>1}
+    _hm=load_raw(W,"aghc_hist_meta_acct.json"); _hc=load_raw(W,"aghc_hist_meta_camp.json"); _ht=load_raw(W,"aghc_hist_tiktok.json")
+    def _ymi(v):
+        p=re.split(r"[|-]",str(v or ""))
+        try: return int(p[0]),int(p[1])-1
+        except Exception: return None,None
+    def _hist_month(name,year):
+        """({indice_mese: spesa Meta}, {indice_mese: spesa TikTok}) del cliente nell'anno.
+        Un mese è presente solo se lo storico ha righe per quell'account in quel mese."""
+        c=_cl.get(name)
+        if not c: return {},{}
+        acct,tt=c[1],c[3]; hm={}; ht={}
+        if acct in _shared:
+            for r in _hc:
+                y,i=_ymi(r.get("year_month"))
+                if y!=year or str(r.get("account_id"))!=acct: continue
+                hm.setdefault(i,0.0)   # l'account ha dati nel mese: 0 se il cliente non ha campagne
+                if match_client(r.get("campaign"))==name: hm[i]+=_n(r.get("spend"))
+        else:
+            for r in _hm:
+                y,i=_ymi(r.get("year_month"))
+                if y==year and str(r.get("account_id"))==acct: hm[i]=hm.get(i,0.0)+_n(r.get("spend"))
+        if tt:
+            for r in _ht:
+                y,i=_ymi(r.get("year_month"))
+                if y==year and str(r.get("account_id"))==tt: ht[i]=ht.get(i,0.0)+_n(r.get("spend"))
+        return hm,ht
     # il mese di riferimento è quello del REPORT (aghc_report.json), non quello di
     # aghc_data.json: quest'ultimo è scritto dal refresh quotidiano e può essere indietro,
     # facendo scivolare token di budget e demografiche sul mese sbagliato.
@@ -95,6 +125,16 @@ def main():
             # confluisce su Meta, così TOT_ = META_ + TT_ continua a quadrare
             r_tt=(NV(att[i])/tot_acc) if (has_tt and tot_acc>0) else 0.0
             mtt[i]=round(NV(mr[i])*r_tt,2); mmeta[i]=round(NV(mr[i])-mtt[i],2)
+        # v3 — MESI CHIUSI PRECEDENTI: valori dallo storico ri-estratto a ogni refresh mensile.
+        # aghc_data.json è scritto dal refresh quotidiano e può fermarsi prima di fine mese
+        # (agosto 2026 congelato al 29/08: riga Agosto, speso/rimanente e grafico -10%).
+        # La colonna TikTok viene dallo storico TikTok anche se has_tt è falso nel mese di
+        # report (canale in stand-by): la spesa dei mesi passati NON va accorpata in Meta.
+        hmeta,htt=_hist_month(name,int(ym.split("-")[0]))
+        for i in range(mm-1):
+            if i in hmeta: mmeta[i]=round(hmeta[i],2)
+            if i in htt: mtt[i]=round(htt[i],2)
+            if i in hmeta or i in htt: mr[i]=round(mmeta[i]+mtt[i],2)
         i0=mm-1
         if 0<=i0<12:
             mmeta[i0]=NV(M.get("budget",{}).get("cur"))
