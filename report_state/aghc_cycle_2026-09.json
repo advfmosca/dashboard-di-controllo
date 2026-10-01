@@ -1,0 +1,51 @@
+{
+ "month": "2026-09",
+ "stages": {
+  "1": {
+   "name": "fetch",
+   "status": "done",
+   "at": "2026-10-01 13:30",
+   "notes": [
+    "daily_tt_camp.json vuoto"
+   ]
+  },
+  "2": {
+   "name": "build_validazione",
+   "status": "done",
+   "at": "2026-10-01 14:20",
+   "notes": [
+    "8A-9 warn -: aghc_data.json fermo al 29/08/2026 (32 giorni): refresh quotidiano non attivo",
+    "8A-9 warn -: data.json fermo al 29/08/2026 (32 giorni): refresh quotidiano non attivo"
+   ]
+  },
+  "3": {
+   "name": "rational",
+   "status": "done",
+   "at": "2026-10-01 14:20",
+   "notes": [
+    "rational validati per tutte le strutture"
+   ]
+  },
+  "4": {
+   "name": "pubblicazione_dati",
+   "status": "pending"
+  },
+  "5": {
+   "name": "deck_adv",
+   "status": "failed",
+   "at": "2026-10-01 13:56",
+   "notes": [
+    "stadio 4 non chiuso: lancia prima quello"
+   ]
+  },
+  "6": {
+   "name": "inserimento_team",
+   "status": "pending"
+  },
+  "7": {
+   "name": "chiusura",
+   "status": "pending"
+  }
+ },
+ "completed": false
+}
