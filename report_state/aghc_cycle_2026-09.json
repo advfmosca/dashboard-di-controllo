@@ -29,7 +29,7 @@
   "4": {
    "name": "pubblicazione_dati",
    "status": "done",
-   "at": "2026-10-01 14:24",
+   "at": "2026-10-01 14:59",
    "notes": [
     "push: True",
     "verifica remota: {\"month_label\": \"Settembre 2026\", \"history_as_of\": \"2026-09\", \"mismatch\": [], \"roster_ok\": true, \"ok\": true}"
@@ -38,18 +38,26 @@
   "5": {
    "name": "deck_adv",
    "status": "done",
-   "at": "2026-10-01 14:25",
+   "at": "2026-10-01 14:59",
    "notes": [
     "16 deck generati e verificati (8B)"
    ]
   },
   "6": {
    "name": "inserimento_team",
-   "status": "pending"
+   "status": "done",
+   "at": "2026-10-02 12:46",
+   "notes": [
+    "8C-5 warn Hotel Lunetta: 'Social media ed Advertising' compare 1 volta/e: verificare indice + divisorio"
+   ]
   },
   "7": {
    "name": "chiusura",
-   "status": "pending"
+   "status": "failed",
+   "at": "2026-10-02 12:46",
+   "notes": [
+    "verifica remota: {\"month_label\": \"Settembre 2026\", \"history_as_of\": \"2026-09\", \"mismatch\": [\"aghc_report.json\", \"aghc_history.json\", \"aghc_demographics.json\", \"report_state/aghc_cycle_2026-09.json\"], \"roster_ok\": true, \"ok\": false}"
+   ]
   }
  },
  "completed": false
