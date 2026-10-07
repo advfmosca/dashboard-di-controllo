@@ -1,27 +1,16 @@
 {
-  "generated_at": "2026-10-06T07:00:43.909576",
-  "reference_date": "2026-10-05",
+  "generated_at": "2026-10-07T06:25:21.287784",
+  "reference_date": "2026-10-06",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Livata · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "4666471140299701",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
-      "details": "Spesa 55,28 € ieri vs media 7gg 33,25 € (+66,2%)",
-      "reference_date": "2026-10-05",
-      "reference_date_label": "5 ott 2026"
-    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 05/10/2026",
-      "details": "1 zero + 6 high",
-      "reference_date": "2026-10-05",
-      "reference_date_label": "5 ott 2026",
+      "title": "Alert spending — 06/10/2026",
+      "details": "1 zero + 4 high",
+      "reference_date": "2026-10-06",
+      "reference_date_label": "6 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 05/10/2026*\n*Top alert:*\n• :zap: Varnelli (Google) — 0,00 € (storico 4,23 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 100,36 € (-2,3%)\n• :fire: Hotel Livata (Meta) — 55,28 € (+66,2%)\n_+ 4 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-05|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 06/10/2026*\n*Top alert:*\n• :zap: Varnelli (Google) — 0,00 € (storico 2,64 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 113,53 € (+15,6%)\n• :fire: Sardinia Family Villas (Google) — 54,09 € (+0,7%)\n_+ 2 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-06|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
