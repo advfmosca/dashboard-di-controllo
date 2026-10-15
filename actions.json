@@ -1,38 +1,16 @@
 {
-  "generated_at": "2026-10-14T07:04:13.731393",
-  "reference_date": "2026-10-13",
+  "generated_at": "2026-10-15T02:11:53.523568",
+  "reference_date": "2026-10-14",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Scintille di futuro · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "256796067397229",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=256796067397229",
-      "details": "Spesa 92,56 € ieri vs media 7gg 60,91 € (+52,0%)",
-      "reference_date": "2026-10-13",
-      "reference_date_label": "13 ott 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 L&A Booty Srl · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "404633425550941",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941",
-      "details": "Spesa 91,01 € ieri vs media 7gg 53,93 € (+68,8%)",
-      "reference_date": "2026-10-13",
-      "reference_date_label": "13 ott 2026"
-    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 13/10/2026",
-      "details": "0 zero + 8 high",
-      "reference_date": "2026-10-13",
-      "reference_date_label": "13 ott 2026",
+      "title": "Alert spending — 14/10/2026",
+      "details": "0 zero + 6 high",
+      "reference_date": "2026-10-14",
+      "reference_date_label": "14 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 13/10/2026*\n*Top alert:*\n• :fire: Scintille di futuro (Meta) — 92,56 € (+52,0%)\n• :fire: L&A Booty Srl (Meta) — 91,01 € (+68,8%)\n• :fire: BeeFamily 2 (Meta) — 83,57 € (+15,7%)\n_+ 5 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-13|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 14/10/2026*\n*Top alert:*\n• :fire: BeeFamily 2 (Meta) — 84,04 € (+23,8%)\n• :fire: Scintille di futuro (Meta) — 83,55 € (+23,8%)\n• :fire: L&A Booty Srl (Meta) — 77,71 € (+16,1%)\n_+ 3 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-14|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
