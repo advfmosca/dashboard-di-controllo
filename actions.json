@@ -1,16 +1,38 @@
 {
-  "generated_at": "2026-10-15T02:11:53.523568",
-  "reference_date": "2026-10-14",
+  "generated_at": "2026-10-16T02:14:46.436920",
+  "reference_date": "2026-10-15",
   "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 BeeFamily 2 · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "1506205527775161",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1506205527775161",
+      "details": "Spesa 88,86 € ieri vs media 7gg 64,60 € (+37,6%)",
+      "reference_date": "2026-10-15",
+      "reference_date_label": "15 ott 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Sardinia Family Villas · spesa anomala alta",
+      "platform": "Google",
+      "account_id": "705-314-5188",
+      "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
+      "details": "Spesa 71,82 € ieri vs media 7gg 47,55 € (+51,0%)",
+      "reference_date": "2026-10-15",
+      "reference_date_label": "15 ott 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 14/10/2026",
-      "details": "0 zero + 6 high",
-      "reference_date": "2026-10-14",
-      "reference_date_label": "14 ott 2026",
+      "title": "Alert spending — 15/10/2026",
+      "details": "0 zero + 7 high",
+      "reference_date": "2026-10-15",
+      "reference_date_label": "15 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 14/10/2026*\n*Top alert:*\n• :fire: BeeFamily 2 (Meta) — 84,04 € (+23,8%)\n• :fire: Scintille di futuro (Meta) — 83,55 € (+23,8%)\n• :fire: L&A Booty Srl (Meta) — 77,71 € (+16,1%)\n_+ 3 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-14|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 15/10/2026*\n*Top alert:*\n• :fire: L&A Booty Srl (Meta) — 89,19 € (+19,0%)\n• :fire: BeeFamily 2 (Meta) — 88,86 € (+37,6%)\n• :fire: Sardinia Family Villas (Google) — 71,82 € (+51,0%)\n_+ 4 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-15|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
