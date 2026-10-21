@@ -1,16 +1,38 @@
 {
-  "generated_at": "2026-10-20T02:12:15.715693",
-  "reference_date": "2026-10-19",
+  "generated_at": "2026-10-21T02:11:01.190653",
+  "reference_date": "2026-10-20",
   "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Ciccio + Sorriso ADV · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "421004342260012",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
+      "details": "Spesa 56,91 € ieri vs media 7gg 30,18 € (+88,6%)",
+      "reference_date": "2026-10-20",
+      "reference_date_label": "20 ott 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ L&A Booty Srl · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "404633425550941",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941",
+      "details": "Spending 0 ieri, media 7gg precedente 64,28 €. Da verificare.",
+      "reference_date": "2026-10-20",
+      "reference_date_label": "20 ott 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 19/10/2026",
-      "details": "1 zero + 3 high",
-      "reference_date": "2026-10-19",
-      "reference_date_label": "19 ott 2026",
+      "title": "Alert spending — 20/10/2026",
+      "details": "2 zero + 6 high",
+      "reference_date": "2026-10-20",
+      "reference_date_label": "20 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 19/10/2026*\n*Top alert:*\n• :zap: Hotel Livata (Meta) — 0,00 € (storico 33,28 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 125,45 € (+25,1%)\n• :fire: Scintille di futuro (Meta) — 65,87 € (-17,7%)\n_+ 1 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-19|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 20/10/2026*\n*Top alert:*\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 64,28 €) · _Causa da verificare_\n• :zap: Hotel Livata (Meta) — 0,00 € (storico 24,82 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 87,69 € (-14,3%)\n_+ 5 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-20|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
