@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-22T08:53:04.215274",
-  "reference_date": "2026-10-21",
+  "generated_at": "2026-10-23T04:15:32.110435",
+  "reference_date": "2026-10-22",
   "actions": [
     {
       "type": "high_spending",
@@ -9,19 +9,30 @@
       "platform": "Meta",
       "account_id": "421004342260012",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
-      "details": "Spesa 81,40 € ieri vs media 7gg 34,46 € (+136,2%)",
-      "reference_date": "2026-10-21",
-      "reference_date_label": "21 ott 2026"
+      "details": "Spesa 100,47 € ieri vs media 7gg 41,67 € (+141,1%)",
+      "reference_date": "2026-10-22",
+      "reference_date_label": "22 ott 2026"
+    },
+    {
+      "type": "new_fermo",
+      "priority": "high",
+      "title": "⚫ NEW ADS // NILO · nuovo account fermo",
+      "platform": "Meta",
+      "account_id": "1588725295419832",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1588725295419832",
+      "details": "Spending 0 ieri, media 7gg precedente 16,70 €. Da verificare.",
+      "reference_date": "2026-10-22",
+      "reference_date_label": "22 ott 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 21/10/2026",
-      "details": "2 zero + 7 high",
-      "reference_date": "2026-10-21",
-      "reference_date_label": "21 ott 2026",
+      "title": "Alert spending — 22/10/2026",
+      "details": "3 zero + 6 high",
+      "reference_date": "2026-10-22",
+      "reference_date_label": "22 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 21/10/2026*\n*Top alert:*\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 51,27 €) · _Causa da verificare_\n• :zap: Hotel Livata (Meta) — 0,00 € (storico 16,95 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 106,14 € (+3,1%)\n_+ 6 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-21|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 22/10/2026*\n*Top alert:*\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 40,14 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 16,70 €) · _Causa da verificare_\n• :zap: Hotel Livata (Meta) — 0,00 € (storico 9,97 €) · _Causa da verificare_\n_+ 6 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-22|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
