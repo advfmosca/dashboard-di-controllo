@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-24T04:16:06.598049",
-  "reference_date": "2026-10-23",
+  "generated_at": "2026-10-25T11:10:37.827606",
+  "reference_date": "2026-10-24",
   "actions": [
     {
       "type": "high_spending",
@@ -9,9 +9,9 @@
       "platform": "Meta",
       "account_id": "4666471140299701",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
-      "details": "Spesa 95,50 € ieri vs media 7gg 1,54 € (+6095,6%)",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026"
+      "details": "Spesa 99,39 € ieri vs media 7gg 13,70 € (+625,3%)",
+      "reference_date": "2026-10-24",
+      "reference_date_label": "24 ott 2026"
     },
     {
       "type": "high_spending",
@@ -20,57 +20,35 @@
       "platform": "Meta",
       "account_id": "421004342260012",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
-      "details": "Spesa 85,07 € ieri vs media 7gg 51,94 € (+63,8%)",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Sardinia Family Villas · spesa anomala alta",
-      "platform": "Google",
-      "account_id": "705-314-5188",
-      "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
-      "details": "Spesa 73,77 € ieri vs media 7gg 52,44 € (+40,7%)",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026"
-    },
-    {
-      "type": "new_fermo",
-      "priority": "high",
-      "title": "⚫ ADV Helios - Rodi · nuovo account fermo",
-      "platform": "Meta",
-      "account_id": "1515205043021222",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
-      "details": "Spending 0 ieri, media 7gg precedente 14,13 €. Da verificare.",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026"
+      "details": "Spesa 93,69 € ieri vs media 7gg 60,24 € (+55,5%)",
+      "reference_date": "2026-10-24",
+      "reference_date_label": "24 ott 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 23/10/2026",
-      "details": "3 zero + 8 high",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026",
+      "title": "Alert spending — 24/10/2026",
+      "details": "3 zero + 7 high",
+      "reference_date": "2026-10-24",
+      "reference_date_label": "24 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 23/10/2026*\n*Top alert:*\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 27,34 €) · _Causa da verificare_\n• :zap: ADV Helios - Rodi (Meta) — 0,00 € (storico 14,13 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 13,81 €) · _Causa da verificare_\n_+ 8 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-23|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 24/10/2026*\n*Top alert:*\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 20,32 €) · _Causa da verificare_\n• :zap: ADV Helios - Rodi (Meta) — 0,00 € (storico 14,13 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 11,90 €) · _Causa da verificare_\n_+ 7 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-24|:link: Apri dashboard →>",
       "skip_if_quiet": false
     },
     {
       "type": "bf_fermo",
-      "priority": "high",
-      "title": "⚫ Bee Family HELIOS — nuovo fermo",
+      "priority": "medium",
+      "title": "⚠️ Bee Family HELIOS — fermo persistente",
       "source": "Meta",
       "client_name": "HELIOS",
       "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
       "details": "spend_y=0, prev7=98,92 €",
-      "reference_date": "2026-10-23",
-      "reference_date_label": "23 ott 2026",
+      "reference_date": "2026-10-24",
+      "reference_date_label": "24 ott 2026",
       "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚫ *Bee Family — HELIOS (Meta)*: nuovo fermo\nSpending ieri: 0,00 € · Media 7gg precedente: 98,92 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222|Apri account →>",
-      "skip_if_quiet": false,
-      "severity": "high"
+      "slack_template": "⚠️ *Bee Family — HELIOS (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 98,92 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222|Apri account →>",
+      "skip_if_quiet": true,
+      "severity": "medium"
     }
   ]
 }
