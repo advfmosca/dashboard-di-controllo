@@ -1,54 +1,28 @@
 {
-  "generated_at": "2026-10-27T04:16:21.187437",
-  "reference_date": "2026-10-26",
+  "generated_at": "2026-10-28T04:15:17.926264",
+  "reference_date": "2026-10-27",
   "actions": [
     {
-      "type": "high_spending",
+      "type": "new_fermo",
       "priority": "high",
-      "title": "🔴 Giulia & Daniele Tango · spesa anomala alta",
+      "title": "⚫ ADS - Adèsso Hotel · nuovo account fermo",
       "platform": "Meta",
-      "account_id": "422761780480167",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=422761780480167",
-      "details": "Spesa 80,76 € ieri vs media 7gg 42,55 € (+89,8%)",
-      "reference_date": "2026-10-26",
-      "reference_date_label": "26 ott 2026"
-    },
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Livata · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "4666471140299701",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
-      "details": "Spesa 59,79 € ieri vs media 7gg 37,62 € (+58,9%)",
-      "reference_date": "2026-10-26",
-      "reference_date_label": "26 ott 2026"
+      "account_id": "1312718426033158",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158",
+      "details": "Spending 0 ieri, media 7gg precedente 15,37 €. Da verificare.",
+      "reference_date": "2026-10-27",
+      "reference_date_label": "27 ott 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 26/10/2026",
-      "details": "3 zero + 10 high",
-      "reference_date": "2026-10-26",
-      "reference_date_label": "26 ott 2026",
+      "title": "Alert spending — 27/10/2026",
+      "details": "2 zero + 11 high",
+      "reference_date": "2026-10-27",
+      "reference_date_label": "27 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 26/10/2026*\n*Top alert:*\n• :zap: ADV Helios - Rodi (Meta) — 0,00 € (storico 14,13 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 6,51 €) · _Causa da verificare_\n• :zap: L&A Booty Srl (Meta) — 0,00 € (storico 2,31 €) · _Causa da verificare_\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-26|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 27/10/2026*\n*Top alert:*\n• :zap: ADS - Adèsso Hotel (Meta) — 0,00 € (storico 15,37 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 3,54 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 103,24 € (+10,8%)\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-27|:link: Apri dashboard →>",
       "skip_if_quiet": false
-    },
-    {
-      "type": "bf_fermo",
-      "priority": "medium",
-      "title": "⚠️ Bee Family HELIOS — fermo persistente",
-      "source": "Meta",
-      "client_name": "HELIOS",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
-      "details": "spend_y=0, prev7=98,92 €",
-      "reference_date": "2026-10-26",
-      "reference_date_label": "26 ott 2026",
-      "slack_target": "U0B0P0N7A2U",
-      "slack_template": "⚠️ *Bee Family — HELIOS (Meta)*: fermo persistente\nSpending ieri: 0,00 € · Media 7gg precedente: 98,92 €\n<https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222|Apri account →>",
-      "skip_if_quiet": true,
-      "severity": "medium"
     }
   ]
 }
