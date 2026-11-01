@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-10-28T04:15:17.926264",
-  "reference_date": "2026-10-27",
+  "generated_at": "2026-11-01T19:21:42.201526",
+  "reference_date": "2026-10-31",
   "actions": [
     {
-      "type": "new_fermo",
+      "type": "high_spending",
       "priority": "high",
-      "title": "⚫ ADS - Adèsso Hotel · nuovo account fermo",
+      "title": "🔴 ADV Helios - Rodi · spesa anomala alta",
       "platform": "Meta",
-      "account_id": "1312718426033158",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1312718426033158",
-      "details": "Spending 0 ieri, media 7gg precedente 15,37 €. Da verificare.",
-      "reference_date": "2026-10-27",
-      "reference_date_label": "27 ott 2026"
+      "account_id": "1515205043021222",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
+      "details": "Spesa 52,64 € ieri vs media 7gg 32,47 € (+62,1%)",
+      "reference_date": "2026-10-31",
+      "reference_date_label": "31 ott 2026"
     },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 27/10/2026",
-      "details": "2 zero + 11 high",
-      "reference_date": "2026-10-27",
-      "reference_date_label": "27 ott 2026",
+      "title": "Alert spending — 31/10/2026",
+      "details": "4 zero + 6 high",
+      "reference_date": "2026-10-31",
+      "reference_date_label": "31 ott 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 27/10/2026*\n*Top alert:*\n• :zap: ADS - Adèsso Hotel (Meta) — 0,00 € (storico 15,37 €) · _Causa da verificare_\n• :zap: NEW ADS // NILO (Meta) — 0,00 € (storico 3,54 €) · _Causa da verificare_\n• :fire: BeeFamily 2 (Meta) — 103,24 € (+10,8%)\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-27|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 31/10/2026*\n*Top alert:*\n• :zap: Giulia & Daniele Tango (Meta) — 0,00 € (storico 31,58 €) · _Causa da verificare_\n• :zap: CW CM 2020 - AP (Meta) — 0,00 € (storico 28,44 €) · _Causa da verificare_\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 24,67 €) · _Causa da verificare_\n_+ 7 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-10-31|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
