@@ -161,16 +161,12 @@ def main():
     a = ap.parse_args()
     ws = a.workspace
     # anno corrente + anno precedente (quest'ultimo serve al confronto anno su anno delle card obiettivo)
-    camp = load(os.path.join(ws, "raw/aghc_obj_meta_camp_prev.json")) + load(os.path.join(ws, "raw/aghc_obj_meta_camp.json"))
-    _seen = set()
-    _dedup = []
-    for _r in reversed(camp):
-        _k = (str(_r.get("account_id")), _r.get("campaign"), _r.get("year_month"))
-        if _k in _seen:
-            continue
-        _seen.add(_k)
-        _dedup.append(_r)
-    camp = list(reversed(_dedup))
+    # i mesi presenti nel pull dell'anno corrente prevalgono su quelli del file anno precedente;
+    # NON deduplicare per nome campagna: campagne diverse possono avere lo stesso nome (es. post sponsorizzati)
+    _cur = load(os.path.join(ws, "raw/aghc_obj_meta_camp.json"))
+    _cur_months = {_r.get("year_month") for _r in _cur}
+    camp = [_r for _r in load(os.path.join(ws, "raw/aghc_obj_meta_camp_prev.json"))
+            if _r.get("year_month") not in _cur_months] + _cur
     plac = load(os.path.join(ws, "raw/aghc_src_meta_placement.json"))
     hist = json.load(open(os.path.join(ws, "aghc_history.json"), encoding="utf-8"))
 
