@@ -1,117 +1,80 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-08T04:15:04.645241",
-  "generated_at_label": "08/11/2026 04:15",
-  "reference_date": "2026-11-07",
-  "reference_date_label": "7 nov 2026",
+  "generated_at": "2026-11-09T04:15:37.527447",
+  "generated_at_label": "09/11/2026 04:15",
+  "reference_date": "2026-11-08",
+  "reference_date_label": "8 nov 2026",
   "pages_url": "https://advfmosca.github.io/dashboard-di-controllo/",
   "errors": [],
   "overview": {
-    "total_spend": 1761.47,
-    "active_accounts": 39,
+    "total_spend": 1874.01,
+    "active_accounts": 40,
     "total_accounts": 43,
-    "date_label": "07/11/2026",
+    "date_label": "08/11/2026",
     "platforms": [
       {
         "name": "Meta",
         "accounts": 29,
-        "spend": 1333.8,
-        "pct": 75.72
+        "spend": 1491.27,
+        "pct": 79.58
       },
       {
         "name": "Google",
         "accounts": 9,
-        "spend": 328.08,
-        "pct": 18.63
+        "spend": 282.64,
+        "pct": 15.08
       },
       {
         "name": "TikTok",
         "accounts": 5,
-        "spend": 99.59,
-        "pct": 5.65
+        "spend": 100.1,
+        "pct": 5.34
       }
     ],
     "projects": [
       {
         "name": "BeeFamily",
-        "spend": 1049.49,
+        "spend": 1096.75,
         "accounts": 14,
-        "pct": 69.83
+        "pct": 67.35
       },
       {
         "name": "AGHC",
-        "spend": 453.36,
-        "accounts": 18,
-        "pct": 30.17
+        "spend": 531.61,
+        "accounts": 19,
+        "pct": 32.65
       }
     ]
   },
   "spending": {
-    "target_day": "2026-11-07",
+    "target_day": "2026-11-08",
     "totals": {
       "meta": 28,
       "google": 9,
       "tiktok": 5,
       "total": 42
     },
-    "zero": [
-      {
-        "platform": "Meta",
-        "account_id": "434507778815442",
-        "account_name": "Hotel Stendhal // ADS",
-        "target": 0,
-        "mean7": 1.86,
-        "delta": -100.0,
-        "triggers": [],
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=434507778815442"
-      }
-    ],
+    "zero": [],
     "high": [
       {
         "platform": "Meta",
         "account_id": "421004342260012",
         "account_name": "Ciccio + Sorriso ADV",
-        "target": 125.63,
-        "mean7": 99.59,
-        "delta": 26.14,
+        "target": 133.28,
+        "mean7": 105.18,
+        "delta": 26.72,
         "triggers": [
           ">50€"
         ],
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012"
       },
       {
-        "platform": "Google",
-        "account_id": "705-314-5188",
-        "account_name": "Sardinia Family Villas",
-        "target": 99.77,
-        "mean7": 68.48,
-        "delta": 45.68,
-        "triggers": [
-          ">50€",
-          ">30%"
-        ],
-        "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188"
-      },
-      {
-        "platform": "Meta",
-        "account_id": "404633425550941",
-        "account_name": "L&A Booty Srl",
-        "target": 89.05,
-        "mean7": 57.23,
-        "delta": 55.6,
-        "triggers": [
-          ">50€",
-          ">30%"
-        ],
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941"
-      },
-      {
         "platform": "Meta",
         "account_id": "1506205527775161",
         "account_name": "BeeFamily 2",
-        "target": 85.69,
-        "mean7": 107.54,
-        "delta": -20.32,
+        "target": 97.81,
+        "mean7": 108.79,
+        "delta": -10.1,
         "triggers": [
           ">50€"
         ],
@@ -121,21 +84,83 @@
         "platform": "Meta",
         "account_id": "256796067397229",
         "account_name": "Scintille di futuro",
-        "target": 73.8,
-        "mean7": 70.71,
-        "delta": 4.36,
+        "target": 78.63,
+        "mean7": 70.72,
+        "delta": 11.18,
         "triggers": [
           ">50€"
         ],
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=256796067397229"
       },
       {
+        "platform": "Google",
+        "account_id": "705-314-5188",
+        "account_name": "Sardinia Family Villas",
+        "target": 69.6,
+        "mean7": 73.88,
+        "delta": -5.79,
+        "triggers": [
+          ">50€"
+        ],
+        "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188"
+      },
+      {
+        "platform": "Meta",
+        "account_id": "4666471140299701",
+        "account_name": "Hotel Livata",
+        "target": 68.46,
+        "mean7": 58.04,
+        "delta": 17.95,
+        "triggers": [
+          ">50€"
+        ],
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701"
+      },
+      {
+        "platform": "Meta",
+        "account_id": "508414914703199",
+        "account_name": "BRORA ADV",
+        "target": 67.89,
+        "mean7": 31.92,
+        "delta": 112.68,
+        "triggers": [
+          ">50€",
+          ">30%"
+        ],
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=508414914703199"
+      },
+      {
+        "platform": "Google",
+        "account_id": "343-383-9480",
+        "account_name": "El Cid Torre Pedrera",
+        "target": 58.81,
+        "mean7": 37.8,
+        "delta": 55.55,
+        "triggers": [
+          ">50€",
+          ">30%"
+        ],
+        "ad_url": "https://ads.google.com/aw/campaigns?__c=3433839480"
+      },
+      {
+        "platform": "Meta",
+        "account_id": "404633425550941",
+        "account_name": "L&A Booty Srl",
+        "target": 54.15,
+        "mean7": 69.96,
+        "delta": -22.6,
+        "triggers": [
+          ">50€"
+        ],
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941"
+      },
+      {
         "platform": "Meta",
         "account_id": "1515205043021222",
         "account_name": "ADV Helios - Rodi",
-        "target": 67.05,
-        "mean7": 8.79,
-        "delta": 662.92,
+        "target": 52.13,
+        "mean7": 10.87,
+        "delta": 379.64,
         "triggers": [
           ">50€",
           ">30%"
@@ -146,72 +171,21 @@
         "platform": "Meta",
         "account_id": "217115315497718",
         "account_name": "CW CM 2020 - AP",
-        "target": 63.78,
-        "mean7": 31.87,
-        "delta": 100.11,
-        "triggers": [
-          ">50€",
-          ">30%"
-        ],
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718"
-      },
-      {
-        "platform": "Google",
-        "account_id": "343-383-9480",
-        "account_name": "El Cid Torre Pedrera",
-        "target": 58.49,
-        "mean7": 31.68,
-        "delta": 84.61,
-        "triggers": [
-          ">50€",
-          ">30%"
-        ],
-        "ad_url": "https://ads.google.com/aw/campaigns?__c=3433839480"
-      },
-      {
-        "platform": "Meta",
-        "account_id": "4666471140299701",
-        "account_name": "Hotel Livata",
-        "target": 55.47,
-        "mean7": 57.95,
-        "delta": -4.28,
+        "target": 50.81,
+        "mean7": 41.01,
+        "delta": 23.89,
         "triggers": [
           ">50€"
         ],
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701"
-      },
-      {
-        "platform": "Google",
-        "account_id": "517-405-1660",
-        "account_name": "Hotel Albatros NEW",
-        "target": 54.48,
-        "mean7": 28.95,
-        "delta": 88.18,
-        "triggers": [
-          ">50€",
-          ">30%"
-        ],
-        "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660"
-      },
-      {
-        "platform": "Meta",
-        "account_id": "508414914703199",
-        "account_name": "BRORA ADV",
-        "target": 46.26,
-        "mean7": 25.31,
-        "delta": 82.79,
-        "triggers": [
-          ">30%"
-        ],
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=508414914703199"
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718"
       },
       {
         "platform": "Meta",
         "account_id": "1201395876543423",
         "account_name": "Altafiumara | Account Pubblicitario",
-        "target": 32.08,
-        "mean7": 9.86,
-        "delta": 225.26,
+        "target": 26.35,
+        "mean7": 12.25,
+        "delta": 115.03,
         "triggers": [
           ">30%"
         ],
@@ -221,9 +195,9 @@
         "platform": "Google",
         "account_id": "678-286-7092",
         "account_name": "Hotel Mauritius",
-        "target": 28.73,
-        "mean7": 0.02,
-        "delta": 132925.93,
+        "target": 20.58,
+        "mean7": 4.13,
+        "delta": 398.78,
         "triggers": [
           ">30%"
         ],
@@ -233,9 +207,9 @@
         "platform": "Google",
         "account_id": "397-800-2496",
         "account_name": "Hotel Trieste",
-        "target": 18.95,
-        "mean7": 0.04,
-        "delta": 46293.42,
+        "target": 12.47,
+        "mean7": 2.75,
+        "delta": 353.73,
         "triggers": [
           ">30%"
         ],
@@ -245,9 +219,9 @@
         "platform": "Google",
         "account_id": "881-991-7013",
         "account_name": "Hotel Olimpic New",
-        "target": 2.55,
-        "mean7": 0.18,
-        "delta": 1352.45,
+        "target": 10.17,
+        "mean7": 0.54,
+        "delta": 1782.63,
         "triggers": [
           ">30%"
         ],
@@ -259,122 +233,94 @@
     "kpi": {
       "actives": 14,
       "total": 38,
-      "total_spend": 1049.5,
-      "total_contatti": 320,
-      "cpc_y": 3.28,
-      "cpc_mean": 3.49
+      "total_spend": 1096.77,
+      "total_contatti": 409,
+      "cpc_y": 2.68,
+      "cpc_mean": 3.33
     },
     "entries": [
       {
-        "name": "HELIOS",
+        "name": "BRORA",
         "source": "Meta",
-        "spend_y": 67.05,
-        "contatti_y": 21,
-        "prev7_spend": 61.52,
-        "prev7_contatti": 30,
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
+        "spend_y": 67.89,
+        "contatti_y": 129,
+        "prev7_spend": 223.45,
+        "prev7_contatti": 485,
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=508414914703199",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 67,05 € vs media 7gg 8,79 € (+662,9%) · 21 contatti (CPL 3,19 €)"
+          "reason": "Spesi 67,89 € vs media 7gg 31,92 € (+112,7%) · 129 contatti (CPL 0,53 €)"
         }
       },
       {
         "name": "EL CID",
         "source": "Google",
-        "spend_y": 58.49,
+        "spend_y": 58.81,
         "contatti_y": 0,
-        "prev7_spend": 221.78,
+        "prev7_spend": 264.63,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=3433839480",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 58,49 € vs media 7gg 31,68 € (+84,6%)"
+          "reason": "Spesi 58,81 € vs media 7gg 37,80 € (+55,6%)"
         }
       },
       {
-        "name": "ALBATROS",
-        "source": "Google",
-        "spend_y": 54.48,
-        "contatti_y": 0,
-        "prev7_spend": 202.65,
-        "prev7_contatti": 0,
-        "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660",
-        "status": {
-          "color": "red",
-          "label": "Spesa anomala alta",
-          "reason": "Spesi 54,48 € vs media 7gg 28,95 € (+88,2%)"
-        }
-      },
-      {
-        "name": "BRORA",
+        "name": "HELIOS",
         "source": "Meta",
-        "spend_y": 46.26,
-        "contatti_y": 104,
-        "prev7_spend": 177.15,
-        "prev7_contatti": 381,
-        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=508414914703199",
+        "spend_y": 52.13,
+        "contatti_y": 32,
+        "prev7_spend": 76.08,
+        "prev7_contatti": 25,
+        "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 46,26 € vs media 7gg 25,31 € (+82,8%) · 104 contatti (CPL 0,44 €)"
+          "reason": "Spesi 52,13 € vs media 7gg 10,87 € (+379,6%) · 32 contatti (CPL 1,63 €)"
         }
       },
       {
         "name": "MAURITIUS",
         "source": "Google",
-        "spend_y": 28.73,
+        "spend_y": 20.58,
         "contatti_y": 0,
-        "prev7_spend": 0.15,
+        "prev7_spend": 28.88,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=6782867092",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 28,73 € vs media 7gg 0,02 € (+132909,3%)"
+          "reason": "Spesi 20,58 € vs media 7gg 4,13 € (+398,7%)"
         }
       },
       {
         "name": "TRIESTE",
         "source": "Google",
-        "spend_y": 18.95,
+        "spend_y": 12.47,
         "contatti_y": 0,
-        "prev7_spend": 0.29,
+        "prev7_spend": 19.23,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=3978002496",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 18,95 € vs media 7gg 0,04 € (+46297,3%)"
+          "reason": "Spesi 12,47 € vs media 7gg 2,75 € (+353,8%)"
         }
       },
       {
         "name": "OLIMPIC",
         "source": "Google",
-        "spend_y": 2.55,
+        "spend_y": 10.17,
         "contatti_y": 0,
-        "prev7_spend": 1.23,
+        "prev7_spend": 3.78,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=8819917013",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 2,55 € vs media 7gg 0,18 € (+1352,2%)"
-        }
-      },
-      {
-        "name": "SARDINIA",
-        "source": "Google",
-        "spend_y": 99.77,
-        "contatti_y": 0,
-        "prev7_spend": 479.39,
-        "prev7_contatti": 0,
-        "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
-        "status": {
-          "color": "yellow",
-          "label": "Spesa in salita",
-          "reason": "Spesi 99,77 € vs media 7gg 68,48 € (+45,7%)"
+          "reason": "Spesi 10,17 € vs media 7gg 0,54 € (+1783,5%)"
         }
       },
       {
@@ -716,85 +662,113 @@
       {
         "name": "COLOR HOLIDAY",
         "source": "Meta",
-        "spend_y": 406.31,
-        "contatti_y": 138,
-        "prev7_spend": 3172.02,
-        "prev7_contatti": 975,
+        "spend_y": 466.29,
+        "contatti_y": 168,
+        "prev7_spend": 3137.51,
+        "prev7_contatti": 1012,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1576344015714351",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 406,31 € (media 7gg 453,15 €, -10,3%) · 138 contatti (CPL 2,94 €)"
+          "reason": "Spesi 466,29 € (media 7gg 448,22 €, +4,0%) · 168 contatti (CPL 2,78 €)"
         }
       },
       {
         "name": "CICCIO",
         "source": "Meta",
-        "spend_y": 125.63,
-        "contatti_y": 39,
-        "prev7_spend": 697.16,
-        "prev7_contatti": 226,
+        "spend_y": 133.28,
+        "contatti_y": 53,
+        "prev7_spend": 736.26,
+        "prev7_contatti": 239,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 125,63 € (media 7gg 99,59 €, +26,1%) · 39 contatti (CPL 3,22 €)"
+          "reason": "Spesi 133,28 € (media 7gg 105,18 €, +26,7%) · 53 contatti (CPL 2,51 €)"
         }
       },
       {
         "name": "BEEFAMILY 2",
         "source": "Meta",
-        "spend_y": 85.69,
-        "contatti_y": 0,
-        "prev7_spend": 752.81,
+        "spend_y": 97.81,
+        "contatti_y": 1,
+        "prev7_spend": 761.55,
         "prev7_contatti": 0,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1506205527775161",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 85,69 € (media 7gg 107,54 €, -20,3%)"
+          "reason": "Spesi 97,81 € (media 7gg 108,79 €, -10,1%) · 1 contatti (CPL 97,81 €)"
+        }
+      },
+      {
+        "name": "SARDINIA",
+        "source": "Google",
+        "spend_y": 69.6,
+        "contatti_y": 0,
+        "prev7_spend": 517.13,
+        "prev7_contatti": 0,
+        "ad_url": "https://ads.google.com/aw/campaigns?__c=7053145188",
+        "status": {
+          "color": "green",
+          "label": "In linea",
+          "reason": "Spesi 69,60 € (media 7gg 73,88 €, -5,8%)"
+        }
+      },
+      {
+        "name": "ALBATROS",
+        "source": "Google",
+        "spend_y": 36.82,
+        "contatti_y": 0,
+        "prev7_spend": 243.56,
+        "prev7_contatti": 0,
+        "ad_url": "https://ads.google.com/aw/campaigns?__c=5174051660",
+        "status": {
+          "color": "green",
+          "label": "In linea",
+          "reason": "Spesi 36,82 € (media 7gg 34,79 €, +5,8%)"
         }
       },
       {
         "name": "H&V",
         "source": "Google",
-        "spend_y": 30.1,
+        "spend_y": 35.3,
         "contatti_y": 0,
-        "prev7_spend": 229.11,
+        "prev7_spend": 234.15,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=8162271235",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 30,10 € (media 7gg 32,73 €, -8,0%)"
+          "reason": "Spesi 35,30 € (media 7gg 33,45 €, +5,5%)"
         }
       },
       {
         "name": "H&V",
         "source": "Meta",
-        "spend_y": 15.09,
-        "contatti_y": 18,
-        "prev7_spend": 144.03,
-        "prev7_contatti": 168,
+        "spend_y": 24.24,
+        "contatti_y": 26,
+        "prev7_spend": 139.85,
+        "prev7_contatti": 176,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=343882111507930",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 15,09 € (media 7gg 20,58 €, -26,7%) · 18 contatti (CPL 0,84 €)"
+          "reason": "Spesi 24,24 € (media 7gg 19,98 €, +21,3%) · 26 contatti (CPL 0,93 €)"
         }
       },
       {
         "name": "HELIOS",
         "source": "Google",
-        "spend_y": 10.4,
+        "spend_y": 11.38,
         "contatti_y": 0,
-        "prev7_spend": 70.14,
+        "prev7_spend": 71.67,
         "prev7_contatti": 0,
         "ad_url": "https://ads.google.com/aw/campaigns?__c=1113563903",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 10,40 € (media 7gg 10,02 €, +3,8%)"
+          "reason": "Spesi 11,38 € (media 7gg 10,24 €, +11,1%)"
         }
       }
     ],
@@ -802,37 +776,37 @@
       {
         "id": "helios",
         "name": "HELIOS",
-        "spend_window": 506.53,
-        "spend_y": 77.45,
-        "contatti_window": 160,
-        "contatti_y": 21,
-        "cpl_window": 3.17,
+        "spend_window": 559.27,
+        "spend_y": 63.51,
+        "contatti_window": 192,
+        "contatti_y": 32,
+        "cpl_window": 2.91,
         "window_days": 15,
         "trend_arrow": "↓",
         "trend_label": "in calo",
-        "trend_pct": -38.5,
+        "trend_pct": -46.9,
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 67,05 € vs media 7gg 8,79 € (+662,9%) · 21 contatti (CPL 3,19 €)"
+          "reason": "Spesi 52,13 € vs media 7gg 10,87 € (+379,6%) · 32 contatti (CPL 1,63 €)"
         },
-        "rational": "<p>Negli ultimi 15 giorni HELIOS attraversa una fase di raffreddamento: la spesa della seconda metà scende del 38% rispetto alla prima, chiudendo il periodo a 506,53 € totali con una media di 33,77 € al giorno, con la giornata di massima erogazione di sabato a 77,45 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>160 contatti generati</strong> a un CPL medio di <strong>3,17 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 33,77 € al giorno. Il mix di acquisizione si divide tra <strong>Meta</strong> con 160 contatti a CPL 2,22 € e <strong>Google</strong> con 150,66 € di spesa senza contatti attribuiti. Tra le conversioni di ieri sono entrati 21 contatti, in linea con la media del periodo.</p><p>La contrazione dei volumi nella seconda metà del periodo evidenzia una perdita di presenza che, se prolungata, rischia di erodere il bacino di pubblico già qualificato. La lettura strategica suggerisce un rilancio controllato prima che l'algoritmo perda la curva di apprendimento.</p>",
+        "rational": "<p>Negli ultimi 15 giorni HELIOS attraversa una fase di raffreddamento: la spesa della seconda metà scende del 47% rispetto alla prima, chiudendo il periodo a 559,27 € totali con una media di 37,28 € al giorno, con la giornata di massima erogazione di sabato a 77,60 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>192 contatti generati</strong> a un CPL medio di <strong>2,91 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 37,28 € al giorno. Il mix di acquisizione si divide tra <strong>Meta</strong> con 192 contatti a CPL 2,13 € e <strong>Google</strong> con 151,12 € di spesa senza contatti attribuiti. Tra le conversioni di ieri sono entrati 32 contatti, in linea con la media del periodo.</p><p>La contrazione dei volumi nella seconda metà del periodo evidenzia una perdita di presenza che, se prolungata, rischia di erodere il bacino di pubblico già qualificato. La lettura strategica suggerisce un rilancio controllato prima che l'algoritmo perda la curva di apprendimento.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1515205043021222",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=1113563903",
         "meta_campaigns": [
           {
             "name": "Estate 2027 - Engage",
-            "spend": 267.07,
-            "lead": 137,
-            "cpl": 1.95,
+            "spend": 304.76,
+            "lead": 165,
+            "cpl": 1.85,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Estate 2027 - Retargeting",
-            "spend": 88.8,
-            "lead": 23,
-            "cpl": 3.86,
+            "spend": 103.39,
+            "lead": 27,
+            "cpl": 3.83,
             "active": true,
             "status": "ACTIVE"
           }
@@ -840,7 +814,7 @@
         "google_campaigns": [
           {
             "name": "Leads-Performance Max - Estate",
-            "spend": 160.0,
+            "spend": 162.04,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -851,28 +825,28 @@
       {
         "id": "el-cid",
         "name": "EL CID",
-        "spend_window": 389.71,
-        "spend_y": 58.49,
+        "spend_window": 444.79,
+        "spend_y": 58.81,
         "contatti_window": 0,
         "contatti_y": 0,
         "cpl_window": null,
         "window_days": 15,
         "trend_arrow": "↑",
         "trend_label": "in crescita",
-        "trend_pct": 124.1,
+        "trend_pct": 133.2,
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 58,49 € vs media 7gg 31,68 € (+84,6%)"
+          "reason": "Spesi 58,81 € vs media 7gg 37,80 € (+55,6%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni EL CID accelera in modo netto: la spesa della seconda metà del periodo cresce del 124% rispetto alla prima, portando il totale a 389,71 € con un ritmo medio di 25,98 € al giorno, con la giornata di massima erogazione di sabato a 58,49 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 389,71 € di investimento, con una media di 25,98 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "rational": "<p>Negli ultimi 15 giorni EL CID accelera in modo netto: la spesa della seconda metà del periodo cresce del 133% rispetto alla prima, portando il totale a 444,79 € con un ritmo medio di 29,65 € al giorno, con la giornata di massima erogazione di sabato a 59,49 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 444,79 € di investimento, con una media di 29,65 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=978507964180533",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=3433839480",
         "meta_campaigns": [],
         "google_campaigns": [
           {
             "name": "[Performance Max] - Sigep",
-            "spend": 286.37,
+            "spend": 324.64,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -880,47 +854,7 @@
           },
           {
             "name": "[Performance Max]",
-            "spend": 110.78,
-            "lead": null,
-            "cpl": null,
-            "active": true,
-            "status": null
-          }
-        ]
-      },
-      {
-        "id": "albatros",
-        "name": "ALBATROS",
-        "spend_window": 369.55,
-        "spend_y": 54.48,
-        "contatti_window": 0,
-        "contatti_y": 0,
-        "cpl_window": null,
-        "window_days": 15,
-        "trend_arrow": "↑",
-        "trend_label": "in crescita",
-        "trend_pct": 100.1,
-        "status": {
-          "color": "red",
-          "label": "Spesa anomala alta",
-          "reason": "Spesi 54,48 € vs media 7gg 28,95 € (+88,2%)"
-        },
-        "rational": "<p>Negli ultimi 15 giorni ALBATROS accelera in modo netto: la spesa della seconda metà del periodo cresce del 100% rispetto alla prima, portando il totale a 369,55 € con un ritmo medio di 24,64 € al giorno, con la giornata di massima erogazione di sabato a 54,48 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 369,55 € di investimento, con una media di 24,64 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
-        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
-        "ad_url_google": "https://ads.google.com/aw/campaigns?__c=5174051660",
-        "meta_campaigns": [],
-        "google_campaigns": [
-          {
-            "name": "[MF] - Performance Max - Sigep",
-            "spend": 291.47,
-            "lead": null,
-            "cpl": null,
-            "active": true,
-            "status": null
-          },
-          {
-            "name": "[MF] - Performance Max",
-            "spend": 79.73,
+            "spend": 124.87,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -931,11 +865,11 @@
       {
         "id": "brora",
         "name": "BRORA",
-        "spend_window": 223.41,
-        "spend_y": 46.26,
-        "contatti_window": 485,
-        "contatti_y": 104,
-        "cpl_window": 0.46,
+        "spend_window": 291.34,
+        "spend_y": 67.89,
+        "contatti_window": 614,
+        "contatti_y": 129,
+        "cpl_window": 0.47,
         "window_days": 15,
         "trend_arrow": "—",
         "trend_label": "n/d",
@@ -943,17 +877,17 @@
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 46,26 € vs media 7gg 25,31 € (+82,8%) · 104 contatti (CPL 0,44 €)"
+          "reason": "Spesi 67,89 € vs media 7gg 31,92 € (+112,7%) · 129 contatti (CPL 0,53 €)"
         },
-        "rational": "<p>Negli ultimi 15 giorni BRORA mantiene una traiettoria di crociera: 223,41 € di investimento distribuiti su 5 giorni effettivi, a un ritmo medio di 14,89 € al giorno, con la giornata di massima erogazione di martedì a 51,19 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>485 contatti generati</strong> a un CPL medio di <strong>0,46 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 14,89 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 0,46 €. L'ultimo giorno ha registrato <strong>104 contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
+        "rational": "<p>Negli ultimi 15 giorni BRORA mantiene una traiettoria di crociera: 291,34 € di investimento distribuiti su 6 giorni effettivi, a un ritmo medio di 19,42 € al giorno, con la giornata di massima erogazione di domenica a 67,89 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>614 contatti generati</strong> a un CPL medio di <strong>0,47 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 19,42 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 0,47 €. L'ultimo giorno ha registrato <strong>129 contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=508414914703199",
         "ad_url_google": null,
         "meta_campaigns": [
           {
             "name": "Summer 2027",
-            "spend": 223.41,
-            "lead": 485,
-            "cpl": 0.46,
+            "spend": 291.34,
+            "lead": 614,
+            "cpl": 0.47,
             "active": true,
             "status": "ACTIVE"
           }
@@ -963,8 +897,8 @@
       {
         "id": "mauritius",
         "name": "MAURITIUS",
-        "spend_window": 28.88,
-        "spend_y": 28.73,
+        "spend_window": 49.47,
+        "spend_y": 20.58,
         "contatti_window": 0,
         "contatti_y": 0,
         "cpl_window": null,
@@ -975,16 +909,16 @@
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 28,73 € vs media 7gg 0,02 € (+132909,3%)"
+          "reason": "Spesi 20,58 € vs media 7gg 4,13 € (+398,7%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni MAURITIUS mantiene una traiettoria di crociera: 28,88 € di investimento distribuiti su 2 giorni effettivi, a un ritmo medio di 1,93 € al giorno, con la giornata di massima erogazione di sabato a 28,73 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 28,88 € di investimento, con una media di 1,93 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "rational": "<p>Negli ultimi 15 giorni MAURITIUS mantiene una traiettoria di crociera: 49,47 € di investimento distribuiti su 3 giorni effettivi, a un ritmo medio di 3,30 € al giorno, con la giornata di massima erogazione di sabato a 28,73 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 49,47 € di investimento, con una media di 3,30 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=574208703469432",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=6782867092",
         "meta_campaigns": [],
         "google_campaigns": [
           {
             "name": "[MF] - Performance Max - Estate",
-            "spend": 19.51,
+            "spend": 32.83,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -992,7 +926,7 @@
           },
           {
             "name": "[MF] - Performance Max - Home",
-            "spend": 8.88,
+            "spend": 16.13,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1011,8 +945,8 @@
       {
         "id": "trieste",
         "name": "TRIESTE",
-        "spend_window": 19.23,
-        "spend_y": 18.95,
+        "spend_window": 31.7,
+        "spend_y": 12.47,
         "contatti_window": 0,
         "contatti_y": 0,
         "cpl_window": null,
@@ -1023,16 +957,16 @@
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 18,95 € vs media 7gg 0,04 € (+46297,3%)"
+          "reason": "Spesi 12,47 € vs media 7gg 2,75 € (+353,8%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni TRIESTE mantiene una traiettoria di crociera: 19,23 € di investimento distribuiti su 2 giorni effettivi, a un ritmo medio di 1,28 € al giorno, con la giornata di massima erogazione di sabato a 18,95 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 19,23 € di investimento, con una media di 1,28 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "rational": "<p>Negli ultimi 15 giorni TRIESTE mantiene una traiettoria di crociera: 31,70 € di investimento distribuiti su 3 giorni effettivi, a un ritmo medio di 2,11 € al giorno, con la giornata di massima erogazione di sabato a 18,95 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 31,70 € di investimento, con una media di 2,11 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=692054874845160",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=3978002496",
         "meta_campaigns": [],
         "google_campaigns": [
           {
             "name": "[MF] - Performance Max",
-            "spend": 17.96,
+            "spend": 30.31,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1040,7 +974,7 @@
           },
           {
             "name": "[MF] - Brand",
-            "spend": 1.28,
+            "spend": 1.39,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1051,8 +985,8 @@
       {
         "id": "olimpic",
         "name": "OLIMPIC",
-        "spend_window": 3.78,
-        "spend_y": 2.55,
+        "spend_window": 13.95,
+        "spend_y": 10.17,
         "contatti_window": 0,
         "contatti_y": 0,
         "cpl_window": null,
@@ -1063,16 +997,16 @@
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 2,55 € vs media 7gg 0,18 € (+1352,2%)"
+          "reason": "Spesi 10,17 € vs media 7gg 0,54 € (+1783,5%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni OLIMPIC mantiene una traiettoria di crociera: 3,78 € di investimento distribuiti su 2 giorni effettivi, a un ritmo medio di 0,25 € al giorno, con la giornata di massima erogazione di sabato a 2,55 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 3,78 € di investimento, con una media di 0,25 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "rational": "<p>Negli ultimi 15 giorni OLIMPIC mantiene una traiettoria di crociera: 13,95 € di investimento distribuiti su 3 giorni effettivi, a un ritmo medio di 0,93 € al giorno, con la giornata di massima erogazione di domenica a 10,17 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 13,95 € di investimento, con una media di 0,93 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=2855621041150238",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=8819917013",
         "meta_campaigns": [],
         "google_campaigns": [
           {
             "name": "Leads-Performance Max -  Generica",
-            "spend": 3.78,
+            "spend": 13.95,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1083,28 +1017,28 @@
       {
         "id": "sardinia",
         "name": "SARDINIA",
-        "spend_window": 1046.34,
-        "spend_y": 99.77,
+        "spend_window": 1046.0,
+        "spend_y": 69.6,
         "contatti_window": 0,
         "contatti_y": 0,
         "cpl_window": null,
         "window_days": 15,
-        "trend_arrow": "→",
-        "trend_label": "stabile",
-        "trend_pct": 8.5,
+        "trend_arrow": "↑",
+        "trend_label": "in crescita",
+        "trend_pct": 11.8,
         "status": {
-          "color": "yellow",
-          "label": "Spesa in salita",
-          "reason": "Spesi 99,77 € vs media 7gg 68,48 € (+45,7%)"
+          "color": "gray",
+          "label": "Inattivo",
+          "reason": "Nessuna spesa rilevante negli ultimi 8 giorni"
         },
-        "rational": "<p>Negli ultimi 15 giorni SARDINIA mantiene una traiettoria di crociera (+8% tra prima e seconda metà del periodo): 1.046,34 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 69,76 € al giorno, con la giornata di massima erogazione di sabato a 99,77 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 1.046,34 € di investimento, con una media di 69,76 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "rational": "<p>Negli ultimi 15 giorni SARDINIA mantiene una traiettoria di crociera (+12% tra prima e seconda metà del periodo): 1.046,00 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 69,73 € al giorno, con la giornata di massima erogazione di sabato a 99,91 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 1.046,00 € di investimento, con una media di 69,73 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=608324351982441",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=7053145188",
         "meta_campaigns": [],
         "google_campaigns": [
           {
             "name": "[DE] - Performance Max - Ville",
-            "spend": 622.97,
+            "spend": 628.85,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1112,7 +1046,47 @@
           },
           {
             "name": "[IT] - Performance Max",
-            "spend": 497.14,
+            "spend": 487.22,
+            "lead": null,
+            "cpl": null,
+            "active": true,
+            "status": null
+          }
+        ]
+      },
+      {
+        "id": "albatros",
+        "name": "ALBATROS",
+        "spend_window": 406.03,
+        "spend_y": 36.82,
+        "contatti_window": 0,
+        "contatti_y": 0,
+        "cpl_window": null,
+        "window_days": 15,
+        "trend_arrow": "↑",
+        "trend_label": "in crescita",
+        "trend_pct": 95.2,
+        "status": {
+          "color": "gray",
+          "label": "Inattivo",
+          "reason": "Nessuna spesa rilevante negli ultimi 8 giorni"
+        },
+        "rational": "<p>Negli ultimi 15 giorni ALBATROS accelera in modo netto: la spesa della seconda metà del periodo cresce del 95% rispetto alla prima, portando il totale a 406,03 € con un ritmo medio di 27,07 € al giorno, con la giornata di massima erogazione di sabato a 54,48 €.</p><p>Sul fronte conversioni il periodo chiude a zero contatti diretti a fronte di 406,03 € di investimento, con una media di 27,07 € al giorno.</p><p>Il segnale di zero contatti a fronte di spesa attiva richiede un'analisi tecnica: si tratta verosimilmente di una rottura nel flusso di tracciamento o di un disallineamento tra creatività e funnel, da verificare prima che la prossima settimana confermi il pattern.</p>",
+        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=630436088886762",
+        "ad_url_google": "https://ads.google.com/aw/campaigns?__c=5174051660",
+        "meta_campaigns": [],
+        "google_campaigns": [
+          {
+            "name": "[MF] - Performance Max - Sigep",
+            "spend": 322.55,
+            "lead": null,
+            "cpl": null,
+            "active": true,
+            "status": null
+          },
+          {
+            "name": "[MF] - Performance Max",
+            "spend": 83.81,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1123,149 +1097,117 @@
       {
         "id": "color-holiday",
         "name": "COLOR HOLIDAY",
-        "spend_window": 6834.76,
-        "spend_y": 406.31,
-        "contatti_window": 1878,
-        "contatti_y": 138,
-        "cpl_window": 3.64,
+        "spend_window": 6823.21,
+        "spend_y": 466.29,
+        "contatti_window": 1921,
+        "contatti_y": 168,
+        "cpl_window": 3.55,
         "window_days": 15,
         "trend_arrow": "→",
         "trend_label": "stabile",
-        "trend_pct": -3.9,
+        "trend_pct": -2.1,
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 406,31 € (media 7gg 453,15 €, -10,3%) · 138 contatti (CPL 2,94 €)"
+          "reason": "Spesi 466,29 € (media 7gg 448,22 €, +4,0%) · 168 contatti (CPL 2,78 €)"
         },
-        "rational": "<p>Negli ultimi 15 giorni COLOR HOLIDAY mantiene una traiettoria di crociera (-4% tra prima e seconda metà del periodo): 6.834,76 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 455,65 € al giorno, con la giornata di massima erogazione di domenica a 546,67 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>1.878 contatti generati</strong> a un CPL medio di <strong>3,64 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 455,65 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 3,64 €. L'ultimo giorno ha registrato <strong>138 contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
+        "rational": "<p>Negli ultimi 15 giorni COLOR HOLIDAY mantiene una traiettoria di crociera (-2% tra prima e seconda metà del periodo): 6.823,21 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 454,88 € al giorno, con la giornata di massima erogazione di domenica a 546,67 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>1.921 contatti generati</strong> a un CPL medio di <strong>3,55 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 454,88 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 3,55 €. L'ultimo giorno ha registrato <strong>168 contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1576344015714351",
         "ad_url_google": null,
         "meta_campaigns": [
           {
-            "name": "Palace - Estate 2027",
-            "spend": 813.8,
-            "lead": 208,
-            "cpl": 3.91,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
             "name": "Green Village - Estate 2027",
-            "spend": 813.05,
-            "lead": 223,
-            "cpl": 3.65,
+            "spend": 812.12,
+            "lead": 228,
+            "cpl": 3.56,
             "active": true,
             "status": "ACTIVE"
           },
           {
-            "name": "Perla Village - Estate 2027",
-            "spend": 807.88,
-            "lead": 229,
-            "cpl": 3.53,
+            "name": "Palace - Estate 2027",
+            "spend": 811.1,
+            "lead": 203,
+            "cpl": 4.0,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Bay - Estate 2027",
-            "spend": 800.26,
+            "spend": 810.51,
             "lead": 227,
-            "cpl": 3.53,
+            "cpl": 3.57,
             "active": true,
             "status": "ACTIVE"
           },
           {
-            "name": "Ermitage - Estate 2027",
-            "spend": 645.34,
-            "lead": 112,
-            "cpl": 5.76,
+            "name": "Perla Village - Estate 2027",
+            "spend": 803.89,
+            "lead": 232,
+            "cpl": 3.47,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "King Marte - Estate 2027",
-            "spend": 642.78,
-            "lead": 119,
-            "cpl": 5.4,
+            "spend": 652.55,
+            "lead": 126,
+            "cpl": 5.18,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "Ermitage - Estate 2027",
+            "spend": 643.4,
+            "lead": 112,
+            "cpl": 5.74,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Metropolitan - Estate 2027",
-            "spend": 639.63,
-            "lead": 138,
-            "cpl": 4.64,
+            "spend": 640.99,
+            "lead": 130,
+            "cpl": 4.93,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Color Flex Pay - Rete",
-            "spend": 546.77,
+            "spend": 510.34,
             "lead": 0,
             "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
-            "name": "Alexandra Plaza - Estate 2027",
-            "spend": 408.78,
-            "lead": 146,
-            "cpl": 2.8,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Mokambo - Estate 2027",
-            "spend": 408.59,
-            "lead": 77,
-            "cpl": 5.31,
+            "spend": 410.59,
+            "lead": 76,
+            "cpl": 5.4,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "Alexandra Plaza - Estate 2027",
+            "spend": 405.18,
+            "lead": 143,
+            "cpl": 2.83,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Miami - Estate 2027",
-            "spend": 405.92,
+            "spend": 402.93,
             "lead": 110,
-            "cpl": 3.69,
+            "cpl": 3.66,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "Dolmen - Estate 2027",
-            "spend": 402.58,
-            "lead": 426,
-            "cpl": 0.95,
-            "active": true,
-            "status": "ACTIVE"
-          }
-        ],
-        "google_campaigns": []
-      },
-      {
-        "id": "beefamily-2",
-        "name": "BEEFAMILY 2",
-        "spend_window": 1497.45,
-        "spend_y": 85.69,
-        "contatti_window": 8,
-        "contatti_y": 0,
-        "cpl_window": 187.18,
-        "window_days": 15,
-        "trend_arrow": "↑",
-        "trend_label": "in crescita",
-        "trend_pct": 11.3,
-        "status": {
-          "color": "green",
-          "label": "In linea",
-          "reason": "Spesi 85,69 € (media 7gg 107,54 €, -20,3%)"
-        },
-        "rational": "<p>Negli ultimi 15 giorni BEEFAMILY 2 mantiene una traiettoria di crociera (+11% tra prima e seconda metà del periodo): 1.497,45 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 99,83 € al giorno, con la giornata di massima erogazione di mercoledì a 124,55 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>8 contatti generati</strong> a un CPL medio di <strong>187,18 €</strong> — un costo per lead sopra il benchmark, da consolidare considerato l'investimento medio di 99,83 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 187,18 €.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
-        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1506205527775161",
-        "ad_url_google": null,
-        "meta_campaigns": [
-          {
-            "name": "TDM 27 NOV — Triangolo del Margine | Lead",
-            "spend": 1072.46,
-            "lead": 0,
-            "cpl": null,
+            "spend": 397.53,
+            "lead": 459,
+            "cpl": 0.87,
             "active": true,
             "status": "ACTIVE"
           }
@@ -1275,37 +1217,69 @@
       {
         "id": "ciccio",
         "name": "CICCIO",
-        "spend_window": 1459.78,
-        "spend_y": 125.63,
-        "contatti_window": 507,
-        "contatti_y": 39,
-        "cpl_window": 2.88,
+        "spend_window": 1499.42,
+        "spend_y": 133.28,
+        "contatti_window": 525,
+        "contatti_y": 53,
+        "cpl_window": 2.86,
         "window_days": 15,
         "trend_arrow": "↑",
         "trend_label": "in crescita",
-        "trend_pct": 13.0,
+        "trend_pct": 20.8,
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 125,63 € (media 7gg 99,59 €, +26,1%) · 39 contatti (CPL 3,22 €)"
+          "reason": "Spesi 133,28 € (media 7gg 105,18 €, +26,7%) · 53 contatti (CPL 2,51 €)"
         },
-        "rational": "<p>Negli ultimi 15 giorni CICCIO mantiene una traiettoria di crociera (+13% tra prima e seconda metà del periodo): 1.459,78 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 97,32 € al giorno, con la giornata di massima erogazione di sabato a 125,63 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>507 contatti generati</strong> a un CPL medio di <strong>2,88 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 97,32 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 2,88 €. Tra le conversioni di ieri sono entrati 39 contatti, in linea con la media del periodo.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
+        "rational": "<p>Negli ultimi 15 giorni CICCIO mantiene una traiettoria di crociera (+21% tra prima e seconda metà del periodo): 1.499,42 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 99,96 € al giorno, con la giornata di massima erogazione di domenica a 133,28 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>525 contatti generati</strong> a un CPL medio di <strong>2,86 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 99,96 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 2,86 €. L'ultimo giorno ha registrato <strong>53 contatti</strong>, segnale che il messaggio attuale intercetta in modo efficace la domanda.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=421004342260012",
         "ad_url_google": null,
         "meta_campaigns": [
           {
             "name": "SUMMER_2027",
-            "spend": 1085.75,
-            "lead": 399,
-            "cpl": 2.72,
+            "spend": 1137.41,
+            "lead": 408,
+            "cpl": 2.79,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "CAPODANNO_2027",
-            "spend": 273.03,
-            "lead": 116,
-            "cpl": 2.35,
+            "spend": 284.3,
+            "lead": 123,
+            "cpl": 2.31,
+            "active": true,
+            "status": "ACTIVE"
+          }
+        ],
+        "google_campaigns": []
+      },
+      {
+        "id": "beefamily-2",
+        "name": "BEEFAMILY 2",
+        "spend_window": 1486.23,
+        "spend_y": 97.81,
+        "contatti_window": 7,
+        "contatti_y": 1,
+        "cpl_window": 212.32,
+        "window_days": 15,
+        "trend_arrow": "↑",
+        "trend_label": "in crescita",
+        "trend_pct": 20.0,
+        "status": {
+          "color": "green",
+          "label": "In linea",
+          "reason": "Spesi 97,81 € (media 7gg 108,79 €, -10,1%) · 1 contatti (CPL 97,81 €)"
+        },
+        "rational": "<p>Negli ultimi 15 giorni BEEFAMILY 2 mantiene una traiettoria di crociera (+20% tra prima e seconda metà del periodo): 1.486,23 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 99,08 € al giorno, con la giornata di massima erogazione di mercoledì a 124,55 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>7 contatti generati</strong> a un CPL medio di <strong>212,32 €</strong> — un costo per lead sopra il benchmark, da consolidare considerato l'investimento medio di 99,08 € al giorno. L'intero volume di contatti è stato lavorato sul canale <strong>Meta</strong> a CPL 212,32 €. Tra le conversioni di ieri sono entrati 1 contatti, in linea con la media del periodo.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
+        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1506205527775161",
+        "ad_url_google": null,
+        "meta_campaigns": [
+          {
+            "name": "TDM 27 NOV — Triangolo del Margine | Lead",
+            "spend": 1095.99,
+            "lead": 1,
+            "cpl": 1095.99,
             "active": true,
             "status": "ACTIVE"
           }
@@ -1315,37 +1289,37 @@
       {
         "id": "handv",
         "name": "H&V",
-        "spend_window": 767.06,
-        "spend_y": 45.19,
-        "contatti_window": 310,
-        "contatti_y": 18,
+        "spend_window": 785.81,
+        "spend_y": 59.54,
+        "contatti_window": 318,
+        "contatti_y": 26,
         "cpl_window": 2.47,
         "window_days": 15,
         "trend_arrow": "→",
         "trend_label": "stabile",
-        "trend_pct": 5.0,
+        "trend_pct": 7.7,
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 30,10 € (media 7gg 32,73 €, -8,0%)"
+          "reason": "Spesi 35,30 € (media 7gg 33,45 €, +5,5%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni H&V mantiene una traiettoria di crociera (+5% tra prima e seconda metà del periodo): 767,06 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 51,14 € al giorno, con la giornata di massima erogazione di domenica a 60,99 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>310 contatti generati</strong> a un CPL medio di <strong>2,47 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 51,14 € al giorno. Il mix di acquisizione si divide tra <strong>Meta</strong> con 310 contatti a CPL 0,95 € e <strong>Google</strong> con 471,26 € di spesa senza contatti attribuiti. Tra le conversioni di ieri sono entrati 18 contatti, in linea con la media del periodo.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
+        "rational": "<p>Negli ultimi 15 giorni H&V mantiene una traiettoria di crociera (+8% tra prima e seconda metà del periodo): 785,81 € di investimento distribuiti su 15 giorni effettivi, a un ritmo medio di 52,39 € al giorno, con la giornata di massima erogazione di domenica a 60,99 €.</p><p>Sul fronte conversioni il periodo restituisce <strong>318 contatti generati</strong> a un CPL medio di <strong>2,47 €</strong> — un costo per lead molto efficiente considerato l'investimento medio di 52,39 € al giorno. Il mix di acquisizione si divide tra <strong>Meta</strong> con 318 contatti a CPL 0,96 € e <strong>Google</strong> con 481,78 € di spesa senza contatti attribuiti. Tra le conversioni di ieri sono entrati 26 contatti, in linea con la media del periodo.</p><p>In uno scenario competitivo che continua a comprimere i margini di efficienza, mantenere questa cadenza significa difendere il CPL attuale senza forzare il sistema: la base dati che stiamo costruendo nel periodo è coerente con il piano di acquisizione concordato ed è la fondazione su cui si misurerà la stagione.</p>",
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=343882111507930",
         "ad_url_google": "https://ads.google.com/aw/campaigns?__c=8162271235",
         "meta_campaigns": [
           {
             "name": "[F] - MONTAGNA STRUTTURE",
-            "spend": 158.07,
-            "lead": 172,
-            "cpl": 0.92,
+            "spend": 160.21,
+            "lead": 173,
+            "cpl": 0.93,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "[F] - MONTAGNA OFFERTE",
-            "spend": 156.74,
-            "lead": 164,
-            "cpl": 0.96,
+            "spend": 159.83,
+            "lead": 163,
+            "cpl": 0.98,
             "active": true,
             "status": "ACTIVE"
           }
@@ -1353,7 +1327,7 @@
         "google_campaigns": [
           {
             "name": "Performance Max - Montagna",
-            "spend": 325.14,
+            "spend": 328.2,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1361,7 +1335,7 @@
           },
           {
             "name": "Performance Max Estate",
-            "spend": 170.28,
+            "spend": 178.36,
             "lead": null,
             "cpl": null,
             "active": true,
@@ -1370,14 +1344,14 @@
         ]
       }
     ],
-    "recap": "Bee Family — Daily Check del 07/11/2026\n14 account attivi su 38 · 7 ROSSO · 1 GIALLO · 6 VERDE · 24 NERO\nSpending: 1.049,50 € · Contatti: 320 · CPL medio: 3,28 €\nDashboard cliente: https://advfmosca.github.io/dashboard-di-controllo/beefamily.html"
+    "recap": "Bee Family — Daily Check del 08/11/2026\n14 account attivi su 38 · 6 ROSSO · 0 GIALLO · 8 VERDE · 24 NERO\nSpending: 1.096,77 € · Contatti: 409 · CPL medio: 2,68 €\nDashboard cliente: https://advfmosca.github.io/dashboard-di-controllo/beefamily.html"
   },
   "aghc": {
     "kpi": {
-      "actives": 13,
+      "actives": 14,
       "total": 15,
-      "total_spend_y": 453.36,
-      "total_spend_window": 6903.72,
+      "total_spend_y": 531.61,
+      "total_spend_window": 6915.91,
       "window_days": 15
     },
     "cards": [
@@ -1387,32 +1361,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=687349689221880",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498330316248203280",
         "has_tiktok": true,
-        "spend_y": 48.48,
-        "spend_window": 746.67,
-        "spend_window_meta": 446.77,
-        "spend_window_tiktok": 299.9,
+        "spend_y": 57.04,
+        "spend_window": 755.89,
+        "spend_window_meta": 455.85,
+        "spend_window_tiktok": 300.04,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": 2.88,
+        "trend_pct": 9.07,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 48,48 € vs media 7gg 30,41 € (+59,4%)"
+          "reason": "Spesi 57,04 € vs media 7gg 30,85 € (+84,9%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni LUNETTA mantiene una traiettoria di crociera (+3% tra prima e seconda metà del periodo): 746,67 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 49,78 € al giorno, con la giornata di massima erogazione di domenica a 38,19 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>289.512 impression</strong> che hanno raggiunto <strong>22.689 persone uniche</strong>, <strong>143.433 interazioni</strong> con la pagina e <strong>4.810 click</strong> — di cui 1.514 con atterraggio sul sito. Il rapporto interazioni/impression del 49.5% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Il mix di investimento vede <strong>TikTok al 40%</strong> (299,90 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni LUNETTA mantiene una traiettoria di crociera (+9% tra prima e seconda metà del periodo): 755,89 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 50,39 € al giorno, con la giornata di massima erogazione di domenica a 38,19 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>302.211 impression</strong> che hanno raggiunto <strong>22.689 persone uniche</strong>, <strong>152.276 interazioni</strong> con la pagina e <strong>4.918 click</strong> — di cui 1.402 con atterraggio sul sito. Il rapporto interazioni/impression del 50.4% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Il mix di investimento vede <strong>TikTok al 40%</strong> (300,04 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 27.94,
-            "impressions": 13510,
-            "reach": 8520,
-            "page_engagement": 5909,
-            "clicks": 250,
-            "lpv": 115
-          },
           {
             "date": "2026-10-25",
             "spend": 36.07,
@@ -1530,25 +1495,34 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 28.58,
-            "impressions": 19513,
+            "spend": 28.6,
+            "impressions": 19537,
             "reach": 13646,
-            "page_engagement": 10850,
-            "clicks": 275
+            "page_engagement": 10858,
+            "clicks": 276
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 37.0,
+            "impressions": 26185,
+            "reach": 18558,
+            "page_engagement": 14744,
+            "clicks": 357,
+            "lpv": 3
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 289512,
+          "impressions_window": 302211,
           "reach_window": 22689,
-          "clicks_window": 4810,
-          "lpv_window": 1514,
-          "page_eng_window": 143433,
-          "impressions_y": 19513,
-          "reach_y": 13646,
-          "clicks_y": 275,
-          "lpv_y": 0,
-          "page_eng_y": 10850
+          "clicks_window": 4918,
+          "lpv_window": 1402,
+          "page_eng_window": 152276,
+          "impressions_y": 26185,
+          "reach_y": 18558,
+          "clicks_y": 357,
+          "lpv_y": 3,
+          "page_eng_y": 14744
         },
         "budget": {
           "year": 2026,
@@ -1562,7 +1536,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Hotel Lunetta",
-            "spend": 345.16,
+            "spend": 352.22,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -1570,7 +1544,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Hotel Lunetta",
-            "spend": 101.61,
+            "spend": 103.63,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -1585,32 +1559,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=30233607946222961",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7612666695502118929",
         "has_tiktok": true,
-        "spend_y": 42.83,
-        "spend_window": 645.97,
-        "spend_window_meta": 346.0,
-        "spend_window_tiktok": 299.97,
+        "spend_y": 45.62,
+        "spend_window": 649.46,
+        "spend_window_meta": 349.42,
+        "spend_window_tiktok": 300.04,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": 4.03,
+        "trend_pct": 6.2,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 42,83 € vs media 7gg 23,57 € (+81,7%)"
+          "reason": "Spesi 45,62 € vs media 7gg 23,71 € (+92,4%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni VILLA ERMELLINA mantiene una traiettoria di crociera (+4% tra prima e seconda metà del periodo): 645,97 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 43,06 € al giorno, con la giornata di massima erogazione di domenica a 28,25 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>556.438 impression</strong> che hanno raggiunto <strong>41.675 persone uniche</strong>, <strong>35.843 interazioni</strong> con la pagina e <strong>3.354 click</strong> — di cui 416 con atterraggio sul sito. Il rapporto interazioni/impression del 6.4% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 46%</strong> (299,97 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni VILLA ERMELLINA mantiene una traiettoria di crociera (+6% tra prima e seconda metà del periodo): 649,46 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 43,30 € al giorno, con la giornata di massima erogazione di domenica a 28,25 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>563.560 impression</strong> che hanno raggiunto <strong>41.675 persone uniche</strong>, <strong>34.019 interazioni</strong> con la pagina e <strong>3.398 click</strong> — di cui 432 con atterraggio sul sito. Il rapporto interazioni/impression del 6.0% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 46%</strong> (300,04 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 22.17,
-            "impressions": 33873,
-            "reach": 29405,
-            "page_engagement": 3077,
-            "clicks": 207,
-            "lpv": 15
-          },
           {
             "date": "2026-10-25",
             "spend": 28.25,
@@ -1730,26 +1695,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 22.91,
-            "impressions": 37682,
-            "reach": 34840,
-            "page_engagement": 1285,
-            "clicks": 205,
+            "spend": 22.92,
+            "impressions": 37751,
+            "reach": 34905,
+            "page_engagement": 1288,
+            "clicks": 206,
             "lpv": 23
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 25.58,
+            "impressions": 40926,
+            "reach": 33702,
+            "page_engagement": 1250,
+            "clicks": 250,
+            "lpv": 31
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 556438,
+          "impressions_window": 563560,
           "reach_window": 41675,
-          "clicks_window": 3354,
-          "lpv_window": 416,
-          "page_eng_window": 35843,
-          "impressions_y": 37682,
-          "reach_y": 34840,
-          "clicks_y": 205,
-          "lpv_y": 23,
-          "page_eng_y": 1285
+          "clicks_window": 3398,
+          "lpv_window": 432,
+          "page_eng_window": 34019,
+          "impressions_y": 40926,
+          "reach_y": 33702,
+          "clicks_y": 250,
+          "lpv_y": 31,
+          "page_eng_y": 1250
         },
         "budget": {
           "year": 2026,
@@ -1763,7 +1737,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Villa Ermellina",
-            "spend": 261.18,
+            "spend": 262.65,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -1771,7 +1745,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Villa Ermellina",
-            "spend": 84.82,
+            "spend": 86.77,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -1786,31 +1760,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1432341844596179",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7498679494010667009",
         "has_tiktok": true,
-        "spend_y": 34.32,
-        "spend_window": 595.06,
-        "spend_window_meta": 295.08,
-        "spend_window_tiktok": 299.98,
-        "contatti_y": 1,
+        "spend_y": 45.59,
+        "spend_window": 603.18,
+        "spend_window_meta": 303.15,
+        "spend_window_tiktok": 300.03,
+        "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -0.13,
+        "trend_pct": 9.06,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 34,32 € vs media 7gg 20,41 € (+68,1%) · 1 contatti (CPL 34,32 €)"
+          "reason": "Spesi 45,59 € vs media 7gg 20,38 € (+123,7%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni MARE mantiene una traiettoria di crociera (-0% tra prima e seconda metà del periodo): 595,06 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 39,67 € al giorno, con la giornata di massima erogazione di lunedì a 27,65 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>102.765 impression</strong> che hanno raggiunto <strong>5.849 persone uniche</strong>, <strong>43.310 interazioni</strong> con la pagina e <strong>5.382 click</strong>. Il rapporto interazioni/impression del 42.1% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Il mix di investimento vede <strong>TikTok al 50%</strong> (299,98 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni MARE mantiene una traiettoria di crociera (+9% tra prima e seconda metà del periodo): 603,18 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 40,21 € al giorno, con la giornata di massima erogazione di lunedì a 27,65 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>107.199 impression</strong> che hanno raggiunto <strong>5.849 persone uniche</strong>, <strong>47.252 interazioni</strong> con la pagina e <strong>5.789 click</strong>. Il rapporto interazioni/impression del 44.1% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Il mix di investimento vede <strong>TikTok al 50%</strong> (300,03 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 17.5,
-            "impressions": 5444,
-            "reach": 2382,
-            "page_engagement": 1565,
-            "clicks": 201
-          },
           {
             "date": "2026-10-25",
             "spend": 25.4,
@@ -1923,26 +1889,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 14.39,
-            "impressions": 5682,
-            "reach": 2816,
-            "page_engagement": 3311,
-            "clicks": 262,
+            "spend": 14.4,
+            "impressions": 5688,
+            "reach": 2818,
+            "page_engagement": 3316,
+            "clicks": 264,
             "lpv": 2
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 25.56,
+            "impressions": 9872,
+            "reach": 5554,
+            "page_engagement": 5502,
+            "clicks": 606,
+            "lpv": 1
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 102765,
+          "impressions_window": 107199,
           "reach_window": 5849,
-          "clicks_window": 5382,
-          "lpv_window": 19,
-          "page_eng_window": 43310,
-          "impressions_y": 5682,
-          "reach_y": 2816,
-          "clicks_y": 262,
-          "lpv_y": 2,
-          "page_eng_y": 3311
+          "clicks_window": 5789,
+          "lpv_window": 20,
+          "page_eng_window": 47252,
+          "impressions_y": 9872,
+          "reach_y": 5554,
+          "clicks_y": 606,
+          "lpv_y": 1,
+          "page_eng_y": 5502
         },
         "budget": {
           "year": 2026,
@@ -1956,15 +1931,15 @@
         "meta_campaigns": [
           {
             "name": "AGHC | CONVERSIONI 80% | Mare Hotel",
-            "spend": 235.14,
+            "spend": 242.36,
             "lead": 1,
-            "cpl": 235.14,
+            "cpl": 242.36,
             "active": true,
             "status": "ACTIVE"
           },
           {
             "name": "AGHC | AON 20% | Mare Hotel",
-            "spend": 59.94,
+            "spend": 60.79,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -1979,32 +1954,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=911357333863123",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7504967007843319824",
         "has_tiktok": true,
-        "spend_y": 39.24,
-        "spend_window": 594.86,
-        "spend_window_meta": 294.93,
-        "spend_window_tiktok": 299.93,
+        "spend_y": 42.67,
+        "spend_window": 600.0,
+        "spend_window_meta": 299.97,
+        "spend_window_tiktok": 300.03,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -0.5,
+        "trend_pct": 6.9,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 39,24 € vs media 7gg 19,66 € (+99,6%)"
+          "reason": "Spesi 42,67 € vs media 7gg 20,33 € (+109,9%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni DELLA PIANA mantiene una traiettoria di crociera (-0% tra prima e seconda metà del periodo): 594,86 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 39,66 € al giorno, con la giornata di massima erogazione di domenica a 25,06 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>70.097 impression</strong> che hanno raggiunto <strong>3.306 persone uniche</strong>, <strong>5.312 interazioni</strong> con la pagina e <strong>3.006 click</strong> — di cui 1.194 con atterraggio sul sito. Il rapporto interazioni/impression del 7.6% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 50%</strong> (299,93 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni DELLA PIANA mantiene una traiettoria di crociera (+7% tra prima e seconda metà del periodo): 600,00 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 40,00 € al giorno, con la giornata di massima erogazione di domenica a 25,06 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>70.944 impression</strong> che hanno raggiunto <strong>3.306 persone uniche</strong>, <strong>5.262 interazioni</strong> con la pagina e <strong>3.119 click</strong> — di cui 1.249 con atterraggio sul sito. Il rapporto interazioni/impression del 7.4% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 50%</strong> (300,03 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 17.68,
-            "impressions": 4692,
-            "reach": 2321,
-            "page_engagement": 440,
-            "clicks": 143,
-            "lpv": 49
-          },
           {
             "date": "2026-10-25",
             "spend": 25.06,
@@ -2124,26 +2090,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 19.3,
-            "impressions": 4827,
+            "spend": 19.38,
+            "impressions": 4836,
             "reach": 2374,
-            "page_engagement": 344,
-            "clicks": 226,
+            "page_engagement": 347,
+            "clicks": 228,
             "lpv": 103
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 22.64,
+            "impressions": 5530,
+            "reach": 2482,
+            "page_engagement": 387,
+            "clicks": 254,
+            "lpv": 104
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 70097,
+          "impressions_window": 70944,
           "reach_window": 3306,
-          "clicks_window": 3006,
-          "lpv_window": 1194,
-          "page_eng_window": 5312,
-          "impressions_y": 4827,
-          "reach_y": 2374,
-          "clicks_y": 226,
-          "lpv_y": 103,
-          "page_eng_y": 344
+          "clicks_window": 3119,
+          "lpv_window": 1249,
+          "page_eng_window": 5262,
+          "impressions_y": 5530,
+          "reach_y": 2482,
+          "clicks_y": 254,
+          "lpv_y": 104,
+          "page_eng_y": 387
         },
         "budget": {
           "year": 2026,
@@ -2157,7 +2132,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Della Piana",
-            "spend": 216.4,
+            "spend": 219.4,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2165,7 +2140,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Della Piana",
-            "spend": 78.53,
+            "spend": 80.57,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2180,32 +2155,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1849759899186169",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7626418949391351815",
         "has_tiktok": true,
-        "spend_y": 36.61,
-        "spend_window": 576.42,
-        "spend_window_meta": 276.3,
-        "spend_window_tiktok": 300.12,
+        "spend_y": 41.41,
+        "spend_window": 580.63,
+        "spend_window_meta": 280.67,
+        "spend_window_tiktok": 299.96,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -5.7,
+        "trend_pct": 5.37,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 36,61 € vs media 7gg 18,09 € (+102,4%)"
+          "reason": "Spesi 41,41 € vs media 7gg 18,84 € (+119,8%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni VILLA GIADA mantiene una traiettoria di crociera (-6% tra prima e seconda metà del periodo): 576,42 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 38,43 € al giorno, con la giornata di massima erogazione di domenica a 24,53 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>87.148 impression</strong> che hanno raggiunto <strong>3.365 persone uniche</strong>, <strong>6.572 interazioni</strong> con la pagina e <strong>1.998 click</strong> — di cui 564 con atterraggio sul sito. Il rapporto interazioni/impression del 7.5% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 52%</strong> (300,12 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni VILLA GIADA mantiene una traiettoria di crociera (+5% tra prima e seconda metà del periodo): 580,63 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 38,71 € al giorno, con la giornata di massima erogazione di domenica a 24,53 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>90.792 impression</strong> che hanno raggiunto <strong>3.365 persone uniche</strong>, <strong>7.039 interazioni</strong> con la pagina e <strong>2.169 click</strong> — di cui 631 con atterraggio sul sito. Il rapporto interazioni/impression del 7.8% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio. Il mix di investimento vede <strong>TikTok al 52%</strong> (299,96 €) come secondo canale di presidio sul target sotto i 35 anni, mentre Meta lavora il pubblico storico del brand.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 17.09,
-            "impressions": 5253,
-            "reach": 2504,
-            "page_engagement": 250,
-            "clicks": 61,
-            "lpv": 12
-          },
           {
             "date": "2026-10-25",
             "spend": 19.69,
@@ -2325,26 +2291,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 16.71,
-            "impressions": 7297,
-            "reach": 2732,
-            "page_engagement": 420,
+            "spend": 16.72,
+            "impressions": 7318,
+            "reach": 2768,
+            "page_engagement": 421,
             "clicks": 151,
             "lpv": 50
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 21.45,
+            "impressions": 8876,
+            "reach": 2429,
+            "page_engagement": 716,
+            "clicks": 232,
+            "lpv": 79
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 87148,
+          "impressions_window": 90792,
           "reach_window": 3365,
-          "clicks_window": 1998,
-          "lpv_window": 564,
-          "page_eng_window": 6572,
-          "impressions_y": 7297,
-          "reach_y": 2732,
-          "clicks_y": 151,
-          "lpv_y": 50,
-          "page_eng_y": 420
+          "clicks_window": 2169,
+          "lpv_window": 631,
+          "page_eng_window": 7039,
+          "impressions_y": 8876,
+          "reach_y": 2429,
+          "clicks_y": 232,
+          "lpv_y": 79,
+          "page_eng_y": 716
         },
         "budget": {
           "year": 2026,
@@ -2358,7 +2333,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON | Villa Giada | Prossimità 15km",
-            "spend": 149.97,
+            "spend": 150.55,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2366,7 +2341,7 @@
           },
           {
             "name": "AGHC | AON 75% | Villa Giada",
-            "spend": 91.9,
+            "spend": 94.35,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2374,212 +2349,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Villa Giada",
-            "spend": 34.43,
-            "lead": 0,
-            "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          }
-        ],
-        "tiktok_campaigns": []
-      },
-      {
-        "id": "217115315497718",
-        "name": "HEMANAIRE",
-        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718",
-        "ad_url_tiktok": null,
-        "has_tiktok": false,
-        "spend_y": 63.78,
-        "spend_window": 485.98,
-        "spend_window_meta": 485.98,
-        "spend_window_tiktok": 0,
-        "contatti_y": 0,
-        "active_days": 11,
-        "zero_days": 0,
-        "trend_pct": 51.49,
-        "trend_arrow": "↑",
-        "trend_label": "in crescita",
-        "status": {
-          "color": "red",
-          "label": "Spesa anomala alta",
-          "reason": "Spesi 63,78 € vs media 7gg 31,87 € (+100,1%)"
-        },
-        "rational": "<p>Negli ultimi 11 giorni HEMANAIRE accelera in modo netto: la spesa della seconda metà del periodo cresce del 51% rispetto alla prima, portando il totale a 485,98 € con un ritmo medio di 44,18 € al giorno, con la giornata di massima erogazione di sabato a 63,78 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>506.166 impression</strong> che hanno raggiunto <strong>46.920 persone uniche</strong>, <strong>21.347 interazioni</strong> con la pagina e <strong>8.275 click</strong> — di cui 5.443 con atterraggio sul sito. Il rapporto interazioni/impression del 4.2% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>L'accelerazione in corso va monitorata in chiave CPM e frequency: in questa fase di pressione competitiva crescente, la sostenibilità della curva si misura sulla capacità di rinnovare l'asset creativo prima che il pubblico si saturi e i costi d'asta inizino a salire più rapidamente dei volumi.</p>",
-        "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 31.88,
-            "impressions": 33906,
-            "reach": 27106,
-            "page_engagement": 557,
-            "clicks": 425,
-            "lpv": 280
-          },
-          {
-            "date": "2026-10-25",
-            "spend": 42.89,
-            "impressions": 45599,
-            "reach": 34399,
-            "page_engagement": 837,
-            "clicks": 626,
-            "lpv": 396
-          },
-          {
-            "date": "2026-10-26",
-            "spend": 34.08,
-            "impressions": 36609,
-            "reach": 28110,
-            "page_engagement": 727,
-            "clicks": 549,
-            "lpv": 366
-          },
-          {
-            "date": "2026-10-27",
-            "spend": 31.25,
-            "impressions": 32677,
-            "reach": 24344,
-            "page_engagement": 693,
-            "clicks": 492,
-            "lpv": 306
-          },
-          {
-            "date": "2026-10-28",
-            "spend": 32.36,
-            "impressions": 33313,
-            "reach": 25994,
-            "page_engagement": 621,
-            "clicks": 450,
-            "lpv": 284
-          },
-          {
-            "date": "2026-10-29",
-            "spend": 26.63,
-            "impressions": 25284,
-            "reach": 17997,
-            "page_engagement": 861,
-            "clicks": 394,
-            "lpv": 253
-          },
-          {
-            "date": "2026-10-30",
-            "spend": 0
-          },
-          {
-            "date": "2026-10-31",
-            "spend": 0
-          },
-          {
-            "date": "2026-11-01",
-            "spend": 0
-          },
-          {
-            "date": "2026-11-02",
-            "spend": 0
-          },
-          {
-            "date": "2026-11-03",
-            "spend": 42.78,
-            "impressions": 44206,
-            "reach": 28025,
-            "page_engagement": 3033,
-            "clicks": 811,
-            "lpv": 536
-          },
-          {
-            "date": "2026-11-04",
-            "spend": 60.43,
-            "impressions": 64481,
-            "reach": 43373,
-            "page_engagement": 3282,
-            "clicks": 1172,
-            "lpv": 759
-          },
-          {
-            "date": "2026-11-05",
-            "spend": 60.0,
-            "impressions": 64291,
-            "reach": 44508,
-            "page_engagement": 3540,
-            "clicks": 1156,
-            "lpv": 754
-          },
-          {
-            "date": "2026-11-06",
-            "spend": 59.9,
-            "impressions": 60582,
-            "reach": 45296,
-            "page_engagement": 3330,
-            "clicks": 1067,
-            "lpv": 734
-          },
-          {
-            "date": "2026-11-07",
-            "spend": 63.78,
-            "impressions": 65218,
-            "reach": 46920,
-            "page_engagement": 3866,
-            "clicks": 1133,
-            "lpv": 775
-          }
-        ],
-        "window_days": 15,
-        "vanity": {
-          "impressions_window": 506166,
-          "reach_window": 46920,
-          "clicks_window": 8275,
-          "lpv_window": 5443,
-          "page_eng_window": 21347,
-          "impressions_y": 65218,
-          "reach_y": 46920,
-          "clicks_y": 1133,
-          "lpv_y": 775,
-          "page_eng_y": 3866
-        },
-        "budget": {
-          "year": 2026,
-          "name": null,
-          "budget_annuale": 15000,
-          "ytd_spent": 3798.47,
-          "residuo": 11201.53,
-          "budget_pct": 25.3
-        },
-        "budget_structures": null,
-        "meta_campaigns": [
-          {
-            "name": "AGHC | AON 75% | Hemanaire",
-            "spend": 231.45,
-            "lead": 0,
-            "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
-            "name": "AGHC | Experience | Hemanaire",
-            "spend": 87.29,
-            "lead": 0,
-            "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
-            "name": "AGHC | TRAFFICO 25% | Hemanaire",
-            "spend": 76.04,
-            "lead": 0,
-            "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
-            "name": "AGHC | Tartufo ITA | Hemanaire",
-            "spend": 63.19,
-            "lead": 0,
-            "cpl": null,
-            "active": true,
-            "status": "ACTIVE"
-          },
-          {
-            "name": "AGHC | Tartufo ENG | Hemanaire",
-            "spend": 28.01,
+            "spend": 35.77,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2594,32 +2364,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1201395876543423",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 32.08,
-        "spend_window": 261.79,
-        "spend_window_meta": 261.79,
+        "spend_y": 26.35,
+        "spend_window": 266.48,
+        "spend_window_meta": 266.48,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 13,
         "zero_days": 0,
-        "trend_pct": -28.0,
+        "trend_pct": -21.34,
         "trend_arrow": "↓",
         "trend_label": "in calo",
         "status": {
           "color": "red",
           "label": "Spesa anomala alta",
-          "reason": "Spesi 32,08 € vs media 7gg 9,86 € (+225,3%)"
+          "reason": "Spesi 26,35 € vs media 7gg 12,25 € (+115,0%)"
         },
-        "rational": "<p>Negli ultimi 13 giorni ALTAFIUMARA attraversa una fase di raffreddamento: la spesa della seconda metà scende del 28% rispetto alla prima, chiudendo il periodo a 261,79 € totali con una media di 20,14 € al giorno, con la giornata di massima erogazione di sabato a 32,08 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>76.262 impression</strong> che hanno raggiunto <strong>6.713 persone uniche</strong>, <strong>5.490 interazioni</strong> con la pagina e <strong>3.752 click</strong> — di cui 1.395 con atterraggio sul sito. Il rapporto interazioni/impression del 7.2% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>La contrazione dei volumi richiede un'analisi di scenario: il calo di 28% nella seconda metà del periodo evidenzia una perdita di presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica costruita nelle settimane precedenti.</p>",
+        "rational": "<p>Negli ultimi 13 giorni ALTAFIUMARA mantiene una traiettoria di crociera (-21% tra prima e seconda metà del periodo): 266,48 € di investimento distribuiti su 13 giorni effettivi di erogazione, a un ritmo medio di 20,50 € al giorno, con la giornata di massima erogazione di sabato a 32,13 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>80.036 impression</strong> che hanno raggiunto <strong>6.726 persone uniche</strong>, <strong>5.687 interazioni</strong> con la pagina e <strong>3.822 click</strong> — di cui 1.377 con atterraggio sul sito. Il rapporto interazioni/impression del 7.1% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 21.71,
-            "impressions": 4877,
-            "reach": 2279,
-            "page_engagement": 342,
-            "clicks": 226,
-            "lpv": 93
-          },
           {
             "date": "2026-10-25",
             "spend": 27.92,
@@ -2728,26 +2489,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 32.08,
-            "impressions": 8640,
-            "reach": 6713,
-            "page_engagement": 495,
-            "clicks": 305,
+            "spend": 32.13,
+            "impressions": 8678,
+            "reach": 6726,
+            "page_engagement": 499,
+            "clicks": 309,
             "lpv": 71
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 26.35,
+            "impressions": 8613,
+            "reach": 6200,
+            "page_engagement": 535,
+            "clicks": 292,
+            "lpv": 75
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 76262,
-          "reach_window": 6713,
-          "clicks_window": 3752,
-          "lpv_window": 1395,
-          "page_eng_window": 5490,
-          "impressions_y": 8640,
-          "reach_y": 6713,
-          "clicks_y": 305,
-          "lpv_y": 71,
-          "page_eng_y": 495
+          "impressions_window": 80036,
+          "reach_window": 6726,
+          "clicks_window": 3822,
+          "lpv_window": 1377,
+          "page_eng_window": 5687,
+          "impressions_y": 8613,
+          "reach_y": 6200,
+          "clicks_y": 292,
+          "lpv_y": 75,
+          "page_eng_y": 535
         },
         "budget": {
           "year": 2026,
@@ -2761,7 +2531,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Altafiumara",
-            "spend": 189.44,
+            "spend": 191.61,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2769,7 +2539,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Altafiumara",
-            "spend": 64.58,
+            "spend": 67.1,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2784,32 +2554,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=4666471140299701",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 55.47,
-        "spend_window": 912.2,
-        "spend_window_meta": 912.2,
+        "spend_y": 68.46,
+        "spend_window": 881.16,
+        "spend_window_meta": 881.16,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -10.54,
-        "trend_arrow": "↓",
-        "trend_label": "in calo",
+        "trend_pct": 2.22,
+        "trend_arrow": "→",
+        "trend_label": "stabile",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 55,47 € (media 7gg 57,95 €, -4,3%)"
+          "reason": "Spesi 68,46 € (media 7gg 58,04 €, +17,9%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni LIVATA mantiene una traiettoria di crociera (-11% tra prima e seconda metà del periodo): 912,20 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 60,81 € al giorno, con la giornata di massima erogazione di sabato a 99,52 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>1.654.845 impression</strong> che hanno raggiunto <strong>86.326 persone uniche</strong>, <strong>230.624 interazioni</strong> con la pagina e <strong>18.155 click</strong> — di cui 5.579 con atterraggio sul sito. Il rapporto interazioni/impression del 13.9% si colloca <strong>in linea con il benchmark</strong> di settore.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni LIVATA mantiene una traiettoria di crociera (+2% tra prima e seconda metà del periodo): 881,16 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 58,74 € al giorno, con la giornata di massima erogazione di domenica a 72,76 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>1.633.032 impression</strong> che hanno raggiunto <strong>86.326 persone uniche</strong>, <strong>227.943 interazioni</strong> con la pagina e <strong>17.632 click</strong> — di cui 5.456 con atterraggio sul sito. Il rapporto interazioni/impression del 14.0% si colloca <strong>in linea con il benchmark</strong> di settore.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 99.52,
-            "impressions": 119640,
-            "reach": 61322,
-            "page_engagement": 19303,
-            "clicks": 1817,
-            "lpv": 565
-          },
           {
             "date": "2026-10-25",
             "spend": 67.93,
@@ -2929,26 +2690,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 55.47,
-            "impressions": 88166,
-            "reach": 47875,
-            "page_engagement": 13851,
-            "clicks": 1070,
+            "spend": 55.49,
+            "impressions": 88371,
+            "reach": 47955,
+            "page_engagement": 13886,
+            "clicks": 1071,
             "lpv": 382
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 68.46,
+            "impressions": 97622,
+            "reach": 50384,
+            "page_engagement": 16587,
+            "clicks": 1293,
+            "lpv": 442
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 1654845,
+          "impressions_window": 1633032,
           "reach_window": 86326,
-          "clicks_window": 18155,
-          "lpv_window": 5579,
-          "page_eng_window": 230624,
-          "impressions_y": 88166,
-          "reach_y": 47875,
-          "clicks_y": 1070,
-          "lpv_y": 382,
-          "page_eng_y": 13851
+          "clicks_window": 17632,
+          "lpv_window": 5456,
+          "page_eng_window": 227943,
+          "impressions_y": 97622,
+          "reach_y": 50384,
+          "clicks_y": 1293,
+          "lpv_y": 442,
+          "page_eng_y": 16587
         },
         "budget": {
           "year": 2026,
@@ -2962,7 +2732,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | TRAFFICO | Hotel Livata | Lusso della Quiete",
-            "spend": 550.08,
+            "spend": 531.73,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2970,7 +2740,7 @@
           },
           {
             "name": "AGHC | AON | Hotel Livata",
-            "spend": 362.12,
+            "spend": 349.43,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -2985,32 +2755,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=752450855779035",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 37.73,
-        "spend_window": 615.73,
-        "spend_window_meta": 615.73,
+        "spend_y": 48.17,
+        "spend_window": 625.82,
+        "spend_window_meta": 625.82,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -7.15,
+        "trend_pct": -1.31,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 37,73 € (media 7gg 39,90 €, -5,4%)"
+          "reason": "Spesi 48,17 € (media 7gg 40,51 €, +18,9%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni MONTEMAGNO mantiene una traiettoria di crociera (-7% tra prima e seconda metà del periodo): 615,73 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 41,05 € al giorno, con la giornata di massima erogazione di mercoledì a 53,74 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>394.920 impression</strong> che hanno raggiunto <strong>19.693 persone uniche</strong>, <strong>103.769 interazioni</strong> con la pagina e <strong>9.138 click</strong> — di cui 3.981 con atterraggio sul sito. Il rapporto interazioni/impression del 26.3% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni MONTEMAGNO mantiene una traiettoria di crociera (-1% tra prima e seconda metà del periodo): 625,82 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 41,72 € al giorno, con la giornata di massima erogazione di mercoledì a 53,74 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>403.811 impression</strong> che hanno raggiunto <strong>19.693 persone uniche</strong>, <strong>100.214 interazioni</strong> con la pagina e <strong>9.412 click</strong> — di cui 4.107 con atterraggio sul sito. Il rapporto interazioni/impression del 24.8% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 38.12,
-            "impressions": 23277,
-            "reach": 12408,
-            "page_engagement": 7425,
-            "clicks": 478,
-            "lpv": 203
-          },
           {
             "date": "2026-10-25",
             "spend": 50.25,
@@ -3130,26 +2891,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 37.73,
-            "impressions": 24233,
-            "reach": 10984,
-            "page_engagement": 2818,
-            "clicks": 542,
+            "spend": 37.77,
+            "impressions": 24307,
+            "reach": 11027,
+            "page_engagement": 2823,
+            "clicks": 547,
             "lpv": 217
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 48.17,
+            "impressions": 32094,
+            "reach": 15799,
+            "page_engagement": 3865,
+            "clicks": 747,
+            "lpv": 329
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 394920,
+          "impressions_window": 403811,
           "reach_window": 19693,
-          "clicks_window": 9138,
-          "lpv_window": 3981,
-          "page_eng_window": 103769,
-          "impressions_y": 24233,
-          "reach_y": 10984,
-          "clicks_y": 542,
-          "lpv_y": 217,
-          "page_eng_y": 2818
+          "clicks_window": 9412,
+          "lpv_window": 4107,
+          "page_eng_window": 100214,
+          "impressions_y": 32094,
+          "reach_y": 15799,
+          "clicks_y": 747,
+          "lpv_y": 329,
+          "page_eng_y": 3865
         },
         "budget": {
           "year": 2026,
@@ -3163,7 +2933,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Tenuta Montemagno",
-            "spend": 302.6,
+            "spend": 297.09,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3171,7 +2941,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Tenuta Montemagno",
-            "spend": 247.18,
+            "spend": 251.42,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3179,7 +2949,7 @@
           },
           {
             "name": "AGHC | TRAFFICO | Cinema in Cantina | Tenuta Montemagno",
-            "spend": 42.58,
+            "spend": 53.94,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3194,32 +2964,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1528485957725509",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 26.74,
-        "spend_window": 608.47,
-        "spend_window_meta": 608.47,
+        "spend_y": 39.17,
+        "spend_window": 603.87,
+        "spend_window_meta": 603.87,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -17.34,
+        "trend_pct": -13.68,
         "trend_arrow": "↓",
         "trend_label": "in calo",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 26,74 € (media 7gg 38,41 €, -30,4%)"
+          "reason": "Spesi 39,17 € (media 7gg 37,24 €, +5,2%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni HANNAH + HANNAH TERRACES mantiene una traiettoria di crociera (-17% tra prima e seconda metà del periodo): 608,47 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 40,56 € al giorno, con la giornata di massima erogazione di domenica a 55,56 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>166.809 impression</strong> che hanno raggiunto <strong>6.195 persone uniche</strong>, <strong>51.505 interazioni</strong> con la pagina e <strong>11.161 click</strong> — di cui 3.227 con atterraggio sul sito. Il rapporto interazioni/impression del 30.9% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni HANNAH + HANNAH TERRACES mantiene una traiettoria di crociera (-14% tra prima e seconda metà del periodo): 603,87 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 40,26 € al giorno, con la giornata di massima erogazione di domenica a 55,56 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>169.644 impression</strong> che hanno raggiunto <strong>6.195 persone uniche</strong>, <strong>53.477 interazioni</strong> con la pagina e <strong>11.326 click</strong> — di cui 3.222 con atterraggio sul sito. Il rapporto interazioni/impression del 31.5% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 43.78,
-            "impressions": 10130,
-            "reach": 4150,
-            "page_engagement": 2518,
-            "clicks": 655,
-            "lpv": 201
-          },
           {
             "date": "2026-10-25",
             "spend": 52.79,
@@ -3339,26 +3100,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 26.74,
-            "impressions": 7971,
-            "reach": 2810,
-            "page_engagement": 2803,
+            "spend": 26.75,
+            "impressions": 7980,
+            "reach": 2803,
+            "page_engagement": 2809,
             "clicks": 530,
             "lpv": 157
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 39.17,
+            "impressions": 12956,
+            "reach": 4080,
+            "page_engagement": 4484,
+            "clicks": 820,
+            "lpv": 196
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 166809,
+          "impressions_window": 169644,
           "reach_window": 6195,
-          "clicks_window": 11161,
-          "lpv_window": 3227,
-          "page_eng_window": 51505,
-          "impressions_y": 7971,
-          "reach_y": 2810,
-          "clicks_y": 530,
-          "lpv_y": 157,
-          "page_eng_y": 2803
+          "clicks_window": 11326,
+          "lpv_window": 3222,
+          "page_eng_window": 53477,
+          "impressions_y": 12956,
+          "reach_y": 4080,
+          "clicks_y": 820,
+          "lpv_y": 196,
+          "page_eng_y": 4484
         },
         "budget": null,
         "budget_structures": [
@@ -3382,7 +3152,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Puntebianche",
-            "spend": 232.68,
+            "spend": 225.54,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3390,7 +3160,7 @@
           },
           {
             "name": "AGHC | AON 75% | Hannah",
-            "spend": 219.16,
+            "spend": 220.08,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3398,7 +3168,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Hannah",
-            "spend": 79.71,
+            "spend": 82.37,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3406,7 +3176,212 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Puntebianche",
-            "spend": 76.92,
+            "spend": 75.88,
+            "lead": 0,
+            "cpl": null,
+            "active": true,
+            "status": "ACTIVE"
+          }
+        ],
+        "tiktok_campaigns": []
+      },
+      {
+        "id": "217115315497718",
+        "name": "HEMANAIRE",
+        "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718",
+        "ad_url_tiktok": null,
+        "has_tiktok": false,
+        "spend_y": 50.81,
+        "spend_window": 505.11,
+        "spend_window_meta": 505.11,
+        "spend_window_tiktok": 0,
+        "contatti_y": 0,
+        "active_days": 11,
+        "zero_days": 0,
+        "trend_pct": 68.4,
+        "trend_arrow": "↑",
+        "trend_label": "in crescita",
+        "status": {
+          "color": "green",
+          "label": "In linea",
+          "reason": "Spesi 50,81 € (media 7gg 41,01 €, +23,9%)"
+        },
+        "rational": "<p>Negli ultimi 11 giorni HEMANAIRE accelera in modo netto: la spesa della seconda metà del periodo cresce del 68% rispetto alla prima, portando il totale a 505,11 € con un ritmo medio di 45,92 € al giorno, con la giornata di massima erogazione di sabato a 63,98 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>524.638 impression</strong> che hanno raggiunto <strong>47.049 persone uniche</strong>, <strong>24.526 interazioni</strong> con la pagina e <strong>8.862 click</strong> — di cui 5.868 con atterraggio sul sito. Il rapporto interazioni/impression del 4.7% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>L'accelerazione in corso va monitorata in chiave CPM e frequency: in questa fase di pressione competitiva crescente, la sostenibilità della curva si misura sulla capacità di rinnovare l'asset creativo prima che il pubblico si saturi e i costi d'asta inizino a salire più rapidamente dei volumi.</p>",
+        "series": [
+          {
+            "date": "2026-10-25",
+            "spend": 42.89,
+            "impressions": 45599,
+            "reach": 34399,
+            "page_engagement": 837,
+            "clicks": 626,
+            "lpv": 396
+          },
+          {
+            "date": "2026-10-26",
+            "spend": 34.08,
+            "impressions": 36609,
+            "reach": 28110,
+            "page_engagement": 727,
+            "clicks": 549,
+            "lpv": 366
+          },
+          {
+            "date": "2026-10-27",
+            "spend": 31.25,
+            "impressions": 32677,
+            "reach": 24344,
+            "page_engagement": 693,
+            "clicks": 492,
+            "lpv": 306
+          },
+          {
+            "date": "2026-10-28",
+            "spend": 32.36,
+            "impressions": 33313,
+            "reach": 25994,
+            "page_engagement": 621,
+            "clicks": 450,
+            "lpv": 284
+          },
+          {
+            "date": "2026-10-29",
+            "spend": 26.63,
+            "impressions": 25284,
+            "reach": 17997,
+            "page_engagement": 861,
+            "clicks": 394,
+            "lpv": 253
+          },
+          {
+            "date": "2026-10-30",
+            "spend": 0
+          },
+          {
+            "date": "2026-10-31",
+            "spend": 0
+          },
+          {
+            "date": "2026-11-01",
+            "spend": 0
+          },
+          {
+            "date": "2026-11-02",
+            "spend": 0
+          },
+          {
+            "date": "2026-11-03",
+            "spend": 42.78,
+            "impressions": 44206,
+            "reach": 28025,
+            "page_engagement": 3033,
+            "clicks": 811,
+            "lpv": 536
+          },
+          {
+            "date": "2026-11-04",
+            "spend": 60.43,
+            "impressions": 64481,
+            "reach": 43373,
+            "page_engagement": 3282,
+            "clicks": 1172,
+            "lpv": 759
+          },
+          {
+            "date": "2026-11-05",
+            "spend": 60.0,
+            "impressions": 64291,
+            "reach": 44508,
+            "page_engagement": 3540,
+            "clicks": 1156,
+            "lpv": 754
+          },
+          {
+            "date": "2026-11-06",
+            "spend": 59.9,
+            "impressions": 60582,
+            "reach": 45296,
+            "page_engagement": 3330,
+            "clicks": 1067,
+            "lpv": 734
+          },
+          {
+            "date": "2026-11-07",
+            "spend": 63.98,
+            "impressions": 65396,
+            "reach": 47049,
+            "page_engagement": 3901,
+            "clicks": 1143,
+            "lpv": 775
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 50.81,
+            "impressions": 52200,
+            "reach": 35119,
+            "page_engagement": 3701,
+            "clicks": 1002,
+            "lpv": 705
+          }
+        ],
+        "window_days": 15,
+        "vanity": {
+          "impressions_window": 524638,
+          "reach_window": 47049,
+          "clicks_window": 8862,
+          "lpv_window": 5868,
+          "page_eng_window": 24526,
+          "impressions_y": 52200,
+          "reach_y": 35119,
+          "clicks_y": 1002,
+          "lpv_y": 705,
+          "page_eng_y": 3701
+        },
+        "budget": {
+          "year": 2026,
+          "name": null,
+          "budget_annuale": 15000,
+          "ytd_spent": 3798.47,
+          "residuo": 11201.53,
+          "budget_pct": 25.3
+        },
+        "budget_structures": null,
+        "meta_campaigns": [
+          {
+            "name": "AGHC | AON 75% | Hemanaire",
+            "spend": 234.1,
+            "lead": 0,
+            "cpl": null,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "AGHC | Experience | Hemanaire",
+            "spend": 104.27,
+            "lead": 0,
+            "cpl": null,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "AGHC | TRAFFICO 25% | Hemanaire",
+            "spend": 77.84,
+            "lead": 0,
+            "cpl": null,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "AGHC | Tartufo ITA | Hemanaire",
+            "spend": 64.9,
+            "lead": 0,
+            "cpl": null,
+            "active": true,
+            "status": "ACTIVE"
+          },
+          {
+            "name": "AGHC | Tartufo ENG | Hemanaire",
+            "spend": 24.0,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3421,32 +3396,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1489903155429629",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 17.93,
-        "spend_window": 284.4,
-        "spend_window_meta": 284.4,
+        "spend_y": 25.83,
+        "spend_window": 292.49,
+        "spend_window_meta": 292.49,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -0.1,
-        "trend_arrow": "→",
-        "trend_label": "stabile",
+        "trend_pct": 17.21,
+        "trend_arrow": "↑",
+        "trend_label": "in crescita",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 17,93 € (media 7gg 19,10 €, -6,1%)"
+          "reason": "Spesi 25,83 € (media 7gg 20,23 €, +27,7%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni CASTELLO mantiene una traiettoria di crociera (-0% tra prima e seconda metà del periodo): 284,40 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 18,96 € al giorno, con la giornata di massima erogazione di domenica a 29,07 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>104.555 impression</strong> che hanno raggiunto <strong>8.206 persone uniche</strong>, <strong>20.635 interazioni</strong> con la pagina e <strong>5.657 click</strong> — di cui 1.883 con atterraggio sul sito. Il rapporto interazioni/impression del 19.7% si colloca <strong>in linea con il benchmark</strong> di settore.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni CASTELLO mantiene una traiettoria di crociera (+17% tra prima e seconda metà del periodo): 292,49 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 19,50 € al giorno, con la giornata di massima erogazione di domenica a 29,07 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>103.425 impression</strong> che hanno raggiunto <strong>8.206 persone uniche</strong>, <strong>21.435 interazioni</strong> con la pagina e <strong>5.920 click</strong> — di cui 1.903 con atterraggio sul sito. Il rapporto interazioni/impression del 20.7% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 17.75,
-            "impressions": 7336,
-            "reach": 3589,
-            "page_engagement": 911,
-            "clicks": 317,
-            "lpv": 118
-          },
           {
             "date": "2026-10-25",
             "spend": 24.55,
@@ -3566,26 +3532,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 17.93,
-            "impressions": 4582,
-            "reach": 2494,
-            "page_engagement": 1258,
-            "clicks": 329,
+            "spend": 17.94,
+            "impressions": 4591,
+            "reach": 2500,
+            "page_engagement": 1261,
+            "clicks": 330,
             "lpv": 86
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 25.83,
+            "impressions": 6197,
+            "reach": 3308,
+            "page_engagement": 1708,
+            "clicks": 579,
+            "lpv": 138
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 104555,
+          "impressions_window": 103425,
           "reach_window": 8206,
-          "clicks_window": 5657,
-          "lpv_window": 1883,
-          "page_eng_window": 20635,
-          "impressions_y": 4582,
-          "reach_y": 2494,
-          "clicks_y": 329,
-          "lpv_y": 86,
-          "page_eng_y": 1258
+          "clicks_window": 5920,
+          "lpv_window": 1903,
+          "page_eng_window": 21435,
+          "impressions_y": 6197,
+          "reach_y": 3308,
+          "clicks_y": 579,
+          "lpv_y": 138,
+          "page_eng_y": 1708
         },
         "budget": {
           "year": 2026,
@@ -3599,7 +3574,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Hotel Castello",
-            "spend": 176.81,
+            "spend": 185.67,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3607,7 +3582,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Hotel Castello",
-            "spend": 77.88,
+            "spend": 81.92,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3615,7 +3590,7 @@
           },
           {
             "name": "AGHC | HALLOWEEN | Hotel Castello",
-            "spend": 29.71,
+            "spend": 24.9,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3630,32 +3605,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=821188209852436",
         "ad_url_tiktok": "https://ads.tiktok.com/i18n/dashboard?aadvid=7499093699838607377",
         "has_tiktok": true,
-        "spend_y": 11.0,
-        "spend_window": 199.72,
-        "spend_window_meta": 199.72,
+        "spend_y": 14.27,
+        "spend_window": 201.04,
+        "spend_window_meta": 201.04,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": 3.2,
+        "trend_pct": 8.59,
         "trend_arrow": "→",
         "trend_label": "stabile",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 11,00 € (media 7gg 13,87 €, -20,7%)"
+          "reason": "Spesi 14,27 € (media 7gg 13,87 €, +2,9%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni MARCELLA ROYAL + TERRAZZA FLAVIA mantiene una traiettoria di crociera (+3% tra prima e seconda metà del periodo): 199,72 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 13,31 € al giorno, con la giornata di massima erogazione di domenica a 16,91 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>128.581 impression</strong> che hanno raggiunto <strong>4.592 persone uniche</strong>, <strong>39.953 interazioni</strong> con la pagina e <strong>1.660 click</strong> — di cui 477 con atterraggio sul sito. Il rapporto interazioni/impression del 31.1% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Nel periodo è stato presidiato il solo canale Meta, con TikTok in stand-by.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 15 giorni MARCELLA ROYAL + TERRAZZA FLAVIA mantiene una traiettoria di crociera (+9% tra prima e seconda metà del periodo): 201,04 € di investimento distribuiti su 15 giorni effettivi di erogazione, a un ritmo medio di 13,40 € al giorno, con la giornata di massima erogazione di domenica a 16,91 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>129.905 impression</strong> che hanno raggiunto <strong>4.592 persone uniche</strong>, <strong>39.932 interazioni</strong> con la pagina e <strong>1.703 click</strong> — di cui 473 con atterraggio sul sito. Il rapporto interazioni/impression del 30.7% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality. Nel periodo è stato presidiato il solo canale Meta, con TikTok in stand-by.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 12.99,
-            "impressions": 6623,
-            "reach": 2811,
-            "page_engagement": 2653,
-            "clicks": 71,
-            "lpv": 30
-          },
           {
             "date": "2026-10-25",
             "spend": 16.55,
@@ -3775,26 +3741,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 11.0,
-            "impressions": 7066,
-            "reach": 2027,
-            "page_engagement": 2106,
-            "clicks": 81,
+            "spend": 11.04,
+            "impressions": 7081,
+            "reach": 2033,
+            "page_engagement": 2110,
+            "clicks": 82,
             "lpv": 24
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 14.27,
+            "impressions": 7932,
+            "reach": 2390,
+            "page_engagement": 2628,
+            "clicks": 113,
+            "lpv": 26
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 128581,
+          "impressions_window": 129905,
           "reach_window": 4592,
-          "clicks_window": 1660,
-          "lpv_window": 477,
-          "page_eng_window": 39953,
-          "impressions_y": 7066,
-          "reach_y": 2027,
-          "clicks_y": 81,
-          "lpv_y": 24,
-          "page_eng_y": 2106
+          "clicks_window": 1703,
+          "lpv_window": 473,
+          "page_eng_window": 39932,
+          "impressions_y": 7932,
+          "reach_y": 2390,
+          "clicks_y": 113,
+          "lpv_y": 26,
+          "page_eng_y": 2628
         },
         "budget": null,
         "budget_structures": [
@@ -3818,7 +3793,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Terrazza Flavia",
-            "spend": 78.09,
+            "spend": 76.97,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3826,7 +3801,7 @@
           },
           {
             "name": "AGHC | AON 75% | Marcella Royal",
-            "spend": 74.73,
+            "spend": 75.97,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3834,7 +3809,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Marcella Royal",
-            "spend": 24.25,
+            "spend": 25.18,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3842,7 +3817,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Terrazza Flavia",
-            "spend": 22.65,
+            "spend": 22.92,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -3857,32 +3832,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1353024533007038",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 7.15,
-        "spend_window": 173.85,
-        "spend_window_meta": 173.85,
+        "spend_y": 8.96,
+        "spend_window": 169.13,
+        "spend_window_meta": 169.13,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 15,
         "zero_days": 0,
-        "trend_pct": -42.25,
+        "trend_pct": -41.41,
         "trend_arrow": "↓",
         "trend_label": "in calo",
         "status": {
           "color": "green",
           "label": "In linea",
-          "reason": "Spesi 7,15 € (media 7gg 8,85 €, -19,2%)"
+          "reason": "Spesi 8,96 € (media 7gg 8,41 €, +6,5%)"
         },
-        "rational": "<p>Negli ultimi 15 giorni VILLA MILIANI attraversa una fase di raffreddamento: la spesa della seconda metà scende del 42% rispetto alla prima, chiudendo il periodo a 173,85 € totali con una media di 11,59 € al giorno, con la giornata di massima erogazione di domenica a 19,74 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>58.240 impression</strong> che hanno raggiunto <strong>3.523 persone uniche</strong>, <strong>13.220 interazioni</strong> con la pagina e <strong>2.470 click</strong> — di cui 508 con atterraggio sul sito. Il rapporto interazioni/impression del 22.7% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>La contrazione dei volumi richiede un'analisi di scenario: il calo di 42% nella seconda metà del periodo evidenzia una perdita di presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica costruita nelle settimane precedenti.</p>",
+        "rational": "<p>Negli ultimi 15 giorni VILLA MILIANI attraversa una fase di raffreddamento: la spesa della seconda metà scende del 41% rispetto alla prima, chiudendo il periodo a 169,13 € totali con una media di 11,28 € al giorno, con la giornata di massima erogazione di domenica a 19,74 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>55.869 impression</strong> che hanno raggiunto <strong>3.523 persone uniche</strong>, <strong>12.952 interazioni</strong> con la pagina e <strong>2.410 click</strong> — di cui 514 con atterraggio sul sito. Il rapporto interazioni/impression del 23.2% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>La contrazione dei volumi richiede un'analisi di scenario: il calo di 41% nella seconda metà del periodo evidenzia una perdita di presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica costruita nelle settimane precedenti.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 13.71,
-            "impressions": 4532,
-            "reach": 2304,
-            "page_engagement": 826,
-            "clicks": 154,
-            "lpv": 19
-          },
           {
             "date": "2026-10-25",
             "spend": 19.74,
@@ -4002,26 +3968,35 @@
           },
           {
             "date": "2026-11-07",
-            "spend": 7.15,
-            "impressions": 1599,
-            "reach": 1081,
-            "page_engagement": 417,
-            "clicks": 64,
+            "spend": 7.18,
+            "impressions": 1603,
+            "reach": 1083,
+            "page_engagement": 418,
+            "clicks": 65,
             "lpv": 24
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 8.96,
+            "impressions": 2157,
+            "reach": 1374,
+            "page_engagement": 557,
+            "clicks": 93,
+            "lpv": 25
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 58240,
+          "impressions_window": 55869,
           "reach_window": 3523,
-          "clicks_window": 2470,
-          "lpv_window": 508,
-          "page_eng_window": 13220,
-          "impressions_y": 1599,
-          "reach_y": 1081,
-          "clicks_y": 64,
-          "lpv_y": 24,
-          "page_eng_y": 417
+          "clicks_window": 2410,
+          "lpv_window": 514,
+          "page_eng_window": 12952,
+          "impressions_y": 2157,
+          "reach_y": 1374,
+          "clicks_y": 93,
+          "lpv_y": 25,
+          "page_eng_y": 557
         },
         "budget": {
           "year": 2026,
@@ -4035,7 +4010,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Villa Miliani",
-            "spend": 127.58,
+            "spend": 122.87,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -4043,7 +4018,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Villa Miliani",
-            "spend": 46.27,
+            "spend": 46.26,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -4058,32 +4033,23 @@
         "ad_url_meta": "https://business.facebook.com/adsmanager/manage/campaigns?act=1372615496521110",
         "ad_url_tiktok": null,
         "has_tiktok": false,
-        "spend_y": 0,
-        "spend_window": 172.69,
-        "spend_window_meta": 172.69,
+        "spend_y": 17.26,
+        "spend_window": 162.09,
+        "spend_window_meta": 162.09,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
         "active_days": 6,
         "zero_days": 0,
-        "trend_pct": -19.04,
+        "trend_pct": -28.93,
         "trend_arrow": "↓",
         "trend_label": "in calo",
         "status": {
-          "color": "gray",
-          "label": "Inattivo",
-          "reason": "Nessuna spesa rilevante negli ultimi 8 giorni"
+          "color": "green",
+          "label": "Attivo",
+          "reason": "Spesi 17,26 € (no storico per confronto)"
         },
-        "rational": "<p>Negli ultimi 6 giorni MAGARI ESTATES mantiene una traiettoria di crociera (-19% tra prima e seconda metà del periodo): 172,69 € di investimento distribuiti su 6 giorni effettivi di erogazione, a un ritmo medio di 28,78 € al giorno, con la giornata di massima erogazione di domenica a 36,92 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>87.960 impression</strong> che hanno raggiunto <strong>12.556 persone uniche</strong>, <strong>35.114 interazioni</strong> con la pagina e <strong>1.206 click</strong> — di cui 288 con atterraggio sul sito. Il rapporto interazioni/impression del 39.9% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 6 giorni MAGARI ESTATES attraversa una fase di raffreddamento: la spesa della seconda metà scende del 29% rispetto alla prima, chiudendo il periodo a 162,09 € totali con una media di 27,01 € al giorno, con la giornata di massima erogazione di domenica a 36,92 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>78.200 impression</strong> che hanno raggiunto <strong>12.556 persone uniche</strong>, <strong>31.095 interazioni</strong> con la pagina e <strong>1.180 click</strong> — di cui 291 con atterraggio sul sito. Il rapporto interazioni/impression del 39.8% colloca l'account <strong>sopra il benchmark di categoria</strong> per il segmento hospitality.</p><p>La contrazione dei volumi richiede un'analisi di scenario: il calo di 29% nella seconda metà del periodo evidenzia una perdita di presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica costruita nelle settimane precedenti.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 27.86,
-            "impressions": 14022,
-            "reach": 9929,
-            "page_engagement": 5529,
-            "clicks": 166,
-            "lpv": 37
-          },
           {
             "date": "2026-10-25",
             "spend": 36.92,
@@ -4164,20 +4130,29 @@
           {
             "date": "2026-11-07",
             "spend": 0
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 17.26,
+            "impressions": 4262,
+            "reach": 2726,
+            "page_engagement": 1510,
+            "clicks": 140,
+            "lpv": 40
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 87960,
+          "impressions_window": 78200,
           "reach_window": 12556,
-          "clicks_window": 1206,
-          "lpv_window": 288,
-          "page_eng_window": 35114,
-          "impressions_y": 0,
-          "reach_y": 0,
-          "clicks_y": 0,
-          "lpv_y": 0,
-          "page_eng_y": 0
+          "clicks_window": 1180,
+          "lpv_window": 291,
+          "page_eng_window": 31095,
+          "impressions_y": 4262,
+          "reach_y": 2726,
+          "clicks_y": 140,
+          "lpv_y": 40,
+          "page_eng_y": 1510
         },
         "budget": {
           "year": 2026,
@@ -4191,7 +4166,7 @@
         "meta_campaigns": [
           {
             "name": "AGHC | AON 75% | Magari Estates",
-            "spend": 129.0,
+            "spend": 118.86,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -4199,7 +4174,7 @@
           },
           {
             "name": "AGHC | TRAFFICO 25% | Magari Estates",
-            "spend": 43.69,
+            "spend": 43.23,
             "lead": 0,
             "cpl": null,
             "active": true,
@@ -4215,31 +4190,22 @@
         "ad_url_tiktok": null,
         "has_tiktok": false,
         "spend_y": 0,
-        "spend_window": 29.91,
-        "spend_window_meta": 29.91,
+        "spend_window": 19.56,
+        "spend_window_meta": 19.56,
         "spend_window_tiktok": 0,
         "contatti_y": 0,
-        "active_days": 3,
+        "active_days": 2,
         "zero_days": 0,
-        "trend_pct": -5.51,
-        "trend_arrow": "→",
-        "trend_label": "stabile",
+        "trend_pct": -54.25,
+        "trend_arrow": "↓",
+        "trend_label": "in calo",
         "status": {
           "color": "gray",
           "label": "Inattivo",
           "reason": "Nessuna spesa rilevante negli ultimi 8 giorni"
         },
-        "rational": "<p>Negli ultimi 3 giorni ACCENTODI + ADESSO mantiene una traiettoria di crociera (-6% tra prima e seconda metà del periodo): 29,91 € di investimento distribuiti su 3 giorni effettivi di erogazione, a un ritmo medio di 9,97 € al giorno, con la giornata di massima erogazione di domenica a 13,42 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>8.085 impression</strong> che hanno raggiunto <strong>2.622 persone uniche</strong>, <strong>253 interazioni</strong> con la pagina e <strong>249 click</strong>. Il rapporto interazioni/impression del 3.1% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>In uno scenario competitivo che continua a comprimere i margini di visibilità, mantenere questa cadenza significa preservare il presidio sui canali principali senza forzature: la base dati che stiamo costruendo nel periodo è quella su cui si fonderà la lettura della stagione, ed è coerente con il piano media concordato.</p>",
+        "rational": "<p>Negli ultimi 2 giorni ACCENTODI + ADESSO attraversa una fase di raffreddamento: la spesa della seconda metà scende del 54% rispetto alla prima, chiudendo il periodo a 19,56 € totali con una media di 9,78 € al giorno, con la giornata di massima erogazione di domenica a 13,42 €.</p><p>L'analisi della visibilità del periodo restituisce <strong>5.567 impression</strong> che hanno raggiunto <strong>2.622 persone uniche</strong>, <strong>162 interazioni</strong> con la pagina e <strong>157 click</strong>. Il rapporto interazioni/impression del 2.9% segnala <strong>spazio di miglioramento</strong> sull'efficacia del messaggio.</p><p>La contrazione dei volumi richiede un'analisi di scenario: il calo di 54% nella seconda metà del periodo evidenzia una perdita di presenza nelle aste che, se prolungata, rischia di erodere la visibilità organica costruita nelle settimane precedenti.</p>",
         "series": [
-          {
-            "date": "2026-10-24",
-            "spend": 10.35,
-            "impressions": 2518,
-            "reach": 1889,
-            "page_engagement": 91,
-            "clicks": 92,
-            "lpv": 5
-          },
           {
             "date": "2026-10-25",
             "spend": 13.42,
@@ -4305,15 +4271,19 @@
           {
             "date": "2026-11-07",
             "spend": 0
+          },
+          {
+            "date": "2026-11-08",
+            "spend": 0
           }
         ],
         "window_days": 15,
         "vanity": {
-          "impressions_window": 8085,
+          "impressions_window": 5567,
           "reach_window": 2622,
-          "clicks_window": 249,
-          "lpv_window": 20,
-          "page_eng_window": 253,
+          "clicks_window": 157,
+          "lpv_window": 15,
+          "page_eng_window": 162,
           "impressions_y": 0,
           "reach_y": 0,
           "clicks_y": 0,
@@ -4333,70 +4303,70 @@
         "tiktok_campaigns": []
       }
     ],
-    "recap": "Ciao a tutti,\necco l'andamento delle campagne AGHC negli ultimi 15 giorni:\n\n📊 Spending totale: 6.903,72 € · 13/15 clienti attivi ieri\n👁  Visualizzazioni: 4.292.383 · 🖱  Click: 80.273 · 🌐  Visite landing: 26.508\n⚠️  Alert da analizzare: 7 critici · 0 da monitorare (dettagli in dashboard)\n\nDashboard live: https://advfmosca.github.io/dashboard-di-controllo/#aghc\n\nPer qualsiasi info sono a disposizione! :)"
+    "recap": "Ciao a tutti,\necco l'andamento delle campagne AGHC negli ultimi 15 giorni:\n\n📊 Spending totale: 6.915,91 € · 14/15 clienti attivi ieri\n👁  Visualizzazioni: 4.318.833 · 🖱  Click: 81.817 · 🌐  Visite landing: 26.960\n⚠️  Alert da analizzare: 6 critici · 0 da monitorare (dettagli in dashboard)\n\nDashboard live: https://advfmosca.github.io/dashboard-di-controllo/#aghc\n\nPer qualsiasi info sono a disposizione! :)"
   },
   "other_roster": {
-    "reference_date": "2026-11-07",
+    "reference_date": "2026-11-08",
     "window_days": 15,
     "accounts": [
       {
         "account_id": "256796067397229",
         "account_name": "Scintille di futuro",
-        "spend_y": 73.8,
-        "spend_window_15d": 1069.11,
+        "spend_y": 78.63,
+        "spend_window_15d": 1072.19,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=256796067397229"
       },
       {
         "account_id": "404633425550941",
         "account_name": "L&A Booty Srl",
-        "spend_y": 89.05,
-        "spend_window_15d": 489.67,
+        "spend_y": 54.15,
+        "spend_window_15d": 543.85,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=404633425550941"
       },
       {
         "account_id": "433491253104777",
         "account_name": "B612 Ads",
-        "spend_y": 23.54,
-        "spend_window_15d": 372.91,
+        "spend_y": 27.87,
+        "spend_window_15d": 377.86,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=433491253104777"
       },
       {
         "account_id": "970009549230769",
         "account_name": "Royal Court Hotel Roma",
-        "spend_y": 17.05,
-        "spend_window_15d": 299.7,
+        "spend_y": 24.08,
+        "spend_window_15d": 303.71,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=970009549230769"
       },
       {
         "account_id": "1695132911866990",
         "account_name": "CIA ADV",
-        "spend_y": 22.66,
-        "spend_window_15d": 291.19,
+        "spend_y": 21.38,
+        "spend_window_15d": 291.41,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=1695132911866990"
       },
       {
         "account_id": "846711379200435",
         "account_name": "Mario Festa",
-        "spend_y": 7.9,
-        "spend_window_15d": 260.09,
+        "spend_y": 12.01,
+        "spend_window_15d": 256.62,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=846711379200435"
       },
       {
         "account_id": "422761780480167",
         "account_name": "Giulia & Daniele Tango",
         "spend_y": 0.0,
-        "spend_window_15d": 221.09,
+        "spend_window_15d": 177.19,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=422761780480167"
       },
       {
         "account_id": "434507778815442",
         "account_name": "Hotel Stendhal // ADS",
         "spend_y": 0.0,
-        "spend_window_15d": 109.54,
+        "spend_window_15d": 93.92,
         "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=434507778815442"
       }
     ],
     "total_count": 8,
-    "total_spend_window": 3113.3
+    "total_spend_window": 3116.75
   }
 }
