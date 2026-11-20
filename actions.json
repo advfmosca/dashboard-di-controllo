@@ -1,16 +1,38 @@
 {
-  "generated_at": "2026-11-19T04:15:21.753645",
-  "reference_date": "2026-11-18",
+  "generated_at": "2026-11-20T04:14:39.254281",
+  "reference_date": "2026-11-19",
   "actions": [
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 Hotel Stendhal // ADS · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "434507778815442",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=434507778815442",
+      "details": "Spesa 103,41 € ieri vs media 7gg 3,01 € (+3340,4%)",
+      "reference_date": "2026-11-19",
+      "reference_date_label": "19 nov 2026"
+    },
+    {
+      "type": "high_spending",
+      "priority": "high",
+      "title": "🔴 CW CM 2020 - AP · spesa anomala alta",
+      "platform": "Meta",
+      "account_id": "217115315497718",
+      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=217115315497718",
+      "details": "Spesa 61,96 € ieri vs media 7gg 43,18 € (+43,5%)",
+      "reference_date": "2026-11-19",
+      "reference_date_label": "19 nov 2026"
+    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 18/11/2026",
-      "details": "0 zero + 13 high",
-      "reference_date": "2026-11-18",
-      "reference_date_label": "18 nov 2026",
+      "title": "Alert spending — 19/11/2026",
+      "details": "0 zero + 14 high",
+      "reference_date": "2026-11-19",
+      "reference_date_label": "19 nov 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 18/11/2026*\n*Top alert:*\n• :fire: Ciccio + Sorriso ADV (Meta) — 93,92 € (-15,7%)\n• :fire: Sardinia Family Villas (Google) — 88,10 € (+26,9%)\n• :fire: Scintille di futuro (Meta) — 73,01 € (-0,9%)\n_+ 10 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-11-18|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 19/11/2026*\n*Top alert:*\n• :fire: Hotel Stendhal // ADS (Meta) — 103,41 € (+3340,4%)\n• :fire: Ciccio + Sorriso ADV (Meta) — 82,47 € (-25,4%)\n• :fire: Scintille di futuro (Meta) — 72,80 € (-1,3%)\n_+ 11 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-11-19|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
