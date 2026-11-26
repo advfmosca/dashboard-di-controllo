@@ -1,27 +1,16 @@
 {
-  "generated_at": "2026-11-25T04:15:26.372635",
-  "reference_date": "2026-11-24",
+  "generated_at": "2026-11-26T04:15:12.950586",
+  "reference_date": "2026-11-25",
   "actions": [
-    {
-      "type": "high_spending",
-      "priority": "high",
-      "title": "🔴 Hotel Stendhal // ADS · spesa anomala alta",
-      "platform": "Meta",
-      "account_id": "434507778815442",
-      "ad_url": "https://business.facebook.com/adsmanager/manage/campaigns?act=434507778815442",
-      "details": "Spesa 105,74 € ieri vs media 7gg 80,61 € (+31,2%)",
-      "reference_date": "2026-11-24",
-      "reference_date_label": "24 nov 2026"
-    },
     {
       "type": "spending_anomaly",
       "priority": "high",
-      "title": "Alert spending — 24/11/2026",
-      "details": "1 zero + 13 high",
-      "reference_date": "2026-11-24",
-      "reference_date_label": "24 nov 2026",
+      "title": "Alert spending — 25/11/2026",
+      "details": "1 zero + 10 high",
+      "reference_date": "2026-11-25",
+      "reference_date_label": "25 nov 2026",
       "slack_target": "C0B2RE5KSHG",
-      "slack_template": ":rotating_light: *Check spending — 24/11/2026*\n*Top alert:*\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 22,26 €) · _Causa da verificare_\n• :fire: Hotel Stendhal // ADS (Meta) — 105,74 € (+31,2%)\n• :fire: Ciccio + Sorriso ADV (Meta) — 88,43 € (-6,5%)\n_+ 11 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-11-24|:link: Apri dashboard →>",
+      "slack_template": ":rotating_light: *Check spending — 25/11/2026*\n*Top alert:*\n• :zap: Magari Estates Hotel (Meta) — 0,00 € (storico 18,27 €) · _Causa da verificare_\n• :fire: Hotel Stendhal // ADS (Meta) — 102,21 € (+6,5%)\n• :fire: Ciccio + Sorriso ADV (Meta) — 93,36 € (+1,4%)\n_+ 8 altri alert sulla dashboard_\n\n<https://advfmosca.github.io/dashboard-di-controllo/?section=spending&date=2026-11-25|:link: Apri dashboard →>",
       "skip_if_quiet": false
     }
   ]
